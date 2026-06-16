@@ -220,6 +220,7 @@ async function startReading() {
 - ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษ
 - ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
 - ห้ามแปลชื่อเป็นภาษาไทย
+- ห้ามใช้ markdown ห้ามใช้ # ## ** หรือสัญลักษณ์ใดๆ ใช้แค่ตัวเลขและข้อความธรรมดา
 - แต่ละหัวข้อเขียนกระชับ 3-4 ประโยค ให้จบในตัวเอง ไม่ตัดกลางคัน
 - พูดเหมือนโหรจริงๆ ที่เห็นดวงชะตาชัดเจน`;
 
@@ -266,7 +267,7 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: isPremium ? 2000 : 500,
+        max_tokens: isPremium ? 3000 : 1000,
         system: systemPrompt,
         messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
       })
