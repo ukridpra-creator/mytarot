@@ -353,3 +353,12 @@ body {
   z-index: 998;
 }
 .overlay.open { display: block; }
+.cursor {
+  display: inline-block; width: 2px; height: 16px;
+  background: var(--purple-light); margin-left: 2px;
+  animation: blink 0.8s ease-in-out infinite;
+  vertical-align: middle;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; } 50% { opacity: 0; }
+}

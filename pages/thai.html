@@ -263,7 +263,7 @@ async function startReading() {
 12. วิธีเสริมดวง และสิ่งที่ต้องระวัง`;
 
   try {
-    const res = await fetch('/.netlify/functions/claude', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -274,9 +274,27 @@ async function startReading() {
       })
     });
 
-    const data = await res.json();
-    const text = data.content?.map(c => c.text || '').join('') || 'ไม่สามารถวิเคราะห์ได้ค่ะ';
-    resultText.textContent = text;
+    const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let text = '';
+
+resultText.textContent = '';
+const cursor = document.createElement('span');
+cursor.className = 'cursor';
+resultText.appendChild(cursor);
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  const chunk = decoder.decode(value);
+  text += chunk;
+  resultText.textContent = text;
+  resultText.appendChild(cursor);
+  resultBox.scrollTop = resultBox.scrollHeight;
+}
+
+cursor.remove();
+resultText.textContent = text;
 
     if (!isPremium) {
       upgradeBox.style.display = 'block';
