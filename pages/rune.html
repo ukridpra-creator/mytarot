@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ไพ่รูน — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 40px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+    .reading-hero { text-align: center; padding: 16px 0 24px; }
+    .reading-icon {
+      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
+      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
+    }
+    .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+    .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .question-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; color: white; font-size: 15px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; resize: none;
+    }
+    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    /* Rune Cards */
+    .rune-section { margin-bottom: 20px; }
+    .rune-section-title {
+      font-size: 13px; color: var(--gold); font-weight: 700;
+      margin-bottom: 12px; text-align: center;
+    }
+    .rune-grid {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 8px; margin-bottom: 12px;
+    }
+    .rune-card {
+      aspect-ratio: 2/3; background: rgba(124,58,237,0.15);
+      border: 1px solid var(--border); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; cursor: pointer; transition: all 0.3s;
+      color: rgba(168,85,247,0.6); font-family: serif;
+      position: relative; overflow: hidden;
+    }
+    .rune-card:hover { background: rgba(124,58,237,0.3); border-color: var(--purple-light); transform: translateY(-2px); }
+    .rune-card.selected {
+      background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(236,72,153,0.3));
+      border-color: var(--purple-light);
+      color: white;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+    }
+    .rune-card.used { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .selected-runes {
+      display: flex; gap: 12px; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .selected-slot {
+      width: 64px; aspect-ratio: 2/3;
+      background: rgba(255,255,255,0.05); border: 2px dashed var(--border);
+      border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 4px;
+    }
+    .selected-slot.filled {
+      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
+      border: 2px solid var(--purple-light);
+    }
+    .slot-rune { font-size: 24px; font-family: serif; color: white; }
+    .slot-num { font-size: 10px; color: var(--dim); }
+    .slot-label { font-size: 9px; color: var(--purple-light); text-align: center; padding: 0 4px; }
+    .shuffle-btn {
+      width: 100%; background: rgba(124,58,237,0.15);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
+    }
+    .shuffle-btn:hover { background: rgba(124,58,237,0.25); }
+    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tier-btn {
+      flex: 1; padding: 12px; border-radius: 14px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.2s; font-weight: 600;
+    }
+    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .result-box {
+      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; display: none;
+    }
+    .result-box.show { display: block; }
+    .result-runes {
+      display: flex; gap: 12px; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .result-rune-card {
+      text-align: center; flex: 1; max-width: 80px;
+    }
+    .result-rune-symbol {
+      width: 60px; height: 90px; margin: 0 auto 8px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(236,72,153,0.3));
+      border: 1px solid var(--purple-light); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-family: serif; color: white;
+    }
+    .result-rune-name { font-size: 11px; color: var(--gold); font-weight: 700; }
+    .result-rune-pos { font-size: 10px; color: var(--dim); }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
+    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+    .loading-text { font-size: 14px; color: var(--dim); }
+    .upgrade-box {
+      margin-top: 20px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 16px; padding: 20px; text-align: center;
+    }
+    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
+    .upgrade-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; border-radius: 12px; padding: 12px 24px;
+      color: white; font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">ไพ่รูน</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+</div>
+
+<div class="page-content">
+  <div class="reading-hero">
+    <div class="reading-icon"><img src="../images/icon-rune.png" alt="ไพ่รูน"></div>
+    <div class="reading-title">ไพ่รูน</div>
+    <div class="reading-ref">📖 อ้างอิง: Elder Futhark 24 ตัว (นอร์สโบราณ)</div>
+    <div class="reading-desc">ตั้งจิตอธิษฐาน แล้วเลือกรูน 3 ตัวที่ดึงดูดใจค่ะ</div>
+  </div>
+
+  <!-- คำถาม -->
+  <div class="question-box">
+    <label class="form-label">💭 สิ่งที่อยากรู้หรือคำถามในใจ</label>
+    <textarea class="form-input" id="question" rows="3" placeholder="พิมพ์คำถามหรือเรื่องที่อยากรู้..."></textarea>
+  </div>
+
+  <!-- เลือกรูน -->
+  <div class="rune-section">
+    <div class="rune-section-title">✨ เลือกรูน 3 ตัวที่ดึงดูดใจ</div>
+
+    <!-- ช่องที่เลือกแล้ว -->
+    <div class="selected-runes">
+      <div class="selected-slot" id="slot0">
+        <div class="slot-num">1</div>
+        <div class="slot-label">อดีต</div>
+      </div>
+      <div class="selected-slot" id="slot1">
+        <div class="slot-num">2</div>
+        <div class="slot-label">ปัจจุบัน</div>
+      </div>
+      <div class="selected-slot" id="slot2">
+        <div class="slot-num">3</div>
+        <div class="slot-label">อนาคต</div>
+      </div>
+    </div>
+
+    <!-- ปุ่มสับรูน -->
+    <button class="shuffle-btn" onclick="shuffleRunes()">🔀 สับรูนใหม่</button>
+
+    <!-- กริดรูน -->
+    <div class="rune-grid" id="runeGrid"></div>
+  </div>
+
+  <div class="tier-toggle">
+    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
+    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>
+    ᚱ วิเคราะห์ไพ่รูน
+  </button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-runes" id="resultRunes"></div>
+    <div class="result-header">
+      <span>🔮</span>
+      <div class="result-title">ผลการทำนายไพ่รูน</div>
+    </div>
+    <div class="result-text" id="resultText"></div>
+    <div class="upgrade-box" id="upgradeBox" style="display:none">
+      <div class="upgrade-text">
+        ✨ อยากรู้ลึกกว่านี้?<br>
+        อัปเกรดพรีเมียมเพื่อดูละเอียด อดีต/ปัจจุบัน/อนาคต<br>
+        แนะนำการดำเนินชีวิตรายด้าน
+      </div>
+      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
+        👑 สมัครพรีเมียม 99 บาท/เดือน
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const RUNES = [
+  {symbol:'ᚠ',name:'เฟฮู',meaning:'ความมั่งคั่ง'},
+  {symbol:'ᚢ',name:'อูรุซ',meaning:'พละกำลัง'},
+  {symbol:'ᚦ',name:'ทูริซาซ',meaning:'การปกป้อง'},
+  {symbol:'ᚨ',name:'อันซุซ',meaning:'ปัญญา'},
+  {symbol:'ᚱ',name:'ไรโดว',meaning:'การเดินทาง'},
+  {symbol:'ᚲ',name:'เคนาซ',meaning:'แสงสว่าง'},
+  {symbol:'ᚷ',name:'เกโบ',meaning:'ของขวัญ'},
+  {symbol:'ᚹ',name:'วุนโจ',meaning:'ความสุข'},
+  {symbol:'ᚺ',name:'ฮากาลาซ',meaning:'การเปลี่ยนแปลง'},
+  {symbol:'ᚾ',name:'เนาทิซ',meaning:'ความจำเป็น'},
+  {symbol:'ᛁ',name:'อีซา',meaning:'การหยุดนิ่ง'},
+  {symbol:'ᛃ',name:'เยรา',meaning:'ผลลัพธ์'},
+  {symbol:'ᛇ',name:'อีวาซ',meaning:'ความยืดหยุ่น'},
+  {symbol:'ᛈ',name:'เพอร์โธ',meaning:'ความลึกลับ'},
+  {symbol:'ᛉ',name:'อัลจิซ',meaning:'การคุ้มครอง'},
+  {symbol:'ᛊ',name:'โซวิโล',meaning:'ความสำเร็จ'},
+  {symbol:'ᛏ',name:'ทิวาซ',meaning:'ความยุติธรรม'},
+  {symbol:'ᛒ',name:'เบอร์คาโน',meaning:'การเริ่มต้นใหม่'},
+  {symbol:'ᛖ',name:'เอฮวาซ',meaning:'การเคลื่อนไหว'},
+  {symbol:'ᛗ',name:'มานนาซ',meaning:'มนุษยชาติ'},
+  {symbol:'ᛚ',name:'ลากุซ',meaning:'สัญชาตญาณ'},
+  {symbol:'ᛜ',name:'อิงวาซ',meaning:'ความอุดมสมบูรณ์'},
+  {symbol:'ᛞ',name:'ดากาซ',meaning:'การตื่นรู้'},
+  {symbol:'ᛟ',name:'โอทาลา',meaning:'มรดก'}
+];
+
+let shuffledRunes = [...RUNES];
+let selectedRunes = [];
+let currentTier = 'free';
+
+function shuffleRunes() {
+  shuffledRunes = [...RUNES].sort(() => Math.random() - 0.5);
+  selectedRunes = [];
+  renderGrid();
+  updateSlots();
+  document.getElementById('readBtn').disabled = true;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('runeGrid');
+  grid.innerHTML = shuffledRunes.map((r, i) => `
+    <div class="rune-card ${selectedRunes.find(s=>s.idx===i) ? 'selected' : ''}"
+         onclick="selectRune(${i})" title="${r.name} — ${r.meaning}">
+      ${r.symbol}
+    </div>
+  `).join('');
+}
+
+function selectRune(idx) {
+  const already = selectedRunes.findIndex(s => s.idx === idx);
+  if (already >= 0) {
+    selectedRunes.splice(already, 1);
+  } else {
+    if (selectedRunes.length >= 3) return;
+    selectedRunes.push({ idx, rune: shuffledRunes[idx] });
+  }
+  renderGrid();
+  updateSlots();
+  document.getElementById('readBtn').disabled = selectedRunes.length < 3;
+}
+
+function updateSlots() {
+  const positions = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`slot${i}`);
+    if (selectedRunes[i]) {
+      slot.className = 'selected-slot filled';
+      slot.innerHTML = `
+        <div class="slot-rune">${selectedRunes[i].rune.symbol}</div>
+        <div class="slot-label">${positions[i]}</div>
+      `;
+    } else {
+      slot.className = 'selected-slot';
+      slot.innerHTML = `<div class="slot-num">${i+1}</div><div class="slot-label">${positions[i]}</div>`;
+    }
+  }
+}
+
+function setTier(tier) {
+  currentTier = tier;
+  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
+  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+}
+
+async function startReading() {
+  if (selectedRunes.length < 3) return;
+
+  const question = document.getElementById('question').value.trim() || 'ภาพรวมชีวิตตอนนี้';
+  const btn = document.getElementById('readBtn');
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
+  const upgradeBox = document.getElementById('upgradeBox');
+  const resultRunes = document.getElementById('resultRunes');
+
+  btn.disabled = true;
+  upgradeBox.style.display = 'none';
+  resultBox.classList.add('show');
+
+  const positions = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
+  resultRunes.innerHTML = selectedRunes.map((s, i) => `
+    <div class="result-rune-card">
+      <div class="result-rune-symbol">${s.rune.symbol}</div>
+      <div class="result-rune-name">${s.rune.name}</div>
+      <div class="result-rune-pos">${positions[i]}</div>
+    </div>
+  `).join('');
+
+  resultText.innerHTML = `
+    <div class="loading">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">AI กำลังอ่านพลังรูน...</div>
+    </div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  const isPremium = currentTier === 'premium';
+  const runeInfo = selectedRunes.map((s, i) => `รูนที่ ${i+1} (${positions[i]}): ${s.rune.symbol} ${s.rune.name} — ${s.rune.meaning}`).join('\n');
+
+  const systemPrompt = `คุณคือหมอดูไพ่รูนระดับปรมาจารย์ อ้างอิง Elder Futhark 24 ตัว
+กฎที่ต้องทำตามทุกข้อ:
+- ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
+- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษ
+- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
+- แต่ละหัวข้อต้องเขียนให้จบในตัวเอง ไม่ตัดกลางคัน
+- พูดเหมือนหมอดูที่เห็นพลังงานรูนชัดเจน`;
+
+  const freePrompt = `ทำนายดวงจากไพ่รูน สำหรับคำถาม: ${question}
+
+รูนที่เลือก:
+${runeInfo}
+
+บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบ:
+1. ตำราอ้างอิงและรูนที่ได้รับ — บอกชื่อรูนและความหมายโดยรวม
+2. ทำนายจากรูนทั้ง 3 ตัว — อดีต ปัจจุบัน อนาคต สั้นๆ
+3. คำแนะนำจากพลังรูน — ควรทำอะไรในช่วงนี้
+4. สิ่งที่ต้องระวัง`;
+
+  const premiumPrompt = `ทำนายดวงจากไพ่รูนแบบพรีเมียมละเอียดมาก สำหรับคำถาม: ${question}
+
+รูนที่เลือก:
+${runeInfo}
+
+บอกครบ 10 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบในตัวเอง:
+1. ตำราอ้างอิงและภาพรวมพลังงานรูนทั้ง 3 ตัว
+2. รูนตัวที่ 1 (อดีต) — ทำนายละเอียด ความหมายและผลกระทบ
+3. รูนตัวที่ 2 (ปัจจุบัน) — ทำนายละเอียด สถานการณ์ตอนนี้
+4. รูนตัวที่ 3 (อนาคต) — ทำนายละเอียด สิ่งที่กำลังจะมา
+5. ความสัมพันธ์ระหว่างรูนทั้ง 3 ตัว — พลังงานรวม
+6. การงานและการเงิน — รูนบอกอะไร
+7. ความรักและความสัมพันธ์ — รูนบอกอะไร
+8. สุขภาพและพลังงาน — รูนบอกอะไร
+9. คำแนะนำจากพลังรูน — ควรทำอะไร ไม่ควรทำอะไร
+10. สิ่งที่ต้องระวัง และกำลังใจจากรูน`;
+
+  try {
+    const res = await fetch('/.netlify/functions/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: isPremium ? 3000 : 600,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'ไม่สามารถวิเคราะห์ได้ค่ะ';
+    resultText.textContent = text;
+
+    if (!isPremium) {
+      upgradeBox.style.display = 'block';
+    }
+
+  } catch (e) {
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
+    console.error(e);
+  }
+
+  btn.disabled = false;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+  shuffleRunes();
+});
+</script>
+</body>
+</html>
