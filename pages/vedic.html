@@ -251,7 +251,7 @@ async function startReading() {
 12. การเสริมดวงตามแบบอินเดีย และสิ่งที่ต้องระวัง`;
 
   try {
-    const res = await fetch('/.netlify/functions/claude', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
