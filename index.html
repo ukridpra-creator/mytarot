@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Tarot — ดูดวงด้วย AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">🔮 My Tarot</div>
+  <div class="header-right">
+    <div class="coin-badge">🪙 20 เหรียญ</div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</header>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18">
+      เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar" id="menuAvatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-badge" id="menuBadge"><span>🆓 แพ็กเกจฟรี</span></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="go('premium')">👑 อัปเกรดพรีเมียม</div>
+    <div class="menu-item" onclick="go('history')">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logout()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<section class="hero">
+  <div class="hero-badge">✨ ทำนายด้วย AI + ตำราโบราณ</div>
+  <h1>ค้นพบความจริง<br><span>ของชีวิตคุณ</span></h1>
+  <p>เลือกศาสตร์ที่ต้องการ แล้วให้เราเปิดเผยเส้นทางชีวิต</p>
+</section>
+
+<main class="main">
+
+  <!-- ฟรี -->
+  <div class="section-label">
+    <span>ดูฟรี</span>
+    <span class="tag free-tag">FREE</span>
+  </div>
+  <div class="grid">
+    <div class="card" onclick="go('tarot')">
+      <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์"></div>
+      <div class="card-title">ไพ่ทาโรต์</div>
+      <div class="card-desc">เปิดไพ่รับคำทำนายจากพลังจักรวาล</div>
+      <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('numerology')">
+      <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
+      <div class="card-title">เลขศาสตร์</div>
+      <div class="card-desc">ความลับของชีวิตซ่อนอยู่ในตัวเลข</div>
+      <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
+    </div>
+  </div>
+
+  <!-- เหรียญ -->
+  <div class="section-label" style="margin-top:24px">
+    <span>ใช้เหรียญ</span>
+    <span class="tag coin-tag">🪙 5-10 เหรียญ</span>
+  </div>
+  <div class="grid">
+    <div class="card" onclick="go('face')">
+      <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
+      <div class="card-title">โหงวเฮ้ง</div>
+      <div class="card-desc">วิเคราะห์ดวงจากใบหน้า</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('palm')">
+      <div class="card-icon"><img src="images/icon-palm.png" alt="ลายมือ"></div>
+      <div class="card-title">ดูลายมือ</div>
+      <div class="card-desc">เส้นมือบอกชะตาที่ซ่อนอยู่</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('iching')">
+      <div class="card-icon"><img src="images/icon-iching.png" alt="อี้จิง"></div>
+      <div class="card-title">อี้จิง</div>
+      <div class="card-desc">ปัญญาจีนโบราณ 3,000 ปี</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 5</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('rune')">
+      <div class="card-icon"><img src="images/icon-rune.png" alt="ไพ่รูน"></div>
+      <div class="card-title">ไพ่รูน</div>
+      <div class="card-desc">อักษรนอร์สโบราณแห่งชะตา</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 5</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('deity')">
+      <div class="card-icon"><img src="images/icon-deity.png" alt="มูเทพ"></div>
+      <div class="card-title">มูเทพ</div>
+      <div class="card-desc">ค้นหาเทพองค์ที่คุ้มครองคุณ</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('saju')">
+      <div class="card-icon"><img src="images/icon-saju.png" alt="ซาจูเกาหลี"></div>
+      <div class="card-title">ซาจูเกาหลี</div>
+      <div class="card-desc">โชคชะตาแบบเกาหลีโบราณ</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+    </div>
+  </div>
+
+  <!-- พรีเมียม -->
+  <div class="section-label" style="margin-top:24px">
+    <span>พรีเมียมเท่านั้น</span>
+    <span class="tag premium-tag">💎 PREMIUM</span>
+  </div>
+  <div class="grid">
+    <div class="card" onclick="go('thai')">
+      <div class="card-icon"><img src="images/icon-thai.png" alt="โหราศาสตร์ไทย"></div>
+      <div class="card-title">โหราศาสตร์ไทย</div>
+      <div class="card-desc">ดาวนพเคราะห์ เรือนชะตา</div>
+      <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('western')">
+      <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก"></div>
+      <div class="card-title">โหราศาสตร์ตะวันตก</div>
+      <div class="card-desc">แผนที่ดาวแห่งชีวิต</div>
+      <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('chinese')">
+      <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน"></div>
+      <div class="card-title">โหราศาสตร์จีน</div>
+      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา</div>
+      <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
+    </div>
+    <div class="card" onclick="go('vedic')">
+      <div class="card-icon"><img src="images/icon-vedic.png" alt="เวทย์มนตร์อินเดีย"></div>
+      <div class="card-title">เวทย์มนตร์อินเดีย</div>
+      <div class="card-desc">Vedic โหราศาสตร์ฮินดูโบราณ</div>
+      <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
+    </div>
+  </div>
+
+  <!-- Premium Banner -->
+  <div class="premium-banner" onclick="go('premium')">
+    <div class="premium-icon">👑</div>
+    <div class="premium-text">
+      <h3>สมัครพรีเมียม</h3>
+      <p>ดูได้ทุกศาสตร์ไม่จำกัด อดีต/ปัจจุบัน/อนาคต</p>
+    </div>
+    <div class="premium-price">
+      <div class="price">99฿</div>
+      <div class="unit">/เดือน</div>
+    </div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <div class="nav-item active"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script src="js/main.js"></script>
+</body>
+</html>

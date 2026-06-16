@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เลขศาสตร์ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 40px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+    .reading-hero { text-align: center; padding: 16px 0 28px; }
+    .reading-icon {
+      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
+      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
+    }
+    .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+    .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .form-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; color: white; font-size: 15px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; margin-bottom: 14px;
+    }
+    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .form-row .form-input { margin-bottom: 0; }
+    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tier-btn {
+      flex: 1; padding: 12px; border-radius: 14px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.2s; font-weight: 600;
+    }
+    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .result-box {
+      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; display: none;
+    }
+    .result-box.show { display: block; }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
+    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+    .loading-text { font-size: 14px; color: var(--dim); }
+    .upgrade-box {
+      margin-top: 20px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 16px; padding: 16px; text-align: center;
+    }
+    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.6; }
+    .upgrade-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; border-radius: 12px; padding: 12px 24px;
+      color: white; font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">เลขศาสตร์</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+</div>
+
+<div class="page-content">
+  <div class="reading-hero">
+    <div class="reading-icon"><img src="../images/icon-numerology.png" alt="เลขศาสตร์"></div>
+    <div class="reading-title">เลขศาสตร์</div>
+    <div class="reading-ref">📖 อ้างอิง: Pythagorean + Chaldean Numerology</div>
+    <div class="reading-desc">ตัวเลขในชีวิตซ่อนความหมายลึกกว่าที่คิด กรอกข้อมูลเพื่อเปิดเผยชะตาค่ะ</div>
+  </div>
+
+  <div class="form-box">
+    <label class="form-label">📝 ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
+    <input class="form-input" id="fullname" type="text" placeholder="เช่น Ukrit Prasert">
+    <label class="form-label">📅 วันเดือนปีเกิด (พ.ศ.)</label>
+    <div class="form-row">
+      <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
+      <input class="form-input" id="month" type="number" placeholder="เดือน" min="1" max="12">
+      <input class="form-input" id="year" type="number" placeholder="ปี พ.ศ.">
+    </div>
+  </div>
+
+  <div class="tier-toggle">
+    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
+    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">
+    🔢 วิเคราะห์เลขศาสตร์
+  </button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-header">
+      <span>🔮</span>
+      <div class="result-title">ผลการวิเคราะห์เลขศาสตร์</div>
+    </div>
+    <div class="result-text" id="resultText"></div>
+    <div class="upgrade-box" id="upgradeBox" style="display:none">
+      <div class="upgrade-text">✨ อยากรู้ลึกกว่านี้?<br>อัปเกรดพรีเมียมเพื่อดูครบทุกเลข อดีต/ปัจจุบัน/อนาคต ทุกช่วงอายุ</div>
+      <button class="upgrade-btn" onclick="window.location.href='../pages/premium.html'">👑 สมัครพรีเมียม 99 บาท/เดือน</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTier = 'free';
+
+function setTier(tier) {
+  currentTier = tier;
+  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
+  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+}
+
+async function startReading() {
+  const name = document.getElementById('fullname').value.trim();
+  const day = document.getElementById('day').value;
+  const month = document.getElementById('month').value;
+  const year = document.getElementById('year').value;
+
+  if (!name || !day || !month || !year) {
+    alert('กรุณากรอกข้อมูลให้ครบค่ะ'); return;
+  }
+
+  const btn = document.getElementById('readBtn');
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
+  const upgradeBox = document.getElementById('upgradeBox');
+
+  btn.disabled = true;
+  upgradeBox.style.display = 'none';
+  resultBox.classList.add('show');
+  resultText.innerHTML = `
+    <div class="loading">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">AI กำลังวิเคราะห์เลขศาสตร์...</div>
+    </div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  const isPremium = currentTier === 'premium';
+  const yearAD = parseInt(year) - 543;
+
+  const systemPrompt = `คุณคือหมอดูเลขศาสตร์ระดับปรมาจารย์ที่มีประสบการณ์มากกว่า 30 ปี อ้างอิงตำรา Pythagorean และ Chaldean Numerology
+กฎที่ต้องทำตามทุกข้อ:
+- ห้ามสอนวิธีคำนวณ ห้ามอธิบายทฤษฎี
+- ให้ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
+- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษแม้แต่คำเดียว
+- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
+- พูดเหมือนหมอดูจริงๆ ที่เห็นชะตาชีวิตของคนๆ นี้ชัดเจน
+- ปิดท้ายด้วยกำลังใจและช่วงอายุที่ดาวให้คุณ`;
+
+  const prompt = isPremium
+    ? `ทำนายดวงเลขศาสตร์แบบพรีเมียมละเอียดมาก สำหรับ:
+ชื่อ: ${name}
+วันเกิด: ${day}/${month}/${yearAD}
+
+ต้องบอกครบดังนี้:
+1. แจ้งตำราอ้างอิงและเลขประจำตัวทุกตัว
+2. ทำนายดวงจากเลขชีวิตหลัก
+3. ทำนายดวงจากเลขแสดงออกจากชื่อ
+4. ทำนายดวงจากเลขแรงปรารถนา
+5. ทำนายดวงจากเลขบุคลิก
+6. อดีต — วัยเด็กถึงปัจจุบัน ละเอียดทุกช่วงวัย
+7. ปัจจุบัน — ดวงตอนนี้ทุกด้าน
+8. อนาคต — ทุกช่วงอายุจนถึงวัยชรา
+9. แนะนำการดำเนินชีวิต การงาน การเงิน ความรัก สุขภาพ
+10. เลขมงคล สีมงคล วันมงคลส่วนตัว
+11. สิ่งที่ต้องระวังในชีวิต
+12. ช่วงอายุที่ดาวให้คุณมากที่สุด`
+    : `ทำนายดวงเลขศาสตร์แบบฟรีสั้นๆ สำหรับ:
+ชื่อ: ${name}
+วันเกิด: ${day}/${month}/${yearAD}
+
+บอกแค่:
+1. แจ้งตำราอ้างอิง
+2. ทำนายดวงจากเลขชีวิตหลัก 3-4 บรรทัด
+3. ดวงปี 2569 สั้นๆ
+4. ภาพรวมชะตา 3-4 บรรทัด
+5. สิ่งที่ต้องระวัง 1 อย่าง`;
+
+  try {
+    const res = await fetch('/.netlify/functions/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: isPremium ? 4000 : 500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || 'ไม่สามารถวิเคราะห์ได้ค่ะ';
+    resultText.textContent = text;
+
+    if (!isPremium) {
+      upgradeBox.style.display = 'block';
+    }
+
+  } catch (e) {
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
+    console.error(e);
+  }
+
+  btn.disabled = false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+});
+</script>
+</body>
+</html>
