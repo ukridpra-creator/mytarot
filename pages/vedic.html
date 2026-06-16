@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เวทย์มนตร์อินเดีย — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 40px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+    .reading-hero { text-align: center; padding: 16px 0 24px; }
+    .reading-icon {
+      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
+      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
+    }
+    .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+    .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .form-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; color: white; font-size: 15px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; margin-bottom: 14px;
+    }
+    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-row .form-input, .form-row2 .form-input { margin-bottom: 0; }
+    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tier-btn {
+      flex: 1; padding: 12px; border-radius: 14px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.2s; font-weight: 600;
+    }
+    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .result-box {
+      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; display: none;
+    }
+    .result-box.show { display: block; }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
+    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: var(--purple-light); margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0; }
+    }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+    .loading-text { font-size: 14px; color: var(--dim); }
+    .upgrade-box {
+      margin-top: 20px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 16px; padding: 20px; text-align: center;
+      display: none;
+    }
+    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
+    .upgrade-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; border-radius: 12px; padding: 12px 24px;
+      color: white; font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">เวทย์มนตร์อินเดีย</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+</div>
+
+<div class="page-content">
+  <div class="reading-hero">
+    <div class="reading-icon"><img src="../images/icon-vedic.png" alt="เวทย์มนตร์อินเดีย"></div>
+    <div class="reading-title">เวทย์มนตร์อินเดีย</div>
+    <div class="reading-ref">📖 อ้างอิง: Brihat Parashara Hora Shastra</div>
+    <div class="reading-desc">ศาสตร์โหราศาสตร์ที่ศักดิ์สิทธิ์ที่สุดของอินเดีย อ้างอิงตำแหน่งดาวจริงค่ะ</div>
+  </div>
+
+  <div class="form-box">
+    <label class="form-label">📅 วันเดือนปีเกิด (พ.ศ.)</label>
+    <div class="form-row">
+      <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
+      <input class="form-input" id="month" type="number" placeholder="เดือน" min="1" max="12">
+      <input class="form-input" id="year" type="number" placeholder="ปี พ.ศ.">
+    </div>
+    <label class="form-label" style="margin-top:14px">⏰ เวลาเกิด</label>
+    <div class="form-row2">
+      <input class="form-input" id="hour" type="number" placeholder="ชั่วโมง (0-23)" min="0" max="23">
+      <input class="form-input" id="minute" type="number" placeholder="นาที (0-59)" min="0" max="59">
+    </div>
+    <label class="form-label" style="margin-top:14px">📍 จังหวัดที่เกิด</label>
+    <input class="form-input" id="province" type="text" placeholder="เช่น กรุงเทพมหานคร">
+  </div>
+
+  <div class="tier-toggle">
+    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
+    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">
+    🕉️ วิเคราะห์เวทย์มนตร์อินเดีย
+  </button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-header">
+      <span>🔮</span>
+      <div class="result-title">ผลการวิเคราะห์เวทย์มนตร์อินเดีย</div>
+    </div>
+    <div class="result-text" id="resultText"></div>
+    <div class="upgrade-box" id="upgradeBox">
+      <div class="upgrade-text">
+        ✨ อยากรู้ลึกกว่านี้?<br>
+        อัปเกรดพรีเมียมเพื่อดูดวงครบทุกด้าน<br>
+        อดีต/ปัจจุบัน/อนาคต ทุกช่วงอายุ
+      </div>
+      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
+        👑 สมัครพรีเมียม 99 บาท/เดือน
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentTier = 'free';
+
+function setTier(tier) {
+  currentTier = tier;
+  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
+  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+}
+
+async function startReading() {
+  const day = document.getElementById('day').value;
+  const month = document.getElementById('month').value;
+  const year = document.getElementById('year').value;
+  const hour = document.getElementById('hour').value;
+  const minute = document.getElementById('minute').value;
+  const province = document.getElementById('province').value.trim() || 'กรุงเทพมหานคร';
+
+  if (!day || !month || !year) {
+    alert('กรุณากรอกวันเดือนปีเกิดให้ครบค่ะ'); return;
+  }
+
+  const btn = document.getElementById('readBtn');
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
+  const upgradeBox = document.getElementById('upgradeBox');
+
+  btn.disabled = true;
+  upgradeBox.style.display = 'none';
+  resultBox.classList.add('show');
+  resultText.innerHTML = `
+    <div class="loading">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">AI กำลังคำนวณดวงดาวอินเดีย...</div>
+    </div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  const isPremium = currentTier === 'premium';
+  const yearAD = parseInt(year) - 543;
+  const timeInfo = hour !== '' ? `เวลา ${hour}:${minute || '00'} น.` : 'ไม่ทราบเวลาเกิด';
+
+  const systemPrompt = `คุณคือผู้เชี่ยวชาญโหราศาสตร์อินเดีย Jyotish อ้างอิง Brihat Parashara Hora Shastra
+กฎที่ต้องทำตามทุกข้อ:
+- ทำนายดวงชะตาโดยตรง เหมือนโหรนั่งอ่านดวงให้ฟัง
+- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษ
+- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
+- ห้ามใช้ markdown ห้ามใช้ # ## ** ใช้แค่ตัวเลขและข้อความธรรมดา
+- แต่ละหัวข้อเขียนกระชับ 3-4 ประโยค ให้จบในตัวเอง ไม่ตัดกลางคัน
+- พูดเหมือนโหรจริงๆ ที่เห็นดวงชะตาชัดเจน`;
+
+  const freePrompt = `ทำนายดวงเวทย์มนตร์อินเดีย สำหรับ:
+วันเกิด: ${day}/${month}/${yearAD} ${timeInfo}
+จังหวัดที่เกิด: ${province}
+
+บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อกระชับ 3-4 ประโยค เขียนให้จบ:
+
+1. ราศี นักษัตร และลัคนา
+2. ดวงภาพรวมปี 2569
+3. ดาวดีที่กำลังส่งผลตอนนี้
+4. สิ่งที่ต้องระวัง`;
+
+  const premiumPrompt = `ทำนายดวงเวทย์มนตร์อินเดียแบบพรีเมียมละเอียด สำหรับ:
+วันเกิด: ${day}/${month}/${yearAD} ${timeInfo}
+จังหวัดที่เกิด: ${province}
+
+บอกครบ 12 หัวข้อนี้ แต่ละหัวข้อกระชับ 3-4 ประโยค เขียนให้จบ:
+
+1. ราศี นักษัตร และลัคนา
+2. แผนที่ดาวเคราะห์ทั้ง 9 ดวง อยู่ราศีไหน ส่งผลอะไร
+3. ดาศา — ช่วงมหาดาศาปัจจุบัน
+4. อดีต — วัยเด็กถึงปัจจุบัน
+5. ปัจจุบัน — ดวงตอนนี้ทุกด้าน
+6. อนาคต — ดวง 3 ปีข้างหน้า
+7. การงาน — ทำนายและแนะนำ
+8. การเงิน — ทำนายและแนะนำ
+9. ความรัก — ทำนายและแนะนำ
+10. สุขภาพ — ทำนายและแนะนำ
+11. ช่วงอายุที่ดาวให้คุณมากที่สุด
+12. การเสริมดวงตามแบบอินเดีย และสิ่งที่ต้องระวัง`;
+
+  try {
+    const res = await fetch('/.netlify/functions/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: isPremium ? 4000 : 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
+      })
+    });
+
+    // Streaming — อ่านทีละ chunk
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+
+    resultText.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      text += chunk;
+      resultText.textContent = text;
+      resultText.appendChild(cursor);
+      resultBox.scrollTop = resultBox.scrollHeight;
+    }
+
+    cursor.remove();
+    resultText.textContent = text;
+
+    if (!isPremium) {
+      upgradeBox.style.display = 'block';
+    }
+
+  } catch (e) {
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
+    console.error(e);
+  }
+
+  btn.disabled = false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+});
+</script>
+</body>
+</html>

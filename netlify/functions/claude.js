@@ -37,11 +37,9 @@ exports.handler = async (event) => {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split('\n');
       buffer = lines.pop();
-
       for (const line of lines) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6).trim();
@@ -60,11 +58,9 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain; charset=utf-8'
       },
-      body: JSON.stringify({
-        content: [{ type: 'text', text: fullText }]
-      })
+      body: fullText
     };
 
   } catch (err) {
