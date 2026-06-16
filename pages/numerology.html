@@ -23,7 +23,7 @@
     }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 24px 20px 40px; }
-    .reading-hero { text-align: center; padding: 16px 0 28px; }
+    .reading-hero { text-align: center; padding: 16px 0 24px; }
     .reading-icon {
       width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
       margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
@@ -89,15 +89,17 @@
       margin-top: 20px;
       background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
       border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 16px; padding: 16px; text-align: center;
+      border-radius: 16px; padding: 20px; text-align: center;
     }
-    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.6; }
+    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
     .upgrade-btn {
       background: linear-gradient(135deg, #7c3aed, #ec4899);
       border: none; border-radius: 12px; padding: 12px 24px;
       color: white; font-size: 14px; font-weight: 700;
       font-family: 'Sarabun', sans-serif; cursor: pointer;
+      transition: all 0.2s;
     }
+    .upgrade-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
   </style>
 </head>
 <body>
@@ -118,7 +120,7 @@
 
   <div class="form-box">
     <label class="form-label">📝 ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
-    <input class="form-input" id="fullname" type="text" placeholder="เช่น Ukrit Prasert">
+    <input class="form-input" id="fullname" type="text" placeholder="เช่น Somsak Jaidee">
     <label class="form-label">📅 วันเดือนปีเกิด (พ.ศ.)</label>
     <div class="form-row">
       <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
@@ -143,8 +145,14 @@
     </div>
     <div class="result-text" id="resultText"></div>
     <div class="upgrade-box" id="upgradeBox" style="display:none">
-      <div class="upgrade-text">✨ อยากรู้ลึกกว่านี้?<br>อัปเกรดพรีเมียมเพื่อดูครบทุกเลข อดีต/ปัจจุบัน/อนาคต ทุกช่วงอายุ</div>
-      <button class="upgrade-btn" onclick="window.location.href='../pages/premium.html'">👑 สมัครพรีเมียม 99 บาท/เดือน</button>
+      <div class="upgrade-text">
+        ✨ อยากรู้ลึกกว่านี้?<br>
+        อัปเกรดพรีเมียมเพื่อดูครบทุกเลข อดีต/ปัจจุบัน/อนาคต<br>
+        ทุกช่วงอายุ แนะนำการดำเนินชีวิตรายด้าน
+      </div>
+      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
+        👑 สมัครพรีเมียม 99 บาท/เดือน
+      </button>
     </div>
   </div>
 </div>
@@ -156,6 +164,8 @@ function setTier(tier) {
   currentTier = tier;
   document.getElementById('tierFree').classList.toggle('active', tier === 'free');
   document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+  document.getElementById('readBtn').textContent = 
+    tier === 'free' ? '🔢 วิเคราะห์เลขศาสตร์ (ฟรี)' : '💎 วิเคราะห์แบบพรีเมียม';
 }
 
 async function startReading() {
@@ -186,43 +196,52 @@ async function startReading() {
   const isPremium = currentTier === 'premium';
   const yearAD = parseInt(year) - 543;
 
-  const systemPrompt = `คุณคือหมอดูเลขศาสตร์ระดับปรมาจารย์ที่มีประสบการณ์มากกว่า 30 ปี อ้างอิงตำรา Pythagorean และ Chaldean Numerology
+  const systemPrompt = `คุณคือหมอดูเลขศาสตร์ระดับปรมาจารย์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology
 กฎที่ต้องทำตามทุกข้อ:
 - ห้ามสอนวิธีคำนวณ ห้ามอธิบายทฤษฎี
-- ให้ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
+- ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
 - ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษแม้แต่คำเดียว
+- ห้ามแปลชื่อเป็นภาษาไทย ให้ใช้ชื่อตามที่กรอกมาเท่านั้น
 - ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
-- พูดเหมือนหมอดูจริงๆ ที่เห็นชะตาชีวิตของคนๆ นี้ชัดเจน
-- ปิดท้ายด้วยกำลังใจและช่วงอายุที่ดาวให้คุณ`;
+- แต่ละหัวข้อต้องเขียนให้จบในตัวเอง ไม่ตัดกลางคัน
+- พูดเหมือนหมอดูจริงๆ ที่เห็นชะตาชีวิตชัดเจน`;
 
-  const prompt = isPremium
-    ? `ทำนายดวงเลขศาสตร์แบบพรีเมียมละเอียดมาก สำหรับ:
+  const freePrompt = `ทำนายดวงเลขศาสตร์ฟรี สำหรับ:
 ชื่อ: ${name}
 วันเกิด: ${day}/${month}/${yearAD}
 
-ต้องบอกครบดังนี้:
-1. แจ้งตำราอ้างอิงและเลขประจำตัวทุกตัว
+บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบ ไม่ตัดกลางคัน:
+
+1. ตำราอ้างอิงและเลขชีวิตหลัก
+บอกว่าอ้างอิงตำราอะไร เลขชีวิตหลักคือเลขอะไร และทำนายความหมายของเลขนี้ให้ชัดเจน
+
+2. ดวงปี 2569
+ทำนายดวงชะตาในปี 2569 ว่าจะเป็นอย่างไร
+
+3. ภาพรวมชะตา
+ทำนายภาพรวมชะตาชีวิตจากเลขศาสตร์
+
+4. สิ่งที่ต้องระวัง
+บอกสิ่งที่ต้องระวังในชีวิต`;
+
+  const premiumPrompt = `ทำนายดวงเลขศาสตร์แบบพรีเมียมละเอียดมาก สำหรับ:
+ชื่อ: ${name}
+วันเกิด: ${day}/${month}/${yearAD}
+
+บอกครบ 12 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบในตัวเอง ไม่ตัดกลางคัน:
+
+1. ตำราอ้างอิงและเลขประจำตัวทุกตัว
 2. ทำนายดวงจากเลขชีวิตหลัก
-3. ทำนายดวงจากเลขแสดงออกจากชื่อ
-4. ทำนายดวงจากเลขแรงปรารถนา
-5. ทำนายดวงจากเลขบุคลิก
+3. ทำนายดวงจากเลขแสดงออก (จากชื่อ)
+4. ทำนายดวงจากเลขแรงปรารถนา (จากสระในชื่อ)
+5. ทำนายดวงจากเลขบุคลิก (จากพยัญชนะในชื่อ)
 6. อดีต — วัยเด็กถึงปัจจุบัน ละเอียดทุกช่วงวัย
 7. ปัจจุบัน — ดวงตอนนี้ทุกด้าน
 8. อนาคต — ทุกช่วงอายุจนถึงวัยชรา
-9. แนะนำการดำเนินชีวิต การงาน การเงิน ความรัก สุขภาพ
-10. เลขมงคล สีมงคล วันมงคลส่วนตัว
-11. สิ่งที่ต้องระวังในชีวิต
-12. ช่วงอายุที่ดาวให้คุณมากที่สุด`
-    : `ทำนายดวงเลขศาสตร์แบบฟรีสั้นๆ สำหรับ:
-ชื่อ: ${name}
-วันเกิด: ${day}/${month}/${yearAD}
-
-บอกแค่:
-1. แจ้งตำราอ้างอิง
-2. ทำนายดวงจากเลขชีวิตหลัก 3-4 บรรทัด
-3. ดวงปี 2569 สั้นๆ
-4. ภาพรวมชะตา 3-4 บรรทัด
-5. สิ่งที่ต้องระวัง 1 อย่าง`;
+9. การงาน — ทำนายและแนะนำ
+10. การเงิน — ทำนายและแนะนำ
+11. ความรักและสุขภาพ — ทำนายและแนะนำ
+12. เลขมงคล สีมงคล วันมงคล และสิ่งที่ต้องระวัง`;
 
   try {
     const res = await fetch('/.netlify/functions/claude', {
@@ -230,9 +249,9 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: isPremium ? 4000 : 500,
+        max_tokens: isPremium ? 3000 : 600,
         system: systemPrompt,
-        messages: [{ role: 'user', content: prompt }]
+        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
       })
     });
 
