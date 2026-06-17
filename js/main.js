@@ -26,7 +26,7 @@ document.querySelectorAll('.nav-item').forEach((item, i) => {
 
 // Coins (เก็บใน localStorage)
 function getCoins() {
-  return parseInt(localStorage.getItem('coins') || '20');
+  return parseInt(localStorage.getItem('coins') || '500');
 }
 function setCoins(n) {
   localStorage.setItem('coins', n);
