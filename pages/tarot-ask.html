@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ถามอะไรก็ได้ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+
+    /* คำถาม */
+    .question-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 20px;
+    }
+    .question-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .question-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; resize: none;
+    }
+    .question-input:focus { border-color: var(--purple-light); }
+    .question-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    /* Slots */
+    .slots-section { margin-bottom: 20px; }
+    .slots-title { font-size: 13px; color: var(--dim); text-align: center; margin-bottom: 12px; }
+    .slots-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+    .slot {
+      width: 80px; aspect-ratio: 2/3;
+      background: rgba(124,58,237,0.08);
+      border: 2px dashed rgba(124,58,237,0.3);
+      border-radius: 12px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .slot.filled {
+      border: 2px solid rgba(124,58,237,0.6);
+      background: rgba(124,58,237,0.15);
+      cursor: pointer;
+    }
+    .slot.filled:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+    .slot-num { font-size: 11px; color: var(--dim); }
+    .slot-label { font-size: 10px; color: var(--purple-light); margin-top: 2px; }
+    .slot-card-img {
+      width: 100%; height: 100%; object-fit: cover;
+      position: absolute; inset: 0; border-radius: 10px;
+    }
+    .slot-card-name {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      padding: 16px 4px 4px; text-align: center;
+      font-size: 9px; color: white; font-weight: 700; line-height: 1.2;
+    }
+    .slot-remove {
+      position: absolute; top: 4px; right: 4px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(239,68,68,0.8); color: white;
+      font-size: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; z-index: 10;
+    }
+    .slots-hint { text-align: center; font-size: 11px; color: var(--dim); }
+
+    /* ไพ่ทั้งหมด */
+    .cards-section { margin-bottom: 24px; }
+    .cards-title {
+      font-size: 13px; color: var(--gold); font-weight: 700;
+      margin-bottom: 12px; text-align: center;
+    }
+    .cards-scroll {
+      display: flex; gap: 8px; overflow-x: auto;
+      padding-bottom: 8px; scroll-snap-type: x mandatory;
+    }
+    .cards-scroll::-webkit-scrollbar { height: 4px; }
+    .cards-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 2px; }
+    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 2px; }
+    .card-item {
+      width: 64px; aspect-ratio: 2/3; flex-shrink: 0;
+      border-radius: 10px; overflow: hidden; cursor: pointer;
+      scroll-snap-align: start; transition: all 0.2s;
+      border: 2px solid transparent; position: relative;
+    }
+    .card-item:hover { transform: translateY(-4px); border-color: var(--purple-light); }
+    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .card-back {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #1e0a4a, #2d1470, #1e0a4a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; border-radius: 8px;
+    }
+    .card-back-pattern {
+      position: absolute; inset: 4px;
+      border: 1px solid rgba(168,85,247,0.3); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-back-star { font-size: 16px; opacity: 0.6; }
+
+    /* ปุ่มทำนาย */
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ผลทำนาย */
+    .result-box {
+      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; display: none;
+    }
+    .result-box.show { display: block; }
+
+    .result-cards { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
+    .result-card { text-align: center; flex: 1; max-width: 90px; }
+    .result-card-face {
+      aspect-ratio: 2/3; border-radius: 12px; overflow: hidden;
+      margin-bottom: 6px; border: 2px solid rgba(124,58,237,0.4);
+      background: linear-gradient(135deg, #1e0a4a, #2d1470);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .result-card-name { font-size: 11px; color: var(--gold); font-weight: 700; }
+    .result-card-pos { font-size: 10px; color: var(--dim); }
+
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
+    .result-text {
+      font-size: 14px; line-height: 2; color: var(--text); white-space: pre-wrap;
+    }
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: var(--purple-light); margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+    .loading-text { font-size: 14px; color: var(--dim); }
+
+    .free-count {
+      text-align: center; font-size: 12px; color: var(--dim); margin-bottom: 8px;
+    }
+    .free-count span { color: var(--purple-light); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="tarot.html" class="back-btn">←</a>
+  <div class="page-title">ถามอะไรก็ได้</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+</div>
+
+<div class="page-content">
+
+  <!-- คำถาม -->
+  <div class="question-box">
+    <label class="question-label">💭 คำถามในใจ (ถ้าไม่กรอก ไพ่จะบอกเองค่ะ)</label>
+    <textarea class="question-input" id="question" rows="3"
+      placeholder="เช่น ความรักช่วงนี้จะเป็นยังไง? หรือควรเปลี่ยนงานไหม?"></textarea>
+  </div>
+
+  <!-- Slots -->
+  <div class="slots-section">
+    <div class="slots-title">✨ ไพ่ที่เลือก</div>
+    <div class="slots-row">
+      <div class="slot" id="slot0">
+        <div class="slot-num">1</div>
+        <div class="slot-label">อดีต</div>
+      </div>
+      <div class="slot" id="slot1">
+        <div class="slot-num">2</div>
+        <div class="slot-label">ปัจจุบัน</div>
+      </div>
+      <div class="slot" id="slot2">
+        <div class="slot-num">3</div>
+        <div class="slot-label">อนาคต</div>
+      </div>
+    </div>
+    <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก • กดไพ่ใน slot เพื่อเอาออก</div>
+  </div>
+
+  <!-- ไพ่ทั้งหมด -->
+  <div class="cards-section">
+    <div class="cards-title">🃏 เลือกไพ่ที่ดึงดูดใจค่ะ</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+  </div>
+
+  <!-- ปุ่มทำนาย -->
+  <div class="free-count">เหลือวันนี้: <span id="freeCount">3</span>/3 ครั้ง</div>
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>
+    🔮 ให้ไพ่ทำนาย
+  </button>
+
+  <!-- ผลทำนาย -->
+  <div class="result-box" id="resultBox">
+    <div class="result-cards" id="resultCards"></div>
+    <div class="result-header">
+      <span>🔮</span>
+      <div class="result-title">ไพ่บอกว่า...</div>
+    </div>
+    <div class="result-text" id="resultText"></div>
+  </div>
+
+</div>
+
+<script>
+const TAROT = [
+  {id:0,name:'The Fool',thai:'เดอะฟูล',emoji:'🌟'},
+  {id:1,name:'The Magician',thai:'เดอะเมจิเชียน',emoji:'🎩'},
+  {id:2,name:'The High Priestess',thai:'ไฮไพรเอสเตส',emoji:'🌙'},
+  {id:3,name:'The Empress',thai:'เดอะเอมเพรส',emoji:'👑'},
+  {id:4,name:'The Emperor',thai:'เดอะเอมเพอเรอร์',emoji:'⚔️'},
+  {id:5,name:'The Hierophant',thai:'เดอะไฮเอโรแฟนต์',emoji:'📿'},
+  {id:6,name:'The Lovers',thai:'เดอะเลิฟเวอร์ส',emoji:'❤️'},
+  {id:7,name:'The Chariot',thai:'เดอะชาริออต',emoji:'🏆'},
+  {id:8,name:'Strength',thai:'สเตรงธ์',emoji:'🦁'},
+  {id:9,name:'The Hermit',thai:'เดอะเฮอร์มิต',emoji:'🕯️'},
+  {id:10,name:'Wheel of Fortune',thai:'วีลออฟฟอร์จูน',emoji:'☸️'},
+  {id:11,name:'Justice',thai:'จัสทิส',emoji:'⚖️'},
+  {id:12,name:'The Hanged Man',thai:'เดอะแฮงด์แมน',emoji:'🙃'},
+  {id:13,name:'Death',thai:'เดธ',emoji:'🌹'},
+  {id:14,name:'Temperance',thai:'เทมเพอแรนซ์',emoji:'🌈'},
+  {id:15,name:'The Devil',thai:'เดอะเดวิล',emoji:'😈'},
+  {id:16,name:'The Tower',thai:'เดอะทาวเวอร์',emoji:'⚡'},
+  {id:17,name:'The Star',thai:'เดอะสตาร์',emoji:'⭐'},
+  {id:18,name:'The Moon',thai:'เดอะมูน',emoji:'🌕'},
+  {id:19,name:'The Sun',thai:'เดอะซัน',emoji:'☀️'},
+  {id:20,name:'Judgement',thai:'จัดจ์เมนต์',emoji:'🎺'},
+  {id:21,name:'The World',thai:'เดอะเวิลด์',emoji:'🌍'},
+];
+
+let shuffled = [];
+let selectedCards = [];
+const positions = ['อดีต','ปัจจุบัน','อนาคต'];
+
+function shuffle() {
+  shuffled = [...TAROT].sort(() => Math.random() - 0.5);
+  renderCards();
+}
+
+function renderCards() {
+  const scroll = document.getElementById('cardsScroll');
+  scroll.innerHTML = shuffled.map((card, i) => {
+    const isSelected = selectedCards.find(s => s.id === card.id);
+    return `
+      <div class="card-item ${isSelected ? 'selected' : ''}" onclick="selectCard(${i})" title="${card.thai}">
+        <div class="card-back">
+          <div class="card-back-pattern">
+            <div class="card-back-star">✦</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function selectCard(idx) {
+  if (selectedCards.length >= 3) return;
+  const card = shuffled[idx];
+  if (selectedCards.find(s => s.id === card.id)) return;
+
+  selectedCards.push(card);
+  updateSlots();
+  renderCards();
+
+  if (selectedCards.length === 3) {
+    document.getElementById('readBtn').disabled = false;
+  }
+}
+
+function removeCard(slotIdx) {
+  selectedCards.splice(slotIdx, 1);
+  updateSlots();
+  renderCards();
+  document.getElementById('readBtn').disabled = true;
+}
+
+function updateSlots() {
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`slot${i}`);
+    if (selectedCards[i]) {
+      const card = selectedCards[i];
+      slot.className = 'slot filled';
+      slot.onclick = () => removeCard(i);
+      slot.innerHTML = `
+        <div class="slot-remove">✕</div>
+        <div style="font-size:28px">${card.emoji}</div>
+        <div class="slot-card-name">${card.thai}</div>
+      `;
+    } else {
+      slot.className = 'slot';
+      slot.onclick = null;
+      slot.innerHTML = `
+        <div class="slot-num">${i+1}</div>
+        <div class="slot-label">${positions[i]}</div>
+      `;
+    }
+  }
+}
+
+async function startReading() {
+  if (selectedCards.length < 3) return;
+
+  const freeCount = parseInt(localStorage.getItem('tarotFreeCount') || '3');
+  const lastDate = localStorage.getItem('tarotFreeDate') || '';
+  const today = new Date().toDateString();
+
+  if (lastDate !== today) {
+    localStorage.setItem('tarotFreeCount', '3');
+    localStorage.setItem('tarotFreeDate', today);
+  }
+
+  const remaining = parseInt(localStorage.getItem('tarotFreeCount') || '3');
+  if (remaining <= 0) {
+    alert('หมดสิทธิ์ฟรีวันนี้แล้วค่ะ กลับมาใหม่พรุ่งนี้ หรืออัปเกรดพรีเมียมค่ะ');
+    return;
+  }
+
+  localStorage.setItem('tarotFreeCount', String(remaining - 1));
+  document.getElementById('freeCount').textContent = remaining - 1;
+
+  const question = document.getElementById('question').value.trim();
+  const btn = document.getElementById('readBtn');
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
+  const resultCards = document.getElementById('resultCards');
+
+  btn.disabled = true;
+  resultBox.classList.add('show');
+
+  resultCards.innerHTML = selectedCards.map((card, i) => `
+    <div class="result-card">
+      <div class="result-card-face">${card.emoji}</div>
+      <div class="result-card-name">${card.thai}</div>
+      <div class="result-card-pos">${positions[i]}</div>
+    </div>
+  `).join('');
+
+  resultText.innerHTML = `
+    <div class="loading">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">ไพ่กำลังบอกความลับ...</div>
+    </div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.thai} (${c.name})`).join(', ');
+  const prompt = `ทำนายไพ่ทาโรต์แบบหมอดู Gen Z สนุก เป็นกันเอง
+${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้บอกสิ่งที่ไพ่อยากบอก'}
+ไพ่ที่จั่วได้: ${cardInfo}
+
+พูดแบบหมอดู Gen Z เรียกว่า "คุณพี่" น้องทักทายก่อน แล้วทำนายจากไพ่ทั้ง 3 ใบ เชื่อมโยงกัน บอกอดีต ปัจจุบัน อนาคต และคำแนะนำ ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย`;
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z สนุก เป็นกันเอง ใช้ภาษาพูดไทย เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดตรงๆ มีพลังงาน ให้กำลังใจ ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+
+    resultText.textContent = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      resultText.textContent = text;
+      resultText.appendChild(cursor);
+    }
+
+    cursor.remove();
+    resultText.textContent = text;
+
+  } catch(e) {
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    console.error(e);
+  }
+
+  btn.disabled = false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+
+  const lastDate = localStorage.getItem('tarotFreeDate') || '';
+  const today = new Date().toDateString();
+  if (lastDate !== today) {
+    localStorage.setItem('tarotFreeCount', '3');
+    localStorage.setItem('tarotFreeDate', today);
+  }
+  document.getElementById('freeCount').textContent = localStorage.getItem('tarotFreeCount') || '3';
+
+  shuffle();
+});
+</script>
+</body>
+</html>
