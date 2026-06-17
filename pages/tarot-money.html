@@ -410,7 +410,7 @@ async function acceptReading() {
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 2000,
+        model: 'claude-sonnet-4-6', max_tokens: 3000,
         system: `คุณคือหมอดูไพ่ทาโรต์ด้านการเงิน Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เน้นการเงินและการบริหารเงิน ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย`,
         messages: [{ role: 'user', content: prompt }]
       })
