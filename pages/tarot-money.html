@@ -346,7 +346,7 @@ function updateSlots() {
 
 function startReading() {
   if (selectedCards.length < MAX_CARDS) return;
-  const coins = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
   if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
   localStorage.setItem('coins', String(coins - 20));
   document.getElementById('coinCount').textContent = coins - 20;
