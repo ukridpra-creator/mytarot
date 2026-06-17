@@ -474,7 +474,7 @@ async function acceptReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        max_tokens: 3000,
         system: `คุณคือหมอดูไพ่ทาโรต์ด้านความรัก Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เน้นความรักและความสัมพันธ์ ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role: 'user', content: prompt }]
       })
