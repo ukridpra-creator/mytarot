@@ -238,7 +238,7 @@
     <div class="result-cards-row" id="resultRow2"></div>
     <div class="result-header"><span>❤️</span><div class="result-title">ดวงความรักบอกว่า...</div></div>
     <div class="result-text" id="resultText"></div>
-    <div class="result-text" id="resultText"></div>
+    
 
 <!-- ถามต่อ -->
 <div class="followup-box" id="followupBox" style="display:none">
@@ -399,7 +399,7 @@ function updateSlots() {
 function startReading() {
   if (selectedCards.length < MAX_CARDS) return;
 
-  const coins = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
   if (coins < 20) {
     alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญ หรืออัปเกรดพรีเมียมค่ะ');
     return;
@@ -590,7 +590,7 @@ async function askFollowup() {
   btn.disabled = false;
 }
 
-</script>
+
 </script>
 </body>
 </html>
