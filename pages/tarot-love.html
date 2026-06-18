@@ -238,6 +238,18 @@
     <div class="result-cards-row" id="resultRow2"></div>
     <div class="result-header"><span>❤️</span><div class="result-title">ดวงความรักบอกว่า...</div></div>
     <div class="result-text" id="resultText"></div>
+    <div class="result-text" id="resultText"></div>
+
+<!-- ถามต่อ -->
+<div class="followup-box" id="followupBox" style="display:none">
+  <div class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+  <textarea class="followup-input" id="followupInput" rows="2" 
+    placeholder="เช่น แล้วคนที่เรานึกถึงอ่ะ เค้าชอบเราไหม?"></textarea>
+  <button class="followup-btn" onclick="askFollowup()">
+    ถามต่อ 🪙 5 เหรียญ
+  </button>
+  <div class="followup-result" id="followupResult"></div>
+</div>
   </div>
 </div>
 
@@ -497,6 +509,8 @@ async function acceptReading() {
     }
     cursor.remove();
     resultText.innerHTML = colorizeReading(text);
+    followupHistory = [];
+document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
@@ -512,6 +526,71 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('coinDisplay').textContent = coins;
   shuffle();
 });
+let followupHistory = [];
+
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+  localStorage.setItem('coins', String(coins - 5));
+  document.getElementById('coinCount').textContent = coins - 5;
+
+  const btn = document.querySelector('.followup-btn');
+  const resultDiv = document.getElementById('followupResult');
+  btn.disabled = true;
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div style="color:var(--gold);font-size:13px;margin-bottom:8px">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.thai} (${c.name})`).join(', ');
+  followupHistory.push({ role: 'user', content: question });
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบคำถามจากไพ่เดิม ตอบสั้นๆ 3-5 บรรทัด ตรงประเด็น มีพลังงาน ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [
+          { role: 'user', content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำทำนายที่บอกไปแล้ว: ${document.getElementById('resultText').innerText}\n\nคำถามเพิ่มเติม: ${question}` },
+          ...followupHistory.slice(-4)
+        ]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'assistant', content: text });
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+
+  input.value = '';
+  btn.disabled = false;
+}
+
+</script>
 </script>
 </body>
 </html>
