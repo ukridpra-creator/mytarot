@@ -395,14 +395,14 @@ async function acceptReading() {
 
   const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.thai} (${c.name})`).join(', ');
   const prompt = `ทำนายดวงสุขภาพจากไพ่ทาโรต์ 3 ใบ ไพ่: ${cardInfo}
-พูดแบบหมอดู Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ทำนายสุขภาพกายและใจ สิ่งที่ต้องระวัง และให้คำแนะนำดูแลตัวเองอย่างละเอียด ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
+พูดแบบหมอดู Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ทำนายสุขภาพกายและใจ สิ่งที่ต้องระวัง และให้คำแนะนำดูแลตัวเองอย่างละเอียด ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษยกเว้นชื่อไพ่ทาโรต์ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6', max_tokens: 3000,
-        system: `คุณคือหมอดูไพ่ทาโรต์ด้านสุขภาพ Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เน้นสุขภาพกายและจิตใจ ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษ ห้ามใช้เลขไทย`,
+        system: `คุณคือหมอดูไพ่ทาโรต์ด้านสุขภาพ Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เน้นสุขภาพกายและจิตใจ ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษยกเว้นชื่อไพ่ทาโรต์ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้เลขไทย`,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -421,7 +421,7 @@ async function acceptReading() {
       resultText.appendChild(cursor);
     }
     cursor.remove();
-    resultText.textContent = text;
+   resultText.innerHTML = colorizeReading(text);
   } catch(e) {
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
