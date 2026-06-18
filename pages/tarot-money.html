@@ -134,7 +134,7 @@
     .result-card-pos { font-size: 9px; color: var(--dim); }
     .result-header { display: flex; align-items: center; gap: 8px; margin: 16px 0 12px; }
     .result-title { font-size: 16px; font-weight: 700; color: #f59e0b; }
-    .result-text { font-size: 14px; line-height: 2; color: var(--text); white-space: pre-wrap; }
+    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
     .cursor {
       display: inline-block; width: 2px; height: 16px;
       background: #f59e0b; margin-left: 2px;
@@ -154,6 +154,35 @@
       50% { transform: translateY(-10px); opacity: 1; }
     }
     .loading-text { font-size: 14px; color: var(--dim); }
+    .followup-box {
+      margin-top: 16px; padding: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+    }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      resize: none; margin-bottom: 10px; box-sizing: border-box;
+    }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn {
+      width: 100%; background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 12px;
+    }
+    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -161,7 +190,7 @@
 <div class="page-header">
   <a href="tarot.html" class="back-btn">←</a>
   <div class="page-title">เจาะลึกการเงิน</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
 </div>
 
 <div class="reveal-overlay" id="revealOverlay">
@@ -198,107 +227,141 @@
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">20</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>
-    💰 อ่านดวงการเงิน
-  </button>
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>💰 อ่านดวงการเงิน</button>
 
   <div class="result-box" id="resultBox">
     <div class="result-cards-row" id="resultRow1"></div>
     <div class="result-cards-row" id="resultRow2"></div>
     <div class="result-header"><span>💰</span><div class="result-title">ดวงการเงินบอกว่า...</div></div>
     <div class="result-text" id="resultText"></div>
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
   </div>
 </div>
 
 <script>
 const TAROT = [
-  {id:0,name:'The Fool',thai:'เดอะฟูล',img:'../images/tarot/0.png'},
-  {id:1,name:'The Magician',thai:'เดอะเมจิเชียน',img:'../images/tarot/1.png'},
-  {id:2,name:'The High Priestess',thai:'ไฮไพรเอสเตส',img:'../images/tarot/2.png'},
-  {id:3,name:'The Empress',thai:'เดอะเอมเพรส',img:'../images/tarot/3.png'},
-  {id:4,name:'The Emperor',thai:'เดอะเอมเพอเรอร์',img:'../images/tarot/4.png'},
-  {id:5,name:'The Hierophant',thai:'เดอะไฮเอโรแฟนต์',img:'../images/tarot/5.png'},
-  {id:6,name:'The Lovers',thai:'เดอะเลิฟเวอร์ส',img:'../images/tarot/6.png'},
-  {id:7,name:'The Chariot',thai:'เดอะชาริออต',img:'../images/tarot/7.png'},
-  {id:8,name:'Strength',thai:'สเตรงธ์',img:'../images/tarot/8.png'},
-  {id:9,name:'The Hermit',thai:'เดอะเฮอร์มิต',img:'../images/tarot/9.png'},
-  {id:10,name:'Wheel of Fortune',thai:'วีลออฟฟอร์จูน',img:'../images/tarot/10.png'},
-  {id:11,name:'Justice',thai:'จัสทิส',img:'../images/tarot/11.png'},
-  {id:12,name:'The Hanged Man',thai:'เดอะแฮงด์แมน',img:'../images/tarot/12.png'},
-  {id:13,name:'Death',thai:'เดธ',img:'../images/tarot/13.png'},
-  {id:14,name:'Temperance',thai:'เทมเพอแรนซ์',img:'../images/tarot/14.png'},
-  {id:15,name:'The Devil',thai:'เดอะเดวิล',img:'../images/tarot/15.png'},
-  {id:16,name:'The Tower',thai:'เดอะทาวเวอร์',img:'../images/tarot/16.png'},
-  {id:17,name:'The Star',thai:'เดอะสตาร์',img:'../images/tarot/17.png'},
-  {id:18,name:'The Moon',thai:'เดอะมูน',img:'../images/tarot/18.png'},
-  {id:19,name:'The Sun',thai:'เดอะซัน',img:'../images/tarot/19.png'},
-  {id:20,name:'Judgement',thai:'จัดจ์เมนต์',img:'../images/tarot/20.png'},
-  {id:21,name:'The World',thai:'เดอะเวิลด์',img:'../images/tarot/21.png'},
-  {id:22,name:'Ace of Wands',thai:'เอซออฟแวนดส์',img:'../images/tarot/w1.png'},
-  {id:23,name:'Two of Wands',thai:'ทูออฟแวนดส์',img:'../images/tarot/w2.png'},
-  {id:24,name:'Three of Wands',thai:'ทรีออฟแวนดส์',img:'../images/tarot/w3.png'},
-  {id:25,name:'Four of Wands',thai:'โฟร์ออฟแวนดส์',img:'../images/tarot/w4.png'},
-  {id:26,name:'Five of Wands',thai:'ไฟว์ออฟแวนดส์',img:'../images/tarot/w5.png'},
-  {id:27,name:'Six of Wands',thai:'ซิกซ์ออฟแวนดส์',img:'../images/tarot/w6.png'},
-  {id:28,name:'Seven of Wands',thai:'เซเว่นออฟแวนดส์',img:'../images/tarot/w7.png'},
-  {id:29,name:'Eight of Wands',thai:'เอทออฟแวนดส์',img:'../images/tarot/w8.png'},
-  {id:30,name:'Nine of Wands',thai:'ไนน์ออฟแวนดส์',img:'../images/tarot/w9.png'},
-  {id:31,name:'Ten of Wands',thai:'เทนออฟแวนดส์',img:'../images/tarot/w10.png'},
-  {id:32,name:'Page of Wands',thai:'เพจออฟแวนดส์',img:'../images/tarot/w11.png'},
-  {id:33,name:'Knight of Wands',thai:'ไนท์ออฟแวนดส์',img:'../images/tarot/w12.png'},
-  {id:34,name:'Queen of Wands',thai:'ควีนออฟแวนดส์',img:'../images/tarot/w13.png'},
-  {id:35,name:'King of Wands',thai:'คิงออฟแวนดส์',img:'../images/tarot/w14.png'},
-  {id:36,name:'Ace of Cups',thai:'เอซออฟคัพส์',img:'../images/tarot/c1.png'},
-  {id:37,name:'Two of Cups',thai:'ทูออฟคัพส์',img:'../images/tarot/c2.png'},
-  {id:38,name:'Three of Cups',thai:'ทรีออฟคัพส์',img:'../images/tarot/c3.png'},
-  {id:39,name:'Four of Cups',thai:'โฟร์ออฟคัพส์',img:'../images/tarot/c4.png'},
-  {id:40,name:'Five of Cups',thai:'ไฟว์ออฟคัพส์',img:'../images/tarot/c5.png'},
-  {id:41,name:'Six of Cups',thai:'ซิกซ์ออฟคัพส์',img:'../images/tarot/c6.png'},
-  {id:42,name:'Seven of Cups',thai:'เซเว่นออฟคัพส์',img:'../images/tarot/c7.png'},
-  {id:43,name:'Eight of Cups',thai:'เอทออฟคัพส์',img:'../images/tarot/c8.png'},
-  {id:44,name:'Nine of Cups',thai:'ไนน์ออฟคัพส์',img:'../images/tarot/c9.png'},
-  {id:45,name:'Ten of Cups',thai:'เทนออฟคัพส์',img:'../images/tarot/c10.png'},
-  {id:46,name:'Page of Cups',thai:'เพจออฟคัพส์',img:'../images/tarot/c11.png'},
-  {id:47,name:'Knight of Cups',thai:'ไนท์ออฟคัพส์',img:'../images/tarot/c12.png'},
-  {id:48,name:'Queen of Cups',thai:'ควีนออฟคัพส์',img:'../images/tarot/c13.png'},
-  {id:49,name:'King of Cups',thai:'คิงออฟคัพส์',img:'../images/tarot/c14.png'},
-  {id:50,name:'Ace of Swords',thai:'เอซออฟซอร์ดส์',img:'../images/tarot/s1.png'},
-  {id:51,name:'Two of Swords',thai:'ทูออฟซอร์ดส์',img:'../images/tarot/s2.png'},
-  {id:52,name:'Three of Swords',thai:'ทรีออฟซอร์ดส์',img:'../images/tarot/s3.png'},
-  {id:53,name:'Four of Swords',thai:'โฟร์ออฟซอร์ดส์',img:'../images/tarot/s4.png'},
-  {id:54,name:'Five of Swords',thai:'ไฟว์ออฟซอร์ดส์',img:'../images/tarot/s5.png'},
-  {id:55,name:'Six of Swords',thai:'ซิกซ์ออฟซอร์ดส์',img:'../images/tarot/s6.png'},
-  {id:56,name:'Seven of Swords',thai:'เซเว่นออฟซอร์ดส์',img:'../images/tarot/s7.png'},
-  {id:57,name:'Eight of Swords',thai:'เอทออฟซอร์ดส์',img:'../images/tarot/s8.png'},
-  {id:58,name:'Nine of Swords',thai:'ไนน์ออฟซอร์ดส์',img:'../images/tarot/s9.png'},
-  {id:59,name:'Ten of Swords',thai:'เทนออฟซอร์ดส์',img:'../images/tarot/s10.png'},
-  {id:60,name:'Page of Swords',thai:'เพจออฟซอร์ดส์',img:'../images/tarot/s11.png'},
-  {id:61,name:'Knight of Swords',thai:'ไนท์ออฟซอร์ดส์',img:'../images/tarot/s12.png'},
-  {id:62,name:'Queen of Swords',thai:'ควีนออฟซอร์ดส์',img:'../images/tarot/s13.png'},
-  {id:63,name:'King of Swords',thai:'คิงออฟซอร์ดส์',img:'../images/tarot/s14.png'},
-  {id:64,name:'Ace of Pentacles',thai:'เอซออฟเพนทาเคิลส์',img:'../images/tarot/p1.png'},
-  {id:65,name:'Two of Pentacles',thai:'ทูออฟเพนทาเคิลส์',img:'../images/tarot/p2.png'},
-  {id:66,name:'Three of Pentacles',thai:'ทรีออฟเพนทาเคิลส์',img:'../images/tarot/p3.png'},
-  {id:67,name:'Four of Pentacles',thai:'โฟร์ออฟเพนทาเคิลส์',img:'../images/tarot/p4.png'},
-  {id:68,name:'Five of Pentacles',thai:'ไฟว์ออฟเพนทาเคิลส์',img:'../images/tarot/p5.png'},
-  {id:69,name:'Six of Pentacles',thai:'ซิกซ์ออฟเพนทาเคิลส์',img:'../images/tarot/p6.png'},
-  {id:70,name:'Seven of Pentacles',thai:'เซเว่นออฟเพนทาเคิลส์',img:'../images/tarot/p7.png'},
-  {id:71,name:'Eight of Pentacles',thai:'เอทออฟเพนทาเคิลส์',img:'../images/tarot/p8.png'},
-  {id:72,name:'Nine of Pentacles',thai:'ไนน์ออฟเพนทาเคิลส์',img:'../images/tarot/p9.png'},
-  {id:73,name:'Ten of Pentacles',thai:'เทนออฟเพนทาเคิลส์',img:'../images/tarot/p10.png'},
-  {id:74,name:'Page of Pentacles',thai:'เพจออฟเพนทาเคิลส์',img:'../images/tarot/p11.png'},
-  {id:75,name:'Knight of Pentacles',thai:'ไนท์ออฟเพนทาเคิลส์',img:'../images/tarot/p12.png'},
-  {id:76,name:'Queen of Pentacles',thai:'ควีนออฟเพนทาเคิลส์',img:'../images/tarot/p13.png'},
-  {id:77,name:'King of Pentacles',thai:'คิงออฟเพนทาเคิลส์',img:'../images/tarot/p14.png'},
+  {id:0,name:'The Fool',img:'../images/tarot/0.png'},
+  {id:1,name:'The Magician',img:'../images/tarot/1.png'},
+  {id:2,name:'The High Priestess',img:'../images/tarot/2.png'},
+  {id:3,name:'The Empress',img:'../images/tarot/3.png'},
+  {id:4,name:'The Emperor',img:'../images/tarot/4.png'},
+  {id:5,name:'The Hierophant',img:'../images/tarot/5.png'},
+  {id:6,name:'The Lovers',img:'../images/tarot/6.png'},
+  {id:7,name:'The Chariot',img:'../images/tarot/7.png'},
+  {id:8,name:'Strength',img:'../images/tarot/8.png'},
+  {id:9,name:'The Hermit',img:'../images/tarot/9.png'},
+  {id:10,name:'Wheel of Fortune',img:'../images/tarot/10.png'},
+  {id:11,name:'Justice',img:'../images/tarot/11.png'},
+  {id:12,name:'The Hanged Man',img:'../images/tarot/12.png'},
+  {id:13,name:'Death',img:'../images/tarot/13.png'},
+  {id:14,name:'Temperance',img:'../images/tarot/14.png'},
+  {id:15,name:'The Devil',img:'../images/tarot/15.png'},
+  {id:16,name:'The Tower',img:'../images/tarot/16.png'},
+  {id:17,name:'The Star',img:'../images/tarot/17.png'},
+  {id:18,name:'The Moon',img:'../images/tarot/18.png'},
+  {id:19,name:'The Sun',img:'../images/tarot/19.png'},
+  {id:20,name:'Judgement',img:'../images/tarot/20.png'},
+  {id:21,name:'The World',img:'../images/tarot/21.png'},
+  {id:22,name:'Ace of Wands',img:'../images/tarot/w1.png'},
+  {id:23,name:'Two of Wands',img:'../images/tarot/w2.png'},
+  {id:24,name:'Three of Wands',img:'../images/tarot/w3.png'},
+  {id:25,name:'Four of Wands',img:'../images/tarot/w4.png'},
+  {id:26,name:'Five of Wands',img:'../images/tarot/w5.png'},
+  {id:27,name:'Six of Wands',img:'../images/tarot/w6.png'},
+  {id:28,name:'Seven of Wands',img:'../images/tarot/w7.png'},
+  {id:29,name:'Eight of Wands',img:'../images/tarot/w8.png'},
+  {id:30,name:'Nine of Wands',img:'../images/tarot/w9.png'},
+  {id:31,name:'Ten of Wands',img:'../images/tarot/w10.png'},
+  {id:32,name:'Page of Wands',img:'../images/tarot/w11.png'},
+  {id:33,name:'Knight of Wands',img:'../images/tarot/w12.png'},
+  {id:34,name:'Queen of Wands',img:'../images/tarot/w13.png'},
+  {id:35,name:'King of Wands',img:'../images/tarot/w14.png'},
+  {id:36,name:'Ace of Cups',img:'../images/tarot/c1.png'},
+  {id:37,name:'Two of Cups',img:'../images/tarot/c2.png'},
+  {id:38,name:'Three of Cups',img:'../images/tarot/c3.png'},
+  {id:39,name:'Four of Cups',img:'../images/tarot/c4.png'},
+  {id:40,name:'Five of Cups',img:'../images/tarot/c5.png'},
+  {id:41,name:'Six of Cups',img:'../images/tarot/c6.png'},
+  {id:42,name:'Seven of Cups',img:'../images/tarot/c7.png'},
+  {id:43,name:'Eight of Cups',img:'../images/tarot/c8.png'},
+  {id:44,name:'Nine of Cups',img:'../images/tarot/c9.png'},
+  {id:45,name:'Ten of Cups',img:'../images/tarot/c10.png'},
+  {id:46,name:'Page of Cups',img:'../images/tarot/c11.png'},
+  {id:47,name:'Knight of Cups',img:'../images/tarot/c12.png'},
+  {id:48,name:'Queen of Cups',img:'../images/tarot/c13.png'},
+  {id:49,name:'King of Cups',img:'../images/tarot/c14.png'},
+  {id:50,name:'Ace of Swords',img:'../images/tarot/s1.png'},
+  {id:51,name:'Two of Swords',img:'../images/tarot/s2.png'},
+  {id:52,name:'Three of Swords',img:'../images/tarot/s3.png'},
+  {id:53,name:'Four of Swords',img:'../images/tarot/s4.png'},
+  {id:54,name:'Five of Swords',img:'../images/tarot/s5.png'},
+  {id:55,name:'Six of Swords',img:'../images/tarot/s6.png'},
+  {id:56,name:'Seven of Swords',img:'../images/tarot/s7.png'},
+  {id:57,name:'Eight of Swords',img:'../images/tarot/s8.png'},
+  {id:58,name:'Nine of Swords',img:'../images/tarot/s9.png'},
+  {id:59,name:'Ten of Swords',img:'../images/tarot/s10.png'},
+  {id:60,name:'Page of Swords',img:'../images/tarot/s11.png'},
+  {id:61,name:'Knight of Swords',img:'../images/tarot/s12.png'},
+  {id:62,name:'Queen of Swords',img:'../images/tarot/s13.png'},
+  {id:63,name:'King of Swords',img:'../images/tarot/s14.png'},
+  {id:64,name:'Ace of Pentacles',img:'../images/tarot/p1.png'},
+  {id:65,name:'Two of Pentacles',img:'../images/tarot/p2.png'},
+  {id:66,name:'Three of Pentacles',img:'../images/tarot/p3.png'},
+  {id:67,name:'Four of Pentacles',img:'../images/tarot/p4.png'},
+  {id:68,name:'Five of Pentacles',img:'../images/tarot/p5.png'},
+  {id:69,name:'Six of Pentacles',img:'../images/tarot/p6.png'},
+  {id:70,name:'Seven of Pentacles',img:'../images/tarot/p7.png'},
+  {id:71,name:'Eight of Pentacles',img:'../images/tarot/p8.png'},
+  {id:72,name:'Nine of Pentacles',img:'../images/tarot/p9.png'},
+  {id:73,name:'Ten of Pentacles',img:'../images/tarot/p10.png'},
+  {id:74,name:'Page of Pentacles',img:'../images/tarot/p11.png'},
+  {id:75,name:'Knight of Pentacles',img:'../images/tarot/p12.png'},
+  {id:76,name:'Queen of Pentacles',img:'../images/tarot/p13.png'},
+  {id:77,name:'King of Pentacles',img:'../images/tarot/p14.png'},
 ];
 
 const BACK = '../images/tarot/back.png';
 const positions = ['สถานการณ์เงิน','รายรับ','รายจ่าย','คำแนะนำ'];
-let shuffled = [], selectedCards = [];
+let shuffled = [], selectedCards = [], followupHistory = [];
 const MAX_CARDS = 4;
+
+function colorizeReading(text) {
+  const cards = [
+    ['The High Priestess','#a855f7'],['The Hanged Man','#a855f7'],
+    ['Wheel of Fortune','#f59e0b'],['The Hierophant','#a855f7'],
+    ['The Magician','#a855f7'],['The Empress','#a855f7'],
+    ['The Emperor','#a855f7'],['The Lovers','#ec4899'],
+    ['The Chariot','#a855f7'],['The Hermit','#a855f7'],
+    ['The Devil','#ef4444'],['The Tower','#ef4444'],
+    ['The Star','#60a5fa'],['The Moon','#818cf8'],
+    ['The Sun','#fbbf24'],['The World','#10b981'],
+    ['The Fool','#a855f7'],['Judgement','#a855f7'],
+    ['Strength','#f59e0b'],['Justice','#3b82f6'],
+    ['Death','#9ca3af'],['Temperance','#10b981'],
+  ];
+  let result = text;
+  cards.forEach(([name, color]) => {
+    result = result.replace(new RegExp(name, 'g'),
+      `<span style="color:${color};font-weight:700">${name}</span>`);
+  });
+  result = result.replace(
+    /(Ace|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Page|Knight|Queen|King) of (Wands|Cups|Swords|Pentacles)/g,
+    (match) => {
+      const colors = {Wands:'#f59e0b', Cups:'#3b82f6', Swords:'#9ca3af', Pentacles:'#10b981'};
+      const suit = match.split(' of ')[1];
+      return `<span style="color:${colors[suit]};font-weight:700">${match}</span>`;
+    }
+  );
+  return result.replace(/\n/g, '<br>');
+}
 
 function shuffle() {
   shuffled = [...TAROT].sort(() => Math.random() - 0.5);
@@ -307,9 +370,9 @@ function shuffle() {
 
 function renderCards() {
   document.getElementById('cardsScroll').innerHTML = shuffled.map((card, i) => {
-    const isSelected = selectedCards.find(s => s.id === card.id);
-    return `<div class="card-item ${isSelected?'selected':''}" onclick="selectCard(${i})">
-      <img src="${BACK}" alt="card back"></div>`;
+    const sel = selectedCards.find(s => s.id === card.id);
+    return `<div class="card-item ${sel?'selected':''}" onclick="selectCard(${i})">
+      <img src="${BACK}" alt="card"></div>`;
   }).join('');
 }
 
@@ -346,11 +409,6 @@ function updateSlots() {
 
 function startReading() {
   if (selectedCards.length < MAX_CARDS) return;
-  const coins = parseInt(localStorage.getItem('coins') || '500');
-  if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 20));
-  document.getElementById('coinCount').textContent = coins - 20;
-  document.getElementById('coinDisplay').textContent = coins - 20;
 
   const makeCard = (card, i) => `
     <div class="reveal-card">
@@ -360,7 +418,7 @@ function startReading() {
           <div class="reveal-card-front"><img src="${card.img}"></div>
         </div>
       </div>
-      <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.thai}</div>
+      <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.name}</div>
       <div class="reveal-card-pos">${positions[i]}</div>
     </div>`;
 
@@ -383,62 +441,141 @@ function startReading() {
 
 async function acceptReading() {
   document.getElementById('revealOverlay').classList.remove('show');
+
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
+  localStorage.setItem('coins', String(coins - 20));
+  document.getElementById('coinCount').textContent = coins - 20;
+  document.getElementById('coinDisplay').textContent = coins - 20;
+
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
   const resultText = document.getElementById('resultText');
   btn.disabled = true;
   resultBox.classList.add('show');
 
-  const makeResultCard = (card, i) => `
+  document.getElementById('resultRow1').innerHTML = selectedCards.slice(0,2).map((c,i)=>`
     <div class="result-card">
-      <div class="result-card-img"><img src="${card.img}"></div>
-      <div class="result-card-name">${card.thai}</div>
+      <div class="result-card-img"><img src="${c.img}"></div>
+      <div class="result-card-name">${c.name}</div>
       <div class="result-card-pos">${positions[i]}</div>
-    </div>`;
-
-  document.getElementById('resultRow1').innerHTML = selectedCards.slice(0,2).map((c,i)=>makeResultCard(c,i)).join('');
-  document.getElementById('resultRow2').innerHTML = selectedCards.slice(2,4).map((c,i)=>makeResultCard(c,i+2)).join('');
+    </div>`).join('');
+  document.getElementById('resultRow2').innerHTML = selectedCards.slice(2,4).map((c,i)=>`
+    <div class="result-card">
+      <div class="result-card-img"><img src="${c.img}"></div>
+      <div class="result-card-name">${c.name}</div>
+      <div class="result-card-pos">${positions[i+2]}</div>
+    </div>`).join('');
 
   resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ไพ่กำลังเปิดเผยดวงการเงิน...</div></div>`;
   resultBox.scrollIntoView({ behavior: 'smooth' });
 
-  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.thai} (${c.name})`).join(', ');
-  const prompt = `ทำนายดวงการเงินจากไพ่ทาโรต์ 4 ใบ ไพ่: ${cardInfo}
-พูดแบบหมอดู Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ทำนายการเงินครบทุกตำแหน่ง บอกสถานการณ์เงิน รายรับ รายจ่าย และคำแนะนำการบริหารเงิน ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษยกเว้นชื่อไพ่ทาโรต์ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
+  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
 
   try {
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 3000,
-        system: `คุณคือหมอดูไพ่ทาโรต์ด้านการเงิน Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เน้นการเงินและการบริหารเงิน ห้ามใช้ markdown ห้ามใช้ภาษาอังกฤษยกเว้นชื่อไพ่ทาโรต์ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้เลขไทย`,
-        messages: [{ role: 'user', content: prompt }]
+        model: 'claude-sonnet-4-6', max_tokens: 4000,
+        system: `คุณคือหมอดูไพ่ทาโรต์ด้านการเงิน Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ชื่อไพ่ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role: 'user', content: `ทำนายดวงการเงินจากไพ่ทาโรต์ 4 ใบ ไพ่: ${cardInfo} ทำนายครบทุกตำแหน่ง บอกสถานการณ์เงิน รายรับ รายจ่าย และคำแนะนำการบริหารเงินค่ะ` }]
       })
     });
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
-    resultText.textContent = '';
+    resultText.innerHTML = '';
     const cursor = document.createElement('span');
     cursor.className = 'cursor';
     resultText.appendChild(cursor);
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value);
-      resultText.textContent = text;
+      resultText.innerHTML = colorizeReading(text);
       resultText.appendChild(cursor);
     }
     cursor.remove();
     resultText.innerHTML = colorizeReading(text);
+
+    followupHistory = [];
+    document.getElementById('followupBox').style.display = 'block';
+
   } catch(e) {
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
   btn.disabled = false;
 }
 
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+  document.getElementById('followupInput').style.display = 'none';
+  document.getElementById('followupBtn').style.display = 'none';
+  document.getElementById('followupTitle').style.display = 'none';
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 600,
+        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากไพ่เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำถาม: ${question}` }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+
+    localStorage.setItem('coins', String(coins - 5));
+    document.getElementById('coinCount').textContent = coins - 5;
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+
+  input.value = '';
+  document.getElementById('followupInput').style.display = 'block';
+  document.getElementById('followupBtn').style.display = 'block';
+  document.getElementById('followupTitle').style.display = 'block';
+  followupBtn.disabled = false;
+  answerDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
   document.getElementById('coinCount').textContent = coins;
   document.getElementById('coinDisplay').textContent = coins;
   shuffle();
