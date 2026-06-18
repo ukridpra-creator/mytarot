@@ -284,12 +284,14 @@ async function startReading() {
   const content = [];
   if (leftImage) {
     const comp = await compressImage(leftImage);
-    content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: comp.split(',')[1] } });
+    const mimeType = comp.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
+content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, data: comp.split(',')[1] } });
     content.push({ type: 'text', text: 'นี่คือรูปมือซ้าย (ศักยภาพ/กำเนิด)' });
   }
   if (rightImage) {
     const comp = await compressImage(rightImage);
-    content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: comp.split(',')[1] } });
+    const mimeType = comp.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
+content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, data: comp.split(',')[1] } });
     content.push({ type: 'text', text: 'นี่คือรูปมือขวา (ชะตากรรม/อนาคต)' });
   }
 
