@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โหงวเฮ้ง — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <style>
+    body { padding-bottom: 40px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+    .reading-hero { text-align: center; padding: 16px 0 24px; }
+    .reading-icon {
+      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
+      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
+    }
+    .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
+    .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .upload-box {
+      border: 2px dashed rgba(124,58,237,0.4); border-radius: 16px;
+      aspect-ratio: 3/4; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; overflow: hidden; position: relative;
+      background: rgba(124,58,237,0.05); margin-bottom: 8px;
+      max-width: 280px; margin-left: auto; margin-right: auto;
+    }
+    .upload-box.has-image { border: none; }
+    .upload-box-icon { font-size: 40px; margin-bottom: 8px; }
+    .upload-box-label { font-size: 13px; font-weight: 700; color: white; margin-bottom: 10px; }
+    .upload-btns { display: flex; gap: 8px; }
+    .upload-btn {
+      background: rgba(124,58,237,0.3); border: none; border-radius: 8px;
+      padding: 8px 14px; color: white; font-size: 12px;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+    .upload-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .upload-box-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      padding: 12px 8px 8px; text-align: center; font-size: 11px; color: white;
+    }
+    .tips-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 20px;
+    }
+    .tips-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+    .tip-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); margin-bottom: 5px; }
+    .tip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
+    }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .result-section { display: none; }
+    .result-section.show { display: block; }
+    .preview-box {
+      border-radius: 16px; overflow: hidden;
+      position: relative; aspect-ratio: 3/4; background: #0a0618;
+      max-width: 280px; margin: 0 auto 20px;
+    }
+    .preview-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .result-box {
+      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
+    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 30px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50% { transform: translateY(-10px); opacity: 1; }
+    }
+    .loading-text { font-size: 14px; color: var(--dim); }
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: var(--purple-light); margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .followup-box {
+      margin-top: 16px; padding: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+    }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      resize: none; margin-bottom: 10px; box-sizing: border-box;
+    }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn {
+      width: 100%; background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 12px;
+    }
+    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">โหงวเฮ้ง</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+</div>
+
+<div class="page-content">
+  <div class="reading-hero">
+    <div class="reading-icon"><img src="../images/icon-face.png" alt="โหงวเฮ้ง"></div>
+    <div class="reading-title">โหงวเฮ้ง</div>
+    <div class="reading-ref">📖 อ้างอิง: ศาสตร์โหงวเฮ้งจีนโบราณ</div>
+    <div class="reading-desc">ถ่ายรูปใบหน้าตรงๆ AI จะวิเคราะห์ลักษณะใบหน้าและทำนายชะตาให้ค่ะ</div>
+  </div>
+
+  <div class="upload-box" id="faceBox">
+    <div class="upload-box-icon">🧑</div>
+    <div class="upload-box-label">รูปใบหน้า</div>
+    <div class="upload-btns">
+      <button class="upload-btn" onclick="document.getElementById('faceCamera').click()">📷 ถ่าย</button>
+      <button class="upload-btn" onclick="document.getElementById('faceGallery').click()">🖼️ แกล</button>
+    </div>
+  </div>
+
+  <input type="file" id="faceCamera" accept="image/*" capture="user" style="display:none" onchange="previewFace(event)">
+  <input type="file" id="faceGallery" accept="image/*" style="display:none" onchange="previewFace(event)">
+
+  <div class="tips-box" style="margin-top:16px">
+    <div class="tips-title">📸 วิธีถ่ายให้ได้ผลแม่น</div>
+    <div class="tip-item"><div class="tip-dot"></div>ถ่ายหน้าตรง แสงสว่างเพียงพอ</div>
+    <div class="tip-item"><div class="tip-dot"></div>ไม่สวมแว่น ไม่มีผมบังใบหน้า</div>
+    <div class="tip-item"><div class="tip-dot"></div>ไม่ยิ้มหรือทำหน้า ให้หน้าปกติค่ะ</div>
+    <div class="tip-item"><div class="tip-dot"></div>ถ่ายให้เห็นใบหน้าชัดทั้งหมดค่ะ</div>
+    <div class="tip-item"><div class="tip-dot"></div>iPhone ถ่ายได้เลยค่ะ ระบบแปลงรูปให้อัตโนมัติ</div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🔍 วิเคราะห์โหงวเฮ้ง</button>
+
+  <div class="result-section" id="resultSection">
+    <div class="preview-box">
+      <img id="previewFace" src="" style="display:none">
+    </div>
+    <div class="result-box">
+      <div class="result-header"><span>🧑</span><div class="result-title">ผลการวิเคราะห์โหงวเฮ้ง</div></div>
+      <div class="result-text" id="resultText"></div>
+      <div class="followup-box" id="followupBox" style="display:none">
+        <div class="followup-result" id="followupResult"></div>
+        <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+        <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+        <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let faceImage = null;
+let analysisResult = '';
+let followupHistory = [];
+
+function getBase64(dataUrl) {
+  if (!dataUrl) return null;
+  const parts = dataUrl.split(',');
+  if (parts.length < 2) return null;
+  const b64 = parts[1];
+  if (!b64 || b64.length < 10) return null;
+  return b64;
+}
+
+async function convertToJpeg(file) {
+  return new Promise(async (resolve) => {
+    const isHeic = file.type === 'image/heic' || file.type === 'image/heif' ||
+      file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif') ||
+      file.type === '' || file.type === 'application/octet-stream';
+    if (isHeic && typeof heic2any !== 'undefined') {
+      try {
+        const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.readAsDataURL(blob instanceof Array ? blob[0] : blob);
+        return;
+      } catch(e) { console.log('heic2any failed:', e); }
+    }
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function compressImage(dataUrl, maxWidth = 600) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      if (img.width === 0 || img.height === 0) { resolve(null); return; }
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = () => resolve(null);
+    img.src = dataUrl;
+  });
+}
+
+function colorizeFaceReading(text) {
+  return text
+    .replace(/หน้าผาก/g, '<span style="color:#a855f7;font-weight:700">หน้าผาก</span>')
+    .replace(/คิ้ว/g, '<span style="color:#3b82f6;font-weight:700">คิ้ว</span>')
+    .replace(/ตา/g, '<span style="color:#60a5fa;font-weight:700">ตา</span>')
+    .replace(/จมูก/g, '<span style="color:#f59e0b;font-weight:700">จมูก</span>')
+    .replace(/ปาก/g, '<span style="color:#ec4899;font-weight:700">ปาก</span>')
+    .replace(/หู/g, '<span style="color:#10b981;font-weight:700">หู</span>')
+    .replace(/คาง/g, '<span style="color:#818cf8;font-weight:700">คาง</span>')
+    .replace(/โหนกแก้ม/g, '<span style="color:#fbbf24;font-weight:700">โหนกแก้ม</span>')
+    .replace(/รูปหน้า/g, '<span style="color:#a855f7;font-weight:700">รูปหน้า</span>')
+    .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
+    .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
+    .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
+    .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
+    .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
+    .replace(/\n/g, '<br>');
+}
+
+async function previewFace(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const box = document.getElementById('faceBox');
+  box.innerHTML = `<div class="upload-box-icon">⏳</div><div class="upload-box-label">กำลังโหลด...</div>`;
+  try {
+    const dataUrl = await convertToJpeg(file);
+    const compressed = await compressImage(dataUrl);
+    if (!compressed || !getBase64(compressed)) {
+      box.innerHTML = `<div class="upload-box-icon">❌</div><div class="upload-box-label">โหลดรูปไม่ได้ค่ะ</div>`;
+      return;
+    }
+    faceImage = compressed;
+    box.innerHTML = `<img src="${compressed}"><div class="upload-box-overlay">✅ รูปใบหน้า</div>`;
+    box.classList.add('has-image');
+    document.getElementById('readBtn').disabled = false;
+  } catch(err) {
+    console.error('previewFace error:', err);
+    box.innerHTML = `<div class="upload-box-icon">❌</div><div class="upload-box-label">เกิดข้อผิดพลาดค่ะ</div>`;
+  }
+}
+
+async function startReading() {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 30) {
+    alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ');
+    return;
+  }
+
+  const btn = document.getElementById('readBtn');
+  const resultSection = document.getElementById('resultSection');
+  const resultText = document.getElementById('resultText');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
+  resultSection.classList.add('show');
+
+  if (faceImage) {
+    const el = document.getElementById('previewFace');
+    el.src = faceImage; el.style.display = 'block';
+  }
+
+  resultText.innerHTML = `
+    <div class="loading">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="loading-text">AI กำลังวิเคราะห์ใบหน้า กรุณารอสักครู่...</div>
+    </div>`;
+  setTimeout(() => resultSection.scrollIntoView({ behavior: 'smooth' }), 100);
+
+  const b64 = getBase64(faceImage);
+  if (!b64) {
+    resultText.textContent = 'ไม่พบรูปใบหน้าค่ะ กรุณาอัปโหลดใหม่ค่ะ';
+    btn.disabled = false;
+    btn.textContent = '🔍 วิเคราะห์โหงวเฮ้ง';
+    return;
+  }
+
+  const content = [
+    { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
+    { type: 'text', text: `วิเคราะห์โหงวเฮ้งจากใบหน้าในรูป แบ่งเป็นหัวข้อดังนี้ โดยแต่ละหัวข้อบอกลักษณะที่เห็น ชื่อเรียกตามโหงวเฮ้ง และความหมาย กระชับ ไม่ยาวเกินไป:
+รูปหน้า (รูปทรงใบหน้าเรียกว่าอะไร ความหมาย)
+หน้าผาก (ลักษณะ ความหมายด้านชีวิตและโชค)
+คิ้ว (ลักษณะ ความหมายด้านบุคลิกและอารมณ์)
+ตา (ลักษณะ ความหมายด้านสติปัญญาและความรัก)
+จมูก (ลักษณะ ความหมายด้านการเงินและทรัพย์สิน)
+ปาก (ลักษณะ ความหมายด้านการพูดและความสัมพันธ์)
+หู (ลักษณะ ความหมายด้านอายุและสุขภาพ)
+โหนกแก้ม (ลักษณะ ความหมายด้านอำนาจและความสำเร็จ)
+คาง (ลักษณะ ความหมายด้านบั้นปลายชีวิต)
+สรุปภาพรวมและคำแนะนำ
+เริ่มด้วยทักทายแบบ Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์` }
+  ];
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้งจีนโบราณ เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แบ่งเป็นหัวข้อชัดเจน แต่ละหัวข้อกระชับ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role: 'user', content }]
+      })
+    });
+
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    resultText.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      resultText.innerHTML = colorizeFaceReading(text);
+      resultText.appendChild(cursor);
+    }
+    cursor.remove();
+    resultText.innerHTML = colorizeFaceReading(text);
+    analysisResult = text;
+
+    const newCoins = coins - 30;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+    document.getElementById('coinDisplay').textContent = newCoins;
+
+    followupHistory = [];
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
+    console.error('startReading error:', e);
+    resultText.textContent = `เกิดข้อผิดพลาดค่ะ: ${e.message}`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔍 วิเคราะห์อีกครั้ง';
+}
+
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+  document.getElementById('followupInput').style.display = 'none';
+  document.getElementById('followupBtn').style.display = 'none';
+  document.getElementById('followupTitle').style.display = 'none';
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 600,
+        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้ง Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ผลวิเคราะห์โหงวเฮ้ง: ${analysisResult}\nคำถาม: ${question}` }]
+      })
+    });
+
+    if (!res.ok) throw new Error('API error');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+
+    const newCoins = coins - 5;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    console.error('followup error:', e);
+  }
+
+  input.value = '';
+  document.getElementById('followupInput').style.display = 'block';
+  document.getElementById('followupBtn').style.display = 'block';
+  document.getElementById('followupTitle').style.display = 'block';
+  followupBtn.disabled = false;
+  answerDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const c = isNaN(coins) ? 500 : coins;
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
+});
+</script>
+</body>
+</html>
