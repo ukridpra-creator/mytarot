@@ -226,7 +226,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 20 เหรียญ หรือ 💎 พรีเมียมไม่จำกัดค่ะ</div>
+    <div class="coin-text">🪙 ใช้ 20 เหรียญ</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">20</span> เหรียญ</div>
   </div>
 
@@ -522,9 +522,10 @@ document.getElementById('followupBox').style.display = 'block';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
   document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
+  const coinDisplay = document.getElementById('coinDisplay');
+  if (coinDisplay) coinDisplay.textContent = coins;
   shuffle();
 });
 let followupHistory = [];
