@@ -30,7 +30,8 @@ function getCoins() {
 }
 function setCoins(n) {
   localStorage.setItem('coins', n);
-  document.querySelector('.coin-badge').textContent = `🪙 ${n} เหรียญ`;
+  const badge = document.querySelector('.coin-badge');
+  if (badge) badge.textContent = `🪙 ${n} เหรียญ`;
 }
 function useCoins(amount) {
   const current = getCoins();
