@@ -6,6 +6,7 @@
   <title>ดูลายมือ — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
     body { padding-bottom: 40px; }
     .page-header {
@@ -119,9 +120,39 @@
       width: 100%; background: rgba(124,58,237,0.15); border: 1px solid var(--border);
       border-radius: 14px; padding: 14px; color: var(--purple-light);
       font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s;
+      cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
     }
     .btn-download:hover { background: rgba(124,58,237,0.25); }
+    .btn-download:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-box {
+      margin-top: 16px; padding: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+    }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      resize: none; margin-bottom: 10px; box-sizing: border-box;
+    }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn {
+      width: 100%; background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 12px;
+    }
+    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -161,8 +192,8 @@
     </div>
   </div>
 
-  <input type="file" id="leftInput" accept="image/*" capture="environment" style="display:none" onchange="previewHand(event,'left')">
-  <input type="file" id="rightInput" accept="image/*" capture="environment" style="display:none" onchange="previewHand(event,'right')">
+  <input type="file" id="leftInput" accept="image/*" style="display:none" onchange="previewHand(event,'left')">
+  <input type="file" id="rightInput" accept="image/*" style="display:none" onchange="previewHand(event,'right')">
 
   <div class="tips-box">
     <div class="tips-title">📸 วิธีถ่ายให้ได้ผลแม่น</div>
@@ -170,6 +201,7 @@
     <div class="tip-item"><div class="tip-dot"></div>ถ่ายในที่แสงสว่างเพียงพอ</div>
     <div class="tip-item"><div class="tip-dot"></div>ให้เส้นมือชัดเจน ไม่เบลอ</div>
     <div class="tip-item"><div class="tip-dot"></div>ถ่ายตั้งฉากกับฝ่ามือ ไม่เอียง</div>
+    <div class="tip-item"><div class="tip-dot"></div>iPhone: ใช้กล้องถ่ายรูปปกติได้เลยค่ะ ระบบจะแปลงรูปให้อัตโนมัติ</div>
   </div>
 
   <div class="coin-box">
@@ -177,9 +209,7 @@
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>
-    🖐️ วิเคราะห์ลายมือ
-  </button>
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🖐️ วิเคราะห์ลายมือ</button>
 
   <div class="result-section" id="resultSection">
     <div class="result-hands">
@@ -205,49 +235,105 @@
     <div class="result-box">
       <div class="result-header"><span>🖐️</span><div class="result-title">ผลการวิเคราะห์ลายมือ</div></div>
       <div class="result-text" id="resultText"></div>
+      <div class="followup-box" id="followupBox" style="display:none">
+        <div class="followup-result" id="followupResult"></div>
+        <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+        <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+        <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+      </div>
     </div>
-    <button class="btn-download" onclick="downloadInfographic()">💾 บันทึกเป็นรูป Infographic</button>
+    <button class="btn-download" id="btnDownload" onclick="downloadInfographic()">💾 บันทึกเป็นรูป Infographic</button>
   </div>
 </div>
 
 <script>
 let rightImage = null, leftImage = null;
 let analysisResult = '', rightLines = [], leftLines = [];
+let followupHistory = [];
 
-async function compressImage(dataUrl, maxWidth = 600) {
+async function convertToJpeg(file) {
+  return new Promise(async (resolve) => {
+    const isHeic = file.type === 'image/heic' || file.type === 'image/heif' ||
+      file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+
+    if (isHeic && typeof heic2any !== 'undefined') {
+      try {
+        const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.readAsDataURL(blob);
+        return;
+      } catch(e) {
+        console.log('heic2any failed, try normal read');
+      }
+    }
+
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function compressImage(dataUrl, maxWidth = 800) {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
       let w = img.width, h = img.height;
+      if (w === 0 || h === 0) { resolve(dataUrl); return; }
       if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
       canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      resolve(canvas.toDataURL('image/jpeg', 0.6));
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
     };
+    img.onerror = () => resolve(dataUrl);
     img.src = dataUrl;
   });
 }
 
-function previewHand(e, side) {
+function colorizePalmReading(text) {
+  return text
+    .replace(/เส้นชีวิต/g, '<span style="color:#ef4444;font-weight:700">เส้นชีวิต</span>')
+    .replace(/เส้นสมอง/g, '<span style="color:#3b82f6;font-weight:700">เส้นสมอง</span>')
+    .replace(/เส้นหัวใจ/g, '<span style="color:#ec4899;font-weight:700">เส้นหัวใจ</span>')
+    .replace(/เส้นโชคชะตา/g, '<span style="color:#f59e0b;font-weight:700">เส้นโชคชะตา</span>')
+    .replace(/เส้นอาทิตย์/g, '<span style="color:#fbbf24;font-weight:700">เส้นอาทิตย์</span>')
+    .replace(/เส้นสุขภาพ/g, '<span style="color:#10b981;font-weight:700">เส้นสุขภาพ</span>')
+    .replace(/อดีต/g, '<span style="color:#818cf8;font-weight:700">อดีต</span>')
+    .replace(/ปัจจุบัน/g, '<span style="color:#a855f7;font-weight:700">ปัจจุบัน</span>')
+    .replace(/อนาคต/g, '<span style="color:#ec4899;font-weight:700">อนาคต</span>')
+    .replace(/การดำเนินชีวิต/g, '<span style="color:#60a5fa;font-weight:700">การดำเนินชีวิต</span>')
+    .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
+    .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
+    .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
+    .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
+    .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
+    .replace(/\n/g, '<br>');
+}
+
+async function previewHand(e, side) {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    if (side === 'left') {
-      leftImage = ev.target.result;
-      const box = document.getElementById('leftBox');
-      box.innerHTML = `<img src="${leftImage}"><div class="upload-box-overlay">✅ มือซ้าย</div>`;
-      box.classList.add('has-image');
-    } else {
-      rightImage = ev.target.result;
-      const box = document.getElementById('rightBox');
-      box.innerHTML = `<img src="${rightImage}"><div class="upload-box-overlay">✅ มือขวา</div>`;
-      box.classList.add('has-image');
-    }
-    checkReady();
-  };
-  reader.readAsDataURL(file);
+
+  const box = document.getElementById(side === 'left' ? 'leftBox' : 'rightBox');
+  box.innerHTML = `<div class="upload-box-icon">⏳</div><div class="upload-box-label">กำลังโหลด...</div>`;
+
+  const dataUrl = await convertToJpeg(file);
+  const compressed = await compressImage(dataUrl);
+
+  if (side === 'left') {
+    leftImage = compressed;
+    box.innerHTML = `<img src="${compressed}"><div class="upload-box-overlay">✅ มือซ้าย</div>`;
+    box.classList.add('has-image');
+  } else {
+    rightImage = compressed;
+    box.innerHTML = `<img src="${compressed}"><div class="upload-box-overlay">✅ มือขวา</div>`;
+    box.classList.add('has-image');
+  }
+  checkReady();
 }
 
 function checkReady() {
@@ -262,17 +348,12 @@ function checkReady() {
 }
 
 async function startReading() {
-  const coins = parseInt(localStorage.getItem('coins') || '500');
-  if (coins < 30) { alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 30));
-  document.getElementById('coinCount').textContent = coins - 30;
-  document.getElementById('coinDisplay').textContent = coins - 30;
-
   const btn = document.getElementById('readBtn');
   const resultSection = document.getElementById('resultSection');
   const resultText = document.getElementById('resultText');
 
   btn.disabled = true;
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
   resultSection.classList.add('show');
   resultText.innerHTML = `
     <div class="loading">
@@ -283,22 +364,18 @@ async function startReading() {
 
   const content = [];
   if (leftImage) {
-    const comp = await compressImage(leftImage);
-    const mimeType = comp.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
-content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, data: comp.split(',')[1] } });
+    content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: leftImage.split(',')[1] } });
     content.push({ type: 'text', text: 'นี่คือรูปมือซ้าย (ศักยภาพ/กำเนิด)' });
   }
   if (rightImage) {
-    const comp = await compressImage(rightImage);
-    const mimeType = comp.startsWith('data:image/png') ? 'image/png' : 'image/jpeg';
-content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, data: comp.split(',')[1] } });
+    content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: rightImage.split(',')[1] } });
     content.push({ type: 'text', text: 'นี่คือรูปมือขวา (ชะตากรรม/อนาคต)' });
   }
 
   content.push({
     type: 'text',
     text: `วิเคราะห์ลายมือ ตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่น ห้ามใช้ backtick:
-{"reading":"คำทำนายละเอียด อดีต/ปัจจุบัน/อนาคต แนะนำการดำเนินชีวิต สิ่งที่ต้องระวัง ภาษาไทยเท่านั้น ห้ามใช้เลขไทย",
+{"reading":"คำทำนายละเอียด อดีต/ปัจจุบัน/อนาคต การดำเนินชีวิต สิ่งที่ต้องระวัง ภาษาไทยเท่านั้น ห้ามใช้เลขไทย เรียกลูกค้าว่าคุณพี่ เรียกตัวเองว่าน้อง",
 "right_lines":[{"name":"เส้นชีวิต","color":"#ef4444","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นสมอง","color":"#3b82f6","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นหัวใจ","color":"#ec4899","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นโชคชะตา","color":"#f59e0b","points":[[x1,y1],[x2,y2],[x3,y3]]}],
 "left_lines":[{"name":"เส้นชีวิต","color":"#ef4444","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นสมอง","color":"#3b82f6","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นหัวใจ","color":"#ec4899","points":[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]},{"name":"เส้นโชคชะตา","color":"#f59e0b","points":[[x1,y1],[x2,y2],[x3,y3]]}]}
 พิกัด x,y เป็นเปอร์เซ็นต์ 0-100 ของขนาดรูป`
@@ -311,7 +388,7 @@ content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, da
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 2000,
-        system: `คุณคือผู้เชี่ยวชาญดูลายมือ อ้างอิงตำรา Cheiro's Language of the Hand ปี 1894 ตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่น ห้ามใช้ backtick พิกัดเส้นใช้เปอร์เซ็นต์ 0-100 ต้องสอดคล้องกับตำแหน่งจริงในรูป`,
+        system: `คุณคือผู้เชี่ยวชาญดูลายมือ อ้างอิงตำรา Cheiro's Language of the Hand ปี 1894 เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบเป็น JSON เท่านั้น ห้ามมีข้อความอื่น ห้ามใช้ backtick พิกัดเส้นใช้เปอร์เซ็นต์ 0-100 ต้องสอดคล้องกับตำแหน่งจริงในรูป`,
         messages: [{ role: 'user', content }]
       })
     });
@@ -328,31 +405,24 @@ content.push({ type: 'image', source: { type: 'base64', media_type: mimeType, da
     if (leftImage) await drawHandWithLines('leftCanvas', leftImage, leftLines);
     if (rightImage) await drawHandWithLines('rightCanvas', rightImage, rightLines);
 
-    // แสดงคำทำนายพร้อมสีหัวข้อ
-    const formatted = analysisResult
-      .replace(/เส้นชีวิต/g, '<span style="color:#ef4444;font-weight:700">เส้นชีวิต</span>')
-      .replace(/เส้นสมอง/g, '<span style="color:#3b82f6;font-weight:700">เส้นสมอง</span>')
-      .replace(/เส้นหัวใจ/g, '<span style="color:#ec4899;font-weight:700">เส้นหัวใจ</span>')
-      .replace(/เส้นโชคชะตา/g, '<span style="color:#f59e0b;font-weight:700">เส้นโชคชะตา</span>')
-      .replace(/เส้นอาทิตย์/g, '<span style="color:#fbbf24;font-weight:700">เส้นอาทิตย์</span>')
-      .replace(/เส้นสุขภาพ/g, '<span style="color:#10b981;font-weight:700">เส้นสุขภาพ</span>')
-      .replace(/อดีต/g, '<span style="color:#a855f7;font-weight:700">อดีต</span>')
-      .replace(/ปัจจุบัน/g, '<span style="color:#a855f7;font-weight:700">ปัจจุบัน</span>')
-      .replace(/อนาคต/g, '<span style="color:#a855f7;font-weight:700">อนาคต</span>')
-      .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
-      .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
-      .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
-      .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
-      .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
-      .replace(/\n/g, '<br>');
+    resultText.innerHTML = colorizePalmReading(analysisResult);
 
-    resultText.innerHTML = formatted;
+    // ตัดเหรียญหลัง API สำเร็จ
+    const coins = parseInt(localStorage.getItem('coins') || '500');
+    localStorage.setItem('coins', String(coins - 30));
+    document.getElementById('coinCount').textContent = coins - 30;
+    document.getElementById('coinDisplay').textContent = coins - 30;
+
+    followupHistory = [];
+    document.getElementById('followupBox').style.display = 'block';
 
   } catch (e) {
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
     console.error(e);
   }
+
   btn.disabled = false;
+  btn.textContent = '🖐️ วิเคราะห์อีกครั้ง';
 }
 
 async function drawHandWithLines(canvasId, imageData, lines) {
@@ -366,8 +436,6 @@ async function drawHandWithLines(canvasId, imageData, lines) {
       lines.forEach(line => {
         if (!line.points || line.points.length < 2) return;
         const pts = line.points.map(([x, y]) => ({ x: (x/100)*img.width, y: (y/100)*img.height }));
-
-        // วาดเส้น
         ctx.beginPath();
         ctx.strokeStyle = line.color || '#fff';
         ctx.lineWidth = Math.max(img.width * 0.008, 3);
@@ -376,8 +444,6 @@ async function drawHandWithLines(canvasId, imageData, lines) {
         ctx.moveTo(pts[0].x, pts[0].y);
         pts.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
         ctx.stroke();
-
-        // วาด label
         ctx.shadowBlur = 0;
         const fontSize = Math.max(img.width * 0.04, 14);
         ctx.font = `bold ${fontSize}px Sarabun, sans-serif`;
@@ -394,7 +460,75 @@ async function drawHandWithLines(canvasId, imageData, lines) {
   });
 }
 
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+  document.getElementById('followupInput').style.display = 'none';
+  document.getElementById('followupBtn').style.display = 'none';
+  document.getElementById('followupTitle').style.display = 'none';
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 600,
+        system: `คุณคือผู้เชี่ยวชาญดูลายมือ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์ลายมือเดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ผลวิเคราะห์ลายมือ: ${analysisResult}\nคำถาม: ${question}` }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+
+    // ตัดเหรียญหลัง AI ตอบ
+    localStorage.setItem('coins', String(coins - 5));
+    document.getElementById('coinCount').textContent = coins - 5;
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+
+  input.value = '';
+  document.getElementById('followupInput').style.display = 'block';
+  document.getElementById('followupBtn').style.display = 'block';
+  document.getElementById('followupTitle').style.display = 'block';
+  followupBtn.disabled = false;
+  answerDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
 async function downloadInfographic() {
+  const btn = document.getElementById('btnDownload');
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังสร้างรูป...';
+
   const W = 1080, H = 1920;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
@@ -412,6 +546,7 @@ async function downloadInfographic() {
   ctx.fillText('ผลดูลายมือ',W/2,160);
   ctx.strokeStyle='rgba(124,58,237,0.5)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(60,200); ctx.lineTo(W-60,200); ctx.stroke();
+
   const handY=220, handW=(W-140)/2, handH=handW*4/3;
   const drawH=(imageData,lines,x,y,w,h)=>new Promise(resolve=>{
     const img=new Image();
@@ -435,13 +570,16 @@ async function downloadInfographic() {
       ctx.restore(); resolve();
     }; img.src=imageData;
   });
+
   await Promise.all([
     leftImage?drawH(leftImage,leftLines,60,handY,handW,handH):Promise.resolve(),
     rightImage?drawH(rightImage,rightLines,60+handW+20,handY,handW,handH):Promise.resolve()
   ]);
+
   ctx.fillStyle='white'; ctx.font='bold 28px Sarabun'; ctx.textAlign='center';
   if(leftImage) ctx.fillText('มือซ้าย — ศักยภาพ',60+handW/2,handY+handH+36);
   if(rightImage) ctx.fillText('มือขวา — ชะตากรรม',60+handW+20+handW/2,handY+handH+36);
+
   const legendY=handY+handH+76;
   [{color:'#ef4444',name:'เส้นชีวิต'},{color:'#3b82f6',name:'เส้นสมอง'},
    {color:'#ec4899',name:'เส้นหัวใจ'},{color:'#f59e0b',name:'เส้นโชคชะตา'}
@@ -452,8 +590,10 @@ async function downloadInfographic() {
     ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='26px Sarabun'; ctx.textAlign='left';
     ctx.fillText(l.name,lx-24,legendY+16);
   });
+
   ctx.strokeStyle='rgba(124,58,237,0.3)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(60,legendY+40); ctx.lineTo(W-60,legendY+40); ctx.stroke();
+
   const textY=legendY+80;
   ctx.fillStyle='#f59e0b'; ctx.font='bold 36px Sarabun'; ctx.textAlign='center';
   ctx.fillText('🌙 ผลการทำนาย',W/2,textY);
@@ -461,10 +601,14 @@ async function downloadInfographic() {
   const plainText = analysisResult.replace(/<[^>]*>/g,'');
   (plainText.match(/.{1,30}/g)||[]).slice(0,20).forEach((chunk,i)=>ctx.fillText(chunk,60,textY+50+i*38));
   ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='24px Sarabun'; ctx.textAlign='center';
-  ctx.fillText('🔮 mytarot.vercel.app | ดูดวงฟรี ทุกศาสตร์',W/2,H-40);
+  ctx.fillText('🔮 mytarot.vercel.app',W/2,H-40);
+
   const link=document.createElement('a');
   link.download='mytarot-palm-reading.jpg';
   link.href=canvas.toDataURL('image/jpeg',0.95); link.click();
+
+  btn.disabled = false;
+  btn.textContent = '💾 บันทึกเป็นรูป Infographic';
 }
 
 function roundRect(ctx,x,y,w,h,r){
