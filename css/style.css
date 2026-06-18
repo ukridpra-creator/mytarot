@@ -362,3 +362,12 @@ body {
 @keyframes blink {
   0%, 100% { opacity: 1; } 50% { opacity: 0; }
 }
+.btn-speak {
+  width: 100%; background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3); border-radius: 14px;
+  padding: 12px; color: var(--purple-light);
+  font-size: 14px; font-weight: 700;
+  font-family: 'Sarabun', sans-serif; cursor: pointer;
+  transition: all 0.2s; margin-top: 12px;
+}
+.btn-speak:hover { background: rgba(124,58,237,0.25); }

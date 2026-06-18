@@ -100,3 +100,41 @@ function updateUserUI() {
     loggedView.style.display = 'none';
   }
 }
+// Text to Speech
+let isSpeaking = false;
+
+function speakText(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.innerText || el.textContent;
+
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    document.querySelectorAll('.btn-speak').forEach(btn => {
+      btn.innerHTML = '🔊 ฟังเสียง';
+    });
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(text.trim());
+  utterance.lang = 'th-TH';
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+
+  utterance.onstart = () => {
+    isSpeaking = true;
+    document.querySelectorAll('.btn-speak').forEach(btn => {
+      btn.innerHTML = '⏹ หยุดเสียง';
+    });
+  };
+
+  utterance.onend = () => {
+    isSpeaking = false;
+    document.querySelectorAll('.btn-speak').forEach(btn => {
+      btn.innerHTML = '🔊 ฟังเสียง';
+    });
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
