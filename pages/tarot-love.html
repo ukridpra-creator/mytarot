@@ -407,7 +407,8 @@ function startReading() {
   }
   localStorage.setItem('coins', String(coins - 20));
   document.getElementById('coinCount').textContent = coins - 20;
-  document.getElementById('coinDisplay').textContent = coins - 20;
+  const coinDisplayEl = document.getElementById('coinDisplay');
+if (coinDisplayEl) coinDisplayEl.textContent = coins - 20;
 
   const overlay = document.getElementById('revealOverlay');
   const row1 = document.getElementById('revealRow1');
