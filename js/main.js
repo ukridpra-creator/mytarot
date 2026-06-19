@@ -7,6 +7,7 @@ function go(page) {
     palm: 'pages/palm.html',
     iching: 'pages/iching.html',
     rune: 'pages/rune.html',
+    saju: 'pages/saju.html',
     thai: 'pages/thai.html',
     western: 'pages/western.html',
     chinese: 'pages/chinese.html',
