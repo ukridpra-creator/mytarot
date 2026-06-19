@@ -250,7 +250,7 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 8000,
         system: `คุณคือหมอดูเลขศาสตร์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แต่ละหัวข้อกระชับพอดีๆ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role: 'user', content: prompt }]
       })
