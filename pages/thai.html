@@ -34,35 +34,34 @@
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
     .form-box {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+      border-radius: 20px; padding: 20px; margin-bottom: 20px;
     }
+    .form-row { margin-bottom: 16px; }
     .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-hint { font-size: 11px; color: var(--dim); margin-top: 6px; }
     .form-input {
       width: 100%; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px 16px; color: white; font-size: 15px;
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; color: white; font-size: 15px;
       font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; margin-bottom: 14px;
+      transition: border-color 0.2s; box-sizing: border-box;
     }
-    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
-    .form-input::placeholder { color: rgba(255,255,255,0.3); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .form-row .form-input, .form-row2 .form-input { margin-bottom: 0; }
+    .form-input:focus { border-color: var(--purple-light); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     .info-box {
       background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px;
+      border-radius: 16px; padding: 14px; margin-bottom: 20px;
     }
-    .info-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+    .info-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
     .info-text { font-size: 12px; color: var(--dim); line-height: 1.6; }
-    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
-    .tier-btn {
-      flex: 1; padding: 12px; border-radius: 14px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s; font-weight: 600;
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
     }
-    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
     .btn-read {
       width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
       border: none; border-radius: 16px; padding: 16px; color: white;
@@ -73,13 +72,13 @@
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .result-box {
       background: rgba(124,58,237,0.08); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; display: none;
+      border-radius: 20px; padding: 20px; display: none; margin-bottom: 16px;
     }
     .result-box.show { display: block; }
     .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
     .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
-    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
+    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 30px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span {
       width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
@@ -92,19 +91,41 @@
       50% { transform: translateY(-10px); opacity: 1; }
     }
     .loading-text { font-size: 14px; color: var(--dim); }
-    .upgrade-box {
-      margin-top: 20px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
-      border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 16px; padding: 20px; text-align: center;
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: var(--purple-light); margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
     }
-    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
-    .upgrade-btn {
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 12px; padding: 12px 24px;
-      color: white; font-size: 14px; font-weight: 700;
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .followup-box {
+      margin-top: 16px; padding: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+    }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      resize: none; margin-bottom: 10px; box-sizing: border-box;
+    }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn {
+      width: 100%; background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 700;
       font-family: 'Sarabun', sans-serif; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 12px;
     }
+    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -112,75 +133,89 @@
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">โหราศาสตร์ไทย</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
 </div>
 
 <div class="page-content">
   <div class="reading-hero">
     <div class="reading-icon"><img src="../images/icon-thai.png" alt="โหราศาสตร์ไทย"></div>
     <div class="reading-title">โหราศาสตร์ไทย</div>
-    <div class="reading-ref">📖 อ้างอิง: ตำราพรหมชาติ + โหราศาสตร์ยูเรเนียนไทย</div>
-    <div class="reading-desc">คำนวณจากดาวนพเคราะห์ 9 ดวง และเรือนชะตา 12 เรือนค่ะ</div>
+    <div class="reading-ref">📖 อ้างอิง: ปฏิทินสุริยยาตร์ + พระคัมภีร์สุริยยาตร์ศิวาคม</div>
+    <div class="reading-desc">คำนวณดาวนพเคราะห์ 9 ดวง ดาวจรรายเดือน และเรือนชะตา 12 เรือนค่ะ</div>
   </div>
 
   <div class="form-box">
-    <label class="form-label">📅 วันเดือนปีเกิด (พ.ศ.)</label>
     <div class="form-row">
-      <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
-      <input class="form-input" id="month" type="number" placeholder="เดือน" min="1" max="12">
-      <input class="form-input" id="year" type="number" placeholder="ปี พ.ศ.">
+      <label class="form-label">📅 วันเกิด (พ.ศ.)</label>
+      <div class="form-grid3">
+        <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
+        <input class="form-input" id="month" type="number" placeholder="เดือน" min="1" max="12">
+        <input class="form-input" id="year" type="number" placeholder="ปี พ.ศ.">
+      </div>
+      <div class="form-hint">⚠️ กรอกเป็น พ.ศ. นะคะ เช่น 2538</div>
     </div>
-
-    <label class="form-label" style="margin-top:14px">⏰ เวลาเกิด</label>
-    <div class="form-row2">
-      <input class="form-input" id="hour" type="number" placeholder="ชั่วโมง (0-23)" min="0" max="23">
-      <input class="form-input" id="minute" type="number" placeholder="นาที (0-59)" min="0" max="59">
+    <div class="form-row">
+      <label class="form-label">⏰ เวลาเกิด (ไม่บังคับ)</label>
+      <div class="form-grid2">
+        <input class="form-input" id="hour" type="number" placeholder="ชั่วโมง 0-23" min="0" max="23">
+        <input class="form-input" id="minute" type="number" placeholder="นาที 0-59" min="0" max="59">
+      </div>
+      <div class="form-hint">ไม่ทราบเวลาเกิดก็ได้ค่ะ ไม่กรอกก็ไม่เป็นไร</div>
     </div>
-
-    <label class="form-label" style="margin-top:14px">📍 จังหวัดที่เกิด</label>
-    <input class="form-input" id="province" type="text" placeholder="เช่น กรุงเทพมหานคร">
+    <div class="form-row">
+      <label class="form-label">📍 จังหวัดที่เกิด</label>
+      <input class="form-input" id="province" type="text" placeholder="เช่น กรุงเทพมหานคร">
+    </div>
   </div>
 
   <div class="info-box">
     <div class="info-title">ℹ️ ทำไมต้องใส่เวลาเกิด?</div>
-    <div class="info-text">เวลาเกิดใช้คำนวณลัคนาและตำแหน่งดาวให้แม่นยำขึ้นค่ะ ถ้าไม่ทราบเวลาเกิดสามารถเว้นไว้ได้ แต่ผลจะแม่นน้อยกว่าค่ะ</div>
+    <div class="info-text">เวลาเกิดใช้คำนวณลัคนาและตำแหน่งดาวให้แม่นยำขึ้นค่ะ ถ้าไม่ทราบก็ไม่เป็นไรค่ะ</div>
   </div>
 
-  <div class="tier-toggle">
-    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
-    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()">
-    🇹🇭 วิเคราะห์โหราศาสตร์ไทย
-  </button>
+  <button class="btn-read" id="readBtn" onclick="startReading()">🇹🇭 วิเคราะห์โหราศาสตร์ไทย</button>
 
   <div class="result-box" id="resultBox">
-    <div class="result-header">
-      <span>🔮</span>
-      <div class="result-title">ผลการวิเคราะห์โหราศาสตร์ไทย</div>
-    </div>
+    <div class="result-header"><span>🔮</span><div class="result-title">ผลการวิเคราะห์โหราศาสตร์ไทย</div></div>
     <div class="result-text" id="resultText"></div>
-    <div class="upgrade-box" id="upgradeBox" style="display:none">
-      <div class="upgrade-text">
-        ✨ อยากรู้ลึกกว่านี้?<br>
-        อัปเกรดพรีเมียมเพื่อดูแผนที่ดาวครบ 9 ดวง<br>
-        อดีต/ปัจจุบัน/อนาคต ทุกช่วงอายุ
-      </div>
-      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
-        👑 สมัครพรีเมียม 99 บาท/เดือน
-      </button>
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
 </div>
 
 <script>
-let currentTier = 'free';
+let analysisResult = '';
+let followupHistory = [];
 
-function setTier(tier) {
-  currentTier = tier;
-  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
-  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+function colorizeThaiAstro(text) {
+  return text
+    .replace(/ดาวอาทิตย์/g, '<span style="color:#fbbf24;font-weight:700">ดาวอาทิตย์</span>')
+    .replace(/ดาวจันทร์/g, '<span style="color:#e2e8f0;font-weight:700">ดาวจันทร์</span>')
+    .replace(/ดาวอังคาร/g, '<span style="color:#ef4444;font-weight:700">ดาวอังคาร</span>')
+    .replace(/ดาวพุธ/g, '<span style="color:#10b981;font-weight:700">ดาวพุธ</span>')
+    .replace(/ดาวพฤหัส/g, '<span style="color:#f59e0b;font-weight:700">ดาวพฤหัส</span>')
+    .replace(/ดาวศุกร์/g, '<span style="color:#ec4899;font-weight:700">ดาวศุกร์</span>')
+    .replace(/ดาวเสาร์/g, '<span style="color:#6b7280;font-weight:700">ดาวเสาร์</span>')
+    .replace(/ดาวราหู/g, '<span style="color:#8b5cf6;font-weight:700">ดาวราหู</span>')
+    .replace(/ดาวเกตุ/g, '<span style="color:#a78bfa;font-weight:700">ดาวเกตุ</span>')
+    .replace(/ดาวจร/g, '<span style="color:#60a5fa;font-weight:700">ดาวจร</span>')
+    .replace(/ลัคนา/g, '<span style="color:#a855f7;font-weight:700">ลัคนา</span>')
+    .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
+    .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
+    .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
+    .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
+    .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
+    .replace(/เสริมดวง/g, '<span style="color:#fbbf24;font-weight:700">เสริมดวง</span>')
+    .replace(/\n/g, '<br>');
 }
 
 async function startReading() {
@@ -191,76 +226,67 @@ async function startReading() {
   const minute = document.getElementById('minute').value;
   const province = document.getElementById('province').value.trim() || 'กรุงเทพมหานคร';
 
-  if (!day || !month || !year) {
-    alert('กรุณากรอกวันเดือนปีเกิดให้ครบค่ะ'); return;
-  }
+  if (!day || !month || !year) { alert('กรุณากรอกวันเดือนปีเกิดให้ครบค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 40) { alert('เหรียญไม่พอค่ะ ต้องใช้ 40 เหรียญค่ะ'); return; }
 
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
   const resultText = document.getElementById('resultText');
-  const upgradeBox = document.getElementById('upgradeBox');
 
   btn.disabled = true;
-  upgradeBox.style.display = 'none';
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
   resultBox.classList.add('show');
   resultText.innerHTML = `
     <div class="loading">
       <div class="loading-dots"><span></span><span></span><span></span></div>
       <div class="loading-text">AI กำลังคำนวณดาวนพเคราะห์...</div>
     </div>`;
-  resultBox.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth' }), 100);
 
-  const isPremium = currentTier === 'premium';
   const yearAD = parseInt(year) - 543;
   const timeInfo = hour !== '' ? `เวลา ${hour}:${minute || '00'} น.` : 'ไม่ทราบเวลาเกิด';
 
-  const systemPrompt = `คุณคือโหรผู้เชี่ยวชาญโหราศาสตร์ไทยระดับปรมาจารย์ อ้างอิงตำราพรหมชาติและโหราศาสตร์ยูเรเนียนไทย
-กฎที่ต้องทำตามทุกข้อ:
-- เขียนให้ครบทุกหัวข้อ แต่ละหัวข้อไม่เกิน 2-3 ประโยค กระชับได้ใจความ
-- ทำนายดวงชะตาโดยตรง เหมือนโหรนั่งอ่านดวงให้ฟัง
-- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษ
-- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
-- ห้ามแปลชื่อเป็นภาษาไทย
-- ห้ามใช้ markdown ห้ามใช้ # ## ** หรือสัญลักษณ์ใดๆ ใช้แค่ตัวเลขและข้อความธรรมดา
-- แต่ละหัวข้อเขียนกระชับ 3-4 ประโยค ให้จบในตัวเอง ไม่ตัดกลางคัน
-- พูดเหมือนโหรจริงๆ ที่เห็นดวงชะตาชัดเจน`;
+  const today = new Date();
+  const todayStr = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()+543}`;
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+  const monthNames = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextMonthName = monthNames[nextMonth];
+  const currentMonthName = monthNames[currentMonth];
 
-  const freePrompt = `ทำนายดวงโหราศาสตร์ไทย สำหรับ:
-วันเกิด: ${day}/${month}/${yearAD} ${timeInfo}
+  const prompt = `วิเคราะห์โหราศาสตร์ไทยตามปฏิทินสุริยยาตร์สำหรับ:
+วันเกิด: ${day}/${month}/${yearAD} (พ.ศ. ${year}) ${timeInfo}
 จังหวัดที่เกิด: ${province}
+วันที่ปัจจุบัน: ${todayStr}
+เดือนปัจจุบัน: ${currentMonthName} พ.ศ. ${currentYear+543}
+เดือนหน้า: ${nextMonthName}
 
-บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อกระชับ 3-4 ประโยค เขียนให้จบ:
+เริ่มด้วยทักทายแบบ Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" จากนั้นแบ่งเป็นหัวข้อ:
 
-1. ตำราอ้างอิง ดาวเจ้าชีวิต ลัคนา และราศี
-บอกว่าอ้างอิงตำราอะไร เกิดวันอะไร ดาวเจ้าชีวิตคือดาวอะไร ลัคนาและราศีคืออะไร
+ดาวเจ้าชีวิตและลัคนาราศี: บอกเกิดวันอะไร ดาวเจ้าชีวิตคืออะไร ลัคนาราศีคืออะไร บุคลิกโดยรวม
 
-2. ดวงภาพรวมปี 2569
-ทำนายดวงชะตาในปี 2569 ว่าจะเป็นอย่างไร
+ดาวนพเคราะห์ ณ วันเกิด: ดาวแต่ละดวงอยู่เรือนไหน ส่งผลอะไรในชีวิต
 
-3. ดาวดีที่กำลังส่งผลตอนนี้
-บอกว่าดาวไหนกำลังส่งพลังดีให้ และส่งผลอะไร
+ดาวจรเดือน${currentMonthName}: ดาวจรตำแหน่งปัจจุบัน กำลังส่งผลอะไรให้คุณพี่
 
-4. สิ่งที่ต้องระวัง
-บอกสิ่งที่ต้องระวังในช่วงนี้`;
+การงาน: ตอนนี้ดาวไหนอยู่ตรงไหน ส่งผลอะไร และเดือน${nextMonthName}ดาวจะย้ายไปไหน จะทำให้เป็นอย่างไร เพราะงั้นควรทำอะไร
 
-  const premiumPrompt = `ทำนายดวงโหราศาสตร์ไทยแบบพรีเมียมละเอียด สำหรับ:
-วันเกิด: ${day}/${month}/${yearAD} ${timeInfo}
-จังหวัดที่เกิด: ${province}
+การเงิน: เหมือนกัน บอก timeline ดาวจรค่ะ
 
-บอกครบ 12 หัวข้อนี้ แต่ละหัวข้อกระชับ 3-4 ประโยค เขียนให้จบในตัวเอง ไม่ตัดกลางคัน:
+ความรัก: เหมือนกัน บอก timeline ดาวจรค่ะ
 
-1. ตำราอ้างอิง ดาวเจ้าชีวิต ลัคนา และราศี
-2. แผนที่ดาวนพเคราะห์ 9 ดวง อยู่เรือนไหน ส่งผลอะไร
-3. ดาวโคจรปัจจุบัน อยู่นานแค่ไหน ส่งผลอะไร
-4. อดีต — วัยเด็กถึงปัจจุบัน
-5. ปัจจุบัน — ดวงตอนนี้ทุกด้าน
-6. อนาคต — ดวง 3 ปีข้างหน้า
-7. การงาน — ทำนายและแนะนำ
-8. การเงิน — ทำนายและแนะนำ
-9. ความรัก — ทำนายและแนะนำ
-10. สุขภาพ — ทำนายและแนะนำ
-11. ช่วงอายุที่ดาวให้คุณมากที่สุด
-12. วิธีเสริมดวง และสิ่งที่ต้องระวัง`;
+สุขภาพ: เหมือนกัน บอก timeline ดาวจรค่ะ
+
+ช่วงดาวดีที่สุดในปีนี้: บอกว่าเดือนไหนดาวจรส่งผลดีที่สุด
+
+สิ่งที่ต้องระวัง: ดาวไหนกำลังส่งผลร้าย ช่วงไหน ระวังอะไร
+
+วิธีเสริมดวง: แนะนำตามหลักโหราศาสตร์ไทยค่ะ
+
+ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
     const res = await fetch('/api/claude', {
@@ -268,48 +294,121 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: isPremium ? 1500 : 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
+        max_tokens: 6000,
+        system: `คุณคือโหราจารย์ผู้เชี่ยวชาญโหราศาสตร์ไทย อ้างอิงปฏิทินสุริยยาตร์และพระคัมภีร์สุริยยาตร์ศิวาคม เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง ทำนายเป็น timeline ดาวจรรายเดือน บอกว่าดาวไหนอยู่ตรงไหน ส่งผลอะไร และเมื่อดาวย้ายจะเกิดอะไรขึ้น ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
 
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+
     const reader = res.body.getReader();
-const decoder = new TextDecoder();
-let text = '';
+    const decoder = new TextDecoder();
+    let text = '';
+    resultText.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
 
-resultText.textContent = '';
-const cursor = document.createElement('span');
-cursor.className = 'cursor';
-resultText.appendChild(cursor);
-
-while (true) {
-  const { done, value } = await reader.read();
-  if (done) break;
-  const chunk = decoder.decode(value);
-  text += chunk;
-  resultText.textContent = text;
-  resultText.appendChild(cursor);
-  resultBox.scrollTop = resultBox.scrollHeight;
-}
-
-cursor.remove();
-resultText.textContent = text;
-
-    if (!isPremium) {
-      upgradeBox.style.display = 'block';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      resultText.innerHTML = colorizeThaiAstro(text);
+      resultText.appendChild(cursor);
     }
+    cursor.remove();
+    resultText.innerHTML = colorizeThaiAstro(text);
+    analysisResult = text;
 
-  } catch (e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
-    console.error(e);
+    const newCoins = coins - 40;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+    document.getElementById('coinDisplay').textContent = newCoins;
+
+    followupHistory = [];
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
+    console.error('startReading error:', e);
+    resultText.textContent = `เกิดข้อผิดพลาดค่ะ: ${e.message}`;
   }
 
   btn.disabled = false;
+  btn.textContent = '🇹🇭 วิเคราะห์อีกครั้ง';
+}
+
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+  document.getElementById('followupInput').style.display = 'none';
+  document.getElementById('followupBtn').style.display = 'none';
+  document.getElementById('followupTitle').style.display = 'none';
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 800,
+        system: `คุณคือโหราจารย์โหราศาสตร์ไทย Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ผลวิเคราะห์โหราศาสตร์ไทย: ${analysisResult}\nคำถาม: ${question}` }]
+      })
+    });
+
+    if (!res.ok) throw new Error('API error');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+
+    const newCoins = coins - 5;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+
+  input.value = '';
+  document.getElementById('followupInput').style.display = 'block';
+  document.getElementById('followupBtn').style.display = 'block';
+  document.getElementById('followupTitle').style.display = 'block';
+  followupBtn.disabled = false;
+  answerDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const c = isNaN(coins) ? 500 : coins;
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
 });
 </script>
 </body>
