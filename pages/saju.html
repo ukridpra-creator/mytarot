@@ -243,9 +243,11 @@ async function startReading() {
     </div>`;
   setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth' }), 100);
 
-  const prompt = `วิเคราะห์ซาจูเกาหลี (사주팔자) จากข้อมูลต่อไปนี้
+  const currentYear = new Date().getFullYear();
+const prompt = `วิเคราะห์ซาจูเกาหลี (사주팔자) จากข้อมูลต่อไปนี้
 วันเกิด (ค.ศ.): ${birthDate}
 เวลาเกิด: ${birthTime}
+ปีปัจจุบัน (ค.ศ.): ${currentYear}
 เพศ: ${selectedGender}
 
 เริ่มด้วยทักทายว่า "อันยองฮาเซโย ${callName}~" แบบ Gen Z อบอุ่น จากนั้นแบ่งเป็นหัวข้อ:
