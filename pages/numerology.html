@@ -34,28 +34,26 @@
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
     .form-box {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+      border-radius: 20px; padding: 20px; margin-bottom: 20px;
     }
+    .form-row { margin-bottom: 16px; }
     .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-hint { font-size: 11px; color: var(--dim); margin-top: 6px; }
     .form-input {
       width: 100%; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px 16px; color: white; font-size: 15px;
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; color: white; font-size: 15px;
       font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; margin-bottom: 14px;
+      transition: border-color 0.2s; box-sizing: border-box;
     }
-    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
-    .form-input::placeholder { color: rgba(255,255,255,0.3); }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-    .form-row .form-input { margin-bottom: 0; }
-    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
-    .tier-btn {
-      flex: 1; padding: 12px; border-radius: 14px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s; font-weight: 600;
+    .form-input:focus { border-color: var(--purple-light); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
     }
-    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
     .btn-read {
       width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
       border: none; border-radius: 16px; padding: 16px; color: white;
@@ -66,13 +64,13 @@
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .result-box {
       background: rgba(124,58,237,0.08); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; display: none;
+      border-radius: 20px; padding: 20px; display: none; margin-bottom: 16px;
     }
     .result-box.show { display: block; }
     .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
     .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
-    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
+    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 30px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span {
       width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
@@ -85,21 +83,41 @@
       50% { transform: translateY(-10px); opacity: 1; }
     }
     .loading-text { font-size: 14px; color: var(--dim); }
-    .upgrade-box {
-      margin-top: 20px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
-      border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 16px; padding: 20px; text-align: center;
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: var(--purple-light); margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
     }
-    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
-    .upgrade-btn {
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 12px; padding: 12px 24px;
-      color: white; font-size: 14px; font-weight: 700;
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .followup-box {
+      margin-top: 16px; padding: 16px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+    }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      resize: none; margin-bottom: 10px; box-sizing: border-box;
+    }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn {
+      width: 100%; background: rgba(124,58,237,0.2);
+      border: 1px solid rgba(124,58,237,0.4);
+      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      font-size: 14px; font-weight: 700;
       font-family: 'Sarabun', sans-serif; cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s; margin-bottom: 12px;
     }
-    .upgrade-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
+    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -107,7 +125,7 @@
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">เลขศาสตร์</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
 </div>
 
 <div class="page-content">
@@ -119,160 +137,234 @@
   </div>
 
   <div class="form-box">
-    <label class="form-label">📝 ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
-    <input class="form-input" id="fullname" type="text" placeholder="เช่น Somsak Jaidee">
-    <label class="form-label">📅 วันเดือนปีเกิด (พ.ศ.)</label>
     <div class="form-row">
-      <input class="form-input" id="day" type="number" placeholder="วัน" min="1" max="31">
-      <input class="form-input" id="month" type="number" placeholder="เดือน" min="1" max="12">
-      <input class="form-input" id="year" type="number" placeholder="ปี พ.ศ.">
+      <label class="form-label">📝 ชื่อจริง (ภาษาอังกฤษ)</label>
+      <input class="form-input" id="firstname" type="text" placeholder="เช่น Somsak">
+      <div class="form-hint">ใส่แค่ชื่อจริงก็ได้ค่ะ ไม่บังคับนามสกุล</div>
+    </div>
+    <div class="form-row" style="margin-top:16px">
+      <label class="form-label">📅 วันเกิด (ค.ศ.)</label>
+      <input type="date" class="form-input" id="birthDate">
+      <div class="form-hint">⚠️ กรอกเป็น ค.ศ. นะคะ ไม่ใช่ พ.ศ.</div>
     </div>
   </div>
 
-  <div class="tier-toggle">
-    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
-    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()">
-    🔢 วิเคราะห์เลขศาสตร์
-  </button>
+  <button class="btn-read" id="readBtn" onclick="startReading()">🔢 วิเคราะห์เลขศาสตร์</button>
 
   <div class="result-box" id="resultBox">
-    <div class="result-header">
-      <span>🔮</span>
-      <div class="result-title">ผลการวิเคราะห์เลขศาสตร์</div>
-    </div>
+    <div class="result-header"><span>🔢</span><div class="result-title">ผลการวิเคราะห์เลขศาสตร์</div></div>
     <div class="result-text" id="resultText"></div>
-    <div class="upgrade-box" id="upgradeBox" style="display:none">
-      <div class="upgrade-text">
-        ✨ อยากรู้ลึกกว่านี้?<br>
-        อัปเกรดพรีเมียมเพื่อดูครบทุกเลข อดีต/ปัจจุบัน/อนาคต<br>
-        ทุกช่วงอายุ แนะนำการดำเนินชีวิตรายด้าน
-      </div>
-      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
-        👑 สมัครพรีเมียม 99 บาท/เดือน
-      </button>
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
 </div>
 
 <script>
-let currentTier = 'free';
+let analysisResult = '';
+let followupHistory = [];
 
-function setTier(tier) {
-  currentTier = tier;
-  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
-  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
-  document.getElementById('readBtn').textContent = 
-    tier === 'free' ? '🔢 วิเคราะห์เลขศาสตร์ (ฟรี)' : '💎 วิเคราะห์แบบพรีเมียม';
+function colorizeNumerology(text) {
+  return text
+    .replace(/เลขชีวิต/g, '<span style="color:#a855f7;font-weight:700">เลขชีวิต</span>')
+    .replace(/เลขแสดงออก/g, '<span style="color:#3b82f6;font-weight:700">เลขแสดงออก</span>')
+    .replace(/เลขแรงปรารถนา/g, '<span style="color:#ec4899;font-weight:700">เลขแรงปรารถนา</span>')
+    .replace(/เลขบุคลิก/g, '<span style="color:#60a5fa;font-weight:700">เลขบุคลิก</span>')
+    .replace(/เลขชะตา/g, '<span style="color:#818cf8;font-weight:700">เลขชะตา</span>')
+    .replace(/เลขมงคล/g, '<span style="color:#10b981;font-weight:700">เลขมงคล</span>')
+    .replace(/เลขที่ควรหลีกเลี่ยง/g, '<span style="color:#ef4444;font-weight:700">เลขที่ควรหลีกเลี่ยง</span>')
+    .replace(/วันมงคล/g, '<span style="color:#10b981;font-weight:700">วันมงคล</span>')
+    .replace(/วันที่ควรระวัง/g, '<span style="color:#ef4444;font-weight:700">วันที่ควรระวัง</span>')
+    .replace(/สีมงคล/g, '<span style="color:#fbbf24;font-weight:700">สีมงคล</span>')
+    .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
+    .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
+    .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
+    .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
+    .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
+    .replace(/\n/g, '<br>');
 }
 
 async function startReading() {
-  const name = document.getElementById('fullname').value.trim();
-  const day = document.getElementById('day').value;
-  const month = document.getElementById('month').value;
-  const year = document.getElementById('year').value;
+  const name = document.getElementById('firstname').value.trim();
+  const birthDate = document.getElementById('birthDate').value;
 
-  if (!name || !day || !month || !year) {
-    alert('กรุณากรอกข้อมูลให้ครบค่ะ'); return;
+  if (!name || !birthDate) { alert('กรุณากรอกข้อมูลให้ครบค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 30) {
+    alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ');
+    return;
   }
 
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
   const resultText = document.getElementById('resultText');
-  const upgradeBox = document.getElementById('upgradeBox');
 
   btn.disabled = true;
-  upgradeBox.style.display = 'none';
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
   resultBox.classList.add('show');
   resultText.innerHTML = `
     <div class="loading">
       <div class="loading-dots"><span></span><span></span><span></span></div>
       <div class="loading-text">AI กำลังวิเคราะห์เลขศาสตร์...</div>
     </div>`;
-  resultBox.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth' }), 100);
 
-  const isPremium = currentTier === 'premium';
-  const yearAD = parseInt(year) - 543;
+  const currentYear = new Date().getFullYear();
 
-  const systemPrompt = `คุณคือหมอดูเลขศาสตร์ระดับปรมาจารย์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology
-กฎที่ต้องทำตามทุกข้อ:
-- ห้ามสอนวิธีคำนวณ ห้ามอธิบายทฤษฎี
-- ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
-- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษแม้แต่คำเดียว
-- ห้ามแปลชื่อเป็นภาษาไทย ให้ใช้ชื่อตามที่กรอกมาเท่านั้น
-- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
-- แต่ละหัวข้อต้องเขียนให้จบในตัวเอง ไม่ตัดกลางคัน
-- พูดเหมือนหมอดูจริงๆ ที่เห็นชะตาชีวิตชัดเจน`;
-
-  const freePrompt = `ทำนายดวงเลขศาสตร์ฟรี สำหรับ:
+  const prompt = `วิเคราะห์เลขศาสตร์สำหรับ:
 ชื่อ: ${name}
-วันเกิด: ${day}/${month}/${yearAD}
+วันเกิด (ค.ศ.): ${birthDate}
+ปีปัจจุบัน: ${currentYear}
 
-บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบ ไม่ตัดกลางคัน:
+เริ่มด้วยทักทายแบบ Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" จากนั้นแบ่งเป็นหัวข้อ:
 
-1. ตำราอ้างอิงและเลขชีวิตหลัก
-บอกว่าอ้างอิงตำราอะไร เลขชีวิตหลักคือเลขอะไร และทำนายความหมายของเลขนี้ให้ชัดเจน
+เลขชีวิต (Life Path Number): บอกเลข ความหมาย บุคลิก จุดแข็ง จุดอ่อน พอดีๆ ไม่ยาวเกินไป
+เลขแสดงออก (Expression Number): บอกเลข ความหมาย พรสวรรค์และเป้าหมายชีวิต
+เลขแรงปรารถนา (Soul Urge Number): บอกเลข ความหมาย ความปรารถนาลึกๆ
+เลขบุคลิก (Personality Number): บอกเลข ความหมาย ภาพที่คนอื่นมองเห็น
+การงาน: อาชีพที่เหมาะสม โอกาสความสำเร็จ
+การเงิน: ดวงเงิน วิธีสร้างความมั่งคั่ง
+ความรัก: ลักษณะคู่ที่เหมาะ ดวงความรัก
+ดวงปีนี้ (${currentYear}): ภาพรวมปีนี้
+เลขมงคล: เลขที่ดีสำหรับเบอร์มือถือ ทะเบียนรถ
+เลขที่ควรหลีกเลี่ยง: เลขที่ไม่ดี ควรเลี่ยงในเบอร์มือถือ ทะเบียนรถ
+วันมงคล: วันในสัปดาห์ที่ดีสำหรับการตัดสินใจสำคัญ
+วันที่ควรระวัง: วันที่ควรระมัดระวัง
+สีมงคล: สีที่เสริมดวงค่ะ
+สิ่งที่ต้องระวัง: คำเตือนจากเลขศาสตร์
 
-2. ดวงปี 2569
-ทำนายดวงชะตาในปี 2569 ว่าจะเป็นอย่างไร
-
-3. ภาพรวมชะตา
-ทำนายภาพรวมชะตาชีวิตจากเลขศาสตร์
-
-4. สิ่งที่ต้องระวัง
-บอกสิ่งที่ต้องระวังในชีวิต`;
-
-  const premiumPrompt = `ทำนายดวงเลขศาสตร์แบบพรีเมียมละเอียดมาก สำหรับ:
-ชื่อ: ${name}
-วันเกิด: ${day}/${month}/${yearAD}
-
-บอกครบ 12 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบในตัวเอง ไม่ตัดกลางคัน:
-
-1. ตำราอ้างอิงและเลขประจำตัวทุกตัว
-2. ทำนายดวงจากเลขชีวิตหลัก
-3. ทำนายดวงจากเลขแสดงออก (จากชื่อ)
-4. ทำนายดวงจากเลขแรงปรารถนา (จากสระในชื่อ)
-5. ทำนายดวงจากเลขบุคลิก (จากพยัญชนะในชื่อ)
-6. อดีต — วัยเด็กถึงปัจจุบัน ละเอียดทุกช่วงวัย
-7. ปัจจุบัน — ดวงตอนนี้ทุกด้าน
-8. อนาคต — ทุกช่วงอายุจนถึงวัยชรา
-9. การงาน — ทำนายและแนะนำ
-10. การเงิน — ทำนายและแนะนำ
-11. ความรักและสุขภาพ — ทำนายและแนะนำ
-12. เลขมงคล สีมงคล วันมงคล และสิ่งที่ต้องระวัง`;
+แต่ละหัวข้อกระชับ พอดีๆ ไม่ยาวเกินไป ไม่สั้นเกินไป ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
-    const res = await fetch('/.netlify/functions/claude', {
+    const res = await fetch('/api/claude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: isPremium ? 3000 : 600,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
+        max_tokens: 4000,
+        system: `คุณคือหมอดูเลขศาสตร์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แต่ละหัวข้อกระชับพอดีๆ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role: 'user', content: prompt }]
       })
     });
 
-    const data = await res.json();
-    const text = data.content?.map(c => c.text || '').join('') || 'ไม่สามารถวิเคราะห์ได้ค่ะ';
-    resultText.textContent = text;
+    if (!res.ok) throw new Error(`API error ${res.status}`);
 
-    if (!isPremium) {
-      upgradeBox.style.display = 'block';
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    resultText.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      resultText.innerHTML = colorizeNumerology(text);
+      resultText.appendChild(cursor);
     }
+    cursor.remove();
+    resultText.innerHTML = colorizeNumerology(text);
+    analysisResult = text;
 
-  } catch (e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
-    console.error(e);
+    const newCoins = coins - 30;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+    document.getElementById('coinDisplay').textContent = newCoins;
+
+    followupHistory = [];
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
+    console.error('startReading error:', e);
+    resultText.textContent = `เกิดข้อผิดพลาดค่ะ: ${e.message}`;
   }
 
   btn.disabled = false;
+  btn.textContent = '🔢 วิเคราะห์อีกครั้ง';
+}
+
+async function askFollowup() {
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (isNaN(coins) || coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+  document.getElementById('followupInput').style.display = 'none';
+  document.getElementById('followupBtn').style.display = 'none';
+  document.getElementById('followupTitle').style.display = 'none';
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById(`ans_${time}`);
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 600,
+        system: `คุณคือหมอดูเลขศาสตร์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ผลวิเคราะห์เลขศาสตร์: ${analysisResult}\nคำถาม: ${question}` }]
+      })
+    });
+
+    if (!res.ok) throw new Error('API error');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+
+    const newCoins = coins - 5;
+    localStorage.setItem('coins', String(newCoins));
+    document.getElementById('coinCount').textContent = newCoins;
+
+  } catch(e) {
+    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+
+  input.value = '';
+  document.getElementById('followupInput').style.display = 'block';
+  document.getElementById('followupBtn').style.display = 'block';
+  document.getElementById('followupTitle').style.display = 'block';
+  followupBtn.disabled = false;
+  answerDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
+  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const c = isNaN(coins) ? 500 : coins;
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
 });
 </script>
 </body>
