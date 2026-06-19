@@ -224,6 +224,9 @@
   <div class="cards-section">
     <div class="cards-title">🃏 ตั้งจิตนึกถึงเรื่องความรัก แล้วเลือกไพ่ 5 ใบค่ะ</div>
     <div class="cards-scroll" id="cardsScroll"></div>
+<div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">
+  ← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →
+</div>
   </div>
 
   <div class="coin-box">
@@ -370,6 +373,11 @@ function colorizeReading(text) {
 function shuffle() {
   shuffled = [...TAROT].sort(() => Math.random() - 0.5);
   renderCards();
+  setTimeout(() => {
+    const scroll = document.getElementById('cardsScroll');
+    scroll.scrollTo({ left: 120, behavior: 'smooth' });
+    setTimeout(() => scroll.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+  }, 500);
 }
 
 function renderCards() {
