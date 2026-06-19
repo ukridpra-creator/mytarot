@@ -37,6 +37,7 @@
     }
     .form-row { margin-bottom: 16px; }
     .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-hint { font-size: 11px; color: var(--dim); margin-top: 6px; }
     .form-input {
       width: 100%; background: rgba(255,255,255,0.05);
       border: 1px solid var(--border); border-radius: 12px;
@@ -45,17 +46,7 @@
       transition: border-color 0.2s; box-sizing: border-box;
     }
     .form-input:focus { border-color: var(--purple-light); }
-    .form-select {
-      width: 100%; background: rgba(20,10,40,0.9);
-      border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px 16px; color: white; font-size: 15px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; box-sizing: border-box;
-      appearance: none;
-    }
-    .form-select:focus { border-color: var(--purple-light); }
-    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .gender-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .gender-row { display: flex; gap: 10px; }
     .gender-btn {
       flex: 1; padding: 12px; border-radius: 12px;
       border: 1px solid var(--border); background: rgba(255,255,255,0.03);
@@ -157,10 +148,12 @@
     <div class="form-row">
       <label class="form-label">📅 วันเกิด</label>
       <input type="date" class="form-input" id="birthDate">
+      <div class="form-hint">⚠️ กรอกเป็น ค.ศ. นะคะ เช่น 15/06/1995 (ไม่ใช่ พ.ศ.)</div>
     </div>
     <div class="form-row">
       <label class="form-label">🕐 เวลาเกิด (ไม่บังคับ)</label>
-      <input type="time" class="form-input" id="birthTime" placeholder="ไม่ทราบเวลาเกิดก็ได้ค่ะ">
+      <input type="time" class="form-input" id="birthTime">
+      <div class="form-hint">ไม่ทราบเวลาเกิดก็ได้ค่ะ ไม่กรอกก็ไม่เป็นไร</div>
     </div>
     <div class="form-row">
       <label class="form-label">👤 เพศ</label>
@@ -172,7 +165,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อครั้งค่ะ</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
   </div>
 
@@ -183,7 +176,7 @@
     <div class="result-text" id="resultText"></div>
     <div class="followup-box" id="followupBox" style="display:none">
       <div class="followup-result" id="followupResult"></div>
-      <div id="followupTitle" class="followup-title">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+      <div id="followupTitle" class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
       <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
       <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
@@ -203,12 +196,22 @@ function setGender(g) {
 
 function colorizeSaju(text) {
   return text
+    .replace(/ธาตุไฟ/g, '<span style="color:#ef4444;font-weight:700">ธาตุไฟ</span>')
+    .replace(/ธาตุน้ำ/g, '<span style="color:#3b82f6;font-weight:700">ธาตุน้ำ</span>')
+    .replace(/ธาตุไม้/g, '<span style="color:#10b981;font-weight:700">ธาตุไม้</span>')
+    .replace(/ธาตุดิน/g, '<span style="color:#f59e0b;font-weight:700">ธาตุดิน</span>')
+    .replace(/ธาตุโลหะ/g, '<span style="color:#9ca3af;font-weight:700">ธาตุโลหะ</span>')
+    .replace(/화/g, '<span style="color:#ef4444;font-weight:700">화</span>')
+    .replace(/수/g, '<span style="color:#3b82f6;font-weight:700">수</span>')
+    .replace(/목/g, '<span style="color:#10b981;font-weight:700">목</span>')
+    .replace(/토/g, '<span style="color:#f59e0b;font-weight:700">토</span>')
+    .replace(/금/g, '<span style="color:#9ca3af;font-weight:700">금</span>')
     .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
     .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
     .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
     .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
-    .replace(/ปีนี้/g, '<span style="color:#a855f7;font-weight:700">ปีนี้</span>')
     .replace(/ดวงชะตา/g, '<span style="color:#818cf8;font-weight:700">ดวงชะตา</span>')
+    .replace(/ปีนี้/g, '<span style="color:#a855f7;font-weight:700">ปีนี้</span>')
     .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
     .replace(/\n/g, '<br>');
 }
@@ -218,12 +221,14 @@ async function startReading() {
   if (!birthDate) { alert('กรุณาใส่วันเกิดก่อนค่ะ'); return; }
 
   const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (isNaN(coins) || coins < 20) {
-    alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ');
+  if (isNaN(coins) || coins < 40) {
+    alert('เหรียญไม่พอค่ะ ต้องใช้ 40 เหรียญค่ะ');
     return;
   }
 
   const birthTime = document.getElementById('birthTime').value || 'ไม่ทราบเวลาเกิด';
+  const callName = selectedGender === 'ชาย' ? 'โอปป้า' : 'ออนนี่';
+
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
   const resultText = document.getElementById('resultText');
@@ -239,21 +244,21 @@ async function startReading() {
   setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth' }), 100);
 
   const prompt = `วิเคราะห์ซาจูเกาหลี (사주팔자) จากข้อมูลต่อไปนี้
-วันเกิด: ${birthDate}
+วันเกิด (ค.ศ.): ${birthDate}
 เวลาเกิด: ${birthTime}
 เพศ: ${selectedGender}
 
-เริ่มด้วยทักทายแบบ Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" จากนั้นแบ่งเป็นหัวข้อ:
-ธาตุประจำตัว (บอกธาตุและความหมาย)
-ดวงชะตาโดยรวม
-การงานและความสำเร็จ
-การเงินและทรัพย์สิน
-ความรักและชีวิตคู่
-สุขภาพ
-ปีนี้ดวงเป็นยังไง
-สิ่งที่ต้องระวัง
-สรุปและคำแนะนำ
-ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
+เริ่มด้วยทักทายว่า "อันยองฮาเซโย ${callName}~" แบบ Gen Z อบอุ่น จากนั้นแบ่งเป็นหัวข้อ:
+ธาตุประจำตัว (บอกชื่อธาตุ ความหมาย จุดแข็ง จุดอ่อน)
+ดวงชะตาโดยรวม (ภาพรวมชีวิต บุคลิก นิสัย)
+การงานและความสำเร็จ (เส้นทางอาชีพที่เหมาะสม โอกาส)
+การเงินและทรัพย์สิน (ดวงเงิน วิธีสร้างความมั่งคั่ง)
+ความรักและชีวิตคู่ (ลักษณะคู่ที่เหมาะ ดวงความรัก)
+สุขภาพ (สิ่งที่ต้องดูแล อวัยวะที่ควรระวัง)
+ปีนี้ดวงเป็นยังไง (ภาพรวมปีนี้ โอกาส ระวัง)
+สิ่งที่ต้องระวัง (คำเตือนจากดวง)
+สรุปและคำแนะนำ (ข้อคิดปิดท้าย)
+เรียก${selectedGender === 'ชาย' ? 'ว่าโอปป้า' : 'ว่าออนนี่'}ตลอด เรียกตัวเองว่า "น้อง" ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
     const res = await fetch('/api/claude', {
@@ -261,8 +266,8 @@ async function startReading() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
-        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี (사주팔자) เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แบ่งเป็นหัวข้อชัดเจน ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        max_tokens: 6000,
+        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี (사주팔자) พูดแบบ Gen Z อบอุ่น เป็นกันเอง สไตล์เกาหลี ทักทายด้วย "อันยองฮาเซโย" เรียกผู้ชายว่า "โอปป้า" เรียกผู้หญิงว่า "ออนนี่" เรียกตัวเองว่า "น้อง" แบ่งเป็นหัวข้อชัดเจน ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -288,7 +293,7 @@ async function startReading() {
     resultText.innerHTML = colorizeSaju(text);
     analysisResult = text;
 
-    const newCoins = coins - 20;
+    const newCoins = coins - 40;
     localStorage.setItem('coins', String(newCoins));
     document.getElementById('coinCount').textContent = newCoins;
     document.getElementById('coinDisplay').textContent = newCoins;
@@ -313,6 +318,7 @@ async function askFollowup() {
   const coins = parseInt(localStorage.getItem('coins') || '0');
   if (isNaN(coins) || coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
 
+  const callName = selectedGender === 'ชาย' ? 'โอปป้า' : 'ออนนี่';
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
 
@@ -330,7 +336,7 @@ async function askFollowup() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6', max_tokens: 600,
-        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี Gen Z เรียก${selectedGender === 'ชาย' ? 'ผู้ใช้ว่าโอปป้า' : 'ผู้ใช้ว่าออนนี่'} เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
         messages: [{ role: 'user', content: `ผลวิเคราะห์ซาจู: ${analysisResult}\nคำถาม: ${question}` }]
       })
     });
