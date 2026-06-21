@@ -53,11 +53,6 @@
 
 <main class="main">
 
-  <!-- ฟรี -->
-  <div class="section-label">
-    <span>ดูฟรี</span>
-    <span class="tag free-tag">FREE</span>
-  </div>
   <div class="grid">
     <div class="card" onclick="go('tarot')">
       <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์"></div>
@@ -65,20 +60,18 @@
       <div class="card-desc">เปิดไพ่รับคำทำนายจากพลังจักรวาล</div>
       <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
     </div>
+    <div class="card" onclick="go('oracle')">
+      <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล"></div>
+      <div class="card-title">ไพ่ออราเคิล</div>
+      <div class="card-desc">ถามจักรวาล รับสารจากดวงดาว</div>
+      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+    </div>
     <div class="card" onclick="go('numerology')">
       <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
       <div class="card-title">เลขศาสตร์</div>
       <div class="card-desc">ความลับของชีวิตซ่อนอยู่ในตัวเลข</div>
       <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
     </div>
-  </div>
-
-  <!-- เหรียญ -->
-  <div class="section-label" style="margin-top:24px">
-    <span>ใช้เหรียญ</span>
-    <span class="tag coin-tag">🪙 5-10 เหรียญ</span>
-  </div>
-  <div class="grid">
     <div class="card" onclick="go('face')">
       <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
       <div class="card-title">โหงวเฮ้ง</div>
@@ -104,8 +97,8 @@
       <div class="card-footer"><span class="tag coin-tag">🪙 5</span><span class="arrow">→</span></div>
     </div>
     <div class="card" onclick="go('deity')">
-      <div class="card-icon"><img src="images/icon-deity.png" alt="มูเทพ"></div>
-      <div class="card-title">มูเทพ</div>
+      <div class="card-icon"><img src="images/icon-deity.png" alt="เทพประจำตัว"></div>
+      <div class="card-title">เทพประจำตัว</div>
       <div class="card-desc">ค้นหาเทพองค์ที่คุ้มครองคุณ</div>
       <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
     </div>
@@ -115,14 +108,6 @@
       <div class="card-desc">โชคชะตาแบบเกาหลีโบราณ</div>
       <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
     </div>
-  </div>
-
-  <!-- พรีเมียม -->
-  <div class="section-label" style="margin-top:24px">
-    <span>พรีเมียมเท่านั้น</span>
-    <span class="tag premium-tag">💎 PREMIUM</span>
-  </div>
-  <div class="grid">
     <div class="card" onclick="go('thai')">
       <div class="card-icon"><img src="images/icon-thai.png" alt="โหราศาสตร์ไทย"></div>
       <div class="card-title">โหราศาสตร์ไทย</div>
@@ -141,25 +126,6 @@
       <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา</div>
       <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
     </div>
-    <div class="card" onclick="go('vedic')">
-      <div class="card-icon"><img src="images/icon-vedic.png" alt="เวทย์มนตร์อินเดีย"></div>
-      <div class="card-title">เวทย์มนตร์อินเดีย</div>
-      <div class="card-desc">Vedic โหราศาสตร์ฮินดูโบราณ</div>
-      <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
-    </div>
-  </div>
-
-  <!-- Premium Banner -->
-  <div class="premium-banner" onclick="go('premium')">
-    <div class="premium-icon">👑</div>
-    <div class="premium-text">
-      <h3>สมัครพรีเมียม</h3>
-      <p>ดูได้ทุกศาสตร์ไม่จำกัด อดีต/ปัจจุบัน/อนาคต</p>
-    </div>
-    <div class="premium-price">
-      <div class="price">99฿</div>
-      <div class="unit">/เดือน</div>
-    </div>
   </div>
 
 </main>
@@ -172,7 +138,6 @@
 </nav>
 
 <script src="js/main.js"></script>
-<!-- ลบออกก่อน launch จริง -->
 <button onclick="localStorage.setItem('coins','9999');location.reload();" 
   style="position:fixed;bottom:80px;right:16px;z-index:999;background:#f59e0b;border:none;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;">
   🪙
