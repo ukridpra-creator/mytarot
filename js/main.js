@@ -12,6 +12,8 @@ function go(page) {
     western: 'pages/western.html',
     chinese: 'pages/chinese.html',
     vedic: 'pages/vedic.html',
+    oracle: 'pages/oracle.html',
+    deity: 'pages/deity.html',
     premium: 'pages/premium.html',
   };
   if(pages[page]) window.location.href = pages[page];
