@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เสียงกระซิบจากปีศาจ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 40px; background: #0a0008; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid rgba(139,0,139,0.3);
+      background: rgba(10,0,8,0.95); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(139,0,139,0.2); border: 1px solid rgba(139,0,139,0.4);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #c084fc;
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+
+    .hero { text-align: center; padding: 24px 0 32px; }
+    .hero-title { font-size: 24px; font-weight: 800; color: white; margin-bottom: 8px; }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; }
+
+    /* Card Back — before reveal */
+    .card-container { display: flex; justify-content: center; margin-bottom: 32px; }
+    .demon-card {
+      width: 200px; height: 320px; border-radius: 20px;
+      position: relative; cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .demon-card:hover { transform: translateY(-4px); }
+    .card-back {
+      width: 100%; height: 100%; border-radius: 20px;
+      background: linear-gradient(135deg, #1a0020, #0d000f);
+      border: 2px solid rgba(139,0,139,0.5);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      box-shadow: 0 0 40px rgba(139,0,139,0.3);
+    }
+    .card-back-icon { font-size: 64px; opacity: 0.8; }
+    .card-back-text { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+    /* Result */
+    .result { display: none; }
+    .result-card {
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid rgba(139,0,139,0.4);
+      margin-bottom: 20px;
+      box-shadow: 0 0 40px rgba(139,0,139,0.2);
+    }
+    .result-img {
+      width: 100%; aspect-ratio: 2/3;
+      object-fit: cover; display: block;
+    }
+    .result-name {
+      text-align: center; padding: 16px;
+      background: rgba(20,0,20,0.8);
+      font-size: 22px; font-weight: 800;
+      color: #c084fc; letter-spacing: 2px;
+      border-top: 1px solid rgba(139,0,139,0.3);
+    }
+
+    .warning-box {
+      background: rgba(139,0,139,0.08);
+      border: 1px solid rgba(139,0,139,0.25);
+      border-radius: 16px; padding: 20px;
+      margin-bottom: 16px;
+    }
+    .warning-label {
+      font-size: 11px; letter-spacing: 2px; color: #c084fc;
+      font-weight: 700; margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .warning-title {
+      font-size: 17px; font-weight: 700; color: white;
+      margin-bottom: 12px;
+    }
+    .warning-text {
+      font-size: 14px; color: rgba(255,255,255,0.7);
+      line-height: 1.9;
+    }
+
+    .btn-reveal {
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #6b21a8, #4a044e);
+      border: none; border-radius: 16px;
+      color: white; font-size: 16px; font-weight: 700;
+      cursor: pointer; font-family: 'Sarabun', sans-serif;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(107,33,168,0.4);
+    }
+    .btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(107,33,168,0.5); }
+    .btn-reveal:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .already-opened {
+      text-align: center; padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; margin-bottom: 20px;
+    }
+    .already-opened p { color: rgba(255,255,255,0.4); font-size: 14px; }
+    .already-opened .reset-time { color: #c084fc; font-weight: 700; margin-top: 4px; }
+
+    .tagline {
+      text-align: center; font-size: 12px;
+      color: rgba(255,255,255,0.2); margin-top: 24px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🖤 เสียงกระซิบจากปีศาจ</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🖤 Whisper of Demon</div>
+    <div class="hero-desc">เปิดไพ่เพื่อรับคำเตือนจากเงามืด<br>ได้เพียงวันละ 1 ครั้งเท่านั้น</div>
+  </div>
+
+  <!-- Already opened today -->
+  <div id="alreadyOpened" style="display:none">
+    <div class="already-opened">
+      <p>🌙 เจ้าได้รับคำเตือนของวันนี้แล้ว</p>
+      <div class="reset-time">จะรีเซ็ตเที่ยงคืนนี้</div>
+    </div>
+  </div>
+
+  <!-- Card to reveal -->
+  <div id="cardReveal">
+    <div class="card-container">
+      <div class="demon-card" onclick="revealCard()">
+       <div class="card-back">
+  <img src="../images/demon/backdemon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">
+          <div class="card-back-text">แตะเพื่อเปิดไพ่</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-reveal" onclick="revealCard()">🖤 รับคำเตือนจากปีศาจ</button>
+  </div>
+
+  <!-- Result -->
+  <div class="result" id="result">
+    <div class="result-card">
+      <img class="result-img" id="resultImg" src="" alt="">
+      <div class="result-name" id="resultName"></div>
+    </div>
+
+    <div class="warning-box">
+      <div class="warning-label">✦ คำเตือนจากปีศาจ ✦</div>
+      <div class="warning-title" id="resultWarning"></div>
+      <div class="warning-text" id="resultMessage"></div>
+    </div>
+
+    <div class="tagline">จงฟังเสียงเตือนนี้ไว้ในใจ...</div>
+  </div>
+</div>
+
+<script>
+const demonCards = [
+  {
+    id: 'lucifer',
+    name: 'LUCIFER',
+    warning: 'อีโก้กำลังบังตาเจ้าอยู่',
+    message: 'ข้าคือลูซิเฟอร์ ผู้ที่เคยยืนสูงกว่าทุกสิ่งในสวรรค์ และข้าก็รู้ดีกว่าใครว่า ความหายนะที่น่ากลัวที่สุด ไม่ได้มาจากศัตรู แต่มาจากความยโสโอหังในใจตัวเอง เจ้ากำลังมองข้ามคนรอบข้างไปทีละคน คิดว่าตัวเองรู้ดีกว่า เข้าใจดีกว่า และถูกกว่าเสมอ แต่จงฟังข้าให้ดี สิ่งที่ทำให้ข้าต้องตกจากสวรรค์ ไม่ใช่ความอ่อนแอ มันคือความเชื่อมั่นในตัวเองที่ไม่มีขอบเขต จงวางมงกุฎในใจลงสักครั้ง แล้วลองมองดูว่าคนที่เจ้ามองข้ามนั้น อาจกำลังพยายามบอกอะไรบางอย่างที่เจ้าไม่เคยได้ยิน'
+  },
+  {
+    id: 'lilith',
+    name: 'LILITH',
+    warning: 'เจ้ากำลังทนอยู่กับสิ่งที่ไม่ใช่ตัวเอง',
+    message: 'ข้าคือลิลิธ หญิงคนแรกที่เลือกเดินออกจากสวนแทนที่จะก้มหัวยอมรับ และข้าจะบอกเจ้าตรงๆ ว่าข้าเห็นอะไรในตัวเจ้า ข้าเห็นคนที่กำลังบิดตัวเองให้พอดีกับพื้นที่ที่ไม่เคยถูกสร้างมาเพื่อเจ้า เจ้าเปลี่ยนน้ำเสียง เปลี่ยนความคิด เปลี่ยนตัวตน เพื่อให้คนอื่นพอใจ แต่ทุกคืนที่เจ้านอนลงบนหมอน เจ้ารู้ดีว่านั่นไม่ใช่เจ้า ข้าออกจากสวนสวรรค์โดยไม่มีอะไรติดมือ แต่ข้าได้ตัวเองกลับคืนมา จงถามตัวเองว่า สิ่งที่เจ้ายึดอยู่ตอนนี้ มันคุ้มค่ากับการสูญเสียตัวเองขนาดนี้จริงๆ หรือ'
+  },
+  {
+    id: 'medusa',
+    name: 'MEDUSA',
+    warning: 'บาดแผลที่ไม่ได้รักษาจะกลายเป็นเกราะ',
+    message: 'ข้าคือเมดูซ่า และข้าไม่ได้น่ากลัวเพราะข้าชั่วร้าย ข้าน่ากลัวเพราะข้าเจ็บปวดมาโดยตลอด และไม่มีใครสนใจ เจ้ากำลังทำแบบเดียวกับที่คนทำกับข้า คือเดินหน้าต่อไปทั้งที่บาดแผลยังไม่หาย ยิ้มให้โลกทั้งที่ข้างในกำลังเลือดออก บาดแผลที่ไม่ได้รับการรักษาจะไม่หายไปเอง มันจะกลายเป็นเกราะที่กันทั้งความเจ็บปวดและความรักออกไปพร้อมกัน จงหยุดสักครั้ง และยอมรับว่าเจ้าเจ็บ ไม่ใช่อ่อนแอ แต่คือก้าวแรกของการหายดีจริงๆ'
+  },
+  {
+    id: 'succubus',
+    name: 'SUCCUBUS',
+    warning: 'เจ้ากำลังรอให้คนอื่นมาเติมเต็มสิ่งที่ต้องหาเอง',
+    message: 'ข้าคือซัคคิวบัส และข้ารู้จักความหิวโหยดีกว่าใคร แต่ความหิวของข้าแตกต่างจากของเจ้า เพราะข้ารู้ว่าข้าต้องการอะไร ส่วนเจ้ายังคงนั่งรอให้คนอื่นมาบอกว่าเจ้ามีคุณค่า รอให้ใครสักคนมารัก มาสนใจ มาทำให้เจ้ารู้สึกว่าตัวเองสมบูรณ์ แต่ข้าจะบอกความจริงที่เจ้าไม่อยากได้ยิน ไม่มีใครในโลกนี้สามารถเติมเต็มสิ่งที่เจ้าต้องหาให้ได้ด้วยตัวเอง จงหยุดมอบพลังชีวิตของเจ้าให้คนที่ไม่เคยขอบคุณ แล้วหันมาถามตัวเองว่าเจ้าต้องการอะไรจริงๆ'
+  },
+  {
+    id: 'loki',
+    name: 'LOKI',
+    warning: 'เจ้าสวมหน้ากากจนลืมว่าตัวเองเป็นใคร',
+    message: 'ข้าคือโลกิ เจ้าแห่งการหลอกลวงและการแปลงกาย และข้าจะบอกเจ้าว่าข้าเห็นอะไรในตัวเจ้า ข้าเห็นนักแสดงที่เก่งกาจมากจนลืมไปแล้วว่าตัวเองเป็นใครก่อนที่จะขึ้นเวที เจ้าสวมหน้ากากต่างกันในแต่ละวัน กับแต่ละคน กับแต่ละสถานการณ์ จนกระทั่งตอนที่อยู่คนเดียว เจ้ายังไม่รู้เลยว่าหน้าไหนคือหน้าที่แท้จริงของเจ้า ข้าเล่นหลายบทบาทเพราะข้าเลือก แต่เจ้าเล่นเพราะกลัว กลัวว่าถ้าให้คนเห็นตัวตนที่แท้จริง เขาจะไม่รัก จงลองถอดหน้ากากดูสักครั้ง คนที่คู่ควรกับเจ้าจะยังอยู่'
+  },
+  {
+    id: 'siren',
+    name: 'SIREN',
+    warning: 'เจ้ากำลังหลงตามสิ่งที่ฟังดูดีแต่อาจไม่ดีจริง',
+    message: 'ข้าคือไซเรน และเสียงของข้าไพเราะที่สุดในโลก แต่ข้าจะบอกเจ้าว่าเพลงที่ไพเราะที่สุดมักจะพาเจ้าไปสู่ที่มืดที่สุด เจ้ากำลังหลงเสียงบางอย่างอยู่ ไม่ว่าจะเป็นคำสัญญาที่ฟังดูสวยงาม แผนการที่ดูสมบูรณ์แบบ หรือคนที่พูดในสิ่งที่เจ้าอยากได้ยิน จงถามตัวเองว่าเจ้าถูกดึงดูดด้วยสิ่งที่เห็น หรือสิ่งที่ได้ยิน เพราะสิ่งที่ฟังดูดีไม่ได้แปลว่าดีจริงเสมอ ก่อนที่เจ้าจะกระโดดตามเสียงนั้น จงหยุดฟังเสียงเล็กๆ ในใจตัวเองสักครั้งก่อน'
+  },
+  {
+    id: 'arachne',
+    name: 'ARACHNE',
+    warning: 'เจ้ากำลังควบคุมทุกอย่างจนใยนั้นดักจับตัวเอง',
+    message: 'ข้าคืออาราคเน่ ช่างทอผู้ยิ่งใหญ่ที่ถักใยทุกเส้นด้วยมือตัวเอง และข้าเข้าใจดีกว่าใครว่ามันรู้สึกอย่างไรที่ต้องควบคุมทุกอย่างให้ได้ เจ้ากำลังถักใยรอบตัวเองอยู่ พยายามจัดการทุกสิ่งทุกอย่าง ดูแลทุกคน วางแผนทุกขั้นตอน เพราะเจ้ากลัวว่าถ้าปล่อยมือออก ทุกอย่างจะพังทลาย แต่ข้าจะบอกเจ้าว่าใยที่ถักแน่นเกินไปจะดักจับแม้แต่ตัวเองด้วย เจ้าเหนื่อยแล้ว ข้ารู้ จงลองปล่อยให้บางสิ่งดำเนินไปเองดูสักครั้ง โลกจะไม่พังเพราะเจ้าหยุดพักหรอก'
+  },
+  {
+    id: 'baphomet',
+    name: 'BAPHOMET',
+    warning: 'เจ้าตัดสินใจด้วยแค่หัวหรือแค่ใจ ไม่ครบทั้งคู่',
+    message: 'ข้าคือบาโฟเมต ผู้ที่ยืนอยู่กึ่งกลางระหว่างแสงและเงา ระหว่างสวรรค์และนรก และข้ารู้ดีกว่าใครว่าการยืนกึ่งกลางนั้นยากแค่ไหน เจ้ากำลังตัดสินใจเรื่องสำคัญบางอย่าง แต่เจ้าใช้แค่ครึ่งเดียวของตัวเอง บางทีเจ้าคิดมากเกินไปจนหัวใจไม่มีที่พูด บางทีเจ้าฟังแต่ใจจนเหตุผลถูกเพิกเฉย ความสมดุลไม่ใช่การประนีประนอม แต่คือการให้ทั้งสองฝั่งได้พูด จงนั่งลงอีกครั้ง แล้วถามทั้งหัวและใจพร้อมกัน คำตอบที่แท้จริงจะอยู่ตรงนั้น'
+  },
+  {
+    id: 'azazel',
+    name: 'AZAZEL',
+    warning: 'เจ้ากำลังแบกบาปที่ไม่ใช่ของเจ้า',
+    message: 'ข้าคืออาซาเซล ผู้ที่ถูกโยนออกไปในทะเลทรายพร้อมบาปของคนอื่นทั้งหมด และข้าจะบอกเจ้าตรงๆ ว่าข้าเห็นสิ่งเดียวกันในตัวเจ้า เจ้ากำลังแบกรับความผิดที่ไม่ใช่ของเจ้า ถูกกล่าวหา ถูกโทษ ถูกทำให้รู้สึกว่าเจ้าคือต้นเหตุของทุกปัญหา และเจ้าก็เริ่มเชื่อมันแล้ว จงฟังข้าให้ดี การที่คนอื่นโยนความผิดมาที่เจ้า ไม่ได้แปลว่าเจ้าผิดจริง คนที่ตะโกนดังที่สุดว่าเจ้าผิด มักจะเป็นคนที่กลัวจะมองดูตัวเองมากที่สุด จงลุกขึ้นและปฏิเสธบาปที่ไม่ใช่ของเจ้า'
+  },
+  {
+    id: 'mammon',
+    name: 'MAMMON',
+    warning: 'ความโลภในใจเจ้าจะไม่มีวันพอ',
+    message: 'ข้าคือมัมมอน เจ้าแห่งทรัพย์สมบัติและความโลภ และข้าจะพูดตรงๆ โดยไม่อ้อมค้อม เพราะนั่นคือวิธีของข้า เจ้ากำลังไล่ตามบางสิ่งที่คิดว่าจะทำให้ชีวิตสมบูรณ์ เงิน ความสำเร็จ การยอมรับ สิ่งของ หรืออะไรก็ตามที่เจ้าเชื่อว่าถ้าได้มาแล้วจะพอ แต่ข้าบอกเจ้าได้เลยว่าจะไม่มีวันพอ เพราะนั่นคือธรรมชาติของความอยากได้ มันเติบโตขึ้นทุกครั้งที่ได้รับ จงถามตัวเองว่าเจ้ากำลังไล่ตามสิ่งที่ต้องการจริงๆ หรือแค่กลัวว่าถ้าหยุดไล่แล้วจะไม่มีคุณค่า'
+  },
+  {
+    id: 'banshee',
+    name: 'BANSHEE',
+    warning: 'เจ้าร้องขอความช่วยเหลืออยู่แต่ไม่มีใครได้ยิน',
+    message: 'ข้าคือแบนชี เสียงร้องของข้าดังก้องในความมืด แต่ไม่มีใครได้ยิน และนั่นคือความเจ็บปวดที่ข้าแบกมาตลอด เจ้ากำลังร้องอยู่เช่นกัน ไม่ใช่เสียงที่หูได้ยิน แต่เป็นเสียงในใจที่กรีดร้องขอให้ใครสักคนเข้าใจ เจ้าอยู่ท่ามกลางผู้คน แต่รู้สึกว่าไม่มีใครเห็นเจ้าจริงๆ ไม่มีใครรู้ว่าเจ้ารู้สึกอย่างไร และเจ้าก็เหนื่อยกับการต้องอธิบายตัวเองทุกครั้ง ข้าอยากให้เจ้ารู้ว่าความโดดเดี่ยวนั้นจริง แต่มันไม่ใช่ความจริงทั้งหมด จงลองเปิดปากพูดกับคนที่เจ้าไว้ใจสักครั้ง แม้จะกลัว'
+  },
+  {
+    id: 'nemesis',
+    name: 'NEMESIS',
+    warning: 'ความแค้นในใจกำลังเผาไหม้ตัวเจ้าเอง',
+    message: 'ข้าคือเนเมซิส เทพีแห่งการแก้แค้นและความยุติธรรม และข้าจะบอกความจริงที่เจ้าไม่อยากได้ยิน เจ้ากำลังถือความโกรธบางอย่างไว้ในใจ มันอาจเป็นความโกรธต่อคนที่ทำร้ายเจ้า คนที่ทรยศ คนที่ไม่ยุติธรรม และเจ้าคิดว่าการถือความโกรธนั้นไว้คือการลงโทษพวกเขา แต่ข้าจะบอกเจ้าว่าเกิดอะไรขึ้นจริงๆ ความแค้นนั้นไม่ได้แตะต้องคนที่เจ้าโกรธเลย มันแค่เผาไหม้ตัวเจ้าจากข้างใน จงปล่อยวางไม่ใช่เพราะพวกเขาสมควรได้รับการให้อภัย แต่เพราะเจ้าสมควรได้รับอิสรภาพ'
+  },
+  {
+    id: 'hecate',
+    name: 'HECATE',
+    warning: 'เจ้ายืนอยู่ที่ทางแยกโดยไม่กล้าเลือก',
+    message: 'ข้าคือเฮคาเต้ เทพีแห่งทางแยกและความมืด ผู้ที่ยืนอยู่ตรงจุดที่เส้นทางสามสายมาบรรจบกัน และข้าเห็นเจ้ายืนอยู่ตรงนั้น มองไปรอบๆ โดยไม่รู้ว่าจะเดินไปทางไหน เจ้ากำลังหลงทางอยู่ ไม่ใช่เพราะเจ้าอ่อนแอ แต่เพราะเจ้ามีทางเลือกมากเกินไปและกลัวที่จะเลือกผิด ข้าจะบอกความลับของทางแยกให้เจ้าฟัง ไม่มีทางไหนที่ถูกหรือผิดอย่างสมบูรณ์ ทุกเส้นทางมีทั้งบทเรียนและของขวัญ จงเชื่อใจตัวเอง แล้วก้าวออกไปสักทาง เพราะการยืนนิ่งอยู่กับที่ต่างหากที่อันตรายที่สุด'
+  },
+  {
+    id: 'paimon',
+    name: 'PAIMON',
+    warning: 'เจ้ายังยึดติดอยู่กับอดีตที่จบไปแล้ว',
+    message: 'ข้าคือไพม่อน ผู้รู้แจ้งในความทรงจำและเวลา และข้าเห็นสิ่งที่เจ้าพยายามซ่อนจากตัวเอง เจ้ากำลังหยุดอยู่กับอดีต ไม่ใช่เพราะเจ้าอ่อนแอ แต่เพราะมีบางอย่างในอดีตที่เจ้ายังไม่ยอมรับว่ามันจบแล้ว อาจเป็นความสัมพันธ์ โอกาส ความสำเร็จที่เคยมี หรือตัวตนที่เคยเป็น เจ้าวนเวียนกลับไปหาสิ่งเหล่านั้นซ้ำๆ เหมือนคนที่ขับรถโดยมองแต่กระจกหลัง จงรู้ไว้ว่าอดีตมีไว้เรียนรู้ ไม่ใช่มีไว้อาศัย ปล่อยมันไปเถิด แล้วเจ้าจะเห็นว่าข้างหน้านั้นงดงามกว่าที่คิด'
+  },
+  {
+    id: 'sloth',
+    name: 'SLOTH',
+    warning: 'เจ้าผัดวันประกันพรุ่งในสิ่งที่สำคัญที่สุด',
+    message: 'ข้าคือสล็อธ อสูรแห่งความเกียจคร้านและการผัดวันประกันพรุ่ง และข้าจะพูดตรงๆ แบบที่ข้าทำเสมอ คือพูดโดยไม่ขยับตัวมากนัก เจ้ามีความฝัน มีแผน มีสิ่งที่อยากทำมานานแล้ว แต่เจ้าก็มีเหตุผลใหม่ทุกวันว่าทำไมถึงยังไม่ถึงเวลา รอให้พร้อมก่อน รอให้โอกาสดีกว่านี้ รอให้มีแรงบันดาลใจ แต่ข้าจะบอกเจ้าว่าความพร้อมสมบูรณ์ไม่มีวันมาถึงถ้าเจ้าไม่ลงมือ เวลาที่เหมาะที่สุดคือตอนนี้ แม้จะไม่พร้อม แม้จะกลัว จงลุกขึ้นและเริ่มต้น'
+  },
+  {
+    id: 'leviathan',
+    name: 'LEVIATHAN',
+    warning: 'เจ้าเปรียบตัวเองกับคนอื่นจนทรมานตัวเอง',
+    message: 'ข้าคือเลวีอาธาน อสูรแห่งความอิจฉาและความอยากได้ในสิ่งที่คนอื่นมี และข้าจะบอกเจ้าตรงๆ เพราะข้าไม่เชื่อในการพูดอ้อมค้อม เจ้ากำลังมองชีวิตคนอื่นและรู้สึกว่าชีวิตของตัวเองไม่พอ ไม่ดีพอ ไม่ประสบความสำเร็จพอ ไม่มีความสุขพอ เจ้าใช้เวลาไปกับการเปรียบเทียบจนลืมไปว่าเจ้ากำลังเดินอยู่บนเส้นทางของตัวเองซึ่งแตกต่างจากทุกคน สิ่งที่เจ้าเห็นในชีวิตคนอื่นคือภาพที่พวกเขาเลือกจะแสดง ไม่ใช่ความจริงทั้งหมด จงหันมามองดูสิ่งดีๆ ที่เจ้ามีบ้าง'
+  },
+  {
+    id: 'belial',
+    name: 'BELIAL',
+    warning: 'เจ้ากำลังโกหกตัวเองอยู่',
+    message: 'ข้าคือเบเลียล ปีศาจแห่งการหลอกลวงและการโกหก และข้าจะบอกเจ้าว่าการโกหกที่อันตรายที่สุดในโลกไม่ใช่การโกหกคนอื่น แต่คือการโกหกตัวเอง เจ้ากำลังทำอยู่ เจ้าบอกตัวเองว่าทุกอย่างโอเค ทั้งที่มันไม่โอเค เจ้าบอกว่าเจ้าไม่ได้สนใจ ทั้งที่เจ้าสนใจมากที่สุด เจ้าบอกว่าเจ้าเลือกสิ่งนี้เพราะอยากได้ ทั้งที่จริงๆ เพราะกลัว ความจริงที่เจ้าหนีจากมันอยู่นั้น ไม่ได้หายไปไหน มันแค่รอ และยิ่งรอนานเท่าไหร่ มันยิ่งใหญ่ขึ้นเท่านั้น จงหันหน้าเข้าหามันสักครั้ง'
+  },
+  {
+    id: 'narcissus',
+    name: 'NARCISSUS',
+    warning: 'เจ้าหลงรักภาพตัวเองจนลืมโลกที่แท้จริง',
+    message: 'ข้าคือนาร์ซิสซัส ผู้ที่หลงรักภาพสะท้อนของตัวเองจนกลายเป็นดอกไม้ริมน้ำ และข้าจะบอกเจ้าว่าข้าเข้าใจความรู้สึกนั้นดี เพราะโลกในกระจกนั้นสวยงามและปลอดภัยกว่าโลกที่แท้จริงมาก เจ้ากำลังหมกมุ่นอยู่กับภาพที่เจ้าอยากให้คนอื่นเห็น มากกว่าการเป็นตัวเองจริงๆ เจ้าใช้เวลาไปกับการสร้างเรื่องราวของตัวเองจนลืมไปว่ายังมีคนรอบข้างที่รักเจ้าในแบบที่เจ้าเป็น ไม่ใช่ในแบบที่เจ้าพยายามจะเป็น จงวางกระจกลงสักครั้ง และลองมองดูคนที่อยู่ตรงหน้าเจ้าจริงๆ'
+  }
+];
+
+function getTodayKey() {
+  const d = new Date();
+  return `demon_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+}
+
+function revealCard() {
+  const key = getTodayKey();
+  if (localStorage.getItem(key)) return;
+
+  const card = demonCards[Math.floor(Math.random() * demonCards.length)];
+  localStorage.setItem(key, card.id);
+  showResult(card);
+}
+
+function showResult(card) {
+  document.getElementById('cardReveal').style.display = 'none';
+  document.getElementById('alreadyOpened').style.display = 'none';
+
+  const result = document.getElementById('result');
+  result.style.display = 'block';
+
+  document.getElementById('resultImg').src = `../images/demon/${card.id}.png`;
+  document.getElementById('resultImg').alt = card.name;
+  document.getElementById('resultName').textContent = card.name;
+  document.getElementById('resultWarning').textContent = card.warning;
+  document.getElementById('resultMessage').textContent = card.message;
+
+  result.scrollIntoView({ behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '500');
+
+  const key = getTodayKey();
+  const savedId = localStorage.getItem(key);
+
+  if (savedId) {
+    const card = demonCards.find(c => c.id === savedId);
+    if (card) {
+      showResult(card);
+      document.getElementById('alreadyOpened').style.display = 'none';
+    }
+  }
+});
+</script>
+</body>
+</html>
