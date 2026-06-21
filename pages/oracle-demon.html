@@ -434,82 +434,92 @@ function getShareImage(platform, callback) {
     ctx.fillStyle = '#0a0008';
     ctx.fillRect(0, 0, w, h);
 
-    // Purple gradient
-    const grad = ctx.createRadialGradient(w/2, h*0.4, 0, w/2, h*0.4, w*0.8);
-    grad.addColorStop(0, 'rgba(107,33,168,0.25)');
+    // Gradient
+    const grad = ctx.createRadialGradient(w/2, h*0.35, 0, w/2, h*0.35, w*0.9);
+    grad.addColorStop(0, 'rgba(107,33,168,0.3)');
     grad.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    let y = 100;
-
-    // "Whisper of Demon"
     ctx.textAlign = 'center';
-    ctx.font = `300 ${w * 0.04}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'rgba(192,132,252,0.6)';
-    ctx.fillText('✦ Whisper of Demon ✦', w/2, y);
-    y += 70;
+    let y = 90;
 
-    // ชื่อปีศาจ
-    ctx.font = `bold ${w * 0.075}px Sarabun, sans-serif`;
+    // "WHISPER OF DEMON" — ใหญ่
+    ctx.font = `800 ${w * 0.072}px Sarabun, sans-serif`;
     ctx.fillStyle = '#c084fc';
-    ctx.fillText(card.name, w/2, y);
-    y += 60;
+    ctx.fillText('WHISPER OF DEMON', w/2, y);
+    y += 50;
 
-    // เส้นคั่น
-    ctx.strokeStyle = 'rgba(139,0,139,0.4)';
+    // เส้นบางใต้หัวเรื่อง
+    ctx.strokeStyle = 'rgba(192,132,252,0.3)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(w*0.25, y); ctx.lineTo(w*0.75, y);
+    ctx.moveTo(w*0.2, y); ctx.lineTo(w*0.8, y);
     ctx.stroke();
-    y += 40;
+    y += 50;
 
-    // รูปไพ่ — ขนาดกลาง
-    const cardW = w * 0.45;
+    // รูปไพ่
+    const cardW = w * 0.52;
     const cardH = cardW * 1.5;
     const cardX = (w - cardW) / 2;
     ctx.shadowColor = 'rgba(139,0,139,0.7)';
-    ctx.shadowBlur = 50;
+    ctx.shadowBlur = 60;
     ctx.drawImage(img, cardX, y, cardW, cardH);
     ctx.shadowBlur = 0;
     y += cardH + 50;
 
+    // ชื่อการ์ด
+    ctx.font = `800 ${w * 0.068}px Sarabun, sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.letterSpacing = '6px';
+    ctx.fillText(card.name, w/2, y);
+    y += 55;
+
     // เส้นคั่น
-    ctx.strokeStyle = 'rgba(139,0,139,0.4)';
+    ctx.strokeStyle = 'rgba(192,132,252,0.35)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(w*0.25, y); ctx.lineTo(w*0.75, y);
     ctx.stroke();
-    y += 40;
+    y += 45;
 
-    // Warning
-    ctx.font = `bold ${w * 0.042}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'white';
+    // Warning — สีม่วงสว่าง
+    ctx.font = `700 ${w * 0.044}px Sarabun, sans-serif`;
+    ctx.fillStyle = '#c084fc';
     ctx.fillText(card.warning, w/2, y);
-    y += 60;
+    y += 55;
 
     // Message — wrap text
-    ctx.font = `${w * 0.033}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    const words = card.message.split(' ');
+    ctx.font = `${w * 0.034}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.72)';
     const maxWidth = w * 0.82;
+    const words = card.message.split(' ');
     let line = '';
     for (let i = 0; i < words.length; i++) {
       const test = line + words[i] + ' ';
       if (ctx.measureText(test).width > maxWidth && line !== '') {
         ctx.fillText(line.trim(), w/2, y);
-        y += 44;
+        y += 46;
         line = words[i] + ' ';
       } else {
         line = test;
       }
     }
-    if (line.trim()) { ctx.fillText(line.trim(), w/2, y); y += 44; }
+    if (line.trim()) { ctx.fillText(line.trim(), w/2, y); y += 46; }
+
+    // เส้นก่อน watermark
+    y += 20;
+    ctx.strokeStyle = 'rgba(192,132,252,0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(w*0.3, y); ctx.lineTo(w*0.7, y);
+    ctx.stroke();
+    y += 40;
 
     // Watermark
-    ctx.font = `${w * 0.032}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'rgba(192,132,252,0.45)';
-    ctx.fillText('mytarot.vip', w/2, h - 60);
+    ctx.font = `${w * 0.034}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'rgba(192,132,252,0.5)';
+    ctx.fillText('mytarot.vip', w/2, y);
 
     callback(canvas.toDataURL('image/jpeg', 0.92));
   };
