@@ -422,65 +422,94 @@ function getShareImage(platform, callback) {
   const card = selectedCard || demonCards.find(c => c.id === localStorage.getItem(getTodayKey()));
   if (!card) return;
 
-  // ขนาดตามแพลตฟอร์ม
-  let w, h;
-  if (platform === 'tt' || platform === 'ig_story') { w = 1080; h = 1920; }
-  else { w = 1080; h = 1080; } // ig post, fb, save
-
+  const w = 1080;
+  const h = 1920;
   canvas.width = w;
   canvas.height = h;
-
-  // Background
-  ctx.fillStyle = '#0a0008';
-  ctx.fillRect(0, 0, w, h);
-
-  // Purple gradient overlay
-  const grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, w*0.7);
-  grad.addColorStop(0, 'rgba(107,33,168,0.3)');
-  grad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, w, h);
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = () => {
-    // Card image - centered
-    const cardW = w * 0.55;
-    const cardH = cardW * 1.5;
-    const cardX = (w - cardW) / 2;
-    const cardY = platform === 'tt' ? h * 0.15 : h * 0.1;
+    // Background
+    ctx.fillStyle = '#0a0008';
+    ctx.fillRect(0, 0, w, h);
 
-    // Card shadow
-    ctx.shadowColor = 'rgba(139,0,139,0.6)';
-    ctx.shadowBlur = 60;
-    ctx.drawImage(img, cardX, cardY, cardW, cardH);
-    ctx.shadowBlur = 0;
+    // Purple gradient
+    const grad = ctx.createRadialGradient(w/2, h*0.4, 0, w/2, h*0.4, w*0.8);
+    grad.addColorStop(0, 'rgba(107,33,168,0.25)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
 
-    // Card name
-    ctx.font = `bold ${w * 0.07}px Sarabun, sans-serif`;
-    ctx.fillStyle = '#c084fc';
+    let y = 100;
+
+    // "Whisper of Demon"
     ctx.textAlign = 'center';
-    ctx.letterSpacing = '4px';
-    ctx.fillText(card.name, w/2, cardY + cardH + w * 0.07);
+    ctx.font = `300 ${w * 0.04}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'rgba(192,132,252,0.6)';
+    ctx.fillText('✦ Whisper of Demon ✦', w/2, y);
+    y += 70;
 
-    // Warning text
-    ctx.font = `${w * 0.038}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'rgba(255,255,255,0.8)';
-    const warnY = cardY + cardH + w * 0.14;
-    ctx.fillText(card.warning, w/2, warnY);
+    // ชื่อปีศาจ
+    ctx.font = `bold ${w * 0.075}px Sarabun, sans-serif`;
+    ctx.fillStyle = '#c084fc';
+    ctx.fillText(card.name, w/2, y);
+    y += 60;
 
-    // Divider
+    // เส้นคั่น
     ctx.strokeStyle = 'rgba(139,0,139,0.4)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(w*0.2, warnY + w*0.04);
-    ctx.lineTo(w*0.8, warnY + w*0.04);
+    ctx.moveTo(w*0.25, y); ctx.lineTo(w*0.75, y);
     ctx.stroke();
+    y += 40;
+
+    // รูปไพ่ — ขนาดกลาง
+    const cardW = w * 0.45;
+    const cardH = cardW * 1.5;
+    const cardX = (w - cardW) / 2;
+    ctx.shadowColor = 'rgba(139,0,139,0.7)';
+    ctx.shadowBlur = 50;
+    ctx.drawImage(img, cardX, y, cardW, cardH);
+    ctx.shadowBlur = 0;
+    y += cardH + 50;
+
+    // เส้นคั่น
+    ctx.strokeStyle = 'rgba(139,0,139,0.4)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(w*0.25, y); ctx.lineTo(w*0.75, y);
+    ctx.stroke();
+    y += 40;
+
+    // Warning
+    ctx.font = `bold ${w * 0.042}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'white';
+    ctx.fillText(card.warning, w/2, y);
+    y += 60;
+
+    // Message — wrap text
+    ctx.font = `${w * 0.033}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    const words = card.message.split(' ');
+    const maxWidth = w * 0.82;
+    let line = '';
+    for (let i = 0; i < words.length; i++) {
+      const test = line + words[i] + ' ';
+      if (ctx.measureText(test).width > maxWidth && line !== '') {
+        ctx.fillText(line.trim(), w/2, y);
+        y += 44;
+        line = words[i] + ' ';
+      } else {
+        line = test;
+      }
+    }
+    if (line.trim()) { ctx.fillText(line.trim(), w/2, y); y += 44; }
 
     // Watermark
-    ctx.font = `${w * 0.028}px Sarabun, sans-serif`;
-    ctx.fillStyle = 'rgba(192,132,252,0.5)';
-    ctx.fillText('mytarot.vip', w/2, h - w*0.04);
+    ctx.font = `${w * 0.032}px Sarabun, sans-serif`;
+    ctx.fillStyle = 'rgba(192,132,252,0.45)';
+    ctx.fillText('mytarot.vip', w/2, h - 60);
 
     callback(canvas.toDataURL('image/jpeg', 0.92));
   };
