@@ -624,22 +624,20 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '500');
 });
 
-function saveAsImage() {
+async function saveAsImage() {
   const btn = document.getElementById('btnSaveImg');
   btn.innerText = '⏳ กำลังเตรียมไฟล์ภาพ...';
   btn.disabled = true;
 
-  // 1. หาว่ายูสเซอร์คนนี้ได้เทพองค์ไหนเป็นองค์หลัก
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  const name1 = sorted[0][0]; // เช่น "พระแม่ลักษมี"
+  const name1 = sorted[0][0];
 
-  // 2. แมปชื่อภาษาไทยคู่กับชื่อไฟล์ภาษาอังกฤษของมิ้กกี้
   const fileMap = {
     'พระศิวะ': 'shiva',
     'พระแม่อุมาเทวี': 'uma',
     'พระพิฆเนศ': 'ganesha',
-    'พระแม่สุรัสวดี': 'saraswati',
-    'พญาอนันตนาคราช': 'ananta',
+    'พระสุรัสวดี': 'saraswati',
+    'อนันตนาคราช': 'ananta',
     'พระพรหม': 'brahma',
     'พระแม่ลักษมี': 'lakshmi',
     'พระนารายณ์': 'narayana',
@@ -647,21 +645,27 @@ function saveAsImage() {
     'พระพาย': 'vayu'
   };
 
-  const englishName = fileMap[name1] || 'lakshmi';
-  
-  // 3. ระบุที่อยู่ไฟล์ภาพสำเร็จรูปตัวเต็ม (.png) ของมิ้กกี้
+  const englishName = fileMap[name1] || 'brahma';
   const imageUrl = `../images/deity/${englishName}c.png`;
 
-  // 4. สั่งดาวน์โหลดไฟล์ภาพนี้ตรงๆ ลงเครื่องยูสเซอร์เลย ไม่ต้องแคปหน้าจอแล้ว
-  const link = document.createElement('a');
-  link.download = `my-deity-${englishName}.png`; // ชื่อไฟล์ตอนเซฟลงเครื่องยูสเซอร์
-  link.href = imageUrl;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // รีเซ็ตปุ่ม
-  btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.download = `my-deity-${englishName}.png`;
+    link.href = blobUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
+  } catch(e) {
+    alert('โหลดรูปไม่สำเร็จ กรุณาลองใหม่ค่ะ');
+    console.error(e);
+  }
+
+  btn.innerText = '📸 เซฟรูปภาพลงมือถือ';
   btn.disabled = false;
 }
 
