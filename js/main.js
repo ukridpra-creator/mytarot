@@ -49,6 +49,19 @@ function useCoins(amount) {
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   setCoins(getCoins());
+  
+  const userId = localStorage.getItem('userId');
+  const userName = localStorage.getItem('userName');
+  const userEmail = localStorage.getItem('userEmail');
+  
+  if (userId) {
+    currentUser = {
+      name: userName,
+      email: userEmail,
+      isPremium: false
+    };
+    updateUserUI();
+  }
 });
 // User Menu
 function toggleUserMenu() {
@@ -68,14 +81,10 @@ function loginGoogle() {
   window.location.href = 'pages/profile.html';
 }
 
-// แก้ bottom nav ให้ปุ่มโปรไฟล์ไป profile.html
 function logout() {
-  currentUser = null;
-  updateUserUI();
-  closeUserMenu();
-}
-
-function logout() {
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
+  localStorage.removeItem('userEmail');
   currentUser = null;
   updateUserUI();
   closeUserMenu();
