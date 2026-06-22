@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function saveAsImage() {
   const btn = document.getElementById('btnSaveImg');
-  btn.innerText = '⏳ กำลังเตรียมไฟล์ภาพ...';
+  btn.innerText = '⏳ กำลังเตรียมรูป...';
   btn.disabled = true;
 
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
@@ -648,24 +648,10 @@ async function saveAsImage() {
   const englishName = fileMap[name1] || 'brahma';
   const imageUrl = `../images/deity/${englishName}c.png`;
 
-  try {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const blobUrl = URL.createObjectURL(blob);
+  // เปิดรูปในแท็บใหม่ → iOS กด save ได้เลย
+  window.open(imageUrl, '_blank');
 
-    const link = document.createElement('a');
-    link.download = `my-deity-${englishName}.png`;
-    link.href = blobUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(blobUrl);
-  } catch(e) {
-    alert('โหลดรูปไม่สำเร็จ กรุณาลองใหม่ค่ะ');
-    console.error(e);
-  }
-
-  btn.innerText = '📸 เซฟรูปภาพลงมือถือ';
+  btn.innerText = '📸 กดค้างที่รูปเพื่อบันทึก';
   btn.disabled = false;
 }
 
