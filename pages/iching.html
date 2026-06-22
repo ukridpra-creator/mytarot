@@ -210,6 +210,8 @@
 
 <script>
 const COIN_SOUND = new Audio('../images/soundscoin.mp3');
+COIN_SOUND.preload = 'auto';
+COIN_SOUND.load();
 
 // 64 hexagrams
 const HEXAGRAMS = {
@@ -373,11 +375,8 @@ function getHexagramNumber(lines) {
 
 async function getReading() {
   const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 5));
-  document.getElementById('coinCount').textContent = coins - 5;
-  document.getElementById('coinDisplay').textContent = coins - 5;
-
+ if (coins < 30) { alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ'); return; }
+localStorage.setItem('coins', String(coins - 30));
   const hexNum = getHexagramNumber(lines);
   const hex = HEXAGRAMS[hexNum];
   const question = document.getElementById('question').value.trim();
@@ -398,7 +397,7 @@ async function getReading() {
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 3000,
+        model: 'claude-sonnet-4-6', max_tokens: 6000,
         system: `คุณคือผู้เชี่ยวชาญอี้จิง ปัญญาจีนโบราณ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "ท่าน"
         
 รูปแบบการตอบ (ห้ามใช้ markdown ห้ามใช้ * หรือ # เขียนเป็นย่อหน้าธรรมดา):
