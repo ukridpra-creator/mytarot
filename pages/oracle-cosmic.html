@@ -416,6 +416,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDeck(PLANET_CARDS, 'planetScroll', 'planet');
   renderDeck(EVENT_CARDS,  'eventScroll',  'event');
   renderDeck(CONCEPT_CARDS,'conceptScroll','concept');
+
+  ['planetScroll','eventScroll','conceptScroll'].forEach(id => {
+    const el = document.getElementById(id);
+    setTimeout(() => {
+      el.scrollTo({ left: 120, behavior: 'smooth' });
+      setTimeout(() => el.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+    }, 500);
+  });
 });
 </script>
 </body>
