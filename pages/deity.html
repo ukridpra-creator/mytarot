@@ -313,7 +313,7 @@ const DEITIES = {
     img: '../images/deity/brahma.png', 
     desc: 'ท่านมีวิสัยทัศน์กว้างไกล ชอบสร้างสิ่งใหม่ และมีความคิดที่ก้าวหน้า พระพรหมคุ้มครองผู้ที่สร้างสรรค์และวางรากฐานสิ่งยิ่งใหญ่ให้โลก',
     offering: 'ดอกมะลิ, ดอกดาวเรือง, นางรำ, ผลไม้รสหวาน, ขนมไทยตระกูลทอง',
-    prayer: 'โอม พรหมาเน นะมะฮา (3 จบ)',
+    prayer: 'โอม พรหมมะเณ นะมะฮา (3 จบ)',
     color: 'สีเหลืองทอง, สีส้มสว่าง, สีครีม',
     direction: 'ทิศใต้ (ทิศแห่งความเจริญรุ่งเรืองและการขยายตัว)',
     taboo: 'ห้ามถวายเนื้อสัตว์เด็ดขาด และควรไหว้ให้ครบทั้ง 4 พระพักตร์เพื่อความครอบคลุม'
@@ -626,41 +626,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function saveAsImage() {
   const btn = document.getElementById('btnSaveImg');
-  btn.innerText = '⏳ กำลังปรุงรูปภาพ...';
+  btn.innerText = '⏳ กำลังเซฟภาพ...';
   btn.disabled = true;
 
-  // 1. เรียงคะแนนเพื่อหาเทพหลักและเทพรองของผู้ใช้คนนั้นๆ
+  // 1. เรียงคะแนนหาเทพหลักที่ยูสเซอร์คนนี้ดึงได้
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  const name1 = sorted[0][0];
-  const name2 = sorted[1][0];
+  const name1 = sorted[0][0]; // เช่น "พระแม่ลักษมี", "พระพิฆเนศ"
 
-  const d1 = DEITIES[name1];
-  const d2 = DEITIES[name2];
+  // 2. แผนผังแปลงชื่อภาษาไทย เป็นชื่อไฟล์ภาษาอังกฤษของมิ้กกี้
+  const fileMap = {
+    'พระศิวะ': 'shiva',
+    'พระแม่อุมาเทวี': 'uma',
+    'พระพิฆเนศ': 'ganesha',
+    'พระแม่สุรัสวดี': 'saraswati',
+    'พญาอนันตนาคราช': 'ananta',
+    'พระพรหม': 'brahma',
+    'พระแม่ลักษมี': 'lakshmi',
+    'พระนารายณ์': 'narayana',
+    'พระแม่ธรณี': 'dharani',
+    'พระพาย': 'vayu'
+  };
 
-  // 2. ยิงข้อมูลจริงขององค์เทพเข้าไปประทับลงบนเลเยอร์
-  document.getElementById('capIcon').src = d1.img;
-  document.getElementById('capName').textContent = name1;
-  document.getElementById('capOffering').textContent = d1.offering;
-  document.getElementById('capColor').textContent = d1.color;
-  document.getElementById('capDirection').textContent = d1.direction;
-  document.getElementById('capTaboo').textContent = d1.taboo;
-  document.getElementById('capPrayer').textContent = d1.prayer ? d1.prayer : "-";
+  // ดึงชื่อไฟล์ภาษาอังกฤษออกมา แล้วเติม 'c.png' ต่อท้ายตามที่มิ้กกี้เตรียมไว้
+  const englishName = fileMap[name1] || 'lakshmi';
+  const bgImageName = `${englishName}c.png`; // จะได้เป็น shivac.png, lakshmic.png ฯลฯ
 
-  // ส่งข้อมูลของเทพรองเข้าไปแสดงผลในกรอบแคปซูล
-  document.getElementById('capSecondaryIcon').src = d2.img;
-  document.getElementById('capSecondaryName').textContent = name2;
-
-  // 3. เรียก html2canvas เพื่อบันทึกภาพ
+  // 3. สั่งเปลี่ยนพื้นหลังของแผ่นซ่อนให้เป็นรูปเทพองค์นั้นทันที
   const target = document.getElementById('captureTemplate');
-  
+  target.style.backgroundImage = `url('images/deity/${bgImageName}')`;
+
+  // 4. ดีเลย์ 800ms เพื่อให้เบราว์เซอร์ดึงภาพ .png มาแปะบน Canvas จนเสร็จชัวร์ๆ ก่อนแคปภาพ
   setTimeout(() => {
     html2canvas(target, {
       useCORS: true, 
-      scale: 2, // รูปชัด คมกริบ ไม่แตก
-      backgroundColor: null // ปล่อยเป็นโปร่งใสเพื่อให้เห็นภาพพื้นหลังสวยงาม
+      allowTaint: true,
+      scale: 2 // ภาพคมชัดระดับ HD ตรงปกเหมือนต้นฉบับที่มิ้กกี้เจนมาเลย
     }).then(canvas => {
       const link = document.createElement('a');
-      link.download = `my-deity-${name1}.png`;
+      link.download = `my-deity-${englishName}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       
@@ -668,11 +671,11 @@ function saveAsImage() {
       btn.disabled = false;
     }).catch(err => {
       console.error(err);
-      alert('เกิดข้อผิดพลาดในการบันทึกรูปภาพ กรุณาลองใหม่อีกครั้ง');
+      alert('เกิดข้อผิดพลาดในการเซฟรูปภาพ');
       btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
       btn.disabled = false;
     });
-  }, 600);
+  }, 800);
 }
 
   // ส่งข้อมูลเทพหลักเข้าแผ่นการ์ด
@@ -713,66 +716,7 @@ function saveAsImage() {
   }, 500);
 
 </script>
-<div id="captureTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 390px; height: 693px; background: url('images/deity/card-bg.png') no-repeat center center; background-size: cover; padding: 0; box-sizing: border-box; overflow: hidden; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-  
-  <div style="position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-    
-    <div style="text-align: center; width: 100%; margin-top: 5px;">
-      <div style="font-size: 20px; color: #fff; font-weight: bold; letter-spacing: 2px; margin-bottom: 2px; text-shadow: 0 0 10px rgba(212,175,55,0.4);">✦ MY TAROT DEITY ✦</div>
-      <div style="font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 1px;">องค์เทพคุ้มครองชะตาชีวิตประจำตัว</div>
-    </div>
-
-    <div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">
-      <div style="position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-        <div style="position: absolute; width: 150px; height: 150px; border: 2px dashed rgba(212, 175, 55, 0.6); border-radius: 50%;"></div>
-        <img id="capIcon" style="width: 134px; height: 134px; border-radius: 50%; border: 3px solid #d4af37; object-fit: cover; box-shadow: 0 0 20px rgba(212,175,55,0.4);">
-      </div>
-      <div id="capName" style="font-size: 26px; font-weight: bold; color: #d4af37; margin-top: 10px; margin-bottom: 2px; letter-spacing: 1px;"></div>
-      <div style="font-size: 16px; color: #f59e0b; letter-spacing: 1px; margin-bottom: 2px;">⭐⭐⭐⭐⭐</div>
-      <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-style: italic;">ความผูกพันแห่งสายญาณบารมี</div>
-    </div>
-
-    <div style="background: #fffcdb; border: 2px solid #d4af37; border-radius: 50px; padding: 6px 20px; width: 85%; box-sizing: border-box; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-      <img id="capSecondaryIcon" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid #d4af37; background: #fff;">
-      <div style="text-align: left;">
-        <div style="font-size: 11px; color: #78350f; font-weight: bold;">⭐ เทพรอง (องค์ที่สอง)</div>
-        <div id="capSecondaryName" style="font-size: 15px; font-weight: bold; color: #000; margin-top: 1px;"></div>
-      </div>
-    </div>
-
-    <div style="width: 88%; height: 195px; box-sizing: border-box; color: #000; font-size: 12px; line-height: 1.5; text-align: left; padding: 5px 10px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 22px;">
-      <div>
-        <div style="font-size: 13px; color: #000; font-weight: bold; margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;">
-          <span style="color: #7c3aed; font-size: 14px;">🕉️</span> แนวทางนอบน้อมเสริมดวงชะตา
-        </div>
-        <div style="margin-bottom: 4px;">
-          <span style="font-weight: bold; color: #000;">ของไหว้เปิดดวง:</span> <span id="capOffering" style="color: #333;"></span>
-        </div>
-        <div style="margin-bottom: 4px;">
-          <span style="font-weight: bold; color: #000;">สีมงคล:</span> <span id="capColor" style="color: #333;"></span>
-        </div>
-        <div style="margin-bottom: 4px;">
-          <span style="font-weight: bold; color: #000;">ทิศตั้งบูชา:</span> <span id="capDirection" style="color: #333;"></span>
-        </div>
-        <div style="display: flex; align-items: flex-start; gap: 3px; color: #000; font-size: 11px; margin-top: 4px;">
-          <span>⚠️</span> 
-          <div><span style="font-weight: bold;">ข้อควรระวัง:</span> <span id="capTaboo" style="color: #333;"></span></div>
-        </div>
-      </div>
-
-      <div>
-        <div style="border-top: 1px dotted #bbb; margin-bottom: 6px; width: 100%;"></div>
-        <div style="text-align: center;">
-          <div style="font-size: 12px; color: #000; font-weight: bold; margin-bottom: 2px;">🙏 บทสวดบูชาแบบย่อ</div>
-          <div id="capPrayer" style="font-size: 12px; font-weight: bold; color: #000; font-family: Georgia, serif; background: rgba(0,0,0,0.03); padding: 4px 10px; border-radius: 6px; display: inline-block;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div style="text-align: center; font-size: 11px; color: #d4af37; border-top: 1px solid rgba(212,175,55,0.2); width: 100%; padding-top: 8px; letter-spacing: 0.5px; margin-bottom: 2px;">
-      เปิดดวงชะตาของคุณได้ที่ <span style="font-weight: bold;">mytarot.vip</span>
-    </div>
+<div id="captureTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 390px; height: 693px; background-size: cover; background-position: center; background-repeat: no-repeat; padding: 0; box-sizing: border-box; overflow: hidden;">
   </div>
-</div>
 </body>
 </html>
