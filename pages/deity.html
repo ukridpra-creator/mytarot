@@ -159,7 +159,6 @@
 <div class="page-content">
 
   <!-- Hero -->
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-title" style="margin-top: 10px;">ค้นหาเทพประจำตัว</div>
     <div class="hero-desc">เปิดดวงค้นหาองค์เทพผู้คุ้มครองชะตาชีวิต<br>ตามตำราโบราณเพื่อเปิดทางสว่างและเสริมสิริมงคลให้แก่คุณ</div>
@@ -249,8 +248,9 @@
         </div>
       </div>
     </div>
+    
     <div class="scores-detail">
-      <div class="scores-title">คะแนนทั้งหมด</div>
+      <div class="scores-title">ระดับความผูกพันแห่งสายญาณบารมีทั้งหมด</div>
       <div id="scoresDetail"></div>
     </div>
     <button class="btn-retry" onclick="resetAll()">🔄 ทำใหม่อีกครั้ง</button>
@@ -445,18 +445,17 @@ const QUIZ = [
   },
 ];
 
-// แก้ไขการจัดเรียงวันให้ตรงกับมาตรฐาน JS (0 = อาทิตย์, 1 = จันทร์ ...)
+// 0 = อาทิตย์, 1 = จันทร์ ...
 const DAY_DEITY = {
-  0: 'พระศิวะ',       // อาทิตย์
-  1: 'พระแม่อุมาเทวี', // จันทร์
-  2: 'พระพิฆเนศ',      // อังคาร
-  3: 'พระสุรัสวดี',    // พุธ
-  4: 'พระพรหม',        // พฤหัส
-  5: 'พระแม่ลักษมี',   // ศุกร์
-  6: 'พระนารายณ์',     // เสาร์
+  0: 'พระศิวะ',
+  1: 'พระแม่อุมาเทวี',
+  2: 'พระพิฆเนศ',
+  3: 'พระสุรัสวดี',
+  4: 'พระพรหม',
+  5: 'พระแม่ลักษมี',
+  6: 'พระนารายณ์',
 };
 
-// ปรับเงื่อนไขเช็กราศีให้ครอบคลุมทุกช่วงตารางวันเกิด
 const SIGN_DEITY = (month, day) => {
   if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return 'พระพิฆเนศ';
   if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return 'พระแม่ลักษมี';
@@ -469,7 +468,7 @@ const SIGN_DEITY = (month, day) => {
   if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return 'พระพรหม';
   if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return 'พระนารายณ์';
   if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return 'พระนารายณ์';
-  if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'พระพาย'; // เพิ่มดักมังกร/มีนให้ครบ
+  if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'พระพาย';
   return 'พระพรหม';
 };
 
@@ -488,13 +487,13 @@ function calcTamra() {
   const yearCE = birthYear - 543;
   const date = new Date(yearCE, birthMonth - 1, birthDay);
   
-  // ตรวจสอบว่าวันที่ที่กรอกมาถูกต้องตามปฏิทินจริงหรือไม่
   if (isNaN(date.getTime()) || date.getDate() !== birthDay) {
     alert('วันที่กรอกไม่ถูกต้องตามปฏิทินจริง กรุณาตรวจสอบอีกครั้งค่ะ');
     return false;
   }
 
-  const dayOfWeek = date.getDay(); // 0 = อาทิตย์, 1 = จันทร์ ...
+  // แจกคะแนนตามฐานดวงเกิดล่วงหน้า (ล็อกผลระบบดวงชะตาครึ่งแรก)
+  const dayOfWeek = date.getDay();
   const dayDeity = DAY_DEITY[dayOfWeek];
   if (dayDeity) scores[dayDeity] += 5;
 
@@ -520,7 +519,6 @@ function startQuiz() {
 
   initScores();
   
-  // ถ้าคำนวณตำราผ่าน (วันที่ถูกต้อง) ค่อยเริ่มควิซ
   if (calcTamra()) {
     currentQ = 0;
     document.getElementById('inputSection').style.display = 'none';
@@ -564,14 +562,21 @@ function showResult() {
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   const [name1, score1] = sorted[0];
   const [name2, score2] = sorted[1];
-  const maxScore = 25;
+
+  // องค์แรกล็อก 5 ดาวเต็มเสมอเพื่อความศักดิ์สิทธิ์
+  const starsHorizontal = '⭐⭐⭐⭐⭐';
 
   const d1 = DEITIES[name1];
   const d2 = DEITIES[name2];
 
   document.getElementById('resultIcon').src = d1.img;
   document.getElementById('resultName').textContent = name1;
-  document.getElementById('resultScore').textContent = `คะแนน ${score1} จาก ${maxScore} คะแนน`;
+  
+  document.getElementById('resultScore').innerHTML = `
+    <div style="font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 4px; letter-spacing: 1px;">ความผูกพันแห่งสายญาณบารมี</div>
+    <div style="font-size: 20px; letter-spacing: 2px; margin-bottom: 6px;">${starsHorizontal}</div>
+  `;
+  
   document.getElementById('resultDesc').textContent = d1.desc;
   document.getElementById('deityOffering').textContent = d1.offering;
   document.getElementById('deityPrayer').textContent = d1.prayer;
@@ -582,16 +587,22 @@ function showResult() {
   document.getElementById('secondaryIcon').src = d2.img;
   document.getElementById('secondaryName').textContent = name2;
 
-  document.getElementById('scoresDetail').innerHTML = sorted.map(([name, score]) => `
-    <div class="score-row">
-      <img src="${DEITIES[name].img}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-      <div class="score-name">${name}</div>
-      <div class="score-bar-wrap">
-        <div class="score-bar" style="width:${(score/maxScore)*100}%"></div>
+  // แปลงตารางสัดส่วนคะแนนด้านล่างให้ออกมาเป็น "ดาวลดหลั่นกันไป" สวยๆ ไม่โชว์เลขดิบ
+  document.getElementById('scoresDetail').innerHTML = sorted.map(([name, score]) => {
+    let rowStars = 1;
+    if (score1 > 0) {
+      rowStars = Math.max(1, Math.round((score / score1) * 5));
+    }
+    const starsString = '⭐'.repeat(rowStars) + '☆'.repeat(5 - rowStars);
+
+    return `
+      <div class="score-row" style="margin-bottom: 12px; display: flex; align-items: center;">
+        <img src="${DEITIES[name].img}" style="width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0; margin-right: 10px;">
+        <div class="score-name" style="font-weight: 500; color: rgba(255,255,255,0.8);">${name}</div>
+        <div style="font-size: 13px; letter-spacing: 1px; color: var(--gold); margin-left: auto;">${starsString}</div>
       </div>
-      <div class="score-num">${score}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
 }
