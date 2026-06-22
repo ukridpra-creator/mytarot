@@ -187,9 +187,9 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 5 เหรียญต่อครั้ง</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
-  </div>
+  <div class="coin-text">🪙 ใช้ 30 เหรียญต่อการทำนาย</div>
+  <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+</div>
 
   <button class="btn-read" id="readBtn" onclick="getReading()" disabled>☯ ขอคำทำนายจากอี้จิง</button>
 
@@ -375,8 +375,10 @@ function getHexagramNumber(lines) {
 
 async function getReading() {
   const coins = parseInt(localStorage.getItem('coins') || '0');
- if (coins < 30) { alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ'); return; }
-localStorage.setItem('coins', String(coins - 30));
+  if (coins < 30) { alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ'); return; }
+  localStorage.setItem('coins', String(coins - 30));
+  document.getElementById('coinCount').textContent = coins - 30;
+  document.getElementById('coinDisplay').textContent = coins - 30;
   const hexNum = getHexagramNumber(lines);
   const hex = HEXAGRAMS[hexNum];
   const question = document.getElementById('question').value.trim();
