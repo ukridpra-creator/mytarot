@@ -326,34 +326,34 @@ const QUIZ = [
   },
 ];
 
-// Day mapping
+// แก้ไขการจัดเรียงวันให้ตรงกับมาตรฐาน JS (0 = อาทิตย์, 1 = จันทร์ ...)
 const DAY_DEITY = {
-  0: 'พระแม่อุมาเทวี', // จันทร์
-  1: 'พระพิฆเนศ',      // อังคาร
-  2: 'พระสุรัสวดี',    // พุธ (กลางวัน)
-  3: 'พระพรหม',        // พฤหัส
-  4: 'พระแม่ลักษมี',   // ศุกร์
-  5: 'พระนารายณ์',     // เสาร์
-  6: 'พระศิวะ',       // อาทิตย์
+  0: 'พระศิวะ',       // อาทิตย์
+  1: 'พระแม่อุมาเทวี', // จันทร์
+  2: 'พระพิฆเนศ',      // อังคาร
+  3: 'พระสุรัสวดี',    // พุธ
+  4: 'พระพรหม',        // พฤหัส
+  5: 'พระแม่ลักษมี',   // ศุกร์
+  6: 'พระนารายณ์',     // เสาร์
 };
 
-// Zodiac mapping (ราศีตะวันตก approximate from birth month/day)
+// ปรับเงื่อนไขเช็กราศีให้ครอบคลุมทุกช่วงตารางวันเกิด
 const SIGN_DEITY = (month, day) => {
-  if ((month==3&&day>=21)||(month==4&&day<=19)) return 'พระพิฆเนศ';
-  if ((month==4&&day>=20)||(month==5&&day<=20)) return 'พระแม่ลักษมี';
-  if ((month==5&&day>=21)||(month==6&&day<=20)) return 'พระสุรัสวดี';
-  if ((month==6&&day>=21)||(month==7&&day<=22)) return 'พระแม่อุมาเทวี';
-  if ((month==7&&day>=23)||(month==8&&day<=22)) return 'พระศิวะ';
-  if ((month==8&&day>=23)||(month==9&&day<=22)) return 'พระสุรัสวดี';
-  if ((month==9&&day>=23)||(month==10&&day<=22)) return 'พระแม่ลักษมี';
-  if ((month==10&&day>=23)||(month==11&&day<=21)) return 'พระพิฆเนศ';
-  if ((month==11&&day>=22)||(month==12&&day<=21)) return 'พระพรหม';
-  if ((month==12&&day>=22)||(month==1&&day<=19)) return 'พระนารายณ์';
-  if ((month==1&&day>=20)||(month==2&&day<=18)) return 'พระนารายณ์';
+  if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) return 'พระพิฆเนศ';
+  if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) return 'พระแม่ลักษมี';
+  if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) return 'พระสุรัสวดี';
+  if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) return 'พระแม่อุมาเทวี';
+  if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) return 'พระศิวะ';
+  if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) return 'พระสุรัสวดี';
+  if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) return 'พระแม่ลักษมี';
+  if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) return 'พระพิฆเนศ';
+  if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) return 'พระพรหม';
+  if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) return 'พระนารายณ์';
+  if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) return 'พระนารายณ์';
+  if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) return 'พระพาย'; // เพิ่มดักมังกร/มีนให้ครบ
   return 'พระพรหม';
 };
 
-// Naksat mapping
 const NAKSAT_DEITY = ['พระแม่อุมาเทวี','พระแม่ธรณี','พระศิวะ','พระแม่ลักษมี','พระนารายณ์','อนันตนาคราช','พระพาย','พระแม่ลักษมี','พระพรหม','พระสุรัสวดี','พระพิฆเนศ','พระพรหม'];
 
 let scores = {};
@@ -366,25 +366,27 @@ function initScores() {
 }
 
 function calcTamra() {
-  // ปี พ.ศ. → ค.ศ.
   const yearCE = birthYear - 543;
   const date = new Date(yearCE, birthMonth - 1, birthDay);
-  const dayOfWeek = date.getDay(); // 0=อาทิตย์
+  
+  // ตรวจสอบว่าวันที่ที่กรอกมาถูกต้องตามปฏิทินจริงหรือไม่
+  if (isNaN(date.getTime()) || date.getDate() !== birthDay) {
+    alert('วันที่กรอกไม่ถูกต้องตามปฏิทินจริง กรุณาตรวจสอบอีกครั้งค่ะ');
+    return false;
+  }
 
-  // Map: 0=อาทิตย์→6, 1=จันทร์→0 ... ให้ตรงกับ DAY_DEITY
-  const dayMap = {0:6, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5};
-  const dayKey = dayMap[dayOfWeek];
-  const dayDeity = DAY_DEITY[dayKey];
+  const dayOfWeek = date.getDay(); // 0 = อาทิตย์, 1 = จันทร์ ...
+  const dayDeity = DAY_DEITY[dayOfWeek];
   if (dayDeity) scores[dayDeity] += 5;
 
-  // ราศี
   const signDeity = SIGN_DEITY(birthMonth, birthDay);
   if (signDeity) scores[signDeity] += 5;
 
-  // นักษัตร
   const nakIdx = (yearCE - 4) % 12;
   const nakDeity = NAKSAT_DEITY[nakIdx < 0 ? nakIdx + 12 : nakIdx];
   if (nakDeity) scores[nakDeity] += 5;
+  
+  return true;
 }
 
 function startQuiz() {
@@ -398,12 +400,14 @@ function startQuiz() {
   }
 
   initScores();
-  calcTamra();
-  currentQ = 0;
-
-  document.getElementById('inputSection').style.display = 'none';
-  document.getElementById('quizSection').style.display = 'block';
-  renderQuestion();
+  
+  // ถ้าคำนวณตำราผ่าน (วันที่ถูกต้อง) ค่อยเริ่มควิซ
+  if (calcTamra()) {
+    currentQ = 0;
+    document.getElementById('inputSection').style.display = 'none';
+    document.getElementById('quizSection').style.display = 'block';
+    renderQuestion();
+  }
 }
 
 function renderQuestion() {
