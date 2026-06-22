@@ -63,14 +63,14 @@ function closeUserMenu() {
 // Mock login (จะเปลี่ยนเป็น Firebase ทีหลัง)
 let currentUser = null;
 
+// แก้ loginGoogle ให้ไปหน้า profile แทน
 function loginGoogle() {
-  // Mock data ก่อน จะเปลี่ยนเป็น Firebase ทีหลัง
-  currentUser = {
-    name: 'Ukrit Prasert',
-    email: 'ukrit@gmail.com',
-    photo: null,
-    isPremium: false
-  };
+  window.location.href = 'pages/profile.html';
+}
+
+// แก้ bottom nav ให้ปุ่มโปรไฟล์ไป profile.html
+function logout() {
+  currentUser = null;
   updateUserUI();
   closeUserMenu();
 }
