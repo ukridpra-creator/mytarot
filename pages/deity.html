@@ -629,13 +629,52 @@ function saveAsImage() {
   btn.innerText = '⏳ กำลังปรุงรูปภาพ...';
   btn.disabled = true;
 
-  // 1. ดึงข้อมูลคะแนนมาเรียงหาเทพหลัก (อันดับ 1) และเทพรอง (อันดับ 2) เพื่อส่งค่าเข้าการ์ด
+  // 1. เรียงคะแนนดวงชะตา หาเทพหลัก (อันดับ 1) และเทพรอง (อันดับ 2) จากหน้าเว็บจริง
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   const name1 = sorted[0][0];
   const name2 = sorted[1][0];
 
   const d1 = DEITIES[name1];
   const d2 = DEITIES[name2];
+
+  // 2. สั่งนำรูปภาพจริงและข้อมูลจริงของเทพที่ผู้ใช้คนนั้นทายได้ ยัดเข้าดีไซน์แผ่นขอบทอง
+  document.getElementById('capIcon').src = d1.img; 
+  document.getElementById('capName').textContent = name1; 
+  document.getElementById('capOffering').innerHTML = `<span style="color: #a78bfa; font-weight:600;">🎁 ของไหว้เปิดดวง:</span> ${d1.offering}`;
+  document.getElementById('capColor').textContent = d1.color;
+  document.getElementById('capDirection').textContent = d1.direction;
+  document.getElementById('capTaboo').innerHTML = `⚠️ <b>ข้อควรระวัง:</b> ${d1.taboo}`;
+  document.getElementById('capPrayer').textContent = d1.prayer ? d1.prayer : "-";
+
+  // ดึงรูปและชื่อจริงของเทพรององค์ที่สองมาใส่
+  document.getElementById('capSecondaryIcon').src = d2.img; 
+  document.getElementById('capSecondaryName').textContent = name2; 
+
+  // 3. เริ่มขั้นตอนสั่งให้ html2canvas จับภาพออกมาเป็นไฟล์
+  const target = document.getElementById('captureTemplate');
+  
+  setTimeout(() => {
+    html2canvas(target, {
+      useCORS: true, 
+      scale: 2, // ภาพคมชัด ไม่แตกเบลอ
+      backgroundColor: '#0c081e'
+    }).then(canvas => {
+      // ดาวน์โหลดรูปภาพดวงชะตาขอบทองส่งลงเครื่องมือถือทันที
+      const link = document.createElement('a');
+      link.download = `my-deity-${name1}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
+      btn.disabled = false;
+    }).catch(err => {
+      console.error(err);
+      alert('เกิดข้อผิดพลาดในการดึงรูปภาพ กรุณาลองใหม่อีกครั้ง');
+      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
+      btn.disabled = false;
+    });
+  }, 600); // ดีเลย์เผื่อเวลาให้เบราว์เซอร์สลับโหลดรูปภาพองค์เทพให้เสร็จ
+}
 
   // ส่งข้อมูลเทพหลักเข้าแผ่นการ์ด
   document.getElementById('capIcon').src = d1.img;
@@ -673,61 +712,78 @@ function saveAsImage() {
       btn.disabled = false;
     });
   }, 500);
-}
+
 </script>
-<div id="captureTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 390px; height: 820px; background: linear-gradient(180deg, #0d0820 0%, #1e1245 100%); padding: 24px 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: space-between; border: 2px solid #d4af37; border-radius: 0;">
+<div id="captureTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 390px; height: 844px; background: #0c081e; padding: 0; box-sizing: border-box; display: flex; flex-direction: column; border: 4px solid #d4af37; border-radius: 20px; overflow: hidden; font-family: sans-serif; box-shadow: 0 0 50px rgba(124, 58, 237, 0.4);">
   
-  <div style="text-align: center; width: 100%;">
-    <div style="font-size: 11px; color: #d4af37; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">✦ MY TAROT DEITY ✦</div>
-    <div style="font-size: 10px; color: rgba(255,255,255,0.4);">องค์เทพคุ้มครองชะตาชีวิตประจำตัว</div>
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(#1e1245 1px, transparent 1px), radial-gradient(#1e1245 1px, transparent 1px); background-size: 30px 30px; background-position: 0 0, 15px 15px; opacity: 0.2; z-index: 1;"></div>
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; display: flex; align-items: center; justify-content: center; opacity: 0.1;">
+    <div style="width: 300px; height: 300px; border: 1px solid #d4af37; transform: rotate(45deg);"></div>
+    <div style="position: absolute; width: 250px; height: 250px; border: 1px solid #d4af37;"></div>
   </div>
 
-  <div style="text-align: center; margin: 10px 0 5px;">
-    <img id="capIcon" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid #d4af37; object-fit: cover; box-shadow: 0 0 20px rgba(124,58,237,0.4);">
-    <div id="capName" style="font-size: 26px; font-weight: 800; color: white; margin-top: 8px; margin-bottom: 2px;"></div>
-    <div style="font-size: 16px; letter-spacing: 2px; color: #d4af37;">⭐⭐⭐⭐⭐</div>
-  </div>
-
-  <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 16px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 12px; margin-bottom: 5px;">
-    <img id="capSecondaryIcon" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);">
-    <div style="text-align: left;">
-      <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-bottom: 2px;">🌟 เทพรอง (องค์ที่สอง)</div>
-      <div id="capSecondaryName" style="font-size: 14px; font-weight: 700; color: white;"></div>
-    </div>
-  </div>
-
-  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.2); border-radius: 16px; padding: 16px; width: 100%; box-sizing: border-box; font-size: 12px; line-height: 1.6; text-align: left;">
-    <div style="font-size: 13px; color: #d4af37; font-weight: 700; margin-bottom: 10px; border-bottom: 1px solid rgba(212,175,55,0.15); padding-bottom: 6px;">
-      🕉️ แนวทางนอบน้อมเสริมดวงชะตา
-    </div>
+  <div style="position: relative; z-index: 3; padding: 25px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; height: 100%;">
     
-    <div style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">
-      <span style="color: #a78bfa; font-weight:600;">ของไหว้เปิดดวง:</span> <span id="capOffering"></span>
+    <div style="text-align: center; width: 100%; margin-bottom: 5px;">
+      <div style="font-size: 13px; color: #d4af37; letter-spacing: 2px; font-weight: 700;">✦ MY TAROT DEITY ✦</div>
+      <div style="font-size: 10px; color: rgba(255,255,255,0.6);">องค์เทพคุ้มครองชะตาชีวิตประจำตัว</div>
     </div>
 
-    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-      <div style="flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px 10px;">
-        <span style="color: #6ee7b7; font-weight: 600; display: block; font-size: 11px;">🎨 สีมงคล</span>
-        <span id="capColor" style="color: rgba(255,255,255,0.7); font-size: 11px;"></span>
+    <div style="text-align: center; margin: 10px 0 10px; flex: 0 0 auto;">
+      <div style="position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">
+        <div style="position: absolute; top: -5px; left: -5px; width: 190px; height: 190px; border: 2px dashed rgba(212, 175, 55, 0.4); border-radius: 50%;"></div>
+        <img id="capIcon" style="width: 170px; height: 170px; border-radius: 50%; border: 4px solid #d4af37; object-fit: cover; box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);">
       </div>
-      <div style="flex: 1; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px 10px;">
-        <span style="color: #6ee7b7; font-weight: 600; display: block; font-size: 11px;">🧭 ทิศมงคล</span>
-        <span id="capDirection" style="color: rgba(255,255,255,0.7); font-size: 11px;"></span>
+      <div id="capName" style="font-size: 28px; font-weight: 800; color: #fff; margin-top: 15px; margin-bottom: 2px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);"></div>
+      <div style="font-size: 16px; letter-spacing: 3px; color: #d4af37; margin-bottom: 5px;">⭐⭐⭐⭐⭐</div>
+      <div style="font-size: 10px; color: rgba(255,255,255,0.5); font-style: italic;">ความผูกพันแห่งสายญาณบารมี</div>
+    </div>
+
+    <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px 20px; width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+      <div style="flex: 0 0 50px;">
+        <img id="capSecondaryIcon" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #d4af37;">
+      </div>
+      <div style="text-align: left; flex: 1;">
+        <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 2px;">🌟 เทพรอง (องค์ที่สอง)</div>
+        <div id="capSecondaryName" style="font-size: 16px; font-weight: 700; color: #fff;"></div>
       </div>
     </div>
 
-    <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 8px 12px; color: #f87171; font-size: 11px; margin-bottom: 12px;">
-      ⚠️ ข้อควรระวัง: <span id="capTaboo" style="color: rgba(255,255,255,0.75);"></span>
+    <div style="background: rgba(255,255,255,0.03); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 20px; width: 100%; box-sizing: border-box; font-size: 13px; line-height: 1.6; text-align: left; position: relative;">
+      
+      <div style="position: absolute; top: 5px; left: 5px; width: 5px; height: 5px; background: #d4af37; border-radius: 50%;"></div>
+      <div style="position: absolute; top: 5px; right: 5px; width: 5px; height: 5px; background: #d4af37; border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: 5px; left: 5px; width: 5px; height: 5px; background: #d4af37; border-radius: 50%;"></div>
+      <div style="position: absolute; bottom: 5px; right: 5px; width: 5px; height: 5px; background: #d4af37; border-radius: 50%;"></div>
+      
+      <div style="font-size: 15px; color: #d4af37; font-weight: 800; margin-bottom: 15px; text-align: center; border-bottom: 1px dashed rgba(212, 175, 55, 0.3); padding-bottom: 8px;">
+        🕉️ แนวทางนอบน้อมเสริมดวงชะตา
+      </div>
+      
+      <div id="capOffering" style="color: rgba(255,255,255,0.9); margin-bottom: 10px;"></div>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <div style="flex: 1; background: rgba(124, 58, 237, 0.05); border: 1px solid rgba(255,255,255,0.03); border-radius: 10px; padding: 8px 12px;">
+          <span style="color: #6ee7b7; font-weight: 600; display: block; font-size: 12px;">🎨 สีมงคล</span>
+          <span id="capColor" style="color: rgba(255,255,255,0.8); font-size: 11px;"></span>
+        </div>
+        <div style="flex: 1; background: rgba(124, 58, 237, 0.05); border: 1px solid rgba(255,255,255,0.03); border-radius: 10px; padding: 8px 12px;">
+          <span style="color: #6ee7b7; font-weight: 600; display: block; font-size: 12px;">🧭 ทิศบูชา</span>
+          <span id="capDirection" style="color: rgba(255,255,255,0.8); font-size: 11px;"></span>
+        </div>
+      </div>
+
+      <div id="capTaboo" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 10px; padding: 10px 15px; color: #f87171; font-size: 11px; margin-bottom: 15px; text-align: center;"></div>
+
+      <div style="text-align: center;">
+        <div style="font-size: 13px; color: #d4af37; font-weight: 700; margin-bottom: 6px;">🙏 บทสวดบูชาแบบย่อ</div>
+        <div id="capPrayer" style="font-size: 13px; font-weight: 600; color: #fff; font-style: italic; background: rgba(212, 175, 55, 0.1); padding: 10px 15px; border-radius: 10px;"></div>
+      </div>
     </div>
 
-    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; text-align: center;">
-      <div style="font-size: 12px; color: #d4af37; font-weight: 700; margin-bottom: 4px;">🙏 บทสวดบูชาแบบย่อ</div>
-      <div id="capPrayer" style="font-size: 12px; font-weight: 600; color: #fff; font-style: italic; background: rgba(124,58,237,0.1); padding: 8px; border-radius: 8px;"></div>
+    <div style="text-align: center; font-size: 11px; color: rgba(212, 175, 55, 0.5); border-top: 1px solid rgba(212, 175, 55, 0.1); width: 100%; padding-top: 15px; letter-spacing: 0.5px;">
+      เปิดดวงชะตาของคุณได้ที่ <span style="font-weight: 700; color: #d4af37;">mytaro.vip</span>
     </div>
-  </div>
-
-  <div style="text-align: center; font-size: 10px; color: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.1); width: 100%; padding-top: 10px;">
-    เปิดดวงชะตาของคุณได้ที่ mytarot.vip
   </div>
 </div>
 </body>
