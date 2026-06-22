@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เทพประจำตัว — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 24px 20px 40px; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 16px 0 28px; }
+    .hero-icon { font-size: 48px; margin-bottom: 12px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+
+    /* Birth date input */
+    .input-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 20px;
+    }
+    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
+    .date-row { display: flex; gap: 10px; }
+    .date-input {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; color: white; font-size: 15px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      text-align: center; transition: border-color 0.2s;
+    }
+    .date-input:focus { border-color: var(--purple-light); }
+    .date-input::placeholder { color: rgba(255,255,255,0.2); font-size: 12px; }
+    .date-hint { font-size: 11px; color: var(--dim); margin-top: 8px; text-align: center; }
+
+    .btn-start {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-top: 16px;
+    }
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-start:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Quiz section */
+    .quiz-section { display: none; }
+    .quiz-progress {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+    }
+    .progress-bar {
+      flex: 1; height: 4px; background: rgba(255,255,255,0.08);
+      border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--pink));
+      transition: width 0.4s ease;
+    }
+    .progress-text { font-size: 12px; color: var(--dim); white-space: nowrap; }
+
+    .quiz-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px; margin-bottom: 16px;
+    }
+    .quiz-num { font-size: 11px; color: var(--purple-light); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+    .quiz-q { font-size: 17px; font-weight: 700; color: white; line-height: 1.5; margin-bottom: 6px; }
+    .quiz-hint { font-size: 12px; color: var(--dim); margin-bottom: 20px; }
+
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .option-btn {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px 16px; cursor: pointer;
+      transition: all 0.2s; text-align: left; width: 100%;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .option-btn:hover { border-color: rgba(124,58,237,0.5); background: rgba(124,58,237,0.08); }
+    .option-btn.selected {
+      border-color: var(--purple-light); background: rgba(124,58,237,0.15);
+    }
+    .option-letter {
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--purple-light);
+    }
+    .option-btn.selected .option-letter {
+      background: var(--purple); border-color: var(--purple); color: white;
+    }
+    .option-text { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5; padding-top: 4px; }
+
+    /* Result */
+    .result-section { display: none; }
+    .result-main {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.08));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 24px; padding: 28px; text-align: center; margin-bottom: 20px;
+    }
+    .result-label { font-size: 12px; color: var(--gold); letter-spacing: 2px; font-weight: 700; margin-bottom: 16px; }
+    .result-deity-icon { font-size: 72px; margin-bottom: 12px; }
+    .result-deity-name { font-size: 28px; font-weight: 800; color: white; margin-bottom: 8px; }
+    .result-deity-score { font-size: 13px; color: var(--dim); margin-bottom: 16px; }
+    .result-desc { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.8; }
+
+    .result-secondary {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .secondary-icon { font-size: 36px; }
+    .secondary-info { flex: 1; }
+    .secondary-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+    .secondary-name { font-size: 16px; font-weight: 700; color: white; }
+
+    .scores-detail {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; margin-bottom: 20px;
+    }
+    .scores-title { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+    .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .score-name { font-size: 13px; color: rgba(255,255,255,0.7); width: 130px; flex-shrink: 0; }
+    .score-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+    .score-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--purple), var(--pink)); transition: width 0.6s ease; }
+    .score-num { font-size: 12px; color: var(--dim); width: 28px; text-align: right; }
+
+    .btn-retry {
+      width: 100%; background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.3); border-radius: 16px;
+      padding: 14px; color: var(--purple-light);
+      font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-retry:hover { background: rgba(124,58,237,0.25); }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">เทพประจำตัว</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+</div>
+
+<div class="page-content">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-icon">🙏</div>
+    <div class="hero-title">ค้นหาเทพประจำตัว</div>
+    <div class="hero-desc">ระบบจะคำนวณจากวันเกิดตามตำราโบราณ<br>และคำถาม 10 ข้อเพื่อหาเทพที่คุ้มครองคุณ</div>
+  </div>
+
+  <!-- Birth date input -->
+  <div id="inputSection">
+    <div class="input-card">
+      <label class="input-label">📅 วันเกิดของคุณ (ปีพุทธศักราช)</label>
+      <div class="date-row">
+        <input class="date-input" id="inputDay" type="number" placeholder="วัน" min="1" max="31">
+        <input class="date-input" id="inputMonth" type="number" placeholder="เดือน" min="1" max="12">
+        <input class="date-input" id="inputYear" type="number" placeholder="ปี พ.ศ." min="2400" max="2600">
+      </div>
+      <div class="date-hint">เช่น เกิด 25 กันยายน 2529 → กรอก 25 / 9 / 2529</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">🙏 เริ่มค้นหาเทพประจำตัว</button>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz-section" id="quizSection">
+    <div class="quiz-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 / 10</div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-num" id="quizNum">ข้อที่ 1</div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-hint">เลือกข้อที่ตรงกับตัวเองมากที่สุด</div>
+      <div class="options-list" id="optionsList"></div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-section" id="resultSection">
+    <div class="result-main">
+      <div class="result-label">✦ เทพประจำตัวของคุณ ✦</div>
+      <div class="result-deity-icon" id="resultIcon"></div>
+      <div class="result-deity-name" id="resultName"></div>
+      <div class="result-deity-score" id="resultScore"></div>
+      <div class="result-desc" id="resultDesc"></div>
+    </div>
+    <div class="result-secondary">
+      <div class="secondary-icon" id="secondaryIcon"></div>
+      <div class="secondary-info">
+        <div class="secondary-label">🌟 เทพรอง (องค์ที่สอง)</div>
+        <div class="secondary-name" id="secondaryName"></div>
+      </div>
+    </div>
+    <div class="scores-detail">
+      <div class="scores-title">คะแนนทั้งหมด</div>
+      <div id="scoresDetail"></div>
+    </div>
+    <button class="btn-retry" onclick="resetAll()">🔄 ทำใหม่อีกครั้ง</button>
+  </div>
+
+</div>
+
+<script>
+const DEITIES = {
+  'พระอิศวร':     { icon: '⚡', desc: 'ท่านเป็นผู้มีพลังอำนาจและความเด็ดเดี่ยวสูง มีความกล้าหาญ ยืนหยัดในสิ่งที่เชื่อ พระอิศวรคุ้มครองผู้ที่เผชิญความท้าทายด้วยความแข็งแกร่งและไม่ย่อท้อ' },
+  'พระแม่อุมาเทวี':{ icon: '🌸', desc: 'ท่านมีความเมตตากรุณาและรักครอบครัวอย่างลึกซึ้ง มีความอดทนและความรักที่ไม่มีเงื่อนไข พระแม่อุมาคุ้มครองผู้ที่ดูแลคนรอบข้างด้วยใจที่อ่อนโยน' },
+  'พระพิฆเนศ':    { icon: '🐘', desc: 'ท่านมีสติปัญญาเฉลียวฉลาด แก้ปัญหาเก่ง และมีความคิดสร้างสรรค์สูง พระพิฆเนศคุ้มครองผู้ที่เผชิญอุปสรรคและก้าวข้ามมันด้วยปัญญา' },
+  'พระสุรัสวดี':  { icon: '🎵', desc: 'ท่านรักการเรียนรู้ มีความคิดละเอียดรอบคอบ และมีพรสวรรค์ด้านศิลปะหรือความรู้ พระสุรัสวดีคุ้มครองผู้ที่แสวงหาปัญญาและความงามในชีวิต' },
+  'อนันตนาคราช':  { icon: '🐍', desc: 'ท่านมีความลึกซึ้งและสัญชาตญาณแหลมคม ชอบสังเกตและคิดอย่างเงียบๆ อนันตนาคราชคุ้มครองผู้ที่ใช้ความอดทนและสัญชาตญาณนำทางชีวิต' },
+  'พระพรหม':      { icon: '🌟', desc: 'ท่านมีวิสัยทัศน์กว้างไกล ชอบสร้างสิ่งใหม่ และมีความคิดที่ก้าวหน้า พระพรหมคุ้มครองผู้ที่สร้างสรรค์และวางรากฐานสิ่งยิ่งใหญ่ให้โลก' },
+  'พระแม่ลักษมี': { icon: '🪷', desc: 'ท่านมีเสน่ห์ดึงดูด ใจกว้าง และมีความสุขในการแบ่งปัน พระแม่ลักษมีคุ้มครองผู้ที่ดึงดูดความอุดมสมบูรณ์และแจกจ่ายสิ่งดีๆ ให้คนรอบข้าง' },
+  'พระนารายณ์':   { icon: '🦅', desc: 'ท่านมีความยุติธรรม รักษาสมดุล และปกป้องคนที่รัก พระนารายณ์คุ้มครองผู้ที่ยืนหยัดเพื่อความถูกต้องและปกป้องผู้อ่อนแอ' },
+  'พระแม่ธรณี':   { icon: '🌍', desc: 'ท่านมีความมั่นคง น่าเชื่อถือ และเป็นรากฐานให้คนรอบข้าง พระแม่ธรณีคุ้มครองผู้ที่สร้างความมั่นคงและเป็นเสาหลักของครอบครัว' },
+  'พระพาย':       { icon: '💨', desc: 'ท่านรักอิสรภาพ ปรับตัวเก่ง และมีพลังงานที่ไหลเวียนไม่หยุดนิ่ง พระพายคุ้มครองผู้ที่เปิดรับการเปลี่ยนแปลงและเดินหน้าสู่สิ่งใหม่' },
+};
+
+const QUIZ = [
+  {
+    q: 'เวลาชีวิตพังทลาย คุณมักจะทำอะไรเป็นอย่างแรก?',
+    options: [
+      { text: 'ลุกขึ้นสู้ทันที ไม่ยอมแพ้', deities: ['พระอิศวร','พระพิฆเนศ'] },
+      { text: 'รอจังหวะ สังเกตสถานการณ์ก่อน', deities: ['พระนารายณ์','อนันตนาคราช'] },
+      { text: 'พึ่งคนรอบข้าง หาแรงใจจากคนที่รัก', deities: ['พระแม่อุมาเทวี','พระแม่ลักษมี'] },
+      { text: 'คิดหาทางออกใหม่ วางแผนใหม่', deities: ['พระพรหม','พระสุรัสวดี'] },
+    ]
+  },
+  {
+    q: 'คนรอบข้างมักบอกว่าคุณเป็นคนแบบไหน?',
+    options: [
+      { text: 'แข็งแกร่ง ยืนหยัดได้ทุกสถานการณ์', deities: ['พระอิศวร','พระแม่ธรณี'] },
+      { text: 'ใจดี ไม่ทอดทิ้งใคร เชื่อใจได้', deities: ['พระแม่อุมาเทวี','พระนารายณ์'] },
+      { text: 'ฉลาด แก้ปัญหาเก่ง คิดเร็ว', deities: ['พระพิฆเนศ','พระสุรัสวดี'] },
+      { text: 'อิสระ ไม่ยึดติด ไหลตามสถานการณ์', deities: ['พระพาย','อนันตนาคราช'] },
+    ]
+  },
+  {
+    q: 'สิ่งที่ทำให้คุณรู้สึกมีพลังงานมากที่สุดคืออะไร?',
+    options: [
+      { text: 'ผ่านสิ่งยากมาได้ พิสูจน์ตัวเองสำเร็จ', deities: ['พระอิศวร','พระแม่ลักษมี'] },
+      { text: 'ได้สร้างหรือเริ่มต้นบางอย่างใหม่', deities: ['พระพรหม','พระพาย'] },
+      { text: 'ได้ดูแลและเห็นคนที่รักมีความสุข', deities: ['พระแม่อุมาเทวี','พระแม่ธรณี'] },
+      { text: 'ได้เรียนรู้ ค้นพบสิ่งใหม่ที่ไม่เคยรู้', deities: ['พระสุรัสวดี','อนันตนาคราช'] },
+    ]
+  },
+  {
+    q: 'เวลามีเงินหรือทรัพยากรเหลือ คุณมักจะ...?',
+    options: [
+      { text: 'แบ่งปันให้คนอื่นหรือคนที่รักทันที', deities: ['พระแม่ลักษมี','พระแม่อุมาเทวี'] },
+      { text: 'เก็บออมสร้างความมั่นคงระยะยาว', deities: ['พระแม่ธรณี','พระนารายณ์'] },
+      { text: 'ลงทุนกับสิ่งที่จะสร้างคุณค่าใหม่', deities: ['พระพรหม','พระพิฆเนศ'] },
+      { text: 'ใช้กับประสบการณ์ใหม่หรือความรู้', deities: ['พระพาย','พระสุรัสวดี'] },
+    ]
+  },
+  {
+    q: 'ความฝันสูงสุดในชีวิตของคุณคืออะไร?',
+    options: [
+      { text: 'สร้างสิ่งยิ่งใหญ่ที่ฝากไว้ให้โลกจดจำ', deities: ['พระพรหม','พระอิศวร'] },
+      { text: 'มีครอบครัวอบอุ่น มั่นคง และปลอดภัย', deities: ['พระแม่อุมาเทวี','พระแม่ธรณี'] },
+      { text: 'มีอิสระ ได้ใช้ชีวิตในแบบที่ตัวเองเลือก', deities: ['พระพาย','อนันตนาคราช'] },
+      { text: 'มีความมั่งคั่ง มีชีวิตที่สมบูรณ์พูนสุข', deities: ['พระแม่ลักษมี','พระนารายณ์'] },
+    ]
+  },
+  {
+    q: 'เวลาต้องตัดสินใจครั้งสำคัญ คุณมักจะ...?',
+    options: [
+      { text: 'เชื่อใจตัวเองและลงมือทำทันที', deities: ['พระอิศวร','พระพาย'] },
+      { text: 'คิดวิเคราะห์รอบด้านก่อนตัดสินใจ', deities: ['พระนารายณ์','พระสุรัสวดี'] },
+      { text: 'ศึกษาข้อมูลให้ลึกซึ้งที่สุดก่อน', deities: ['พระสุรัสวดี','พระพิฆเนศ'] },
+      { text: 'รอสัญญาณจากภายในหรือสัญชาตญาณ', deities: ['อนันตนาคราช','พระแม่ธรณี'] },
+    ]
+  },
+  {
+    q: 'สิ่งที่คุณกลัวที่สุดในชีวิตคืออะไร?',
+    options: [
+      { text: 'สูญเสียคนที่รักหรือความสัมพันธ์สำคัญ', deities: ['พระแม่อุมาเทวี','พระแม่ลักษมี'] },
+      { text: 'ไม่มีความมั่นคงหรือรากฐานในชีวิต', deities: ['พระแม่ธรณี','พระนารายณ์'] },
+      { text: 'สูญเสียอิสรภาพหรือถูกควบคุม', deities: ['พระพาย','พระอิศวร'] },
+      { text: 'ทำสิ่งที่ตั้งใจไม่สำเร็จสักที', deities: ['พระพิฆเนศ','พระพรหม'] },
+    ]
+  },
+  {
+    q: 'คุณให้คุณค่ากับสิ่งใดมากที่สุดในชีวิต?',
+    options: [
+      { text: 'ความสัมพันธ์และความผูกพันกับคนรอบข้าง', deities: ['พระแม่ลักษมี','อนันตนาคราช'] },
+      { text: 'ความรู้ ปัญญา และการเรียนรู้ตลอดชีวิต', deities: ['พระสุรัสวดี','พระพิฆเนศ'] },
+      { text: 'ความมั่นคง รากฐาน และความน่าเชื่อถือ', deities: ['พระแม่ธรณี','พระนารายณ์'] },
+      { text: 'อิสรภาพ โอกาสใหม่ และการเติบโต', deities: ['พระพาย','พระพรหม'] },
+    ]
+  },
+  {
+    q: 'เวลาเครียดมากๆ คุณจะจัดการกับมันยังไง?',
+    options: [
+      { text: 'สู้ต่อและหาทางออกจนกว่าจะแก้ได้', deities: ['พระอิศวร','พระพิฆเนศ'] },
+      { text: 'เงียบ เก็บตัว รอให้ใจสงบก่อน', deities: ['อนันตนาคราช','พระแม่ธรณี'] },
+      { text: 'หาคนคุยด้วยหรือระบายกับคนที่ไว้ใจ', deities: ['พระแม่อุมาเทวี','พระแม่ลักษมี'] },
+      { text: 'เปลี่ยนมุมมอง หาทางออกแบบใหม่', deities: ['พระพรหม','พระพาย'] },
+    ]
+  },
+  {
+    q: 'ถ้ามีพลังวิเศษได้ 1 อย่าง คุณจะเลือกอะไร?',
+    options: [
+      { text: 'พลังสร้างสิ่งใหม่จากศูนย์ได้ทุกอย่าง', deities: ['พระพรหม','พระแม่ลักษมี'] },
+      { text: 'พลังปกป้องคนที่รักจากอันตรายทั้งหมด', deities: ['พระนารายณ์','พระแม่อุมาเทวี'] },
+      { text: 'พลังรู้แจ้งและเข้าใจทุกสิ่งในจักรวาล', deities: ['พระสุรัสวดี','อนันตนาคราช'] },
+      { text: 'พลังขจัดทุกอุปสรรคได้ทันที', deities: ['พระพิฆเนศ','พระอิศวร'] },
+    ]
+  },
+];
+
+// Day mapping
+const DAY_DEITY = {
+  0: 'พระแม่อุมาเทวี', // จันทร์
+  1: 'พระพิฆเนศ',      // อังคาร
+  2: 'พระสุรัสวดี',    // พุธ (กลางวัน)
+  3: 'พระพรหม',        // พฤหัส
+  4: 'พระแม่ลักษมี',   // ศุกร์
+  5: 'พระนารายณ์',     // เสาร์
+  6: 'พระอิศวร',       // อาทิตย์
+};
+
+// Zodiac mapping (ราศีตะวันตก approximate from birth month/day)
+const SIGN_DEITY = (month, day) => {
+  if ((month==3&&day>=21)||(month==4&&day<=19)) return 'พระพิฆเนศ';
+  if ((month==4&&day>=20)||(month==5&&day<=20)) return 'พระแม่ลักษมี';
+  if ((month==5&&day>=21)||(month==6&&day<=20)) return 'พระสุรัสวดี';
+  if ((month==6&&day>=21)||(month==7&&day<=22)) return 'พระแม่อุมาเทวี';
+  if ((month==7&&day>=23)||(month==8&&day<=22)) return 'พระอิศวร';
+  if ((month==8&&day>=23)||(month==9&&day<=22)) return 'พระสุรัสวดี';
+  if ((month==9&&day>=23)||(month==10&&day<=22)) return 'พระแม่ลักษมี';
+  if ((month==10&&day>=23)||(month==11&&day<=21)) return 'พระพิฆเนศ';
+  if ((month==11&&day>=22)||(month==12&&day<=21)) return 'พระพรหม';
+  if ((month==12&&day>=22)||(month==1&&day<=19)) return 'พระนารายณ์';
+  if ((month==1&&day>=20)||(month==2&&day<=18)) return 'พระนารายณ์';
+  return 'พระพรหม';
+};
+
+// Naksat mapping
+const NAKSAT_DEITY = ['พระแม่อุมาเทวี','พระแม่ธรณี','พระอิศวร','พระแม่ลักษมี','พระนารายณ์','อนันตนาคราช','พระพาย','พระแม่ลักษมี','พระพรหม','พระสุรัสวดี','พระพิฆเนศ','พระพรหม'];
+
+let scores = {};
+let currentQ = 0;
+let birthDay, birthMonth, birthYear;
+
+function initScores() {
+  scores = {};
+  Object.keys(DEITIES).forEach(d => scores[d] = 0);
+}
+
+function calcTamra() {
+  // ปี พ.ศ. → ค.ศ.
+  const yearCE = birthYear - 543;
+  const date = new Date(yearCE, birthMonth - 1, birthDay);
+  const dayOfWeek = date.getDay(); // 0=อาทิตย์
+
+  // Map: 0=อาทิตย์→6, 1=จันทร์→0 ... ให้ตรงกับ DAY_DEITY
+  const dayMap = {0:6, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5};
+  const dayKey = dayMap[dayOfWeek];
+  const dayDeity = DAY_DEITY[dayKey];
+  if (dayDeity) scores[dayDeity] += 5;
+
+  // ราศี
+  const signDeity = SIGN_DEITY(birthMonth, birthDay);
+  if (signDeity) scores[signDeity] += 5;
+
+  // นักษัตร
+  const nakIdx = (yearCE - 4) % 12;
+  const nakDeity = NAKSAT_DEITY[nakIdx < 0 ? nakIdx + 12 : nakIdx];
+  if (nakDeity) scores[nakDeity] += 5;
+}
+
+function startQuiz() {
+  birthDay = parseInt(document.getElementById('inputDay').value);
+  birthMonth = parseInt(document.getElementById('inputMonth').value);
+  birthYear = parseInt(document.getElementById('inputYear').value);
+
+  if (!birthDay || !birthMonth || !birthYear || birthYear < 2400) {
+    alert('กรุณากรอกวันเกิดให้ครบถ้วนค่ะ');
+    return;
+  }
+
+  initScores();
+  calcTamra();
+  currentQ = 0;
+
+  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('quizSection').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUIZ[currentQ];
+  document.getElementById('quizNum').textContent = `ข้อที่ ${currentQ + 1} จาก 10`;
+  document.getElementById('quizQ').textContent = q.q;
+  document.getElementById('progressFill').style.width = `${(currentQ / 10) * 100}%`;
+  document.getElementById('progressText').textContent = `${currentQ} / 10`;
+
+  const letters = ['ก', 'ข', 'ค', 'ง'];
+  document.getElementById('optionsList').innerHTML = q.options.map((opt, i) => `
+    <button class="option-btn" onclick="selectOption(${i})">
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt.text}</div>
+    </button>
+  `).join('');
+}
+
+function selectOption(idx) {
+  const q = QUIZ[currentQ];
+  q.options[idx].deities.forEach(d => { if (scores[d] !== undefined) scores[d] += 1; });
+
+  currentQ++;
+  if (currentQ >= QUIZ.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'block';
+
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const [name1, score1] = sorted[0];
+  const [name2, score2] = sorted[1];
+  const maxScore = 15 + 10; // 3 ตำรา × 5 + 10 quiz
+
+  const d1 = DEITIES[name1];
+  const d2 = DEITIES[name2];
+
+  document.getElementById('resultIcon').textContent = d1.icon;
+  document.getElementById('resultName').textContent = name1;
+  document.getElementById('resultScore').textContent = `คะแนน ${score1} จาก ${maxScore} คะแนน`;
+  document.getElementById('resultDesc').textContent = d1.desc;
+
+  document.getElementById('secondaryIcon').textContent = d2.icon;
+  document.getElementById('secondaryName').textContent = name2;
+
+  // Score bars
+  document.getElementById('scoresDetail').innerHTML = sorted.map(([name, score]) => `
+    <div class="score-row">
+      <div class="score-name">${DEITIES[name].icon} ${name}</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" style="width:${(score/maxScore)*100}%"></div>
+      </div>
+      <div class="score-num">${score}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  initScores();
+  currentQ = 0;
+  document.getElementById('inputSection').style.display = 'block';
+  document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '500');
+});
+</script>
+</body>
+</html>
