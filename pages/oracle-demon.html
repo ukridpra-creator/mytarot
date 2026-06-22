@@ -6,6 +6,7 @@
   <title>เสียงกระซิบจากปีศาจ — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body { padding-bottom: 60px; background: #0a0008; }
     .page-header {
@@ -526,13 +527,45 @@ function getShareImage(platform, callback) {
   img.src = `../images/demon/${card.id}.png`;
 }
 
-function saveCard() {
-  getShareImage('save', (dataUrl) => {
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = `whisper-${selectedCard?.id || 'demon'}.jpg`;
-    a.click();
+async function saveCard() {
+  const el = document.getElementById('resultBox');
+  const canvas = await html2canvas(el, {
+    backgroundColor: '#0a0008',
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
   });
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/jpeg', 0.92);
+  a.download = `whisper-${selectedCard?.id || 'demon'}.jpg`;
+  a.click();
+}
+
+async function shareCard(platform) {
+  const el = document.getElementById('resultBox');
+  const canvas = await html2canvas(el, {
+    backgroundColor: '#0a0008',
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+  });
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], 'whisper-demon.jpg', { type: 'image/jpeg' });
+    if (navigator.share && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: `Whisper of Demon — ${selectedCard?.name}`,
+        text: `${selectedCard?.warning}\n\nดูดวงเพิ่มเติมที่ mytarot.vip 🖤`
+      });
+    } else {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/jpeg', 0.92);
+      a.download = `whisper-${selectedCard?.id || 'demon'}.jpg`;
+      a.click();
+    }
+  }, 'image/jpeg', 0.92);
 }
 
 function shareCard(platform) {
