@@ -154,7 +154,7 @@
 
   <!-- Hexagram display -->
   <div class="hexagram-section">
-    <div class="hexagram-title">☯ เฮ็กซะแกรม</div>
+    <div class="hexagram-title">☯ กวา (卦)</div>
     <div class="hexagram-lines" id="hexagramLines">
       <div class="hex-line"><div class="hex-line-empty"></div></div>
       <div class="hex-line"><div class="hex-line-empty"></div></div>
@@ -404,7 +404,7 @@ async function getReading() {
         
 รูปแบบการตอบ (ห้ามใช้ markdown ห้ามใช้ * หรือ # เขียนเป็นย่อหน้าธรรมดา):
 
-✦ ความหมายของเฮ็กซะแกรม
+✦ ความหมายของกวา
 อธิบายความหมายของบทที่ได้ สั้นๆ 2-3 ประโยค
 
 ✦ คำทำนาย  
@@ -414,7 +414,7 @@ async function getReading() {
 แนะนำแนวทางการปฏิบัติตามหลักอี้จิง สิ่งที่ควรทำและไม่ควรทำ
 
 เขียนให้ยาว ลึกซึ้ง และมีปัญญา`,
-        messages: [{ role: 'user', content: `เฮ็กซะแกรมที่ได้: บทที่ ${hexNum} ${hex.th} (${hex.en})\n${lineDesc}\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้ทำนายสิ่งที่อี้จิงต้องการบอก'}` }]
+        messages: [{ role: 'user', content: `กวา (卦) ที่ได้: บทที่ ${hexNum} ${hex.th} (${hex.en})\n${lineDesc}\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้ทำนายสิ่งที่อี้จิงต้องการบอก'}` }]
       })
     });
 
