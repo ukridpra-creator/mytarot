@@ -361,7 +361,7 @@ async function askFollowup() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const coins = parseInt(localStorage.getItem('coins') || '0');
   const c = isNaN(coins) ? 500 : coins;
   document.getElementById('coinCount').textContent = c;
   document.getElementById('coinDisplay').textContent = c;

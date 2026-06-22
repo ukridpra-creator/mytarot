@@ -409,7 +409,7 @@ async function acceptReading() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const coins = parseInt(localStorage.getItem('coins') || '0');
   document.getElementById('coinCount').textContent = coins;
   document.getElementById('coinDisplay').textContent = coins;
 

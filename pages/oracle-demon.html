@@ -593,7 +593,7 @@ function shareCard(platform) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '500');
+  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
 
   const key = getTodayKey();
   const savedId = localStorage.getItem(key);

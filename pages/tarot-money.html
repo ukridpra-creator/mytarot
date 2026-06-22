@@ -450,7 +450,7 @@ function startReading() {
 async function acceptReading() {
   document.getElementById('revealOverlay').classList.remove('show');
 
-  const coins = parseInt(localStorage.getItem('coins') || '500');
+  const coins = parseInt(localStorage.getItem('coins') || '0');
   if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
   localStorage.setItem('coins', String(coins - 20));
   document.getElementById('coinCount').textContent = coins - 20;
