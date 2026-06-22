@@ -626,14 +626,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function saveAsImage() {
   const btn = document.getElementById('btnSaveImg');
-  btn.innerText = '⏳ กำลังเซฟภาพ...';
+  btn.innerText = '⏳ กำลังเตรียมไฟล์ภาพ...';
   btn.disabled = true;
 
-  // 1. เรียงคะแนนหาเทพหลักที่ยูสเซอร์คนนี้ดึงได้
+  // 1. หาว่ายูสเซอร์คนนี้ได้เทพองค์ไหนเป็นองค์หลัก
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  const name1 = sorted[0][0]; // เช่น "พระแม่ลักษมี", "พระพิฆเนศ"
+  const name1 = sorted[0][0]; // เช่น "พระแม่ลักษมี"
 
-  // 2. แผนผังแปลงชื่อภาษาไทย เป็นชื่อไฟล์ภาษาอังกฤษของมิ้กกี้
+  // 2. แมปชื่อภาษาไทยคู่กับชื่อไฟล์ภาษาอังกฤษของมิ้กกี้
   const fileMap = {
     'พระศิวะ': 'shiva',
     'พระแม่อุมาเทวี': 'uma',
@@ -647,73 +647,23 @@ function saveAsImage() {
     'พระพาย': 'vayu'
   };
 
-  // ดึงชื่อไฟล์ภาษาอังกฤษออกมา แล้วเติม 'c.png' ต่อท้ายตามที่มิ้กกี้เตรียมไว้
   const englishName = fileMap[name1] || 'lakshmi';
-  const bgImageName = `${englishName}c.png`; // จะได้เป็น shivac.png, lakshmic.png ฯลฯ
-
-  // 3. สั่งเปลี่ยนพื้นหลังของแผ่นซ่อนให้เป็นรูปเทพองค์นั้นทันที
-  const target = document.getElementById('captureTemplate');
-  target.style.backgroundImage = `url('images/deity/${bgImageName}')`;
-
-  // 4. ดีเลย์ 800ms เพื่อให้เบราว์เซอร์ดึงภาพ .png มาแปะบน Canvas จนเสร็จชัวร์ๆ ก่อนแคปภาพ
-  setTimeout(() => {
-    html2canvas(target, {
-      useCORS: true, 
-      allowTaint: true,
-      scale: 2 // ภาพคมชัดระดับ HD ตรงปกเหมือนต้นฉบับที่มิ้กกี้เจนมาเลย
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = `my-deity-${englishName}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      
-      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
-      btn.disabled = false;
-    }).catch(err => {
-      console.error(err);
-      alert('เกิดข้อผิดพลาดในการเซฟรูปภาพ');
-      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
-      btn.disabled = false;
-    });
-  }, 800);
-}
-
-  // ส่งข้อมูลเทพหลักเข้าแผ่นการ์ด
-  document.getElementById('capIcon').src = d1.img;
-  document.getElementById('capName').textContent = name1;
-  document.getElementById('capOffering').textContent = d1.offering;
-  document.getElementById('capColor').textContent = d1.color;
-  document.getElementById('capDirection').textContent = d1.direction;
-  document.getElementById('capTaboo').textContent = d1.taboo;
-  document.getElementById('capPrayer').textContent = d1.prayer ? d1.prayer : "-";
-
-  // ส่งข้อมูลเทพรองเข้าแผ่นการ์ด
-  document.getElementById('capSecondaryIcon').src = d2.img;
-  document.getElementById('capSecondaryName').textContent = name2;
-
-  // 2. สั่งเริ่มแคปภาพโครง Template ด้วย html2canvas
-  const target = document.getElementById('captureTemplate');
   
-  setTimeout(() => {
-    html2canvas(target, {
-      useCORS: true, 
-      scale: 2, // ภาพคมชัดระดับ HD
-      backgroundColor: '#0d0820'
-    }).then(canvas => {
-      // 3. สั่งโหลดไฟล์ลงเครื่องมือถืออัตโนมัติ
-      const link = document.createElement('a');
-      link.download = `my-deity-${name1}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      
-      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
-      btn.disabled = false;
-    }).catch(err => {
-      alert('เกิดข้อผิดพลาดในการเซฟรูปภาพ กรุณาลองใหม่อีกครั้ง');
-      btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
-      btn.disabled = false;
-    });
-  }, 500);
+  // 3. ระบุที่อยู่ไฟล์ภาพสำเร็จรูปตัวเต็ม (.png) ของมิ้กกี้
+  const imageUrl = `images/deity/${englishName}c.png`;
+
+  // 4. สั่งดาวน์โหลดไฟล์ภาพนี้ตรงๆ ลงเครื่องยูสเซอร์เลย ไม่ต้องแคปหน้าจอแล้ว
+  const link = document.createElement('a');
+  link.download = `my-deity-${englishName}.png`; // ชื่อไฟล์ตอนเซฟลงเครื่องยูสเซอร์
+  link.href = imageUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // รีเซ็ตปุ่ม
+  btn.innerText = '📸 เซฟรูปภาพหน้าจอลงมือถือ';
+  btn.disabled = false;
+}
 
 </script>
 <div id="captureTemplate" style="position: absolute; left: -9999px; top: -9999px; width: 390px; height: 693px; background-size: cover; background-position: center; background-repeat: no-repeat; padding: 0; box-sizing: border-box; overflow: hidden;">
