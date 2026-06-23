@@ -1,19 +1,17 @@
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      }
-    });
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    return res.status(200).end();
   }
 
-  const body = await req.json();
+  const body = await new Promise((resolve) => {
+    let data = '';
+    req.on('data', chunk => data += chunk);
+    req.on('end', () => resolve(JSON.parse(data)));
+  });
+
   body.stream = true;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -26,44 +24,35 @@ export default async function handler(req) {
     body: JSON.stringify(body)
   });
 
-  const encoder = new TextEncoder();
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+
   const decoder = new TextDecoder();
+  const reader = response.body.getReader();
+  let buffer = '';
 
-  const stream = new ReadableStream({
-    async start(controller) {
-      const reader = response.body.getReader();
-      let buffer = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') continue;
-            try {
-              const parsed = JSON.parse(data);
-              if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-                controller.enqueue(encoder.encode(parsed.delta.text));
-              }
-            } catch (e) {}
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+            res.write(parsed.delta.text);
           }
-        }
+        } catch (e) {}
       }
-      controller.close();
     }
-  });
+  }
 
-  return new Response(stream, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Access-Control-Allow-Origin': '*',
-      'X-Content-Type-Options': 'nosniff'
-    }
-  });
+  res.end();
 }
