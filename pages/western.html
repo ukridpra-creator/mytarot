@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>ทดสอบ FreeAstroAPI</title></head>
+<head><meta charset="UTF-8"><title>ทดสอบ APIs</title></head>
 <body style="background:#000;color:#fff;padding:20px;font-family:monospace;">
-  <h2>ทดสอบ FreeAstroAPI</h2>
-  <button onclick="test()" style="padding:10px 20px;margin-bottom:20px;">ทดสอบ</button>
-  <pre id="result">กด ทดสอบ ก่อน...</pre>
+  <h2>ทดสอบ APIs</h2>
+  <button onclick="testFree()" style="padding:10px 20px;margin:4px;">FreeAstroAPI</button>
+  <button onclick="testProkerala()" style="padding:10px 20px;margin:4px;">Prokerala</button>
+  <pre id="result">กดปุ่มเพื่อทดสอบ...</pre>
   <script>
-  async function test() {
-    document.getElementById('result').textContent = 'กำลังเรียก API...';
-    try {
-      const res = await fetch('/api/freeastro', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          year: 1986, month: 9, day: 25,
-          hour: 10, minute: 37,
-          lat: 13.7563, lng: 100.5018,
-          tz_str: 'Asia/Bangkok'
-        })
-      });
-      const data = await res.json();
-      document.getElementById('result').textContent = JSON.stringify(data, null, 2);
-    } catch(e) {
-      document.getElementById('result').textContent = 'Error: ' + e.message;
-    }
+  const body = {
+    year: 1986, month: 9, day: 25,
+    hour: 10, minute: 37,
+    lat: 13.7563, lng: 100.5018,
+    lon: 100.5018
+  };
+
+  async function testFree() {
+    document.getElementById('result').textContent = 'กำลังเรียก FreeAstroAPI...';
+    const res = await fetch('/api/freeastro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+  }
+
+  async function testProkerala() {
+    document.getElementById('result').textContent = 'กำลังเรียก Prokerala...';
+    const res = await fetch('/api/prokerala', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
   }
   </script>
 </body>
