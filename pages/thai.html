@@ -388,7 +388,7 @@ ${planetInfo}
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: `คุณคือโหราจารย์ผู้เชี่ยวชาญโหราศาสตร์ไทย อ้างอิงปฏิทินสุริยยาตร์ เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง เขียนแต่ละหัวข้อ 3-4 ประโยค กระชับ ได้ใจความ ห้ามใช้ markdown`,
         messages: [{ role: 'user', content: prompt }]
       })
