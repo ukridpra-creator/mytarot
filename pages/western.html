@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ทดสอบ Prokerala API</title>
-</head>
+<html>
+<head><meta charset="UTF-8"><title>ทดสอบ FreeAstroAPI</title></head>
 <body style="background:#000;color:#fff;padding:20px;font-family:monospace;">
-  <h2>ทดสอบ Prokerala API</h2>
+  <h2>ทดสอบ FreeAstroAPI</h2>
   <button onclick="test()" style="padding:10px 20px;margin-bottom:20px;">ทดสอบ</button>
   <pre id="result">กด ทดสอบ ก่อน...</pre>
-
   <script>
   async function test() {
     document.getElementById('result').textContent = 'กำลังเรียก API...';
     try {
-      const res = await fetch('/api/prokerala', {
+      const res = await fetch('/api/freeastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          birthDate: '1986-09-25',
-          birthTime: '10:37',
-          lat: '13.7563',
-          lon: '100.5018'
+          year: 1986, month: 9, day: 25,
+          hour: 10, minute: 37,
+          lat: 13.7563, lng: 100.5018,
+          tz_str: 'Asia/Bangkok'
         })
       });
       const data = await res.json();
