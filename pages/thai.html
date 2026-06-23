@@ -133,7 +133,7 @@
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">โหราศาสตร์ไทย</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
 </div>
 
 <div class="page-content">
@@ -175,7 +175,7 @@
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 40 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()">🇹🇭 วิเคราะห์โหราศาสตร์ไทย</button>
@@ -257,12 +257,34 @@ async function startReading() {
   const nextMonthName = monthNames[nextMonth];
   const currentMonthName = monthNames[currentMonth];
 
+  // เรียก Vedic API ก่อน
+  let planetInfo = '';
+  try {
+    const apiRes = await fetch('/api/thai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        year: yearAD, month: parseInt(month), day: parseInt(day),
+        hour: parseInt(hour) || 12, minute: parseInt(minute) || 0,
+        lat: 13.7563, lng: 100.5018
+      })
+    });
+    const apiData = await apiRes.json();
+    if (apiData.data?.planets) {
+      planetInfo = '\nตำแหน่งดาว ณ วันเกิด:\n' +
+        apiData.data.planets.map(p =>
+          `${p.name}: ${p.sign} ${p.pos?.toFixed(1)}° เรือน ${p.house || '-'}`
+        ).join('\n');
+    }
+  } catch(e) {}
+
   const prompt = `วิเคราะห์โหราศาสตร์ไทยตามปฏิทินสุริยยาตร์สำหรับ:
 วันเกิด: ${day}/${month}/${yearAD} (พ.ศ. ${year}) ${timeInfo}
 จังหวัดที่เกิด: ${province}
 วันที่ปัจจุบัน: ${todayStr}
 เดือนปัจจุบัน: ${currentMonthName} พ.ศ. ${currentYear+543}
 เดือนหน้า: ${nextMonthName}
+${planetInfo}
 
 เริ่มด้วยทักทายแบบ Gen Z เรียกว่า "คุณพี่" เรียกตัวเองว่า "น้อง" จากนั้นแบ่งเป็นหัวข้อ:
 
@@ -406,9 +428,8 @@ async function askFollowup() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const coins = parseInt(localStorage.getItem('coins') || '0');
-  const c = isNaN(coins) ? 500 : coins;
-  document.getElementById('coinCount').textContent = c;
-  document.getElementById('coinDisplay').textContent = c;
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
 });
 </script>
 </body>
