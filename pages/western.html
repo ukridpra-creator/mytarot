@@ -1,40 +1,451 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>ทดสอบ APIs</title></head>
-<body style="background:#000;color:#fff;padding:20px;font-family:monospace;">
-  <h2>ทดสอบ APIs</h2>
-  <button onclick="testFree()" style="padding:10px 20px;margin:4px;">FreeAstroAPI</button>
-  <button onclick="testProkerala()" style="padding:10px 20px;margin:4px;">Prokerala</button>
-  <pre id="result">กดปุ่มเพื่อทดสอบ...</pre>
-  <script>
-  const body = {
-    year: 1986, month: 9, day: 25,
-    hour: 10, minute: 37,
-    lat: 13.7563, lng: 100.5018,
-    lon: 100.5018
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โหราศาสตร์ตะวันตก — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 24px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+
+    .input-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; display: block; }
+    .date-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .date-input {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 8px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      text-align: center; transition: border-color 0.2s;
+    }
+    .date-input:focus { border-color: var(--purple-light); }
+    .date-input::placeholder { color: rgba(255,255,255,0.2); font-size: 11px; }
+    .text-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; box-sizing: border-box; margin-bottom: 10px;
+    }
+    .text-input:focus { border-color: var(--purple-light); }
+    .text-input::placeholder { color: rgba(255,255,255,0.2); }
+    .why-box {
+      background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 12px; padding: 12px 14px; font-size: 12px;
+      color: var(--dim); line-height: 1.8;
+    }
+    .why-box strong { color: var(--purple-light); }
+
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
+    }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Planet table */
+    .planets-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 20px; display: none;
+    }
+    .planets-card.show { display: block; }
+    .planets-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 14px; }
+    .planet-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .planet-row:last-child { border-bottom: none; }
+    .planet-symbol { font-size: 20px; width: 28px; text-align: center; }
+    .planet-name { font-size: 13px; color: rgba(255,255,255,0.6); width: 90px; }
+    .planet-sign { font-size: 14px; font-weight: 700; color: white; flex: 1; }
+    .planet-deg { font-size: 12px; color: var(--dim); width: 40px; text-align: right; }
+    .planet-house { font-size: 11px; color: var(--purple-light); width: 52px; text-align: right; }
+    .retro { color: #ef4444; font-size: 10px; margin-left: 4px; }
+
+    .asc-row {
+      display: flex; gap: 16px; margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .asc-item { flex: 1; text-align: center; background: rgba(124,58,237,0.08); border-radius: 12px; padding: 10px; }
+    .asc-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+    .asc-value { font-size: 14px; font-weight: 700; color: var(--purple-light); }
+
+    /* Result */
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .result-section {
+      border-radius: 16px; padding: 16px 20px; margin-bottom: 12px;
+      border-left: 3px solid;
+    }
+    .result-section h3 {
+      font-size: 15px; font-weight: 700; margin-bottom: 10px;
+    }
+    .result-section p {
+      font-size: 14px; line-height: 2; color: rgba(255,255,255,0.8);
+    }
+    .sec-identity  { background: rgba(168,85,247,0.08);  border-color: #a855f7; }
+    .sec-identity h3 { color: #a855f7; }
+    .sec-mind      { background: rgba(96,165,250,0.08);  border-color: #60a5fa; }
+    .sec-mind h3   { color: #60a5fa; }
+    .sec-love      { background: rgba(236,72,153,0.08);  border-color: #ec4899; }
+    .sec-love h3   { color: #ec4899; }
+    .sec-career    { background: rgba(245,158,11,0.08);  border-color: #f59e0b; }
+    .sec-career h3 { color: #f59e0b; }
+    .sec-money     { background: rgba(16,185,129,0.08);  border-color: #10b981; }
+    .sec-money h3  { color: #10b981; }
+    .sec-luck      { background: rgba(249,115,22,0.08);  border-color: #f97316; }
+    .sec-luck h3   { color: #f97316; }
+    .sec-challenge { background: rgba(239,68,68,0.08);   border-color: #ef4444; }
+    .sec-challenge h3 { color: #ef4444; }
+    .sec-future    { background: rgba(6,182,212,0.08);   border-color: #06b6d4; }
+    .sec-future h3 { color: #06b6d4; }
+
+    .cursor { display: inline-block; width: 2px; height: 16px; background: var(--purple-light); margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+    .loading-text { font-size: 14px; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🌟 โหราศาสตร์ตะวันตก</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🌟 โหราศาสตร์ตะวันตก</div>
+    <div class="hero-desc">วิเคราะห์ดวงชะตาจากตำแหน่งดาวเคราะห์<br>ณ วันและเวลาที่คุณเกิดอย่างแม่นยำ</div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด (ปี ค.ศ.)</label>
+    <div class="date-row">
+      <input class="date-input" id="inDay"   type="number" placeholder="วัน"  min="1" max="31">
+      <input class="date-input" id="inMonth" type="number" placeholder="เดือน" min="1" max="12">
+      <input class="date-input" id="inYear"  type="number" placeholder="ปี ค.ศ." min="1900" max="2100">
+    </div>
+    <label class="input-label">⏰ เวลาเกิด</label>
+    <div class="date-row" style="margin-bottom:16px;">
+      <input class="date-input" id="inHour"   type="number" placeholder="ชั่วโมง" min="0" max="23">
+      <input class="date-input" id="inMinute" type="number" placeholder="นาที"    min="0" max="59">
+    </div>
+    <label class="input-label">📍 สถานที่เกิด (ไม่บังคับ)</label>
+    <input class="text-input" id="inCity" placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่, London">
+    <div class="why-box">
+      <strong>ทำไมต้องใส่เวลาและสถานที่เกิด?</strong><br>
+      เวลาเกิดช่วยคำนวณ <strong>ราศีขึ้น (Ascendant)</strong> และ <strong>เรือนดาว (Houses)</strong> ซึ่งบ่งบอกบุคลิกภาพและชีวิตด้านต่างๆ ได้อย่างแม่นยำมากขึ้น • สถานที่เกิดช่วยคำนวณ <strong>พิกัดภูมิศาสตร์</strong> ที่ถูกต้อง • หากไม่ทราบ ระบบยังคำนวณได้แต่ความแม่นยำจะลดลง
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" onclick="startReading()">🌟 วิเคราะห์ดวงชะตา</button>
+
+  <!-- Planet table -->
+  <div class="planets-card" id="planetsCard">
+    <div class="planets-title">🌟 ตำแหน่งดาวเคราะห์ ณ วันเกิด</div>
+    <div id="planetsList"></div>
+    <div class="asc-row" id="ascRow"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-box" id="resultBox">
+    <div class="result-section sec-identity">
+      <h3>✦ ตัวตนและบุคลิกภาพ</h3>
+      <p id="secIdentity"></p>
+    </div>
+    <div class="result-section sec-mind">
+      <h3>✦ จิตใจและอารมณ์</h3>
+      <p id="secMind"></p>
+    </div>
+    <div class="result-section sec-love">
+      <h3>✦ ความรักและความสัมพันธ์</h3>
+      <p id="secLove"></p>
+    </div>
+    <div class="result-section sec-career">
+      <h3>✦ การงานและเป้าหมายชีวิต</h3>
+      <p id="secCareer"></p>
+    </div>
+    <div class="result-section sec-money">
+      <h3>✦ การเงินและทรัพย์สิน</h3>
+      <p id="secMoney"></p>
+    </div>
+    <div class="result-section sec-luck">
+      <h3>✦ โชคและการเติบโต</h3>
+      <p id="secLuck"></p>
+    </div>
+    <div class="result-section sec-challenge">
+      <h3>✦ ความท้าทายและบทเรียน</h3>
+      <p id="secChallenge"></p>
+    </div>
+    <div class="result-section sec-future">
+      <h3>✦ อนาคต คุณจะต้องเจอ...</h3>
+      <p id="secFuture"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const PLANET_SYMBOLS = {
+  sun: '☀️', moon: '🌙', mercury: '☿', venus: '♀️',
+  mars: '♂️', jupiter: '♃', saturn: '♄', uranus: '⛢',
+  neptune: '♆', pluto: '♇', north_node: '☊', chiron: '⚷', lilith: '⚸'
+};
+const PLANET_NAMES_TH = {
+  sun: 'ดวงอาทิตย์', moon: 'ดวงจันทร์', mercury: 'ดาวพุธ',
+  venus: 'ดาวศุกร์', mars: 'ดาวอังคาร', jupiter: 'ดาวพฤหัส',
+  saturn: 'ดาวเสาร์', uranus: 'ดาวยูเรนัส', neptune: 'ดาวเนปจูน',
+  pluto: 'ดาวพลูโต', north_node: 'ราหู', chiron: 'ไคออน', lilith: 'ลิลิธ'
+};
+const SIGN_TH = {
+  aries: 'เมษ', taurus: 'พฤษภ', gemini: 'เมถุน', cancer: 'กรกฎ',
+  leo: 'สิงห์', virgo: 'กันย์', libra: 'ตุลย์', scorpio: 'พิจิก',
+  sagittarius: 'ธนู', capricorn: 'มังกร', aquarius: 'กุมภ์', pisces: 'มีน'
+};
+
+const CITY_COORDS = {
+  'กรุงเทพ': { lat: 13.7563, lng: 100.5018 },
+  'กรุงเทพมหานคร': { lat: 13.7563, lng: 100.5018 },
+  'เชียงใหม่': { lat: 18.7883, lng: 98.9853 },
+  'ภูเก็ต': { lat: 7.8804, lng: 98.3923 },
+  'ขอนแก่น': { lat: 16.4419, lng: 102.8360 },
+  'นครราชสีมา': { lat: 14.9799, lng: 102.0977 },
+  'london': { lat: 51.5074, lng: -0.1278 },
+  'tokyo': { lat: 35.6762, lng: 139.6503 },
+  'new york': { lat: 40.7128, lng: -74.0060 },
+};
+
+function getCityCoords(city) {
+  if (!city) return { lat: 13.7563, lng: 100.5018 };
+  const key = city.toLowerCase().trim();
+  for (const [name, coords] of Object.entries(CITY_COORDS)) {
+    if (key.includes(name.toLowerCase())) return coords;
+  }
+  return { lat: 13.7563, lng: 100.5018 };
+}
+
+function renderPlanets(planets, angles) {
+  const mainPlanets = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+  const list = document.getElementById('planetsList');
+  list.innerHTML = planets
+    .filter(p => mainPlanets.includes(p.id))
+    .map(p => `
+      <div class="planet-row">
+        <div class="planet-symbol">${PLANET_SYMBOLS[p.id] || '⭐'}</div>
+        <div class="planet-name">${PLANET_NAMES_TH[p.id] || p.name}</div>
+        <div class="planet-sign">${SIGN_TH[p.sign_id] || p.sign} <span style="color:var(--dim);font-size:12px;">(${p.sign})</span>${p.retrograde ? '<span class="retro">℞</span>' : ''}</div>
+        <div class="planet-deg">${p.pos.toFixed(1)}°</div>
+        <div class="planet-house">เรือน ${p.house}</div>
+      </div>
+    `).join('');
+
+  if (angles) {
+    document.getElementById('ascRow').innerHTML = `
+      <div class="asc-item">
+        <div class="asc-label">↑ ราศีขึ้น (ASC)</div>
+        <div class="asc-value">${SIGN_TH[angles.asc?.sign_id] || ''} ${angles.asc?.pos?.toFixed(1) || ''}°</div>
+      </div>
+      <div class="asc-item">
+        <div class="asc-label">↑ จุดสูงสุด (MC)</div>
+        <div class="asc-value">${SIGN_TH[angles.mc?.sign_id] || ''} ${angles.mc?.pos?.toFixed(1) || ''}°</div>
+      </div>
+    `;
+  }
+  document.getElementById('planetsCard').classList.add('show');
+}
+
+function buildPrompt(planets, angles, birthInfo) {
+  const mainPlanets = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+  const planetDesc = planets
+    .filter(p => mainPlanets.includes(p.id))
+    .map(p => `${PLANET_NAMES_TH[p.id]}: ${SIGN_TH[p.sign_id] || p.sign} ${p.pos.toFixed(1)}° เรือน ${p.house}${p.retrograde ? ' (ถอยหลัง)' : ''}`)
+    .join('\n');
+
+  const ascDesc = angles ? `ราศีขึ้น: ${SIGN_TH[angles.asc?.sign_id] || ''} ${angles.asc?.pos?.toFixed(1) || ''}°\nจุดสูงสุด (MC): ${SIGN_TH[angles.mc?.sign_id] || ''}` : '';
+
+  return `วิเคราะห์ดวงชะตาจาก natal chart นี้อย่างละเอียดและลึกซึ้ง เขียนเป็นภาษาไทย เรียกผู้ถามว่า "คุณ"
+
+ข้อมูล natal chart:
+${planetDesc}
+${ascDesc}
+
+แบ่งการวิเคราะห์ออกเป็น 8 หัวข้อดังนี้ โดยใช้ ✦ นำหน้าหัวข้อ และขึ้นบรรทัดใหม่แยกแต่ละหัวข้อ:
+
+✦ ตัวตนและบุคลิกภาพ
+✦ จิตใจและอารมณ์
+✦ ความรักและความสัมพันธ์
+✦ การงานและเป้าหมายชีวิต
+✦ การเงินและทรัพย์สิน
+✦ โชคและการเติบโต
+✦ ความท้าทายและบทเรียน
+✦ อนาคต คุณจะต้องเจอ...
+
+เขียนให้ยาว ลึกซึ้ง ไม่ต้องพูดชื่อดาวภาษาอังกฤษ ห้ามใช้ markdown ห้ามใช้ * หรือ #`;
+}
+
+function parseResult(text) {
+  const sections = {
+    'ตัวตนและบุคลิกภาพ': 'secIdentity',
+    'จิตใจและอารมณ์': 'secMind',
+    'ความรักและความสัมพันธ์': 'secLove',
+    'การงานและเป้าหมายชีวิต': 'secCareer',
+    'การเงินและทรัพย์สิน': 'secMoney',
+    'โชคและการเติบโต': 'secLuck',
+    'ความท้าทายและบทเรียน': 'secChallenge',
+    'อนาคต': 'secFuture',
   };
 
-  async function testFree() {
-    document.getElementById('result').textContent = 'กำลังเรียก FreeAstroAPI...';
-    const res = await fetch('/api/freeastro', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+  let current = null;
+  const lines = text.split('\n');
+  const content = {};
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    let matched = false;
+    for (const [key, id] of Object.entries(sections)) {
+      if (trimmed.includes(key)) {
+        current = id;
+        content[id] = content[id] || '';
+        matched = true;
+        break;
+      }
+    }
+    if (!matched && current && trimmed) {
+      content[current] = (content[current] || '') + trimmed + ' ';
+    }
   }
 
-  async function testProkerala() {
-    document.getElementById('result').textContent = 'กำลังเรียก Prokerala...';
-    const res = await fetch('/api/prokerala', {
+  for (const [id, text] of Object.entries(content)) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = text.replace(/\n/g, '<br>');
+  }
+}
+
+async function startReading() {
+  const day    = parseInt(document.getElementById('inDay').value);
+  const month  = parseInt(document.getElementById('inMonth').value);
+  const year   = parseInt(document.getElementById('inYear').value);
+  const hour   = parseInt(document.getElementById('inHour').value) || 12;
+  const minute = parseInt(document.getElementById('inMinute').value) || 0;
+  const city   = document.getElementById('inCity').value.trim();
+
+  if (!day || !month || !year) { alert('กรุณากรอกวันเกิดให้ครบค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 40) { alert('เหรียญไม่พอค่ะ ต้องใช้ 40 เหรียญค่ะ'); return; }
+  localStorage.setItem('coins', String(coins - 40));
+  document.getElementById('coinCount').textContent = coins - 40;
+  document.getElementById('coinDisplay').textContent = coins - 40;
+
+  const { lat, lng } = getCityCoords(city);
+
+  // เรียก API
+  let planets = [], angles = null;
+  try {
+    const apiRes = await fetch('/api/western', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ year, month, day, hour, minute, lat, lng })
     });
-    const data = await res.json();
-    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+    const apiData = await apiRes.json();
+    if (apiData.data?.planets) {
+      planets = apiData.data.planets;
+      angles = apiData.data.angles_details;
+      renderPlanets(planets, angles);
+    }
+  } catch(e) {}
+
+  // Claude วิเคราะห์
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  // loading
+  ['secIdentity','secMind','secLove','secCareer','secMoney','secLuck','secChallenge','secFuture'].forEach(id => {
+    document.getElementById(id).innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  });
+
+  try {
+    const prompt = buildPrompt(planets, angles, { year, month, day, hour, minute, city });
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 6000,
+        system: 'คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ วิเคราะห์ดวงชะตาเป็นภาษาไทยอย่างลึกซึ้งและละเอียด เรียกผู้ถามว่า คุณ ห้ามใช้ markdown ห้ามใช้ * หรือ # เขียนเป็นย่อหน้าธรรมดา',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+
+    // clear loading
+    ['secIdentity','secMind','secLove','secCareer','secMoney','secLuck','secChallenge','secFuture'].forEach(id => {
+      document.getElementById(id).innerHTML = '';
+    });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      parseResult(text);
+    }
+
+  } catch(e) {
+    document.getElementById('secIdentity').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
-  </script>
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+});
+</script>
 </body>
 </html>
