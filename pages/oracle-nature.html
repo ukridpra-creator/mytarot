@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nature Spirit Oracle — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 20px; }
+    .hero-icon { font-size: 40px; margin-bottom: 8px; }
+    .hero-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
+    .slots-section { margin-bottom: 20px; }
+    .slots-title { font-size: 13px; color: var(--dim); text-align: center; margin-bottom: 12px; }
+    .slots-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+    .slot {
+      width: 80px; aspect-ratio: 2/3;
+      background: rgba(16,185,129,0.06);
+      border: 2px dashed rgba(16,185,129,0.3);
+      border-radius: 10px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .slot.filled { border: 2px solid rgba(16,185,129,0.6); cursor: pointer; }
+    .slot-num { font-size: 10px; color: var(--dim); }
+    .slot-label { font-size: 9px; color: #10b981; margin-top: 2px; text-align: center; padding: 0 2px; line-height: 1.2; }
+    .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .slot-overlay {
+      position: absolute; inset: 0; border-radius: 8px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 3px;
+    }
+    .slot-pos { font-size: 8px; color: #10b981; text-align: center; }
+    .slot-remove {
+      position: absolute; top: 2px; right: 2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: rgba(239,68,68,0.9); color: white;
+      font-size: 8px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; z-index: 10;
+    }
+    .slots-hint { text-align: center; font-size: 11px; color: var(--dim); }
+    .cards-section { margin-bottom: 24px; }
+    .cards-title { font-size: 13px; color: #10b981; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+    .cards-scroll::-webkit-scrollbar { height: 3px; }
+    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.4); border-radius: 2px; }
+    .card-item {
+      width: 52px; aspect-ratio: 2/3; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden; cursor: pointer;
+      transition: all 0.2s; border: 2px solid transparent;
+    }
+    .card-item:hover { transform: translateY(-4px); border-color: #10b981; }
+    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .coin-box {
+      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
+    }
+    .coin-text { font-size: 13px; color: #10b981; margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, #065f46, #10b981);
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,185,129,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .reveal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.92); display: none;
+      flex-direction: column; align-items: center; justify-content: center; padding: 16px;
+    }
+    .reveal-overlay.show { display: flex; }
+    .reveal-title { font-size: 16px; color: #10b981; font-weight: 700; margin-bottom: 20px; text-align: center; }
+    .reveal-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+    .reveal-card { text-align: center; }
+    .reveal-card-wrap {
+      width: 90px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
+      margin-bottom: 8px; border: 2px solid rgba(16,185,129,0.5); perspective: 600px;
+    }
+    .reveal-card-inner {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.6s ease;
+    }
+    .reveal-card-inner.flipped { transform: rotateY(180deg); }
+    .reveal-card-front, .reveal-card-back {
+      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
+    }
+    .reveal-card-back { transform: rotateY(0deg); }
+    .reveal-card-front { transform: rotateY(180deg); }
+    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
+    .reveal-card-name { font-size: 10px; color: #10b981; font-weight: 700; }
+    .reveal-card-pos { font-size: 9px; color: var(--dim); margin-top: 1px; }
+    .btn-accept {
+      background: linear-gradient(135deg, #065f46, #10b981);
+      border: none; border-radius: 16px; padding: 14px 32px;
+      color: white; font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+      margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .btn-accept.show { opacity: 1; pointer-events: all; }
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .result-cards-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .result-card { text-align: center; }
+    .result-card-img {
+      width: 64px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden;
+      margin-bottom: 4px; border: 1px solid rgba(16,185,129,0.4);
+    }
+    .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .result-card-name { font-size: 9px; color: #10b981; font-weight: 700; line-height: 1.2; }
+    .result-card-pos { font-size: 9px; color: var(--dim); }
+    .result-reading {
+      background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .result-title { font-size: 16px; font-weight: 700; color: #10b981; }
+    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
+
+    /* Secret Card Button */
+    .secret-box {
+      background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+      text-align: center; display: none;
+    }
+    .secret-box.show { display: block; }
+    .secret-title { font-size: 15px; color: #d4af37; font-weight: 700; margin-bottom: 6px; }
+    .secret-desc { font-size: 12px; color: var(--dim); margin-bottom: 14px; line-height: 1.6; }
+    .btn-secret {
+      background: linear-gradient(135deg, #92400e, #d4af37);
+      border: none; border-radius: 14px; padding: 12px 24px;
+      color: white; font-size: 14px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s;
+    }
+    .btn-secret:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.4); }
+    .btn-secret:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Secret Result */
+    .secret-result-box {
+      background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px; display: none;
+    }
+    .secret-result-box.show { display: block; }
+    .secret-card-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .secret-card-img {
+      width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
+      border: 2px solid rgba(212,175,55,0.5); flex-shrink: 0;
+      perspective: 600px;
+    }
+    .secret-card-inner {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.8s ease;
+    }
+    .secret-card-inner.flipped { transform: rotateY(180deg); }
+    .secret-card-front, .secret-card-back {
+      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
+    }
+    .secret-card-back { transform: rotateY(0deg); }
+    .secret-card-front { transform: rotateY(180deg); }
+    .secret-card-front img, .secret-card-back img { width: 100%; height: 100%; object-fit: cover; }
+    .secret-card-info { flex: 1; }
+    .secret-card-label { font-size: 11px; color: #d4af37; margin-bottom: 4px; }
+    .secret-card-name { font-size: 14px; color: white; font-weight: 700; }
+    .secret-text { font-size: 14px; line-height: 2; color: var(--text); }
+    .secret-header { font-size: 15px; color: #d4af37; font-weight: 700; margin-bottom: 10px; }
+
+    .cursor {
+      display: inline-block; width: 2px; height: 16px;
+      background: #10b981; margin-left: 2px;
+      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+    .loading-text { font-size: 14px; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🌿 Nature Spirit Oracle</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+</div>
+
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-title">🌿 ไพ่แห่งธรรมชาติของท่าน...</div>
+  <div id="revealRow" class="reveal-row"></div>
+  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🍃 รับคำทำนาย</button>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-icon">🌿</div>
+    <div class="hero-title">Nature Spirit Oracle</div>
+    <div class="hero-desc">เสียงกระซิบจากวิญญาณแห่งธรรมชาติ<br>Core · Situation · Action — 3 ใบแห่งชะตา</div>
+  </div>
+
+  <div class="slots-section">
+    <div class="slots-title">🍃 ไพ่ที่เลือก (3 ใบ)</div>
+    <div class="slots-row">
+      <div class="slot" id="slot0"><div class="slot-num">1</div><div class="slot-label">Core</div></div>
+      <div class="slot" id="slot1"><div class="slot-num">2</div><div class="slot-label">Situation</div></div>
+      <div class="slot" id="slot2"><div class="slot-num">3</div><div class="slot-label">Action</div></div>
+    </div>
+    <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก • กดไพ่ใน slot เพื่อเอาออก</div>
+  </div>
+
+  <div class="cards-section">
+    <div class="cards-title">🌱 ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบ</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้ง</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🌿 ให้ธรรมชาติทำนาย</button>
+
+  <!-- Result -->
+  <div class="result-box" id="resultBox">
+    <div class="result-cards-row" id="resultRow"></div>
+    <div class="result-reading">
+      <div class="result-header"><span>🌿</span><div class="result-title">วิญญาณแห่งธรรมชาติกล่าวว่า...</div></div>
+      <div class="result-text" id="resultText"></div>
+    </div>
+
+    <!-- Secret Card Button -->
+    <div class="secret-box" id="secretBox">
+      <div class="secret-title">🔮 ไพ่แห่งความลับ</div>
+      <div class="secret-desc">มีสิ่งซ่อนเร้นที่ธรรมชาติยังไม่ได้กล่าวถึง...<br>ท่านต้องการรู้สิ่งที่ซ่อนอยู่เบื้องหลังหรือไม่?</div>
+      <button class="btn-secret" id="btnSecret" onclick="openSecret()">🔮 เปิดไพ่ความลับ 🪙 10 เหรียญ</button>
+    </div>
+
+    <!-- Secret Result -->
+    <div class="secret-result-box" id="secretResultBox">
+      <div class="secret-header">🔮 สิ่งที่ซ่อนเร้น...</div>
+      <div class="secret-card-wrap">
+        <div class="secret-card-img">
+          <div class="secret-card-inner" id="secretCardInner">
+            <div class="secret-card-back"><img src="../images/nature/backf.png"></div>
+            <div class="secret-card-front"><img id="secretCardImg" src=""></div>
+          </div>
+        </div>
+        <div class="secret-card-info">
+          <div class="secret-card-label">🔮 ไพ่ความลับ</div>
+          <div class="secret-card-name" id="secretCardName"></div>
+        </div>
+      </div>
+      <div class="secret-text" id="secretText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const NATURE_CARDS = [
+  // Core (c1-c10)
+  {id:'c1', name:'The Seed', meaning:'จุดเริ่มต้น ไอเดียใหม่', img:'../images/nature/c1.png'},
+  {id:'c2', name:'The Root', meaning:'พื้นฐาน ความมั่นคง', img:'../images/nature/c2.png'},
+  {id:'c3', name:'The Tree', meaning:'เติบโต แข็งแกร่ง', img:'../images/nature/c3.png'},
+  {id:'c4', name:'The River', meaning:'ไหลลื่น ปล่อยวาง', img:'../images/nature/c4.png'},
+  {id:'c5', name:'The Stone', meaning:'นิ่ง อดทน มั่นคง', img:'../images/nature/c5.png'},
+  {id:'c6', name:'The Rain', meaning:'เยียวยา ชำระล้าง', img:'../images/nature/c6.png'},
+  {id:'c7', name:'The Mist', meaning:'ไม่ชัดเจน ลังเล', img:'../images/nature/c7.png'},
+  {id:'c8', name:'The Bloom', meaning:'เปิดใจ บาน ความงาม', img:'../images/nature/c8.png'},
+  {id:'c9', name:'The Wind', meaning:'เปลี่ยนแปลง อิสระ', img:'../images/nature/c9.png'},
+  {id:'c10', name:'The Firefly', meaning:'ความหวังเล็กๆ แสงในความมืด', img:'../images/nature/c10.png'},
+  // Situation (s1-s10)
+  {id:'s1', name:'The Storm', meaning:'วุ่นวาย ปัญหา', img:'../images/nature/s1.png'},
+  {id:'s2', name:'The Drought', meaning:'หมดแรง ขาดแคลน', img:'../images/nature/s2.png'},
+  {id:'s3', name:'The Crossroad', meaning:'ทางแยก ตัดสินใจ', img:'../images/nature/s3.png'},
+  {id:'s4', name:'The Fall', meaning:'จบบางอย่าง ปล่อย', img:'../images/nature/s4.png'},
+  {id:'s5', name:'The Tide', meaning:'ขึ้นลง ไม่เสถียร', img:'../images/nature/s5.png'},
+  {id:'s6', name:'The Shadow', meaning:'กลัว ความมืด', img:'../images/nature/s6.png'},
+  {id:'s7', name:'The Echo', meaning:'เรื่องเดิมวนซ้ำ', img:'../images/nature/s7.png'},
+  {id:'s8', name:'The Web', meaning:'ติดกับดัก พันธนาการ', img:'../images/nature/s8.png'},
+  {id:'s9', name:'The Cliff', meaning:'เสี่ยง กดดัน วิกฤต', img:'../images/nature/s9.png'},
+  {id:'s10', name:'The Cocoon', meaning:'ช่วงเปลี่ยนผ่าน', img:'../images/nature/s10.png'},
+  // Action (a1-a10)
+  {id:'a1', name:'Nurture', meaning:'ดูแล ใส่ใจ', img:'../images/nature/a1.png'},
+  {id:'a2', name:'Wait', meaning:'รอจังหวะ อย่าเร่ง', img:'../images/nature/a2.png'},
+  {id:'a3', name:'Release', meaning:'ปล่อยวาง ตัด', img:'../images/nature/a3.png'},
+  {id:'a4', name:'Move', meaning:'ลงมือทำ เริ่มเลย', img:'../images/nature/a4.png'},
+  {id:'a5', name:'Listen', meaning:'ฟังข้างใน เสียงจิตใจ', img:'../images/nature/a5.png'},
+  {id:'a6', name:'Protect', meaning:'ปกป้องตัวเอง', img:'../images/nature/a6.png'},
+  {id:'a7', name:'Adapt', meaning:'ปรับตัว ยืดหยุ่น', img:'../images/nature/a7.png'},
+  {id:'a8', name:'Focus', meaning:'โฟกัส ตั้งใจ', img:'../images/nature/a8.png'},
+  {id:'a9', name:'Cleanse', meaning:'เคลียร์พลังลบ', img:'../images/nature/a9.png'},
+  {id:'a10', name:'Trust', meaning:'เชื่อในตัวเอง', img:'../images/nature/a10.png'},
+];
+
+const BACK = '../images/nature/backf.png';
+const positions = ['Core — พลังหลัก', 'Situation — สถานการณ์', 'Action — คำแนะนำ'];
+let shuffled = [], selectedCards = [], analysisResult = '';
+const MAX_CARDS = 3;
+
+function shuffle() {
+  shuffled = [...NATURE_CARDS].sort(() => Math.random() - 0.5);
+  renderCards();
+  setTimeout(() => {
+    const scroll = document.getElementById('cardsScroll');
+    scroll.scrollTo({ left: 120, behavior: 'smooth' });
+    setTimeout(() => scroll.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+  }, 500);
+}
+
+function renderCards() {
+  document.getElementById('cardsScroll').innerHTML = shuffled.map((card, i) => {
+    const sel = selectedCards.find(s => s.id === card.id);
+    return `<div class="card-item ${sel?'selected':''}" onclick="selectCard(${i})">
+      <img src="${BACK}" alt="${card.name}"></div>`;
+  }).join('');
+}
+
+function selectCard(idx) {
+  if (selectedCards.length >= MAX_CARDS) return;
+  const card = shuffled[idx];
+  if (selectedCards.find(s => s.id === card.id)) return;
+  selectedCards.push(card);
+  updateSlots(); renderCards();
+  if (selectedCards.length === MAX_CARDS) document.getElementById('readBtn').disabled = false;
+}
+
+function removeCard(i) {
+  selectedCards.splice(i, 1);
+  updateSlots(); renderCards();
+  document.getElementById('readBtn').disabled = true;
+}
+
+function updateSlots() {
+  const labels = ['Core','Situation','Action'];
+  for (let i = 0; i < MAX_CARDS; i++) {
+    const slot = document.getElementById(`slot${i}`);
+    if (selectedCards[i]) {
+      slot.className = 'slot filled';
+      slot.onclick = () => removeCard(i);
+      slot.innerHTML = `<div class="slot-remove">✕</div>
+        <img class="slot-img" src="${BACK}">
+        <div class="slot-overlay"><div class="slot-pos">${labels[i]}</div></div>`;
+    } else {
+      slot.className = 'slot'; slot.onclick = null;
+      slot.innerHTML = `<div class="slot-num">${i+1}</div><div class="slot-label">${labels[i]}</div>`;
+    }
+  }
+}
+
+function startReading() {
+  if (selectedCards.length < MAX_CARDS) return;
+
+  const makeCard = (card, i) => `
+    <div class="reveal-card">
+      <div class="reveal-card-wrap">
+        <div class="reveal-card-inner" id="revealInner${i}">
+          <div class="reveal-card-back"><img src="${BACK}"></div>
+          <div class="reveal-card-front"><img src="${card.img}"></div>
+        </div>
+      </div>
+      <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.name}</div>
+      <div class="reveal-card-pos">${['Core','Situation','Action'][i]}</div>
+    </div>`;
+
+  document.getElementById('revealRow').innerHTML = selectedCards.map((c,i)=>makeCard(c,i)).join('');
+  document.getElementById('btnAccept').className = 'btn-accept';
+  document.getElementById('revealOverlay').classList.add('show');
+
+  let flipped = 0;
+  const flipNext = () => {
+    if (flipped >= MAX_CARDS) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
+    setTimeout(() => {
+      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+      document.getElementById(`revealName${flipped}`).style.opacity = '1';
+      flipped++; flipNext();
+    }, 600);
+  };
+  setTimeout(flipNext, 300);
+}
+
+async function acceptReading() {
+  document.getElementById('revealOverlay').classList.remove('show');
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญ'); return; }
+  localStorage.setItem('coins', String(coins - 20));
+  document.getElementById('coinCount').textContent = coins - 20;
+  document.getElementById('coinDisplay').textContent = coins - 20;
+
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
+  resultBox.classList.add('show');
+
+  document.getElementById('resultRow').innerHTML = selectedCards.map((c,i)=>`
+    <div class="result-card">
+      <div class="result-card-img"><img src="${c.img}"></div>
+      <div class="result-card-name">${c.name}</div>
+      <div class="result-card-pos">${['Core','Situation','Action'][i]}</div>
+    </div>`).join('');
+
+  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">วิญญาณแห่งธรรมชาติกำลังกระซิบ...</div></div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  const cardInfo = selectedCards.map((c,i)=>`${['Core','Situation','Action'][i]}: ${c.name} (${c.meaning})`).join('\n');
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        system: `ท่านคือวิญญาณแห่งป่าผู้เฒ่า ผู้ทำนายชะตาผ่านไพ่ธรรมชาติ พูดด้วยน้ำเสียงลึกซึ้ง ลึกลับ อบอุ่น เรียกผู้มาถามว่า "ท่าน" เรียกตัวเองว่า "ข้า" ใช้ภาษาไทยที่มีกลิ่นอายโบราณแต่เข้าใจง่าย ทำนายเชื่อมโยง 3 ใบเข้าด้วยกัน ห้ามใช้ markdown ห้ามใช้ * หรือ #`,
+        messages: [{ role: 'user', content: `ไพ่ที่จั่วได้:\n${cardInfo}\n\nกรุณาทำนายโดยเชื่อมโยงทั้ง 3 ใบ อธิบายความหมายของแต่ละใบและภาพรวมชะตา` }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    resultText.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    resultText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      resultText.innerHTML = text.replace(/\n/g,'<br>');
+      resultText.appendChild(cursor);
+    }
+    cursor.remove();
+    resultText.innerHTML = text.replace(/\n/g,'<br>');
+    analysisResult = text;
+
+    document.getElementById('secretBox').classList.add('show');
+
+  } catch(e) {
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+  }
+}
+
+async function openSecret() {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 10) { alert('เหรียญไม่พอ ต้องใช้ 10 เหรียญ'); return; }
+  localStorage.setItem('coins', String(coins - 10));
+  document.getElementById('coinCount').textContent = coins - 10;
+
+  document.getElementById('btnSecret').disabled = true;
+  document.getElementById('secretBox').classList.remove('show');
+
+  // สุ่มไพ่ที่ยังไม่ได้เลือก
+  const used = selectedCards.map(c => c.id);
+  const remaining = NATURE_CARDS.filter(c => !used.includes(c.id));
+  const secretCard = remaining[Math.floor(Math.random() * remaining.length)];
+
+  document.getElementById('secretCardImg').src = secretCard.img;
+  document.getElementById('secretCardName').textContent = secretCard.name;
+  document.getElementById('secretResultBox').classList.add('show');
+  document.getElementById('secretResultBox').scrollIntoView({ behavior: 'smooth' });
+
+  // flip animation
+  setTimeout(() => {
+    document.getElementById('secretCardInner').classList.add('flipped');
+  }, 300);
+
+  const secretText = document.getElementById('secretText');
+  secretText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ข้าจะเปิดเผยสิ่งที่ซ่อนอยู่...</div></div>`;
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 800,
+        system: `ท่านคือวิญญาณแห่งป่าผู้เฒ่า เรียกผู้มาถามว่า "ท่าน" เรียกตัวเองว่า "ข้า" พูดลึกลับ ลึกซึ้ง ห้ามใช้ markdown`,
+        messages: [{ role: 'user', content: `คำทำนายเดิม: ${analysisResult}\n\nไพ่ความลับที่เปิดเพิ่ม: ${secretCard.name} (${secretCard.meaning})\n\nกรุณาเปิดเผยสิ่งที่ซ่อนเร้นเบื้องหลัง เชื่อมกับคำทำนายเดิม สั้นๆ กระชับ` }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    secretText.innerHTML = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    secretText.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      secretText.innerHTML = text.replace(/\n/g,'<br>');
+      secretText.appendChild(cursor);
+    }
+    cursor.remove();
+    secretText.innerHTML = text.replace(/\n/g,'<br>');
+
+  } catch(e) {
+    secretText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+  shuffle();
+});
+</script>
+</body>
+</html>
