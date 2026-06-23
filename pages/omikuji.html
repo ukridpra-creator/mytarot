@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>おみくじ เซียมซีญี่ปุ่น — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0608;
+      color: white;
+      font-family: 'Sarabun', sans-serif;
+      padding-bottom: 60px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Japanese pattern background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(139,0,0,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(212,175,55,0.08) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(139,0,0,0.03) 20px, rgba(139,0,0,0.03) 21px),
+        repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(212,175,55,0.02) 20px, rgba(212,175,55,0.02) 21px);
+      pointer-events: none;
+    }
+
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      background: rgba(10,6,8,0.95); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(139,0,0,0.2); border: 1px solid rgba(212,175,55,0.3);
+      display: flex; align-items: center; justify-content: center;
+      color: #d4af37; font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 16px; font-weight: 700; color: #d4af37; letter-spacing: 2px; }
+    .coin-badge { margin-left: auto; font-size: 13px; color: #d4af37; }
+
+    .page-content { padding: 0 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
+
+    /* Torii Gate Decoration */
+    .torii {
+      width: 100%; max-width: 360px;
+      text-align: center; padding: 20px 0 10px;
+      position: relative;
+    }
+    .torii-text { font-size: 11px; color: rgba(212,175,55,0.5); letter-spacing: 4px; margin-bottom: 6px; }
+    .torii-title { font-size: 28px; color: #d4af37; letter-spacing: 6px; margin-bottom: 4px; font-weight: 300; }
+    .torii-sub { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 2px; }
+    .torii-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 12px 0;
+    }
+    .torii-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent); }
+    .torii-symbol { font-size: 16px; color: #d4af37; }
+
+    /* Donation Box */
+    .donation-section {
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 24px;
+    }
+    .donation-box-wrap { position: relative; width: 160px; height: 200px; margin-bottom: 12px; }
+    .donation-box {
+      width: 160px; height: 180px;
+      background: linear-gradient(180deg, #1a0a02 0%, #2d1005 30%, #3d1508 100%);
+      border: 2px solid #8B6914;
+      border-radius: 4px 4px 8px 8px;
+      position: absolute; bottom: 0;
+      overflow: hidden;
+    }
+    .donation-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 40px;
+      background: linear-gradient(180deg, #8B0000, #6b0000);
+      border-bottom: 2px solid #d4af37;
+    }
+    .donation-box::after {
+      content: '賽錢箱';
+      position: absolute; top: 8px; left: 0; right: 0;
+      text-align: center; font-size: 11px; color: #d4af37; letter-spacing: 2px;
+    }
+    .donation-slot {
+      position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 6px;
+      background: #0d0508; border-radius: 3px;
+      border: 1px solid #d4af37;
+    }
+    .donation-grid {
+      position: absolute; bottom: 0; left: 0; right: 0; top: 50px;
+      background: repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(139,0,0,0.1) 20px, rgba(139,0,0,0.1) 21px),
+                  repeating-linear-gradient(180deg, transparent, transparent 20px, rgba(139,0,0,0.1) 20px, rgba(139,0,0,0.1) 21px);
+    }
+    .donation-rope {
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 22px;
+      background: linear-gradient(180deg, #8B6914, #d4af37, #8B6914);
+      border-radius: 2px;
+    }
+    .donation-rope::after {
+      content: '';
+      position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 8px;
+      background: radial-gradient(ellipse, #d4af37 0%, #8B6914 100%);
+      border-radius: 50%;
+    }
+
+    /* Coin animation */
+    .coin-anim {
+      position: absolute; top: -30px; left: 50%;
+      transform: translateX(-50%);
+      width: 24px; height: 24px;
+      background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
+      border-radius: 50%;
+      border: 2px solid #8B6914;
+      display: none;
+      z-index: 10;
+    }
+    .coin-anim::after {
+      content: '¥';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #5a3e00; font-weight: 700;
+    }
+    @keyframes coinFall {
+      0% { top: -30px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
+      80% { top: 36px; opacity: 1; transform: translateX(-50%) rotate(360deg); }
+      100% { top: 44px; opacity: 0; transform: translateX(-50%) rotate(400deg); }
+    }
+    .coin-falling { display: block !important; animation: coinFall 0.8s ease-in forwards; }
+
+    .donation-hint { font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; letter-spacing: 1px; }
+    .btn-donate {
+      margin-top: 12px;
+      padding: 12px 32px; font-size: 14px;
+      border: 1px solid rgba(212,175,55,0.5); border-radius: 30px;
+      background: rgba(139,0,0,0.2); color: #d4af37;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Sarabun', sans-serif; letter-spacing: 1px;
+    }
+    .btn-donate:hover { background: rgba(139,0,0,0.4); }
+
+    /* Tube section */
+    .tube-section {
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 24px; display: none;
+    }
+    .tube-section.show { display: flex; }
+
+    .tube-wrap { position: relative; width: 120px; height: 260px; margin-bottom: 16px; cursor: pointer; }
+    #tube {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 240px;
+    }
+    .tube-body {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
+      background: linear-gradient(90deg, #4a2508 0%, #7a3a10 20%, #c06030 45%, #d4703a 50%, #c06030 55%, #7a3a10 80%, #4a2508 100%);
+      border-radius: 6px 6px 14px 14px;
+      border: 1px solid #2d1005;
+      overflow: hidden;
+    }
+    .tube-grain {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(180deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 11px);
+    }
+    .tube-shine {
+      position: absolute; top: 0; left: 20px; width: 12px; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    }
+    .tube-top {
+      position: absolute; top: 0; left: 0; right: 0; height: 30px;
+      background: linear-gradient(90deg, #3a1a04, #6a3008, #8a4010, #6a3008, #3a1a04);
+      border-radius: 40% 40% 0 0 / 14px 14px 0 0;
+      border: 1px solid #2d1005;
+      border-bottom: none;
+    }
+    .tube-hole {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 20px; height: 12px;
+      background: #050203; border-radius: 50%;
+      border: 1px solid #1a0a04;
+      z-index: 2;
+    }
+    .gold-band {
+      position: absolute; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, #6B5010, #c8a030, #f0d060, #c8a030, #6B5010);
+    }
+    .gb1 { top: 26px; } .gb2 { top: 34px; } .gb3 { bottom: 20px; } .gb4 { bottom: 26px; }
+
+    .tube-engraving {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 22px; color: rgba(212,175,55,0.3); letter-spacing: 2px;
+      text-align: center; line-height: 1.4;
+    }
+
+    /* Stick that comes out of hole */
+    #stick-out {
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      width: 7px;
+      bottom: 218px; /* starts inside tube at hole level */
+      height: 0;
+      background: linear-gradient(180deg, #f5e070, #d4a030, #8B5a10);
+      border-radius: 4px 4px 1px 1px;
+      z-index: 5;
+      display: none;
+    }
+    #stick-number {
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+      font-size: 9px; color: #d4af37; white-space: nowrap; font-weight: 700;
+      opacity: 0; transition: opacity 0.3s;
+    }
+
+    @keyframes tubeShake {
+      0%,100% { transform: translateX(-50%) rotate(0deg); }
+      5%  { transform: translateX(-50%) rotate(-10deg); }
+      15% { transform: translateX(-50%) rotate(13deg); }
+      25% { transform: translateX(-50%) rotate(-15deg); }
+      35% { transform: translateX(-50%) rotate(14deg); }
+      45% { transform: translateX(-50%) rotate(-13deg); }
+      55% { transform: translateX(-50%) rotate(12deg); }
+      65% { transform: translateX(-50%) rotate(-10deg); }
+      75% { transform: translateX(-50%) rotate(8deg); }
+      85% { transform: translateX(-50%) rotate(-6deg); }
+      92% { transform: translateX(-50%) rotate(4deg); }
+    }
+    .shaking { animation: tubeShake 3.5s ease-in-out; }
+
+    @keyframes stickRise {
+      0%   { height: 0; }
+      100% { height: 100px; }
+    }
+    .stick-rising { display: block !important; animation: stickRise 0.6s ease-out 3.3s forwards; }
+    .stick-number-show { opacity: 1 !important; transition-delay: 3.8s !important; }
+
+    .tube-hint { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; margin-bottom: 12px; }
+    .btn-shake {
+      padding: 12px 36px; font-size: 14px; letter-spacing: 2px;
+      border: 1px solid rgba(212,175,55,0.5); border-radius: 30px;
+      background: rgba(139,0,0,0.3); color: #d4af37;
+      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+    }
+    .btn-shake:hover { background: rgba(139,0,0,0.5); }
+    .btn-shake:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Slip */
+    .slip-section {
+      width: 100%; max-width: 360px;
+      display: flex; flex-direction: column; align-items: center;
+      display: none;
+    }
+    .slip-section.show { display: flex; }
+
+    @keyframes unfold {
+      0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      100% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    }
+    #slip-card {
+      width: 220px;
+      background: #fdf6e3;
+      border-radius: 3px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,175,55,0.3);
+      animation: unfold 0.6s ease-out forwards;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .slip-watermark {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(139,0,0,0.03) 15px, rgba(139,0,0,0.03) 16px);
+      border-radius: 3px; pointer-events: none;
+    }
+    .slip-header {
+      background: linear-gradient(180deg, #8B0000, #6b0000);
+      padding: 14px 10px 10px;
+      text-align: center;
+      border-bottom: 3px double #d4af37;
+      position: relative;
+    }
+    .slip-header::after {
+      content: '';
+      position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+      width: 60%; height: 3px;
+      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    }
+    .slip-shrine-name { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; margin-bottom: 4px; }
+    .slip-num { font-size: 10px; color: #d4af37; letter-spacing: 2px; margin-bottom: 6px; }
+    .slip-level-jp { font-size: 40px; color: white; font-weight: 700; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+    .slip-level-th { font-size: 11px; color: #d4af37; letter-spacing: 1px; margin-top: 2px; }
+    .slip-poem-box {
+      background: #f5e6c0;
+      padding: 10px 14px;
+      border-bottom: 1px solid #d4af37;
+      text-align: center;
+      position: relative;
+    }
+    .slip-poem-box::before {
+      content: '❧';
+      display: block; font-size: 12px; color: #8B4513; margin-bottom: 4px;
+    }
+    .poem-line { font-size: 10px; color: #5a3e1b; line-height: 1.9; font-style: italic; }
+    .slip-body { padding: 8px 14px 12px; background: #fdf6e3; }
+    .slip-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 5px 0; border-bottom: 1px dotted rgba(212,175,55,0.5);
+    }
+    .slip-row:last-child { border-bottom: none; }
+    .slip-label { font-size: 9px; color: #8B4513; font-weight: 700; flex-shrink: 0; width: 56px; }
+    .slip-val { font-size: 9px; color: #3d1f08; text-align: right; line-height: 1.5; flex: 1; }
+    .slip-footer {
+      background: linear-gradient(180deg, #6b0000, #8B0000);
+      padding: 8px;
+      text-align: center;
+      border-top: 3px double #d4af37;
+    }
+    .slip-footer-jp { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+    .slip-footer-th { font-size: 8px; color: rgba(212,175,55,0.5); margin-top: 2px; letter-spacing: 1px; }
+
+    /* Action buttons */
+    .action-row { display: flex; gap: 12px; margin-top: 4px; }
+    .btn-save {
+      flex: 1; padding: 12px; font-size: 13px;
+      border: 1px solid rgba(212,175,55,0.4); border-radius: 14px;
+      background: rgba(212,175,55,0.1); color: #d4af37;
+      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+    }
+    .btn-save:hover { background: rgba(212,175,55,0.2); }
+    .btn-burn {
+      flex: 1; padding: 12px; font-size: 13px;
+      border: 1px solid rgba(239,68,68,0.4); border-radius: 14px;
+      background: rgba(239,68,68,0.1); color: #ef4444;
+      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+    }
+    .btn-burn:hover { background: rgba(239,68,68,0.2); }
+
+    /* Burn animation */
+    .burn-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.8);
+    }
+    .burn-overlay.show { display: flex; }
+    .burn-wrap { position: relative; width: 220px; }
+    #burn-slip { width: 220px; }
+    .fire-container {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 0; overflow: visible;
+    }
+    @keyframes fireRise {
+      0% { height: 0; opacity: 0; }
+      10% { opacity: 1; }
+      100% { height: 100%; opacity: 1; }
+    }
+    @keyframes slipBurn {
+      0% { opacity: 1; filter: none; }
+      50% { filter: sepia(1) brightness(0.5); }
+      100% { opacity: 0; filter: brightness(0); }
+    }
+    @keyframes flame {
+      0%,100% { transform: scaleX(1) scaleY(1) rotate(-2deg); }
+      25% { transform: scaleX(1.1) scaleY(1.2) rotate(2deg); }
+      50% { transform: scaleX(0.9) scaleY(1.3) rotate(-1deg); }
+      75% { transform: scaleX(1.05) scaleY(1.1) rotate(3deg); }
+    }
+    .flame {
+      position: absolute; bottom: 0;
+      border-radius: 50% 50% 20% 20%;
+      animation: flame 0.3s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    .flame1 { width: 60px; height: 80px; left: 30px; background: radial-gradient(ellipse at 50% 80%, #ff6b00, #ff4500, transparent); opacity: 0.9; }
+    .flame2 { width: 80px; height: 100px; left: 50px; background: radial-gradient(ellipse at 50% 80%, #ffd700, #ff8c00, transparent); opacity: 0.8; animation-delay: 0.1s; }
+    .flame3 { width: 40px; height: 60px; left: 80px; background: radial-gradient(ellipse at 50% 80%, #fff, #ffd700, transparent); opacity: 0.7; animation-delay: 0.15s; }
+    .flame4 { width: 50px; height: 70px; left: 110px; background: radial-gradient(ellipse at 50% 80%, #ff6b00, #ff4500, transparent); opacity: 0.85; animation-delay: 0.05s; }
+
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: #d4af37; animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-8px);opacity:1} }
+    .loading-text { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="divination.html" class="back-btn">←</a>
+  <div class="page-title">おみくじ • เซียมซีญี่ปุ่น</div>
+  <div class="coin-badge">🪙 <span id="coinCount">0</span></div>
+</div>
+
+<!-- Burn overlay -->
+<div class="burn-overlay" id="burnOverlay">
+  <div class="burn-wrap">
+    <img id="burn-slip" src="" alt="">
+    <div class="fire-container" id="fireContainer">
+      <div class="flame flame1"></div>
+      <div class="flame flame2"></div>
+      <div class="flame flame3"></div>
+      <div class="flame flame4"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page-content">
+
+  <!-- Header decoration -->
+  <div class="torii">
+    <div class="torii-text">浅草神社</div>
+    <div class="torii-title">おみくじ</div>
+    <div class="torii-sub">ศาลเจ้าแห่งโชคชะตา</div>
+    <div class="torii-divider">
+      <div class="torii-line"></div>
+      <div class="torii-symbol">⛩</div>
+      <div class="torii-line"></div>
+    </div>
+  </div>
+
+  <!-- Step 1: Donation box -->
+  <div class="donation-section" id="donationSection">
+    <div class="donation-box-wrap">
+      <div class="donation-rope"></div>
+      <div class="donation-box">
+        <div class="donation-slot"></div>
+        <div class="donation-grid"></div>
+      </div>
+      <div class="coin-anim" id="coinAnim"></div>
+    </div>
+    <div class="donation-hint">หยอดเหรียญบูชา 🪙 10 เหรียญ</div>
+    <button class="btn-donate" onclick="doDonate()">🪙 บริจาคเหรียญ</button>
+  </div>
+
+  <!-- Step 2: Tube -->
+  <div class="tube-section" id="tubeSection">
+    <div class="tube-wrap">
+      <div id="tube">
+        <div class="tube-body">
+          <div class="tube-grain"></div>
+          <div class="tube-shine"></div>
+          <div class="gold-band gb1"></div>
+          <div class="gold-band gb2"></div>
+          <div class="gold-band gb3"></div>
+          <div class="gold-band gb4"></div>
+          <div class="tube-engraving">御<br>籤</div>
+        </div>
+        <div class="tube-top">
+          <div class="tube-hole"></div>
+        </div>
+        <div id="stick-out">
+          <div id="stick-number"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tube-hint" id="tubeHint">แตะกระบอกเพื่อเขย่า</div>
+    <button class="btn-shake" id="btnShake" onclick="doShake()">🎋 เขย่ากระบอก</button>
+  </div>
+
+  <!-- Step 3: Slip -->
+  <div class="slip-section" id="slipSection">
+    <div id="slip-card">
+      <div class="slip-watermark"></div>
+      <div class="slip-header">
+        <div class="slip-shrine-name">ศาลเจ้าแห่งโชคชะตา</div>
+        <div class="slip-num" id="slipNum"></div>
+        <div class="slip-level-jp" id="slipLevelJp"></div>
+        <div class="slip-level-th" id="slipLevelTh"></div>
+      </div>
+      <div class="slip-poem-box" id="slipPoem"></div>
+      <div class="slip-body" id="slipBody">
+        <div class="loading">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <div class="loading-text">กำลังอ่านคำทำนาย...</div>
+        </div>
+      </div>
+      <div class="slip-footer">
+        <div class="slip-footer-jp">mytarot.vip</div>
+        <div class="slip-footer-th">คำทำนายจากศาลเจ้าแห่งโชคชะตา</div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn-save" onclick="saveSlip()">💾 บันทึกรูป</button>
+      <button class="btn-burn" onclick="burnSlip()">🔥 เผาทิ้ง</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const LEVELS = [
+  { jp:'大吉', th:'โชคดีอย่างยิ่ง', w:1 },
+  { jp:'吉', th:'โชคดี', w:3 },
+  { jp:'中吉', th:'โชคดีปานกลาง', w:3 },
+  { jp:'小吉', th:'โชคดีนิดหน่อย', w:2 },
+  { jp:'末吉', th:'โชคดีในอนาคต', w:2 },
+  { jp:'凶', th:'โชคร้าย', w:2 },
+  { jp:'大凶', th:'โชคร้ายมาก', w:1 },
+];
+const NUMS = ['第一番','第五番','第八番','第十三番','第十六番','第二十番','第二十三番','第三十一番','第三十五番','第四十二番','第四十八番','第五十六番','第六十三番','第七十番','第七十八番','第八十五番','第九十二番','第九十九番'];
+
+let currentLevel = null;
+let currentNum = '';
+let busy = false;
+
+function weighted() {
+  const tot = LEVELS.reduce((a,l)=>a+l.w,0);
+  let r = Math.random()*tot;
+  for (const l of LEVELS){ r-=l.w; if(r<=0) return l; }
+  return LEVELS[0];
+}
+
+async function doDonate() {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
+
+  // coin animation
+  const coin = document.getElementById('coinAnim');
+  coin.classList.add('coin-falling');
+
+  setTimeout(() => {
+    localStorage.setItem('coins', String(coins - 10));
+    document.getElementById('coinCount').textContent = coins - 10;
+    coin.classList.remove('coin-falling');
+
+    // show tube
+    document.getElementById('donationSection').style.display = 'none';
+    document.getElementById('tubeSection').classList.add('show');
+  }, 900);
+}
+
+function doShake() {
+  if (busy) return;
+  busy = true;
+  document.getElementById('btnShake').disabled = true;
+  document.getElementById('tubeHint').textContent = 'กำลังเขย่า... ตั้งจิตอธิษฐาน';
+
+  const tube = document.getElementById('tube');
+  tube.classList.add('shaking');
+
+  // pick result
+  currentLevel = weighted();
+  currentNum = NUMS[Math.floor(Math.random() * NUMS.length)];
+
+  // stick rises from hole after shake
+  const stick = document.getElementById('stick-out');
+  const stickNum = document.getElementById('stick-number');
+  stickNum.textContent = currentNum;
+  stick.classList.add('stick-rising');
+
+  setTimeout(() => {
+    stickNum.classList.add('stick-number-show');
+  }, 3800);
+
+  setTimeout(() => {
+    tube.classList.remove('shaking');
+    document.getElementById('tubeHint').textContent = 'ไม้ออกมาแล้ว! กดรับคำทำนาย';
+    document.getElementById('btnShake').textContent = '📜 รับคำทำนาย';
+    document.getElementById('btnShake').disabled = false;
+    document.getElementById('btnShake').onclick = showSlip;
+    busy = false;
+  }, 3600);
+}
+
+function showSlip() {
+  document.getElementById('tubeSection').classList.remove('show');
+  document.getElementById('slipSection').classList.add('show');
+
+  document.getElementById('slipNum').textContent = currentNum;
+  document.getElementById('slipLevelJp').textContent = currentLevel.jp;
+  document.getElementById('slipLevelTh').textContent = currentLevel.th;
+
+  generateReading();
+}
+
+async function generateReading() {
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `คุณคือหมอดูเซียมซีญี่ปุ่น ตอบเป็นภาษาไทย สั้นกระชับ สไตล์คำทำนายโบราณญี่ปุ่น ตอบในรูปแบบ JSON เท่านั้น ห้ามมี markdown หรือ backtick`,
+        messages: [{
+          role: 'user',
+          content: `สร้างคำทำนายเซียมซีญี่ปุ่นสำหรับ ${currentNum} ระดับ ${currentLevel.jp} (${currentLevel.th})
+
+ตอบเป็น JSON format นี้เท่านั้น:
+{
+  "poem": ["บรรทัด1", "บรรทัด2", "บรรทัด3", "บรรทัด4"],
+  "readings": [
+    {"label": "🙏 ความปรารถนา", "val": "คำทำนายสั้น"},
+    {"label": "❤️ ความรัก", "val": "คำทำนายสั้น"},
+    {"label": "💼 การงาน", "val": "คำทำนายสั้น"},
+    {"label": "💰 การเงิน", "val": "คำทำนายสั้น"},
+    {"label": "🏥 สุขภาพ", "val": "คำทำนายสั้น"},
+    {"label": "✈️ การเดินทาง", "val": "คำทำนายสั้น"},
+    {"label": "📚 การเรียน", "val": "คำทำนายสั้น"},
+    {"label": "🔍 ของหาย", "val": "คำทำนายสั้น"}
+  ]
+}`
+        }]
+      })
+    });
+
+    const data = await res.json();
+    let text = data.content[0].text;
+    text = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(text);
+
+    // poem
+    document.getElementById('slipPoem').innerHTML =
+      parsed.poem.map(l => `<div class="poem-line">${l}</div>`).join('');
+
+    // readings
+    document.getElementById('slipBody').innerHTML =
+      parsed.readings.map(r => `
+        <div class="slip-row">
+          <span class="slip-label">${r.label}</span>
+          <span class="slip-val">${r.val}</span>
+        </div>`).join('');
+
+  } catch(e) {
+    document.getElementById('slipBody').innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#8B4513">เกิดข้อผิดพลาด กรุณาลองใหม่</div>';
+  }
+}
+
+async function saveSlip() {
+  const slip = document.getElementById('slip-card');
+  const canvas = await html2canvas(slip, { backgroundColor: '#fdf6e3', scale: 2 });
+  const link = document.createElement('a');
+  link.download = `omikuji-${currentLevel.jp}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+async function burnSlip() {
+  const slip = document.getElementById('slip-card');
+  const canvas = await html2canvas(slip, { backgroundColor: '#fdf6e3', scale: 1 });
+
+  const overlay = document.getElementById('burnOverlay');
+  const burnImg = document.getElementById('burn-slip');
+  burnImg.src = canvas.toDataURL();
+  overlay.classList.add('show');
+
+  const fire = document.getElementById('fireContainer');
+
+  // animate fire rising
+  let h = 0;
+  const interval = setInterval(() => {
+    h += 3;
+    fire.style.height = h + 'px';
+    burnImg.style.opacity = Math.max(0, 1 - h/200);
+    if (h >= 220) {
+      clearInterval(interval);
+      setTimeout(() => {
+        overlay.classList.remove('show');
+        fire.style.height = '0';
+        burnImg.style.opacity = '1';
+        // reset
+        document.getElementById('slipSection').classList.remove('show');
+        document.getElementById('donationSection').style.display = 'flex';
+        document.getElementById('stick-out').classList.remove('stick-rising');
+        document.getElementById('stick-out').style.height = '0';
+        document.getElementById('stick-number').classList.remove('stick-number-show');
+        document.getElementById('btnShake').textContent = '🎋 เขย่ากระบอก';
+        document.getElementById('btnShake').onclick = doShake;
+        document.getElementById('btnShake').disabled = false;
+      }, 800);
+    }
+  }, 20);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  document.getElementById('coinCount').textContent = coins;
+});
+</script>
+</body>
+</html>
