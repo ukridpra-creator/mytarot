@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โหราศาสตร์จีน บาจื้อ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--purple-light);
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 24px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+
+    .input-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+    }
+    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; display: block; }
+    .date-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .date-input {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 8px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      text-align: center; transition: border-color 0.2s;
+    }
+    .date-input:focus { border-color: var(--purple-light); }
+    .date-input::placeholder { color: rgba(255,255,255,0.2); font-size: 11px; }
+    .text-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; box-sizing: border-box; margin-bottom: 10px;
+    }
+    .text-input:focus { border-color: var(--purple-light); }
+    .text-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* Gender selector */
+    .gender-row { display: flex; gap: 10px; margin-bottom: 0; }
+    .gender-btn {
+      flex: 1; padding: 12px; border-radius: 12px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.6); font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.2s;
+    }
+    .gender-btn.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); color: white; }
+
+    /* Four Pillars table */
+    .pillars-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 20px; padding: 20px; margin-bottom: 20px; display: none;
+    }
+    .pillars-card.show { display: block; }
+    .pillars-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 16px; text-align: center; }
+    .pillars-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;
+    }
+    .pillar-col {
+      text-align: center; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: 14px; padding: 12px 8px;
+    }
+    .pillar-label { font-size: 11px; color: var(--dim); margin-bottom: 8px; }
+    .pillar-gan { font-size: 28px; color: var(--gold); font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .pillar-zhi { font-size: 28px; color: white; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+    .pillar-pinyin { font-size: 10px; color: var(--dim); }
+
+    .day-master-box {
+      background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+      border: 1px solid rgba(245,158,11,0.3); border-radius: 14px;
+      padding: 14px 16px; margin-bottom: 12px; text-align: center;
+    }
+    .dm-label { font-size: 11px; color: var(--dim); margin-bottom: 6px; }
+    .dm-value { font-size: 18px; font-weight: 800; color: var(--gold); }
+
+    .elements-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .element-item {
+      flex: 1; text-align: center; border-radius: 10px; padding: 8px 4px;
+      font-size: 11px; font-weight: 700;
+    }
+    .el-wood  { background: rgba(34,197,94,0.15);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .el-fire  { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .el-earth { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .el-metal { background: rgba(156,163,175,0.15);color: #9ca3af; border: 1px solid rgba(156,163,175,0.3); }
+    .el-water { background: rgba(59,130,246,0.15); color: #3b82f6; border: 1px solid rgba(59,130,246,0.3); }
+    .el-name  { font-size: 12px; margin-bottom: 2px; }
+    .el-score { font-size: 14px; font-weight: 800; }
+
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
+    }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read {
+      width: 100%; background: linear-gradient(135deg, #dc2626, #f59e0b);
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(220,38,38,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Result */
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .result-section {
+      border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid;
+    }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.8); }
+    .sec-element   { background: rgba(245,158,11,0.08);  border-color: #f59e0b; }
+    .sec-element h3 { color: #f59e0b; }
+    .sec-strength  { background: rgba(168,85,247,0.08);  border-color: #a855f7; }
+    .sec-strength h3 { color: #a855f7; }
+    .sec-love      { background: rgba(236,72,153,0.08);  border-color: #ec4899; }
+    .sec-love h3   { color: #ec4899; }
+    .sec-career    { background: rgba(96,165,250,0.08);  border-color: #60a5fa; }
+    .sec-career h3 { color: #60a5fa; }
+    .sec-money     { background: rgba(16,185,129,0.08);  border-color: #10b981; }
+    .sec-money h3  { color: #10b981; }
+    .sec-luck      { background: rgba(249,115,22,0.08);  border-color: #f97316; }
+    .sec-luck h3   { color: #f97316; }
+    .sec-warning   { background: rgba(239,68,68,0.08);   border-color: #ef4444; }
+    .sec-warning h3 { color: #ef4444; }
+    .sec-future    { background: rgba(6,182,212,0.08);   border-color: #06b6d4; }
+    .sec-future h3 { color: #06b6d4; }
+
+    .cursor { display: inline-block; width: 2px; height: 16px; background: var(--purple-light); margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+    .loading-text { font-size: 14px; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🀄 บาจื้อ สี่เสา</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🀄 บาจื้อ สี่เสาแห่งชะตา</div>
+    <div class="hero-desc">ปัญญาจีนโบราณแห่งห้าธาตุ<br>วิเคราะห์ชะตาชีวิตจากวัน เวลา และสถานที่เกิด</div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด (ปี ค.ศ.)</label>
+    <div class="date-row">
+      <input class="date-input" id="inDay"   type="number" placeholder="วัน"   min="1" max="31">
+      <input class="date-input" id="inMonth" type="number" placeholder="เดือน" min="1" max="12">
+      <input class="date-input" id="inYear"  type="number" placeholder="ปี ค.ศ." min="1900" max="2100">
+    </div>
+    <label class="input-label">⏰ เวลาเกิด</label>
+    <div class="date-row" style="margin-bottom:16px;">
+      <input class="date-input" id="inHour"   type="number" placeholder="ชั่วโมง" min="0" max="23">
+      <input class="date-input" id="inMinute" type="number" placeholder="นาที"    min="0" max="59">
+    </div>
+    <label class="input-label">⚧ เพศ</label>
+    <div class="gender-row" style="margin-bottom:16px;">
+      <button class="gender-btn active" id="btnMale"   onclick="setGender('M')">♂ ชาย</button>
+      <button class="gender-btn"        id="btnFemale" onclick="setGender('F')">♀ หญิง</button>
+    </div>
+    <label class="input-label">📍 สถานที่เกิด (ไม่บังคับ)</label>
+    <input class="text-input" id="inCity" placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่">
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" onclick="startReading()">🀄 วิเคราะห์บาจื้อ</button>
+
+  <!-- Four Pillars -->
+  <div class="pillars-card" id="pillarsCard">
+    <div class="pillars-title">八字 สี่เสาแห่งชะตา</div>
+    <div class="pillars-grid" id="pillarsGrid"></div>
+    <div class="day-master-box">
+      <div class="dm-label">Day Master — ธาตุประจำตัว</div>
+      <div class="dm-value" id="dmValue"></div>
+    </div>
+    <div class="elements-row" id="elementsRow"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-box" id="resultBox">
+    <div class="result-section sec-element">
+      <h3>✦ ธาตุประจำตัวและบุคลิก</h3>
+      <p id="secElement"></p>
+    </div>
+    <div class="result-section sec-strength">
+      <h3>✦ จุดแข็งและพรสวรรค์</h3>
+      <p id="secStrength"></p>
+    </div>
+    <div class="result-section sec-love">
+      <h3>✦ ความรักและความสัมพันธ์</h3>
+      <p id="secLove"></p>
+    </div>
+    <div class="result-section sec-career">
+      <h3>✦ การงานและเส้นทางชีวิต</h3>
+      <p id="secCareer"></p>
+    </div>
+    <div class="result-section sec-money">
+      <h3>✦ การเงินและทรัพย์สิน</h3>
+      <p id="secMoney"></p>
+    </div>
+    <div class="result-section sec-luck">
+      <h3>✦ ช่วงดวงดี (Luck Cycle)</h3>
+      <p id="secLuck"></p>
+    </div>
+    <div class="result-section sec-warning">
+      <h3>✦ สิ่งที่ควรระวัง</h3>
+      <p id="secWarning"></p>
+    </div>
+    <div class="result-section sec-future">
+      <h3>✦ อนาคต คุณจะต้องเจอ...</h3>
+      <p id="secFuture"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedGender = 'M';
+
+function setGender(g) {
+  selectedGender = g;
+  document.getElementById('btnMale').classList.toggle('active', g === 'M');
+  document.getElementById('btnFemale').classList.toggle('active', g === 'F');
+}
+
+const CITY_COORDS = {
+  'กรุงเทพ': { lat: 13.7563, lng: 100.5018 },
+  'กรุงเทพมหานคร': { lat: 13.7563, lng: 100.5018 },
+  'เชียงใหม่': { lat: 18.7883, lng: 98.9853 },
+  'ภูเก็ต': { lat: 7.8804, lng: 98.3923 },
+  'ขอนแก่น': { lat: 16.4419, lng: 102.8360 },
+};
+
+function getCityCoords(city) {
+  if (!city) return { lat: 13.7563, lng: 100.5018 };
+  const key = city.toLowerCase().trim();
+  for (const [name, coords] of Object.entries(CITY_COORDS)) {
+    if (key.includes(name.toLowerCase())) return coords;
+  }
+  return { lat: 13.7563, lng: 100.5018 };
+}
+
+const PILLAR_LABELS = { year: 'ปี', month: 'เดือน', day: 'วัน', hour: 'ชั่วโมง' };
+const ELEMENT_TH = { Wood: 'ไม้', Fire: 'ไฟ', Earth: 'ดิน', Metal: 'ทอง', Water: 'น้ำ' };
+const ELEMENT_CLASS = { Wood: 'el-wood', Fire: 'el-fire', Earth: 'el-earth', Metal: 'el-metal', Water: 'el-water' };
+
+function renderPillars(data) {
+  // Four Pillars
+  document.getElementById('pillarsGrid').innerHTML = data.pillars.map(p => `
+    <div class="pillar-col">
+      <div class="pillar-label">${PILLAR_LABELS[p.label] || p.label}</div>
+      <div class="pillar-gan">${p.gan}</div>
+      <div class="pillar-zhi">${p.zhi}</div>
+      <div class="pillar-pinyin">${p.gan_pinyin || ''} ${p.zhi_pinyin || ''}</div>
+    </div>
+  `).join('');
+
+  // Day Master
+  const dm = data.day_master;
+  const elTH = ELEMENT_TH[dm?.info?.element] || dm?.info?.element || '';
+  const polarity = dm?.info?.polarity === 'Yang' ? 'หยาง' : 'หยิน';
+  document.getElementById('dmValue').textContent = `${dm?.stem || ''} — ${elTH} ${polarity} (${dm?.info?.name || ''})`;
+
+  // Elements
+  if (data.elements?.points) {
+    document.getElementById('elementsRow').innerHTML = Object.entries(data.elements.points).map(([el, score]) => `
+      <div class="element-item ${ELEMENT_CLASS[el] || ''}">
+        <div class="el-name">${ELEMENT_TH[el] || el}</div>
+        <div class="el-score">${score}</div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('pillarsCard').classList.add('show');
+}
+
+function buildPrompt(data, birthInfo) {
+  const pillarsDesc = data.pillars?.map(p =>
+    `${PILLAR_LABELS[p.label]}: ${p.gan}${p.zhi} (${p.gan_pinyin || ''} ${p.zhi_pinyin || ''})`
+  ).join(', ') || '';
+
+  const dm = data.day_master;
+  const elTH = ELEMENT_TH[dm?.info?.element] || '';
+  const dmDesc = `${dm?.stem || ''} — ${elTH} ${dm?.info?.polarity === 'Yang' ? 'หยาง' : 'หยิน'}`;
+
+  const elements = data.elements?.points ?
+    Object.entries(data.elements.points).map(([el, score]) => `${ELEMENT_TH[el]}: ${score}`).join(', ') : '';
+
+  const professional = data.professional ?
+    `ความแข็งแกร่ง Day Master: ${data.professional.dm_strength}\nโครงสร้าง: ${data.professional.structure}` : '';
+
+  const luckCycle = data.luck_cycle?.pillars?.slice(0, 3).map(lp =>
+    `อายุ ${lp.start_age}-${lp.end_age}: ${lp.gan_zhi}`
+  ).join(', ') || '';
+
+  const stars = data.stars?.map(s => s.name).join(', ') || '';
+
+  return `วิเคราะห์บาจื้อ (สี่เสาแห่งชะตา) อย่างละเอียดและลึกซึ้ง เขียนเป็นภาษาไทย เรียกผู้ถามว่า "คุณ"
+เพศ: ${birthInfo.sex === 'M' ? 'ชาย' : 'หญิง'}
+
+สี่เสา: ${pillarsDesc}
+Day Master: ${dmDesc}
+ห้าธาตุ: ${elements}
+${professional}
+${luckCycle ? `Luck Cycle: ${luckCycle}` : ''}
+${stars ? `ดาวมงคล: ${stars}` : ''}
+
+แบ่งการวิเคราะห์เป็น 8 หัวข้อ โดยใช้ ✦ นำหน้าหัวข้อ:
+
+✦ ธาตุประจำตัวและบุคลิก
+✦ จุดแข็งและพรสวรรค์
+✦ ความรักและความสัมพันธ์
+✦ การงานและเส้นทางชีวิต
+✦ การเงินและทรัพย์สิน
+✦ ช่วงดวงดี (Luck Cycle)
+✦ สิ่งที่ควรระวัง
+✦ อนาคต คุณจะต้องเจอ...
+
+เขียนให้ยาว ลึกซึ้ง ห้ามใช้ markdown ห้ามใช้ * หรือ #`;
+}
+
+function parseResult(text) {
+  const sections = {
+    'ธาตุประจำตัวและบุคลิก': 'secElement',
+    'จุดแข็งและพรสวรรค์': 'secStrength',
+    'ความรักและความสัมพันธ์': 'secLove',
+    'การงานและเส้นทางชีวิต': 'secCareer',
+    'การเงินและทรัพย์สิน': 'secMoney',
+    'ช่วงดวงดี': 'secLuck',
+    'สิ่งที่ควรระวัง': 'secWarning',
+    'อนาคต': 'secFuture',
+  };
+
+  let current = null;
+  const content = {};
+  const lines = text.split('\n');
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    let matched = false;
+    for (const [key, id] of Object.entries(sections)) {
+      if (trimmed.includes(key)) {
+        current = id;
+        content[id] = content[id] || '';
+        matched = true;
+        break;
+      }
+    }
+    if (!matched && current && trimmed) {
+      content[current] = (content[current] || '') + trimmed + ' ';
+    }
+  }
+
+  for (const [id, txt] of Object.entries(content)) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = txt;
+  }
+}
+
+async function startReading() {
+  const day    = parseInt(document.getElementById('inDay').value);
+  const month  = parseInt(document.getElementById('inMonth').value);
+  const year   = parseInt(document.getElementById('inYear').value);
+  const hour   = parseInt(document.getElementById('inHour').value) || 12;
+  const minute = parseInt(document.getElementById('inMinute').value) || 0;
+  const city   = document.getElementById('inCity').value.trim();
+
+  if (!day || !month || !year) { alert('กรุณากรอกวันเกิดให้ครบค่ะ'); return; }
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 40) { alert('เหรียญไม่พอค่ะ ต้องใช้ 40 เหรียญค่ะ'); return; }
+  localStorage.setItem('coins', String(coins - 40));
+  document.getElementById('coinCount').textContent = coins - 40;
+  document.getElementById('coinDisplay').textContent = coins - 40;
+
+  const { lat, lng } = getCityCoords(city);
+
+  // เรียก BaZi API
+  let baziData = null;
+  try {
+    const apiRes = await fetch('/api/bazi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ year, month, day, hour, minute, lat, lng, city: city || 'Bangkok', sex: selectedGender })
+    });
+    const apiData = await apiRes.json();
+    if (apiData.data?.pillars) {
+      baziData = apiData.data;
+      renderPillars(baziData);
+    }
+  } catch(e) {}
+
+  // Claude วิเคราะห์
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  ['secElement','secStrength','secLove','secCareer','secMoney','secLuck','secWarning','secFuture'].forEach(id => {
+    document.getElementById(id).innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์บาจื้อ...</div></div>`;
+  });
+
+  try {
+    const prompt = baziData
+      ? buildPrompt(baziData, { sex: selectedGender })
+      : `วิเคราะห์บาจื้อจากวันเกิด ${day}/${month}/${year} เวลา ${hour}:${String(minute).padStart(2,'0')} เพศ${selectedGender === 'M' ? 'ชาย' : 'หญิง'} แบ่งเป็น 8 หัวข้อ ใช้ ✦ นำหน้า: ธาตุประจำตัวและบุคลิก, จุดแข็งและพรสวรรค์, ความรักและความสัมพันธ์, การงานและเส้นทางชีวิต, การเงินและทรัพย์สิน, ช่วงดวงดี, สิ่งที่ควรระวัง, อนาคต คุณจะต้องเจอ... ห้ามใช้ markdown`;
+
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 6000,
+        system: 'คุณคือผู้เชี่ยวชาญบาจื้อและห้าธาตุแห่งจีนโบราณ วิเคราะห์ดวงชะตาเป็นภาษาไทยอย่างลึกซึ้ง เรียกผู้ถามว่า คุณ ห้ามใช้ markdown',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+
+    ['secElement','secStrength','secLove','secCareer','secMoney','secLuck','secWarning','secFuture'].forEach(id => {
+      document.getElementById(id).innerHTML = '';
+    });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      parseResult(text);
+    }
+
+  } catch(e) {
+    document.getElementById('secElement').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+});
+</script>
+</body>
+</html>
