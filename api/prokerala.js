@@ -20,9 +20,9 @@ export default async function handler(req, res) {
   // 2. Get planet positions
   const datetime = `${birthDate}T${birthTime}:00+07:00`;
   const astroRes = await fetch(
-    `https://api.prokerala.com/v2/astrology/planet-position?ayanamsa=1&coordinates=${lat},${lon}&datetime=${encodeURIComponent(datetime)}`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
+  `https://api.prokerala.com/v2/astrology/western/natal-chart?coordinates=${lat},${lon}&datetime=${encodeURIComponent(datetime)}`,
+  { headers: { Authorization: `Bearer ${token}` } }
+);
 
   const astroData = await astroRes.json();
   res.status(200).json(astroData);
