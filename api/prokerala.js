@@ -1,32 +1,28 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { year, month, day, hour, minute, lat, lon } = req.body;
+  const { year, month, day, hour, minute, lat, lng } = req.body;
 
+  // 1. FreeAstroAPI
   try {
-    const tokenRes = await fetch('https://api.prokerala.com/token', {
+    const astroRes = await fetch('https://api.freeastroapi.com/api/v1/natal/calculate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-        client_id: process.env.PROKERALA_CLIENT_ID,
-        client_secret: process.env.PROKERALA_CLIENT_SECRET,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.FREEASTRO_API_KEY,
+      },
+      body: JSON.stringify({
+        name: 'User', year, month, day, hour, minute,
+        lat, lng, tz_str: 'Asia/Bangkok'
       })
     });
-    const tokenData = await tokenRes.json();
-    const token = tokenData.access_token;
-    if (!token) return res.status(500).json({ error: 'Token failed', detail: tokenData });
-
-    const datetime = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}T${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}:00+07:00`;
-
-    const astroRes = await fetch(
-      `https://api.prokerala.com/v2/astrology/western/natal-planet-position?coordinates=${lat},${lon}&datetime=${encodeURIComponent(datetime)}&house_system=placidus&orb=default&aspect_filter=major`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
     const data = await astroRes.json();
-    res.status(200).json(data);
+    if (data.planets) return res.status(200).json({ source: 'freeastro', data });
+  } catch(e) {}
 
-  } catch(e) {
-    res.status(500).json({ error: e.message });
-  }
+  // 2. Claude fallback
+  return res.status(200).json({
+    source: 'claude',
+    data: { year, month, day, hour, minute, lat, lng }
+  });
 }
