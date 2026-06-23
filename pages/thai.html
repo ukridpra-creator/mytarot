@@ -271,16 +271,24 @@ function parseThaiResult(text) {
 
   for (const line of text.split('\n')) {
     const trimmed = line.trim();
+    if (!trimmed) continue;
+    
+    // เช็คว่าบรรทัดนี้เป็น header หรือเปล่า (มี ✦ หรือเป็นแค่ชื่อหัวข้อสั้นๆ)
+    const isHeader = trimmed.startsWith('✦') || trimmed.length < 30;
+    
     let matched = false;
-    for (const [key, id] of Object.entries(sections)) {
-      if (trimmed.includes(key)) {
-        current = id;
-        content[id] = content[id] || '';
-        matched = true;
-        foundFirst = true;
-        break;
+    if (isHeader) {
+      for (const [key, id] of Object.entries(sections)) {
+        if (trimmed.includes(key)) {
+          current = id;
+          content[id] = content[id] || '';
+          matched = true;
+          foundFirst = true;
+          break;
+        }
       }
     }
+    
     if (!matched && trimmed) {
       if (!foundFirst) introLines.push(trimmed);
       else if (current) content[current] = (content[current] || '') + trimmed + ' ';
