@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>觀音靈簽 เซียมซีกวนอิม — My Tarot</title>
+  <title>觀音靈簽 เซียมซีเจ้าแม่กวนอิม — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -433,7 +433,7 @@
 
 <div class="page-header">
   <a href="divination.html" class="back-btn">←</a>
-  <div class="page-title">觀音靈簽 · เซียมซีกวนอิม</div>
+  <div class="page-title">觀音靈簽 · เซียมซีเจ้าแม่กวนอิม</div>
   <div class="coin-badge">🪙 <span id="coinCount">0</span></div>
 </div>
 
@@ -471,7 +471,7 @@
 <div class="page-content">
   <div class="torii">
     <div class="torii-text">觀音靈簽</div>
-    <div class="torii-title">เซียมซีกวนอิม</div>
+    <div class="torii-title">เซียมซีเจ้าแม่กวนอิม</div>
     <div class="torii-sub">南無觀世音菩薩</div>
     <div class="torii-divider">
       <div class="torii-line"></div>
@@ -661,8 +661,7 @@ function doDonate() {
   const coins = parseInt(localStorage.getItem('coins') || '0');
   if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
 
-  sounds.coin.currentTime = 0;
-  sounds.coin.play();
+  try { sounds.coin.currentTime = 0; sounds.coin.play(); } catch(e) {}
 
   const coin = document.getElementById('coinDrop');
   coin.classList.remove('coin-falling');
@@ -686,8 +685,7 @@ function doShake() {
   document.getElementById('btnShake').disabled = true;
   document.getElementById('tubeHint').textContent = 'กำลังเขย่า... ตั้งจิตอธิษฐาน 🙏';
 
-  sounds.shake.currentTime = 0;
-  sounds.shake.play();
+  try { sounds.shake.currentTime = 0; sounds.shake.play(); } catch(e) {}
 
   const tube = document.getElementById('tube');
   tube.classList.add('shaking');
@@ -704,10 +702,8 @@ function doShake() {
   stick.classList.add('stick-rising');
 
   setTimeout(() => {
-    sounds.shake.pause();
-    sounds.stick.currentTime = 0;
-    sounds.stick.play();
-  }, 3300);
+  try { sounds.shake.pause(); sounds.stick.currentTime = 0; sounds.stick.play(); } catch(e) {}
+}, 3300);
 
   setTimeout(() => { stickNum.classList.add('stick-show'); }, 3900);
 
