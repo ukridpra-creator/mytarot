@@ -1,4 +1,4 @@
-dconst GUANYIN_DATA = [
+const GUANYIN_DATA = [
   {
     "num": 1,
     "num_zh": "第一籤",
