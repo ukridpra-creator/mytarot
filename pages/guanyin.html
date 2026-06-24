@@ -750,11 +750,17 @@ function closeShare(e) {
 
 async function doSave() {
   const canvas = await getSlipCanvas();
-  const a = document.createElement('a');
-  a.download = `guanyin-${currentEntry.grade}.png`;
-  a.href = canvas.toDataURL();
-  a.click();
-  closeShare();
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `omikuji-${currentEntry.level_jp}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    closeShare();
+  }, 'image/png');
 }
 
 async function doShare() {
