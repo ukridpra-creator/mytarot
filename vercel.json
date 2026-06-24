@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{"type": "host", "value": "mytarot.vercel.app"}],
+      "destination": "https://mytarot.vip/$1",
+      "permanent": true
+    }
+  ]
+}
