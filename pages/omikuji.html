@@ -412,7 +412,20 @@ let currentEntry = null;
 let busy = false;
 
 async function getSlipCanvas() {
-  return await html2canvas(document.getElementById('slip-card'), { backgroundColor: '#fdf6e3', scale: 2, useCORS: true });
+  const slip = document.getElementById('slip-card');
+  return await html2canvas(slip, {
+    backgroundColor: '#fdf6e3',
+    scale: 3,
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    imageTimeout: 0,
+    onclone: (doc) => {
+      const card = doc.getElementById('slip-card');
+      card.style.transform = 'none';
+      card.style.animation = 'none';
+    }
+  });
 }
 
 function doDonate() {
@@ -513,21 +526,20 @@ async function doShare() {
 
 async function burnSlip() {
   const canvas = await getSlipCanvas();
+
   const overlay = document.getElementById('burnOverlay');
   const img = document.getElementById('burn-slip-img');
   const fire = document.getElementById('fireWrap');
   const msg = document.getElementById('burnMsg');
 
-  img.src = canvas.toDataURL();
+  img.src = canvas.toDataURL('image/png', 1.0);
   img.style.opacity = '1';
   msg.classList.remove('show');
   fire.style.display = 'none';
   overlay.classList.add('show');
 
-  // รอ 0.5s แล้วเริ่มไฟ
   setTimeout(() => {
     fire.style.display = 'block';
-
     let p = 0;
     const iv = setInterval(() => {
       p += 1.2;
@@ -537,12 +549,10 @@ async function burnSlip() {
         fire.style.display = 'none';
         img.style.opacity = '0';
         msg.classList.add('show');
-
         setTimeout(() => {
           overlay.classList.remove('show');
           msg.classList.remove('show');
           img.style.opacity = '1';
-          // reset
           document.getElementById('slipSection').classList.remove('show');
           document.getElementById('donationSection').style.display = 'flex';
           const stick = document.getElementById('stick-out');
@@ -559,7 +569,6 @@ async function burnSlip() {
     }, 25);
   }, 500);
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
 });
