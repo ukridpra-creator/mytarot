@@ -433,6 +433,25 @@
 </div>
 
 <script>
+  // === SOUNDS ===
+const sounds = {
+  coin:  new Audio('../sounds/coin.mp3'),
+  shake: new Audio('../sounds/shake.mp3'),
+  stick: new Audio('../sounds/stick.mp3'),
+  fire:  new Audio('../sounds/fire.mp3'),
+  bgm:   new Audio('../sounds/bgm.mp3'),
+};
+sounds.bgm.loop = true;
+sounds.bgm.volume = 0.2;
+sounds.shake.loop = true;
+sounds.coin.volume = 0.7;
+sounds.stick.volume = 0.8;
+sounds.fire.volume = 0.6;
+
+// เปิด BGM ตอน user กดครั้งแรก
+document.addEventListener('click', () => {
+  if (sounds.bgm.paused) sounds.bgm.play().catch(()=>{});
+}, { once: true });
 let currentEntry = null;
 let busy = false;
 
@@ -461,6 +480,8 @@ function doDonate() {
   coin.classList.remove('coin-falling');
   void coin.offsetWidth;
   coin.classList.add('coin-falling');
+  sounds.coin.currentTime = 0;
+sounds.coin.play();
 
   setTimeout(() => {
     localStorage.setItem('coins', String(coins - 10));
@@ -483,7 +504,13 @@ function doShake() {
 
   const tube = document.getElementById('tube');
   tube.classList.add('shaking');
-
+sounds.shake.currentTime = 0;
+sounds.shake.play();
+setTimeout(() => {
+  sounds.shake.pause();
+  sounds.stick.currentTime = 0;
+  sounds.stick.play();
+}, 3300);
   currentEntry = OMIKUJI_DATA[Math.floor(Math.random() * OMIKUJI_DATA.length)];
 
   const stick = document.getElementById('stick-out');
@@ -566,6 +593,8 @@ async function burnSlip() {
 
   setTimeout(() => {
     fire.style.display = 'block';
+    sounds.fire.currentTime = 0;
+sounds.fire.play();
     let p = 0;
     const iv = setInterval(() => {
       p += 1.2;
@@ -579,6 +608,8 @@ async function burnSlip() {
           overlay.classList.remove('show');
           msg.classList.remove('show');
           img.style.opacity = '1';
+          sounds.fire.currentTime = 0;
+sounds.fire.play();
           document.getElementById('slipSection').classList.remove('show');
           document.getElementById('donationSection').style.display = 'flex';
           const stick = document.getElementById('stick-out');
