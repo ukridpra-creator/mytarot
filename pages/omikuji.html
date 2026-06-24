@@ -63,37 +63,46 @@
       border-radius: 50%;
     }
     .saisen-box {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
-      background: linear-gradient(180deg, #3d1a08 0%, #5a2510 50%, #3d1a08 100%);
-      border: 2px solid #8B6914;
-      border-radius: 6px 6px 10px 10px;
-    }
-    /* ทึบสนิท ไม่มีกระจก */
-    .saisen-inner {
-      position: absolute; left: 8px; right: 8px; top: 44px; bottom: 8px;
-      background: linear-gradient(180deg, #1a0803, #0d0401);
-      border-radius: 4px;
-      border: 1px solid rgba(212,175,55,0.15);
-    }
-    .saisen-top {
-      position: absolute; top: 0; left: 0; right: 0; height: 44px;
-      background: linear-gradient(180deg, #8B0000, #6b0000);
-      border-radius: 4px 4px 0 0;
-      border-bottom: 2px solid #d4af37;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .saisen-title { font-size: 11px; color: #d4af37; letter-spacing: 3px; }
-    .saisen-slot {
-      position: absolute; top: 42px; left: 50%; transform: translateX(-50%);
-      width: 48px; height: 6px;
-      background: #050101; border-radius: 3px;
-      border: 1px solid #d4af37; z-index: 3;
-    }
-    .saisen-band {
-      position: absolute; left: 0; right: 0; height: 4px;
-      background: linear-gradient(90deg, #6B5010, #d4af37, #f0d060, #d4af37, #6B5010);
-    }
-    .sb1 { top: 46px; } .sb2 { top: 52px; } .sb3 { bottom: 14px; }
+  position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
+  background: linear-gradient(180deg, #5c1a1a 0%, #8B2500 40%, #6b1a00 100%);
+  border: 2px solid #d4af37;
+  border-radius: 6px 6px 10px 10px;
+  overflow: hidden;
+}
+.saisen-box::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 50% 100%, transparent 40%, rgba(212,175,55,0.08) 41%, rgba(212,175,55,0.08) 50%, transparent 51%);
+  background-size: 20px 20px;
+}
+.saisen-inner {
+  position: absolute; left: 8px; right: 8px; top: 48px; bottom: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212,175,55,0.3);
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(212,175,55,0.05) 8px, rgba(212,175,55,0.05) 9px),
+    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(212,175,55,0.05) 8px, rgba(212,175,55,0.05) 9px),
+    linear-gradient(180deg, #3d0a00, #1a0400);
+}
+.saisen-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 44px;
+  background: linear-gradient(180deg, #8B0000, #6b0000);
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid #d4af37;
+  display: flex; align-items: center; justify-content: center;
+}
+.saisen-title { font-size: 11px; color: #d4af37; letter-spacing: 3px; }
+.saisen-slot {
+  position: absolute; top: 42px; left: 50%; transform: translateX(-50%);
+  width: 48px; height: 6px;
+  background: #050101; border-radius: 3px;
+  border: 1px solid #d4af37; z-index: 3;
+}
+.saisen-band {
+  position: absolute; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #6B5010, #d4af37, #f0d060, #d4af37, #6B5010);
+}
+.sb1 { top: 46px; } .sb2 { top: 52px; } .sb3 { bottom: 14px; }
 
     /* COIN DROP - ตกลงช่องพอดี */
     .coin-drop {
@@ -109,13 +118,13 @@
       font-size: 8px; color: #5a3e00; font-weight: 700;
     }
     @keyframes coinFall {
-      0%   { top: 20px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
-      65%  { top: 44px; opacity: 1; transform: translateX(-50%) rotate(290deg); }
-      80%  { top: 40px; opacity: 1; transform: translateX(-50%) rotate(320deg); }
-      100% { top: 45px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
-    }
-    .coin-falling { display: block !important; animation: coinFall 0.8s ease-in forwards; }
-
+  0%   { top: 20px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
+  70%  { top: 43px; opacity: 1; transform: translateX(-50%) rotate(300deg); }
+  85%  { top: 39px; opacity: 1; transform: translateX(-50%) rotate(330deg); }
+  95%  { top: 44px; opacity: 1; transform: translateX(-50%) rotate(355deg); }
+  100% { top: 44px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
+}
+.coin-falling { display: block !important; animation: coinFall 1.2s ease-in forwards; }
     .donation-steps {
       font-size: 12px; color: rgba(255,255,255,0.4); text-align: center;
       letter-spacing: 1px; line-height: 2; margin-bottom: 14px;
@@ -163,11 +172,17 @@
       font-weight: 900;
     }
     #stick-out {
-      position: absolute; left: 50%; transform: translateX(-50%);
-      width: 7px; bottom: 223px; height: 0;
-      background: linear-gradient(180deg, #f5e070, #d4a030, #8B5a10);
-      border-radius: 4px 4px 1px 1px; z-index: 5; display: none;
-    }
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 7px;
+  bottom: 230px; /* ตรงรูพอดี */
+  height: 0;
+  background: linear-gradient(180deg, #f5e070, #d4a030, #8B5a10);
+  border-radius: 4px 4px 1px 1px; z-index: 5; display: none;
+}
+@keyframes stickRise { 
+  0% { height: 0; bottom: 230px; } 
+  100% { height: 90px; bottom: 230px; } 
+}
     #stick-number {
       position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
       font-size: 9px; color: #d4af37; white-space: nowrap; font-weight: 700;
@@ -283,10 +298,20 @@
     .fl3 { width: 65%; height: 50px; left: 17%; background: linear-gradient(180deg, transparent 0%, #ffdd00 20%, #ffffff 100%); animation: f3 0.25s ease-in-out infinite; opacity: 0.75; }
     .fl4 { width: 40%; height: 35px; left: 30%; background: linear-gradient(180deg, transparent, #fff); animation: f1 0.15s ease-in-out infinite 0.05s; opacity: 0.6; }
 
-    .burn-msg { margin-top: 28px; text-align: center; opacity: 0; transition: opacity 1s; }
-    .burn-msg.show { opacity: 1; }
-    .burn-msg-main { font-size: 18px; color: #d4af37; font-weight: 700; margin-bottom: 8px; }
-    .burn-msg-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .burn-msg {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, 120px);
+  text-align: center;
+  opacity: 0; transition: opacity 1s;
+  z-index: 401;
+  width: 280px;
+}
+.burn-msg.show { opacity: 1; }
+@keyframes stickRise { 
+  0% { height: 0; bottom: 230px; } 
+  100% { height: 90px; bottom: 230px; } 
+}
   </style>
 </head>
 <body>
@@ -332,7 +357,7 @@
 
 <div class="page-content">
   <div class="torii">
-    <div class="torii-text">浅草神社</div>
+    <div class="torii-text">運命の神社</div>
     <div class="torii-title">おみくじ</div>
     <div class="torii-sub">ศาลเจ้าแห่งโชคชะตา</div>
     <div class="torii-divider">
@@ -440,11 +465,12 @@ function doDonate() {
   setTimeout(() => {
     localStorage.setItem('coins', String(coins - 10));
     document.getElementById('coinCount').textContent = coins - 10;
-    setTimeout(() => {
-      document.getElementById('donationSection').style.display = 'none';
-      document.getElementById('tubeSection').classList.add('show');
-    }, 300);
-  }, 800);
+  }, 1100);
+
+  setTimeout(() => {
+    document.getElementById('donationSection').style.display = 'none';
+    document.getElementById('tubeSection').classList.add('show');
+  }, 1400);
 }
 
 function doShake() {
