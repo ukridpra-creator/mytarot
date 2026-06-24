@@ -234,23 +234,20 @@
 
     /* COIN DROP */
     .coin-drop {
-      position: absolute; top: 10px; right: 76px;
-      width: 18px; height: 18px;
-      background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
-      border-radius: 50%; border: 2px solid #8B6914;
-      display: none; z-index: 10;
-    }
-    .coin-drop::after {
-      content: '圓'; position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 6px; color: #5a3e00; font-weight: 700;
-    }
-    @keyframes coinFall {
-      0%   { top: 10px; opacity: 1; transform: rotate(0deg); }
-      65%  { top: 48px; opacity: 1; transform: rotate(280deg); }
-      80%  { top: 43px; opacity: 1; transform: rotate(310deg); }
-      100% { top: 50px; opacity: 0; transform: rotate(360deg); }
-    }
+  position: absolute; 
+  top: 30px; 
+  right: 76px;
+  width: 18px; height: 18px;
+  background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
+  border-radius: 50%; border: 2px solid #8B6914;
+  display: none; z-index: 10;
+}
+@keyframes coinFall {
+  0%   { top: 30px; opacity: 1; transform: rotate(0deg); }
+  65%  { top: 125px; opacity: 1; transform: rotate(280deg); }
+  80%  { top: 120px; opacity: 1; transform: rotate(310deg); }
+  100% { top: 127px; opacity: 0; transform: rotate(360deg); }
+}
     .coin-falling { display: block !important; animation: coinFall 1s ease-in forwards; }
 
     .donation-steps {
@@ -635,10 +632,10 @@ const MOCK_DATA = [
 ];
 
 const sounds = {
-  coin:  new Audio('../sound/coin.mp3'),
-  shake: new Audio('../sound/shake.mp3'),
-  stick: new Audio('../sound/stick.mp3'),
-  fire:  new Audio('../sound/fire.mp3'),
+  coin:  new Audio('../sounds/coin.mp3'),
+  shake: new Audio('../sounds/shake.mp3'),
+  stick: new Audio('../sounds/stick.mp3'),
+  fire:  new Audio('../sounds/fire.mp3'),
 };
 sounds.shake.loop = true;
 sounds.coin.volume = 0.7;
