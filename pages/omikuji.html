@@ -66,19 +66,16 @@
       border-radius: 6px 6px 10px 10px;
       border: 2px solid #8B6914;
     }
-    /* Glass front */
-    .saisen-glass {
-      position: absolute; left: 8px; right: 8px; top: 35px; bottom: 8px;
-      background: rgba(20,10,5,0.6);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .saisen-glass::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
-    }
+    /* กล่องทึบแบบเดิม */
+.saisen-glass {
+  position: absolute; left: 8px; right: 8px; top: 35px; bottom: 8px;
+  background: linear-gradient(180deg, #2d1005 0%, #1a0803 100%);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.saisen-glass::before { display: none; }
+.coins-inside { display: none; }
     /* Coins inside */
     .coins-inside {
       position: absolute; bottom: 0; left: 0; right: 0;
@@ -153,17 +150,10 @@
 }
 @keyframes coinDrop {
   0%   { top: -30px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
-  70%  { top: 42px; opacity: 1; transform: translateX(-50%) rotate(320deg); }
-  85%  { top: 36px; opacity: 1; transform: translateX(-50%) rotate(340deg); }
-  100% { top: 42px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
+  60%  { top: 40px; opacity: 1; transform: translateX(-50%) rotate(300deg); }
+  80%  { top: 35px; opacity: 1; transform: translateX(-50%) rotate(340deg); }
+  100% { top: 40px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
 }
-    @keyframes coinDrop {
-      0%   { top: -40px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
-      60%  { top: 36px; opacity: 1; transform: translateX(-50%) rotate(300deg); }
-      75%  { top: 30px; opacity: 1; transform: translateX(-50%) rotate(330deg); }
-      90%  { top: 38px; opacity: 1; transform: translateX(-50%) rotate(350deg); }
-      100% { top: 38px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
-    }
     .coin-dropping { display: block !important; animation: coinDrop 0.9s ease-in forwards; }
 
     .donation-steps {
@@ -694,39 +684,38 @@ async function doShare(platform) {
 // Burn
 async function burnSlip() {
   const canvas = await getSlipCanvas();
-  slipCanvas = canvas;
-
   const overlay = document.getElementById('burnOverlay');
   const img = document.getElementById('burn-slip-img');
   img.src = canvas.toDataURL();
-  img.style.clipPath = 'inset(0 0 0% 0)';
+  img.style.clipPath = 'inset(0% 0 0% 0)';
   overlay.classList.add('show');
 
   const fireRow = document.getElementById('fireRow');
   fireRow.style.display = 'block';
-  fireRow.style.bottom = '0';
+  fireRow.style.bottom = '0px';
+  fireRow.style.top = 'auto';
 
   const msg = document.getElementById('burnMessage');
   msg.classList.remove('show');
 
-  // animate fire rising + clip from bottom
   let progress = 0;
+  const total = 100;
   const interval = setInterval(() => {
-    progress += 1;
-    const pct = progress; // 0 to 100
-    img.style.clipPath = `inset(0 0 ${pct}% 0)`;
-    fireRow.style.bottom = `${pct}%`;
+    progress += 0.8;
+    // clip จากล่างขึ้นบน
+    img.style.clipPath = `inset(0% 0 ${progress}% 0)`;
+    // ไฟอยู่ที่ขอบด้านล่างของส่วนที่เหลือ
+    const remaining = 100 - progress;
+    fireRow.style.bottom = `${remaining}%`;
 
     if (progress >= 100) {
       clearInterval(interval);
       fireRow.style.display = 'none';
       msg.classList.add('show');
-
       setTimeout(() => {
         overlay.classList.remove('show');
         msg.classList.remove('show');
-        img.style.clipPath = 'inset(0 0 0% 0)';
-        // reset
+        img.style.clipPath = '';
         document.getElementById('slipSection').classList.remove('show');
         document.getElementById('donationSection').style.display = 'flex';
         document.getElementById('stick-out').classList.remove('stick-rising');
