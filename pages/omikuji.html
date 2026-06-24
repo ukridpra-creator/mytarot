@@ -87,13 +87,20 @@
       padding: 4px;
       gap: 2px;
     }
-    .coin-inside {
-      width: 18px; height: 8px;
-      background: radial-gradient(ellipse at 40% 30%, #f0d060, #d4af37, #8B6914);
-      border-radius: 50%;
-      border: 1px solid #8B6914;
-      opacity: 0.9;
-    }
+    .coins-inside {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 60px;
+  padding: 4px 6px;
+  display: flex; flex-wrap: wrap; gap: 1px;
+  align-content: flex-end;
+}
+.coin-inside {
+  width: 14px; height: 14px;
+  background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
+  border-radius: 50%;
+  border: 1px solid #8B6914;
+  opacity: 0.9;
+}
     /* Top red part */
     .saisen-top {
       position: absolute; top: 0; left: 0; right: 0; height: 42px;
@@ -135,17 +142,21 @@
 
     /* Falling coin animation */
     .coin-drop {
-      position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
-      width: 22px; height: 22px;
-      background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
-      border-radius: 50%; border: 2px solid #8B6914;
-      display: none; z-index: 10;
-    }
-    .coin-drop::after {
-      content: '¥'; position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 9px; color: #5a3e00; font-weight: 700;
-    }
+  position: absolute; 
+  top: -30px; 
+  left: 50%; 
+  transform: translateX(-50%);
+  width: 22px; height: 22px;
+  background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
+  border-radius: 50%; border: 2px solid #8B6914;
+  display: none; z-index: 10;
+}
+@keyframes coinDrop {
+  0%   { top: -30px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
+  70%  { top: 42px; opacity: 1; transform: translateX(-50%) rotate(320deg); }
+  85%  { top: 36px; opacity: 1; transform: translateX(-50%) rotate(340deg); }
+  100% { top: 42px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
+}
     @keyframes coinDrop {
       0%   { top: -40px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
       60%  { top: 36px; opacity: 1; transform: translateX(-50%) rotate(300deg); }
@@ -583,7 +594,16 @@ async function doDonate() {
 // Shake
 function doShake() {
   if (busy) return;
+  
+  // check data loaded
+  if (typeof OMIKUJI_DATA === 'undefined') {
+    alert('ข้อมูลยังโหลดไม่ครบ กรุณารีเฟรชหน้า');
+    return;
+  }
+  
   busy = true;
+  // ... ที่เหลือเหมือนเดิม
+}
   document.getElementById('btnShake').disabled = true;
   document.getElementById('tubeHint').textContent = 'กำลังเขย่า... ตั้งจิตอธิษฐาน 🙏';
 
