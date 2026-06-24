@@ -595,15 +595,12 @@ async function doDonate() {
 function doShake() {
   if (busy) return;
   
-  // check data loaded
   if (typeof OMIKUJI_DATA === 'undefined') {
     alert('ข้อมูลยังโหลดไม่ครบ กรุณารีเฟรชหน้า');
     return;
   }
   
   busy = true;
-  // ... ที่เหลือเหมือนเดิม
-}
   document.getElementById('btnShake').disabled = true;
   document.getElementById('tubeHint').textContent = 'กำลังเขย่า... ตั้งจิตอธิษฐาน 🙏';
 
