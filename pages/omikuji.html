@@ -608,8 +608,12 @@ sounds.fire.play();
           overlay.classList.remove('show');
           msg.classList.remove('show');
           img.style.opacity = '1';
-          sounds.fire.currentTime = 0;
-sounds.fire.play();
+          sounds.fire.pause();
+sounds.fire.currentTime = 0;
+
+const coin = document.getElementById('coinDrop');
+coin.classList.remove('coin-falling');
+void coin.offsetWidth;
           document.getElementById('slipSection').classList.remove('show');
           document.getElementById('donationSection').style.display = 'flex';
           const stick = document.getElementById('stick-out');
