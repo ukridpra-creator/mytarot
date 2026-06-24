@@ -335,6 +335,9 @@
       <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">👥</div><div class="sheet-btn-label">Facebook</div></div>
     </div>
     <button class="sheet-cancel" onclick="closeShare()">ยกเลิก</button>
+<div style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px;">
+  iOS: รูปจะถูกบันทึกใน Files หรือแชร์ผ่าน Sheet
+</div>
   </div>
 </div>
 
@@ -559,11 +562,23 @@ function closeShare(e) {
 
 async function doSave() {
   const canvas = await getSlipCanvas();
-  const a = document.createElement('a');
-  a.download = `omikuji-${currentEntry.level_jp}.png`;
-  a.href = canvas.toDataURL();
-  a.click();
-  closeShare();
+  
+  canvas.toBlob(async (blob) => {
+    // iOS Safari รองรับ
+    if (navigator.share && navigator.canShare({ files: [new File([blob], 'omikuji.png', { type: 'image/png' })] })) {
+      const file = new File([blob], `omikuji-${currentEntry.level_jp}.png`, { type: 'image/png' });
+      await navigator.share({ files: [file] });
+    } else {
+      // Android / Desktop
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `omikuji-${currentEntry.level_jp}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    closeShare();
+  }, 'image/png');
 }
 
 async function doShare() {
