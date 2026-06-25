@@ -121,6 +121,42 @@
     }
     .nav-item span:first-child { font-size: 20px; }
     .nav-item.active { color: var(--purple-light); }
+    /* Glitter particles */
+.glitter {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.glitter::before, .glitter::after {
+  content: '';
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #d4af37;
+  box-shadow:
+    10vw 20vh 0 rgba(212,175,55,0.6),
+    25vw 60vh 0 rgba(255,255,255,0.4),
+    40vw 30vh 0 rgba(212,175,55,0.5),
+    55vw 80vh 0 rgba(255,255,255,0.3),
+    70vw 45vh 0 rgba(212,175,55,0.6),
+    85vw 15vh 0 rgba(255,255,255,0.5),
+    15vw 75vh 0 rgba(212,175,55,0.4),
+    90vw 65vh 0 rgba(255,255,255,0.6),
+    60vw 10vh 0 rgba(212,175,55,0.3),
+    35vw 90vh 0 rgba(255,255,255,0.4);
+  animation: sparkle 3s ease-in-out infinite alternate;
+}
+.glitter::after {
+  animation-delay: 1.5s;
+  box-shadow:
+    20vw 40vh 0 rgba(255,255,255,0.5),
+    45vw 15vh 0 rgba(212,175,55,0.4),
+    75vw 70vh 0 rgba(255,255,255,0.6),
+    5vw 55vh 0 rgba(212,175,55,0.3),
+    92vw 30vh 0 rgba(255,255,255,0.5);
+}
+@keyframes sparkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
   </style>
 
   <script type="module">
@@ -260,6 +296,7 @@
   </script>
 </head>
 <body>
+  <div class="glitter"></div>
 
 <div class="page-header">
   <div class="page-title">👤 โปรไฟล์</div>
