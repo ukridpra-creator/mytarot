@@ -37,12 +37,17 @@
     .checkin-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
     .checkin-days { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
     .checkin-day {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-size: 9px; color: rgba(255,255,255,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-    }
+  width: 44px; height: 54px; border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 9px; color: rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.03); gap: 3px;
+}
+.checkin-day img {
+  width: 36px; height: 36px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4));
+}
     .checkin-day.done {
       background: rgba(212,175,55,0.2); border-color: #d4af37; color: #d4af37;
     }
@@ -218,7 +223,7 @@
   else if (i === streak % 7 && !alreadyDone) cls += ' today';
   else if (i < streak && alreadyDone) cls += ' done';
   const imgSrc = i === 6 ? 'images/coin50.png' : 'images/coin10.png';
-  daysHtml += '<div class="' + cls + '"><img src="' + imgSrc + '"><div>' + (i+1) + '</div></div>';
+  daysHtml += '<div class="' + cls + '"><img src="' + imgSrc + '"><div>วันที่' + (i+1) + '</div></div>';
 }
 
       document.getElementById('checkinDays').innerHTML = daysHtml;
