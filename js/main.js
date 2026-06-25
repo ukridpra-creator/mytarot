@@ -48,7 +48,8 @@ function useCoins(amount) {
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-  setCoins(getCoins());
+  const userId = localStorage.getItem('userId');
+  setCoins(userId ? getCoins() : 0);
 
   // sync avatar จาก localStorage
   const avatar = localStorage.getItem('userAvatar') || '👤';
@@ -56,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (avatarEl) avatarEl.textContent = avatar;
 
   // sync ชื่อ
-  const userId = localStorage.getItem('userId');
   const displayName = localStorage.getItem('userDisplayName') || localStorage.getItem('userName');
   const userEmail = localStorage.getItem('userEmail');
   
@@ -72,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // sync avatar ทุกครั้งที่กลับมาหน้านี้
 window.addEventListener('pageshow', () => {
+  const userId = localStorage.getItem('userId');
+  if (!userId) setCoins(0);
   const avatar = localStorage.getItem('userAvatar') || '👤';
   const avatarEl = document.getElementById('avatarEl');
   if (avatarEl) avatarEl.textContent = avatar;
