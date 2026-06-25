@@ -1,5 +1,10 @@
 // Navigation
 function go(page) {
+  if (!localStorage.getItem('userId')) {
+    const overlay = document.getElementById('loginRequiredOverlay');
+    if (overlay) overlay.classList.add('show');
+    return;
+  }
   const pages = {
     tarot: 'pages/tarot.html',
     numerology: 'pages/numerology.html',
