@@ -49,14 +49,20 @@ function useCoins(amount) {
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   setCoins(getCoins());
-  
+
+  // sync avatar จาก localStorage
+  const avatar = localStorage.getItem('userAvatar') || '👤';
+  const avatarEl = document.getElementById('avatarEl');
+  if (avatarEl) avatarEl.textContent = avatar;
+
+  // sync ชื่อ
   const userId = localStorage.getItem('userId');
-  const userName = localStorage.getItem('userName');
+  const displayName = localStorage.getItem('userDisplayName') || localStorage.getItem('userName');
   const userEmail = localStorage.getItem('userEmail');
   
   if (userId) {
     currentUser = {
-      name: userName,
+      name: displayName,
       email: userEmail,
       isPremium: false
     };

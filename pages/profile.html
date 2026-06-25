@@ -30,37 +30,58 @@
       font-family: 'Sarabun', sans-serif; transition: all 0.2s;
       box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
-    .btn-google:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .btn-google:hover { transform: translateY(-2px); }
     .btn-google img { width: 20px; height: 20px; }
 
-    /* Logged in */
     .profile-section { display: none; }
 
-    /* Avatar selector */
+    /* Avatar card */
     .avatar-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; padding: 20px; margin-bottom: 16px; text-align: center;
     }
     .avatar-display {
       width: 90px; height: 90px; border-radius: 50%;
-      margin: 0 auto 16px; border: 3px solid rgba(124,58,237,0.4);
-      overflow: hidden; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px; border: 3px solid rgba(124,58,237,0.4);
+      display: flex; align-items: center; justify-content: center;
       font-size: 48px; background: rgba(124,58,237,0.1);
     }
-    .avatar-display img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-name { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .profile-email { font-size: 13px; color: var(--dim); margin-bottom: 16px; }
 
-    .avatar-grid { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+    /* ชื่อที่แก้ได้ */
+    .profile-name-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .profile-name {
+      font-size: 20px; font-weight: 800; color: white;
+      border: none; background: transparent;
+      font-family: 'Sarabun', sans-serif; text-align: center;
+      outline: none; width: auto; min-width: 80px; max-width: 200px;
+    }
+    .profile-name:focus {
+      border-bottom: 1px solid rgba(124,58,237,0.6);
+    }
+    .edit-icon {
+      font-size: 14px; color: rgba(255,255,255,0.3); cursor: pointer;
+    }
+    .profile-email { font-size: 13px; color: var(--dim); margin-bottom: 16px; }
+    .btn-save-name {
+      display: none; padding: 6px 16px; border-radius: 20px;
+      background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5);
+      color: white; font-size: 12px; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; margin-bottom: 12px;
+    }
+
+    .avatar-label { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
+    .avatar-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .avatar-opt {
-      width: 52px; height: 52px; border-radius: 50%;
-      font-size: 28px; display: flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border-radius: 50%;
+      font-size: 26px; display: flex; align-items: center; justify-content: center;
       cursor: pointer; border: 2px solid transparent;
       background: rgba(255,255,255,0.05); transition: all 0.2s;
     }
     .avatar-opt:hover { transform: scale(1.1); }
     .avatar-opt.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
-    .avatar-label { font-size: 11px; color: var(--dim); margin-top: 4px; }
 
     /* Coins */
     .coins-card {
@@ -80,24 +101,6 @@
       font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
 
-    /* Premium */
-    .premium-card {
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.08));
-      border: 1px solid rgba(124,58,237,0.3);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-      display: flex; align-items: center; gap: 16px;
-    }
-    .premium-icon { font-size: 36px; }
-    .premium-info { flex: 1; }
-    .premium-label { font-size: 12px; color: var(--purple-light); margin-bottom: 4px; }
-    .premium-status { font-size: 16px; font-weight: 700; color: white; }
-    .btn-premium {
-      padding: 10px 16px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; color: white; font-size: 13px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-
     /* Menu */
     .menu-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
@@ -113,7 +116,6 @@
     .menu-item-icon { font-size: 20px; width: 28px; text-align: center; }
     .menu-item-text { flex: 1; font-size: 14px; color: white; font-weight: 600; }
     .menu-item-arrow { color: var(--dim); font-size: 16px; }
-    .menu-item.danger .menu-item-text { color: #ef4444; }
 
     .btn-logout {
       width: 100%; padding: 14px; border-radius: 16px;
@@ -124,7 +126,6 @@
     }
     .btn-logout:hover { background: rgba(239,68,68,0.2); }
 
-    /* Bottom nav */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(13,8,32,0.95); backdrop-filter: blur(12px);
@@ -159,10 +160,14 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const AVATARS = ['🔮','🌙','⭐','🌸','🐉','🦋','🌺','🎭','🌊','⚡','🌙','🦄'];
+    const AVATARS = ['🔮','🌙','⭐','🌸','🐉','🦋','🌺','🎭','🌊','⚡','🌈','🦄'];
 
     function getSavedAvatar() {
       return localStorage.getItem('userAvatar') || '🔮';
+    }
+
+    function getSavedName() {
+      return localStorage.getItem('userDisplayName') || '';
     }
 
     function renderAvatarGrid(current) {
@@ -177,6 +182,30 @@
       document.querySelectorAll('.avatar-opt').forEach(el => {
         el.classList.toggle('active', el.textContent === avatar);
       });
+    };
+
+    window.editName = function() {
+      const input = document.getElementById('profileNameInput');
+      input.focus();
+      input.select();
+    };
+
+    window.onNameInput = function() {
+      document.getElementById('btnSaveName').style.display = 'inline-block';
+    };
+
+    window.saveName = function() {
+      const name = document.getElementById('profileNameInput').value.trim();
+      if (!name) return;
+      localStorage.setItem('userDisplayName', name);
+      document.getElementById('btnSaveName').style.display = 'none';
+      // แจ้งสำเร็จ
+      const btn = document.getElementById('btnSaveName');
+      btn.textContent = '✓ บันทึกแล้ว';
+      setTimeout(() => {
+        btn.textContent = 'บันทึกชื่อ';
+        btn.style.display = 'none';
+      }, 1500);
     };
 
     window.loginGoogle = async function() {
@@ -201,16 +230,20 @@
         profileSection.style.display = 'block';
 
         const avatar = getSavedAvatar();
+        const savedName = getSavedName() || user.displayName || 'ผู้ใช้';
+
         document.getElementById('avatarDisplay').textContent = avatar;
-        document.getElementById('profileName').textContent = user.displayName || 'ผู้ใช้';
+        document.getElementById('profileNameInput').value = savedName;
         document.getElementById('profileEmail').textContent = user.email;
         document.getElementById('avatarGrid').innerHTML = renderAvatarGrid(avatar);
         document.getElementById('coinAmount').textContent = parseInt(localStorage.getItem('coins') || '0');
 
-        // sync user to localStorage
         localStorage.setItem('userId', user.uid);
         localStorage.setItem('userName', user.displayName || '');
         localStorage.setItem('userEmail', user.email || '');
+        if (!localStorage.getItem('userDisplayName')) {
+          localStorage.setItem('userDisplayName', user.displayName || '');
+        }
 
       } else {
         guestSection.style.display = 'block';
@@ -248,8 +281,19 @@
       <div class="avatar-display">
         <span id="avatarDisplay">🔮</span>
       </div>
-      <div class="profile-name" id="profileName"></div>
+      <div class="profile-name-wrap">
+        <input
+          class="profile-name"
+          id="profileNameInput"
+          type="text"
+          maxlength="20"
+          oninput="onNameInput()"
+          onkeydown="if(event.key==='Enter') saveName()"
+        >
+        <span class="edit-icon" onclick="editName()">✏️</span>
+      </div>
       <div class="profile-email" id="profileEmail"></div>
+      <button class="btn-save-name" id="btnSaveName" onclick="saveName()">บันทึกชื่อ</button>
       <div class="avatar-label">เลือก avatar ของคุณ</div>
       <div class="avatar-grid" id="avatarGrid"></div>
     </div>
@@ -262,16 +306,6 @@
         <div class="coins-amount" id="coinAmount">0</div>
       </div>
       <button class="btn-coins" onclick="alert('เร็วๆ นี้ค่ะ!')">ซื้อเพิ่ม</button>
-    </div>
-
-    <!-- Premium -->
-    <div class="premium-card">
-      <div class="premium-icon">👑</div>
-      <div class="premium-info">
-        <div class="premium-label">แพ็กเกจปัจจุบัน</div>
-        <div class="premium-status">🆓 แพ็กเกจฟรี</div>
-      </div>
-      <button class="btn-premium" onclick="alert('เร็วๆ นี้ค่ะ!')">อัปเกรด</button>
     </div>
 
     <!-- Menu -->
