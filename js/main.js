@@ -69,6 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUserUI();
   }
 });
+
+// sync avatar ทุกครั้งที่กลับมาหน้านี้
+window.addEventListener('pageshow', () => {
+  const avatar = localStorage.getItem('userAvatar') || '👤';
+  const avatarEl = document.getElementById('avatarEl');
+  if (avatarEl) avatarEl.textContent = avatar;
+});
 // User Menu
 function toggleUserMenu() {
   document.getElementById('userMenu').classList.toggle('open');
@@ -96,29 +103,6 @@ function logout() {
   closeUserMenu();
 }
 
-function updateUserUI() {
-  const guestView = document.getElementById('guestView');
-  const loggedView = document.getElementById('loggedView');
-  const menuBadge = document.getElementById('menuBadge');
-
-  if(currentUser) {
-    guestView.style.display = 'none';
-    loggedView.style.display = 'block';
-    document.getElementById('menuName').textContent = currentUser.name;
-    document.getElementById('menuEmail').textContent = currentUser.email;
-
-    if(currentUser.isPremium) {
-      menuBadge.innerHTML = '<span>👑 พรีเมียม</span>';
-      menuBadge.classList.add('premium');
-    } else {
-      menuBadge.innerHTML = '<span>🆓 แพ็กเกจฟรี</span>';
-      menuBadge.classList.remove('premium');
-    }
-  } else {
-    guestView.style.display = 'block';
-    loggedView.style.display = 'none';
-  }
-}
 // Text to Speech
 let isSpeaking = false;
 
