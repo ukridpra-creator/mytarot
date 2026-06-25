@@ -443,12 +443,9 @@
     <div class="sheet-handle"></div>
     <div class="sheet-title">แชร์ใบเซียมซี</div>
     <div class="sheet-row">
-      <div class="sheet-btn" onclick="doSave()"><div class="sheet-btn-icon">💾</div><div class="sheet-btn-label">บันทึก</div></div>
-      <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">🎵</div><div class="sheet-btn-label">TikTok</div></div>
-      <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">💬</div><div class="sheet-btn-label">LINE</div></div>
-      <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">📸</div><div class="sheet-btn-label">Instagram</div></div>
-      <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">👥</div><div class="sheet-btn-label">Facebook</div></div>
-    </div>
+  <div class="sheet-btn" onclick="doSave()"><div class="sheet-btn-icon">💾</div><div class="sheet-btn-label">บันทึก</div></div>
+  <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">🔗</div><div class="sheet-btn-label">แชร์</div></div>
+</div>
     <button class="sheet-cancel" onclick="closeShare()">ยกเลิก</button>
   </div>
 </div>
@@ -747,7 +744,7 @@ async function doSave() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `omikuji-${currentEntry.level_jp}.png`;
+    a.download = `guanyin-${currentEntry.grade}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
