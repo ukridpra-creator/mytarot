@@ -384,27 +384,27 @@ async function saveReading(type, question, result) {
 }
 
 async function startReading() {
+  // ✅ บังคับ login ก่อนเสมอ
+  if (!currentUser) {
+    const ok = await loginNow();
+    if (!ok) return; // ผู้ใช้กดยกเลิก/ปิด popup login
+  }
+
   const day    = parseInt(document.getElementById('inDay').value);
   const month  = parseInt(document.getElementById('inMonth').value);
   const year   = parseInt(document.getElementById('inYear').value);
   const hour   = parseInt(document.getElementById('inHour').value);
   const minute = parseInt(document.getElementById('inMinute').value);
   const city   = document.getElementById('inCity').value.trim();
-
-  if (!await useCoins(40)) return;
-
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  const coinCountEl = document.getElementById('coinCount');
-  const coinDisplayEl = document.getElementById('coinDisplay');
-  if (coinCountEl) coinCountEl.textContent = coins;
-  if (coinDisplayEl) coinDisplayEl.textContent = coins;
   const { lat, lng } = getCityCoords(city);
+
+  const idToken = await currentUser.getIdToken();
 
   let baziData = null;
   try {
     const apiRes = await fetch('/api/bazi', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({ year, month, day, hour, minute, lat, lng, city: city || 'Bangkok', sex: selectedGender })
     });
     const apiData = await apiRes.json();
@@ -426,14 +426,23 @@ async function startReading() {
 
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'bazi',                 // ✅ ใหม่ — server ใช้กำหนดราคาเอง
         model: 'claude-sonnet-4-6',
         max_tokens: 8000,
         system: 'คุณคือผู้เชี่ยวชาญบาจื้อและห้าธาตุแห่งจีนโบราณ วิเคราะห์ดวงชะตาเป็นภาษาไทย เรียกผู้ถามว่า คุณ เขียนแต่ละหัวข้อ 3-4 ประโยค กระชับ ได้ใจความ ตรงประเด็น ใช้คำศัพท์บาจื้อเป็นภาษาไทย เช่น หยิน หยาง ห้าธาตุ เจ้าชะตา กวาจื่อ ลั้กชิก ห้ามใช้คำอังกฤษ ห้ามใช้ markdown',
         messages: [{ role: 'user', content: prompt }]
       })
     });
+
+    if (res.status === 402) { alert('เหรียญไม่พอค่ะ กรุณาซื้อเหรียญเพิ่มค่ะ 🪙'); return; }
+    if (res.status === 401) { alert('กรุณาเข้าสู่ระบบใหม่ค่ะ'); return; }
+    if (!res.ok) { alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'); return; }
+
+    // ✅ อัปเดตเหรียญจากค่าจริงที่ server หักแล้ว (ไม่เดาเอง)
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -459,6 +468,32 @@ async function startReading() {
   }
 }
 
+function updateCoinUI(amount) {
+  const badge = document.querySelector('.coin-badge');
+  if (badge) badge.textContent = '🪙 ' + amount;
+  const coinCountEl = document.getElementById('coinCount');
+  const coinDisplayEl = document.getElementById('coinDisplay');
+  if (coinCountEl) coinCountEl.textContent = amount;
+  if (coinDisplayEl) coinDisplayEl.textContent = amount;
+}
+
+// ✅ เปลี่ยน loginNow ให้คืนค่า true/false แทนการแค่ alert
+async function loginNow() {
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, signInWithPopup, GoogleAuthProvider } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    currentUser = result.user;
+    return true;
+  } catch(e) {
+    alert('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่ค่ะ');
+    return false;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   initDropdowns();
 
@@ -474,14 +509,23 @@ if (coinDisplayEl) coinDisplayEl.textContent = coins;
     const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
     const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (user) {
-        localStorage.setItem('userId', user.uid);
-      }
-    });
-  } catch(e) { console.error(e); }
+    onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    localStorage.setItem('userId', user.uid);
+    // ✅ เพิ่มส่วนนี้ — ดึงเหรียญจริงจาก Firestore มาทับ
+    try {
+      const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const db = getFirestore(app);
+      const snap = await getDoc(doc(db, 'users', user.uid));
+      const realCoins = snap.exists() ? (snap.data().coins ?? 0) : 0;
+      localStorage.setItem('coins', String(realCoins));
+      updateCoinUI(realCoins);
+    } catch(e) { console.error(e); }
+  }
 });
+} catch(e) { console.error(e); }   // ✅ เติมบรรทัดนี้ — ปิด try ของ Firebase Auth init
+});                                  
 </script>
 </body>
 </html>
