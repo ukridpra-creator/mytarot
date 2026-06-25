@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    .checkin-day img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4));
+}
     /* CHECK-IN POPUP */
     .checkin-overlay {
       position: fixed; inset: 0; z-index: 500;
@@ -207,13 +213,13 @@
 
       let daysHtml = '';
       for (let i = 0; i < 7; i++) {
-        let cls = 'checkin-day';
-        let icon = (i + 1) === 7 ? '👑' : '🪙';
-        if (i < streak % 7) cls += ' done';
-        else if (i === streak % 7 && !alreadyDone) cls += ' today';
-        else if (i < streak && alreadyDone) cls += ' done';
-        daysHtml += '<div class="' + cls + '"><div class="checkin-day-num">' + icon + '</div><div>' + (i+1) + '</div></div>';
-      }
+  let cls = 'checkin-day';
+  if (i < streak % 7) cls += ' done';
+  else if (i === streak % 7 && !alreadyDone) cls += ' today';
+  else if (i < streak && alreadyDone) cls += ' done';
+  const imgSrc = i === 6 ? 'images/coin50.png' : 'images/coin10.png';
+  daysHtml += '<div class="' + cls + '"><img src="' + imgSrc + '"><div>' + (i+1) + '</div></div>';
+}
 
       document.getElementById('checkinDays').innerHTML = daysHtml;
       document.getElementById('checkinRewardIcon').textContent = nextDay === 7 ? '👑' : '🪙';
