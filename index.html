@@ -53,80 +53,127 @@
 
 <main class="main">
   <div class="grid">
+
+    <!-- 1. ไพ่ทาโรต์ -->
     <div class="card" onclick="go('tarot')">
       <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์"></div>
       <div class="card-title">ไพ่ทาโรต์</div>
-      <div class="card-desc">เปิดไพ่รับคำทำนายจากพลังจักรวาล</div>
-      <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
+      <div class="card-desc">เปิดไพ่รับคำทำนายจากพลังจักรวาล วิเคราะห์ความรัก การงาน และเส้นทางชีวิตด้วย AI</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
     </div>
+
+    <!-- 2. ไพ่ออราเคิล -->
     <div class="card" onclick="go('oracle')">
       <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล"></div>
       <div class="card-title">ไพ่ออราเคิล</div>
-      <div class="card-desc">ถามจักรวาล รับสารจากดวงดาว</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+      <div class="card-desc">ถามจักรวาล รับสารจากดวงดาวและสิ่งศักดิ์สิทธิ์ที่คอยชี้นำเส้นทางของคุณ</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
     </div>
-    <div class="card" onclick="go('numerology')">
-      <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
-      <div class="card-title">เลขศาสตร์</div>
-      <div class="card-desc">ความลับของชีวิตซ่อนอยู่ในตัวเลข</div>
-      <div class="card-footer"><span class="tag free-tag">ฟรี</span><span class="arrow">→</span></div>
-    </div>
-    <div class="card" onclick="go('face')">
-      <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
-      <div class="card-title">โหงวเฮ้ง</div>
-      <div class="card-desc">วิเคราะห์ดวงจากใบหน้า</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
-    </div>
-    <div class="card" onclick="go('palm')">
-      <div class="card-icon"><img src="images/icon-palm.png" alt="ลายมือ"></div>
-      <div class="card-title">ดูลายมือ</div>
-      <div class="card-desc">เส้นมือบอกชะตาที่ซ่อนอยู่</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
-    </div>
-    <div class="card" onclick="go('iching')">
-      <div class="card-icon"><img src="images/icon-iching.png" alt="อี้จิง"></div>
-      <div class="card-title">อี้จิง</div>
-      <div class="card-desc">ปัญญาจีนโบราณ 3,000 ปี</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 5</span><span class="arrow">→</span></div>
-    </div>
-    <div class="card" onclick="go('rune')">
-      <div class="card-icon"><img src="images/icon-rune.png" alt="ไพ่รูน"></div>
-      <div class="card-title">ไพ่รูน</div>
-      <div class="card-desc">อักษรนอร์สโบราณแห่งชะตา</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 5</span><span class="arrow">→</span></div>
-    </div>
+
+    <!-- 3. เทพประจำตัว -->
     <div class="card" onclick="go('deity')">
       <div class="card-icon"><img src="images/icon-deity.png" alt="เทพประจำตัว"></div>
       <div class="card-title">เทพประจำตัว</div>
-      <div class="card-desc">ค้นหาเทพองค์ที่คุ้มครองคุณ</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+      <div class="card-desc">ค้นหาเทพองค์ที่คุ้มครองและเกื้อหนุนดวงชะตาของคุณ พร้อมคำแนะนำจากเทพ</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
     </div>
+
+    <!-- 4. ซาจูเกาหลี -->
     <div class="card" onclick="go('saju')">
       <div class="card-icon"><img src="images/icon-saju.png" alt="ซาจูเกาหลี"></div>
       <div class="card-title">ซาจูเกาหลี</div>
-      <div class="card-desc">โชคชะตาแบบเกาหลีโบราณ</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+      <div class="card-desc">โชคชะตาแบบเกาหลีโบราณ วิเคราะห์จากวันเดือนปีเกิด เผยความลับแห่งชีวิต</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
     </div>
+
+    <!-- 5. ดูลายมือ -->
+    <div class="card" onclick="go('palm')">
+      <div class="card-icon"><img src="images/icon-palm.png" alt="ลายมือ"></div>
+      <div class="card-title">ดูลายมือ</div>
+      <div class="card-desc">เส้นมือบอกชะตาที่ซ่อนอยู่ วิเคราะห์เส้นชีวิต เส้นหัวใจ และโชคลาภด้วย AI</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
+    </div>
+
+    <!-- 6. โหงวเฮ้ง -->
+    <div class="card" onclick="go('face')">
+      <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
+      <div class="card-title">โหงวเฮ้ง</div>
+      <div class="card-desc">วิเคราะห์ดวงจากใบหน้าตามศาสตร์จีนโบราณ เผยบุคลิก โชคลาภ และอนาคต</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
+    </div>
+
+    <!-- 7. การทำนาย -->
     <div class="card" onclick="window.location.href='pages/divination.html'">
       <div class="card-icon"><img src="images/icon-divination.png" alt="การทำนาย"></div>
       <div class="card-title">การทำนาย</div>
-      <div class="card-desc">เซียมซีญี่ปุ่น และศาสตร์ทำนายต่างๆ</div>
-      <div class="card-footer"><span class="tag coin-tag">🪙 10</span><span class="arrow">→</span></div>
+      <div class="card-desc">เซียมซีญี่ปุ่น เซียมซีเจ้าแม่กวนอิม และศาสตร์ทำนายจากหลากหลายวัฒนธรรม</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
     </div>
+
+    <!-- 8. เลขศาสตร์ -->
+    <div class="card" onclick="go('numerology')">
+      <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
+      <div class="card-title">เลขศาสตร์</div>
+      <div class="card-desc">ความลับของชีวิตซ่อนอยู่ในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อของคุณ</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
+    </div>
+
+    <!-- 9. อี้จิง -->
+    <div class="card" onclick="go('iching')">
+      <div class="card-icon"><img src="images/icon-iching.png" alt="อี้จิง"></div>
+      <div class="card-title">อี้จิง</div>
+      <div class="card-desc">ปัญญาจีนโบราณกว่า 3,000 ปี ถามคำถามแล้วรับคำตอบจากคัมภีร์แห่งการเปลี่ยนแปลง</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
+    </div>
+
+    <!-- 10. ไพ่รูน -->
+    <div class="card" onclick="go('rune')">
+      <div class="card-icon"><img src="images/icon-rune.png" alt="ไพ่รูน"></div>
+      <div class="card-title">ไพ่รูน</div>
+      <div class="card-desc">อักษรนอร์สโบราณแห่งชะตา ปลุกพลังไวกิ้งเพื่อเผยความจริงที่ซ่อนอยู่</div>
+      <div class="card-footer"><span class="arrow">→</span></div>
+    </div>
+
+    <!-- 11. โหราศาสตร์ตะวันตก -->
     <div class="card" onclick="go('western')">
       <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก"></div>
       <div class="card-title">โหราศาสตร์ตะวันตก</div>
-      <div class="card-desc">แผนที่ดาวแห่งชีวิต</div>
+      <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์ดวงชะตาจากตำแหน่งดาวเคราะห์ในวันที่คุณเกิด</div>
       <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
     </div>
+
+    <!-- 12. โหราศาสตร์จีน -->
     <div class="card" onclick="go('chinese')">
       <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน"></div>
       <div class="card-title">โหราศาสตร์จีน</div>
-      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา</div>
+      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา ศาสตร์จีนโบราณที่เปิดเผยดวงชะตาตลอดชีวิต</div>
       <div class="card-footer"><span class="tag premium-tag">💎</span><span class="arrow">→</span></div>
     </div>
+
   </div>
 </main>
+
+<!-- FOOTER -->
+<footer style="
+  background: rgba(10,6,8,0.95);
+  border-top: 1px solid rgba(212,175,55,0.15);
+  padding: 32px 20px 100px;
+  text-align: center;
+  position: relative; z-index: 1;
+">
+  <div style="font-size: 20px; margin-bottom: 8px;">🔮 My Tarot</div>
+  <div style="font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 16px; letter-spacing: 1px;">
+    ดูดวงออนไลน์ด้วย AI · ไพ่ทาโรต์ · เซียมซี · โหราศาสตร์
+  </div>
+  <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 16px;">
+    <a href="#" style="font-size: 11px; color: rgba(212,175,55,0.5); text-decoration: none;">Privacy Policy</a>
+    <a href="#" style="font-size: 11px; color: rgba(212,175,55,0.5); text-decoration: none;">Terms of Service</a>
+    <a href="https://www.tiktok.com/@mytarot" target="_blank" style="font-size: 11px; color: rgba(212,175,55,0.5); text-decoration: none;">TikTok @MyTarot</a>
+  </div>
+  <div style="font-size: 10px; color: rgba(255,255,255,0.2);">
+    © 2025 MyTarot.vip · All rights reserved
+  </div>
+</footer>
 
 <nav class="bottom-nav">
   <div class="nav-item active"><span>🔮</span><span>ดูดวง</span></div>
