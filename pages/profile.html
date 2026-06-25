@@ -251,11 +251,15 @@
     };
 
     window.logoutUser = async function() {
-      if (!confirm('ออกจากระบบใช่ไหม?')) return;
-      await signOut(auth);
-      localStorage.removeItem('userAvatar');
-      localStorage.removeItem('userDisplayName');
-    };
+  if (!confirm('ออกจากระบบใช่ไหม?')) return;
+  await signOut(auth);
+  localStorage.removeItem('userAvatar');
+  localStorage.removeItem('userDisplayName');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
+  localStorage.removeItem('userEmail');
+  localStorage.removeItem('coins'); // ← เพิ่มตรงนี้
+};
 
     onAuthStateChanged(auth, async function(user) {
       const guestSection = document.getElementById('guestSection');

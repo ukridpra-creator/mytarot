@@ -76,7 +76,7 @@
           const data = snap.exists() ? snap.data() : {};
           const avatar = data.avatar || localStorage.getItem('userAvatar') || '';
           const displayName = data.displayName || user.displayName || '';
-          const coins = data.coins || parseInt(localStorage.getItem('coins') || '0');
+          const coins = data.coins !== undefined ? data.coins : 0;
           localStorage.setItem('userAvatar', avatar);
           localStorage.setItem('userDisplayName', displayName);
           localStorage.setItem('userId', user.uid);
