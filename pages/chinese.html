@@ -379,7 +379,7 @@ async function saveReading(type, question, result) {
     const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
     const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), { type, question: question || '', result: result.slice(0, 300), createdAt: new Date().toISOString() });
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), { type, question: question || '', result: result, createdAt: new Date().toISOString() });
   } catch(e) { console.error('saveReading error:', e); }
 }
 
