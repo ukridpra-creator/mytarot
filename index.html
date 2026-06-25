@@ -190,10 +190,15 @@
 
 <div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)closeLoginRequired()">
   <div class="login-required-sheet">
-    <div class="login-required-icon">🔐</div>
-    <div class="login-required-title">กรุณาเข้าสู่ระบบก่อน</div>
-    <div class="login-required-sub">เข้าสู่ระบบเพื่อรับเหรียญเช็คอินประจำวัน<br>และ sync ข้อมูลทุกอุปกรณ์</div>
-    <button class="btn-login-now" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+    <div class="login-required-icon">
+      <img src="images/mascot.png" style="width:140px;height:140px;object-fit:contain;">
+    </div>
+    <div class="login-required-title">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div class="login-required-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
+    <button class="btn-login-now" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">
+      เข้าสู่ระบบด้วย Google
+    </button>
     <button class="btn-cancel-login" onclick="closeLoginRequired()">ยกเลิก</button>
   </div>
 </div>
