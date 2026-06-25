@@ -36,13 +36,35 @@ function setCoins(n) {
   const badge = document.querySelector('.coin-badge');
   if (badge) badge.textContent = `🪙 ${n} เหรียญ`;
 }
-function useCoins(amount) {
+async function useCoins(amount) {
   const current = getCoins();
-  if(current < amount) {
-    alert('เหรียญไม่พอค่ะ! กดซื้อเหรียญเพิ่มได้เลย 🪙');
+  if (current < amount) {
+    alert('เหรียญไม่พอค่ะ! กรุณาซื้อเหรียญเพิ่มค่ะ 🪙');
     return false;
   }
-  setCoins(current - amount);
+  const newAmount = current - amount;
+  setCoins(newAmount);
+
+  // หัก Firestore ด้วย
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    try {
+      const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+      const { getFirestore, doc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const firebaseConfig = {
+        apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+        authDomain: "my-tarot67.firebaseapp.com",
+        projectId: "my-tarot67",
+        storageBucket: "my-tarot67.firebasestorage.app",
+        messagingSenderId: "33661162829",
+        appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+      };
+      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      await setDoc(doc(db, 'users', userId), { coins: newAmount }, { merge: true });
+    } catch(e) { console.error('useCoins Firestore error:', e); }
+  }
+
   return true;
 }
 
