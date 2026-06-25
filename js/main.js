@@ -95,12 +95,31 @@ function loginGoogle() {
 }
 
 function logout() {
+  import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js')
+    .then(({ getAuth, signOut }) => {
+      signOut(getAuth());
+    });
   localStorage.removeItem('userId');
   localStorage.removeItem('userName');
   localStorage.removeItem('userEmail');
+  localStorage.removeItem('userDisplayName');
   currentUser = null;
   updateUserUI();
   closeUserMenu();
+}
+function updateUserUI() {
+  const guestView = document.getElementById('guestView');
+  const loggedView = document.getElementById('loggedView');
+
+  if(currentUser) {
+    guestView.style.display = 'none';
+    loggedView.style.display = 'block';
+    document.getElementById('menuName').textContent = currentUser.name;
+    document.getElementById('menuEmail').textContent = currentUser.email;
+  } else {
+    guestView.style.display = 'block';
+    loggedView.style.display = 'none';
+  }
 }
 
 // Text to Speech

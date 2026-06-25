@@ -6,6 +6,47 @@
   <title>My Tarot — ดูดวงด้วย AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+    authDomain: "my-tarot67.firebaseapp.com",
+    projectId: "my-tarot67",
+    storageBucket: "my-tarot67.firebasestorage.app",
+    messagingSenderId: "33661162829",
+    appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      localStorage.setItem('userId', user.uid);
+      localStorage.setItem('userName', user.displayName || '');
+      localStorage.setItem('userEmail', user.email || '');
+      
+      const avatar = localStorage.getItem('userAvatar') || '🔮';
+      const avatarEl = document.getElementById('avatarEl');
+      if (avatarEl) avatarEl.textContent = avatar;
+
+      // update user menu
+      const guestView = document.getElementById('guestView');
+      const loggedView = document.getElementById('loggedView');
+      if (guestView) guestView.style.display = 'none';
+      if (loggedView) loggedView.style.display = 'block';
+      const menuName = document.getElementById('menuName');
+      const menuEmail = document.getElementById('menuEmail');
+      const displayName = localStorage.getItem('userDisplayName') || user.displayName || '';
+      if (menuName) menuName.textContent = displayName;
+      if (menuEmail) menuEmail.textContent = user.email;
+    } else {
+      localStorage.removeItem('userId');
+    }
+  });
+</script>
 </head>
 <body>
 
