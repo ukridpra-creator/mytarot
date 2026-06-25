@@ -453,8 +453,9 @@ async function startReading() {
 
   } catch(e) {
     console.error(e);
+    const el = document.getElementById('secElement');
+    if (el) el.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
   initDropdowns();
