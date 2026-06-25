@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ประวัติดูดวง — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--purple-light); font-size: 16px; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+
+    /* Guest */
+    .guest-section { text-align: center; padding: 60px 20px; }
+    .guest-icon { font-size: 64px; margin-bottom: 16px; }
+    .guest-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 8px; }
+    .guest-desc { font-size: 14px; color: var(--dim); line-height: 1.7; margin-bottom: 24px; }
+    .btn-login {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-radius: 16px;
+      background: white; border: none; cursor: pointer;
+      font-size: 15px; font-weight: 700; color: #333;
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    /* Loading */
+    .loading-section { text-align: center; padding: 60px 20px; }
+    .loading-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+
+    /* Empty */
+    .empty-section { text-align: center; padding: 60px 20px; }
+    .empty-icon { font-size: 64px; margin-bottom: 16px; }
+    .empty-title { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
+    .empty-desc { font-size: 14px; color: var(--dim); }
+
+    /* History list */
+    .history-count { font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+    .history-item {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; margin-bottom: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .history-item:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.05); }
+    .history-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .history-type {
+      font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3);
+      color: var(--purple-light); white-space: nowrap;
+    }
+    .history-date { font-size: 11px; color: var(--dim); margin-left: auto; }
+    .history-question { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+    .history-result { font-size: 13px; color: var(--dim); line-height: 1.6;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* Detail popup */
+    .detail-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.8); display: none;
+      align-items: flex-end; justify-content: center;
+    }
+    .detail-overlay.show { display: flex; }
+    .detail-sheet {
+      background: linear-gradient(180deg, #1a0e2e, #0d0820);
+      border: 1px solid var(--border); border-radius: 24px 24px 0 0;
+      padding: 24px 20px 40px; width: 100%; max-width: 480px;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .detail-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0 auto 20px; }
+    .detail-type { font-size: 13px; color: var(--purple-light); font-weight: 700; margin-bottom: 4px; }
+    .detail-date { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+    .detail-question { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+    .detail-result { font-size: 14px; color: var(--text); line-height: 2; white-space: pre-wrap; }
+    .detail-close {
+      width: 100%; padding: 14px; border-radius: 16px; margin-top: 20px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: white; font-size: 15px; font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(13,8,32,0.95); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      display: flex; padding: 8px 0 12px;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 3px; cursor: pointer;
+      color: var(--dim); font-size: 10px; transition: color 0.2s;
+    }
+    .nav-item span:first-child { font-size: 20px; }
+    .nav-item.active { color: var(--purple-light); }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, collection, getDocs, orderBy, query, limit }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+      authDomain: "my-tarot67.firebaseapp.com",
+      projectId: "my-tarot67",
+      storageBucket: "my-tarot67.firebasestorage.app",
+      messagingSenderId: "33661162829",
+      appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function showDetail(item) {
+      document.getElementById('detailType').textContent = item.type;
+      document.getElementById('detailDate').textContent = formatDate(item.createdAt);
+      document.getElementById('detailQuestion').textContent = item.question ? `คำถาม: ${item.question}` : '';
+      document.getElementById('detailResult').textContent = item.result;
+      document.getElementById('detailOverlay').classList.add('show');
+    }
+
+    window.closeDetail = function() {
+      document.getElementById('detailOverlay').classList.remove('show');
+    };
+
+    async function loadHistory(uid) {
+      document.getElementById('loadingSection').style.display = 'block';
+      document.getElementById('historyList').style.display = 'none';
+      document.getElementById('emptySection').style.display = 'none';
+
+      try {
+        const q = query(
+          collection(db, 'users', uid, 'readings'),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        );
+        const snap = await getDocs(q);
+        const items = [];
+        snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+
+        document.getElementById('loadingSection').style.display = 'none';
+
+        if (items.length === 0) {
+          document.getElementById('emptySection').style.display = 'block';
+          return;
+        }
+
+        document.getElementById('historyCount').textContent = `ประวัติทั้งหมด ${items.length} รายการ`;
+        document.getElementById('historyList').innerHTML = items.map(item => `
+          <div class="history-item" onclick='showDetailFromData(${JSON.stringify(item)})'>
+            <div class="history-header">
+              <div class="history-type">${item.type || 'ดูดวง'}</div>
+              <div class="history-date">${formatDate(item.createdAt)}</div>
+            </div>
+            ${item.question ? `<div class="history-question">📝 ${item.question}</div>` : ''}
+            <div class="history-result">${item.result || ''}</div>
+          </div>
+        `).join('');
+        document.getElementById('historyList').style.display = 'block';
+
+      } catch(e) {
+        console.error(e);
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('emptySection').style.display = 'block';
+      }
+    }
+
+    window.showDetailFromData = function(item) {
+      showDetail(item);
+    };
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        document.getElementById('guestSection').style.display = 'none';
+        document.getElementById('historyCount').style.display = 'block';
+        loadHistory(user.uid);
+      } else {
+        document.getElementById('guestSection').style.display = 'block';
+        document.getElementById('loadingSection').style.display = 'none';
+      }
+    });
+
+    window.loginNow = async function() {
+      try { await signInWithPopup(auth, provider); }
+      catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ'); }
+    };
+  </script>
+</head>
+<body>
+
+<!-- Detail popup -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-sheet">
+    <div class="detail-handle"></div>
+    <div class="detail-type" id="detailType"></div>
+    <div class="detail-date" id="detailDate"></div>
+    <div class="detail-question" id="detailQuestion"></div>
+    <div class="detail-result" id="detailResult"></div>
+    <button class="detail-close" onclick="closeDetail()">ปิด</button>
+  </div>
+</div>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">📜 ประวัติดูดวง</div>
+</div>
+
+<div class="page-content">
+
+  <!-- Guest -->
+  <div id="guestSection" style="display:none">
+    <div class="guest-section">
+      <div class="guest-icon">📜</div>
+      <div class="guest-title">เข้าสู่ระบบเพื่อดูประวัติ</div>
+      <div class="guest-desc">บันทึกประวัติการดูดวงทั้งหมดของคุณ<br>sync ข้ามอุปกรณ์ได้ทุกที่</div>
+      <button class="btn-login" onclick="loginNow()">
+        <img src="https://www.google.com/favicon.ico" width="18">
+        เข้าสู่ระบบด้วย Google
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingSection" style="display:none">
+    <div class="loading-section">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div style="font-size:14px;color:var(--dim);">กำลังโหลดประวัติ...</div>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div id="emptySection" style="display:none">
+    <div class="empty-section">
+      <div class="empty-icon">🔮</div>
+      <div class="empty-title">ยังไม่มีประวัติดูดวง</div>
+      <div class="empty-desc">เริ่มดูดวงแล้วประวัติจะปรากฏที่นี่</div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-count" id="historyCount" style="display:none"></div>
+  <div id="historyList" style="display:none"></div>
+
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item active"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="window.location.href='../index.html#checkin'"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+</body>
+</html>
