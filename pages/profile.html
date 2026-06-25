@@ -16,8 +16,6 @@
     }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
-
-    /* Guest */
     .guest-section { text-align: center; padding: 40px 20px; }
     .guest-icon { font-size: 64px; margin-bottom: 16px; }
     .guest-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 8px; }
@@ -32,10 +30,7 @@
     }
     .btn-google:hover { transform: translateY(-2px); }
     .btn-google img { width: 20px; height: 20px; }
-
     .profile-section { display: none; }
-
-    /* Avatar card */
     .avatar-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; padding: 20px; margin-bottom: 16px; text-align: center;
@@ -44,26 +39,19 @@
       width: 90px; height: 90px; border-radius: 50%;
       margin: 0 auto 12px; border: 3px solid rgba(124,58,237,0.4);
       display: flex; align-items: center; justify-content: center;
-      font-size: 48px; background: rgba(124,58,237,0.1);
+      font-size: 48px; background: rgba(124,58,237,0.1); overflow: hidden;
     }
-
-    /* ชื่อที่แก้ได้ */
     .profile-name-wrap {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin-bottom: 4px;
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;
     }
     .profile-name {
       font-size: 20px; font-weight: 800; color: white;
       border: none; background: transparent;
       font-family: 'Sarabun', sans-serif; text-align: center;
-      outline: none; width: auto; min-width: 80px; max-width: 200px;
+      outline: none; min-width: 80px; max-width: 200px;
     }
-    .profile-name:focus {
-      border-bottom: 1px solid rgba(124,58,237,0.6);
-    }
-    .edit-icon {
-      font-size: 14px; color: rgba(255,255,255,0.3); cursor: pointer;
-    }
+    .profile-name:focus { border-bottom: 1px solid rgba(124,58,237,0.6); }
+    .edit-icon { font-size: 14px; color: rgba(255,255,255,0.3); cursor: pointer; }
     .profile-email { font-size: 13px; color: var(--dim); margin-bottom: 16px; }
     .btn-save-name {
       display: none; padding: 6px 16px; border-radius: 20px;
@@ -71,19 +59,17 @@
       color: white; font-size: 12px; font-family: 'Sarabun', sans-serif;
       cursor: pointer; margin-bottom: 12px;
     }
-
     .avatar-label { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
     .avatar-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .avatar-opt {
       width: 48px; height: 48px; border-radius: 50%;
-      font-size: 26px; display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer; border: 2px solid transparent;
-      background: rgba(255,255,255,0.05); transition: all 0.2s;
+      background: rgba(255,255,255,0.05); transition: all 0.2s; overflow: hidden;
     }
     .avatar-opt:hover { transform: scale(1.1); }
     .avatar-opt.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
-
-    /* Coins */
+    .avatar-opt img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .coins-card {
       background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
       border: 1px solid rgba(245,158,11,0.3);
@@ -100,8 +86,6 @@
       color: var(--gold); font-size: 13px; font-weight: 700;
       font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
-
-    /* Menu */
     .menu-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; overflow: hidden; margin-bottom: 16px;
@@ -116,7 +100,6 @@
     .menu-item-icon { font-size: 20px; width: 28px; text-align: center; }
     .menu-item-text { flex: 1; font-size: 14px; color: white; font-weight: 600; }
     .menu-item-arrow { color: var(--dim); font-size: 16px; }
-
     .btn-logout {
       width: 100%; padding: 14px; border-radius: 16px;
       background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
@@ -125,7 +108,6 @@
       transition: all 0.2s; margin-top: 8px;
     }
     .btn-logout:hover { background: rgba(239,68,68,0.2); }
-
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(13,8,32,0.95); backdrop-filter: blur(12px);
@@ -141,7 +123,6 @@
     .nav-item.active { color: var(--purple-light); }
   </style>
 
-  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
@@ -160,32 +141,59 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const AVATARS = ['🔮','🌙','⭐','🌸','🐉','🦋','🌺','🎭','🌊','⚡','🌈','🦄'];
+    const AVATARS = [
+      '../images/iconprofile/av1.png',
+      '../images/iconprofile/av2.png',
+      '../images/iconprofile/av3.png',
+      '../images/iconprofile/av4.png',
+      '../images/iconprofile/av5.png',
+      '../images/iconprofile/av6.png',
+      '../images/iconprofile/av7.png',
+      '../images/iconprofile/av8.png',
+      '../images/iconprofile/av9.png',
+      '../images/iconprofile/av10.png',
+      '../images/iconprofile/av11.png',
+      '../images/iconprofile/av12.png',
+      '../images/iconprofile/av13.png',
+      '../images/iconprofile/av14.png',
+    ];
 
     function getSavedAvatar() {
-      return localStorage.getItem('userAvatar') || '🔮';
+      return localStorage.getItem('userAvatar') || '';
     }
 
     function getSavedName() {
       return localStorage.getItem('userDisplayName') || '';
     }
 
+    function setAvatarDisplay(avatar) {
+      const el = document.getElementById('avatarDisplay');
+      if (avatar && avatar.includes('.png')) {
+        el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      } else {
+        el.textContent = avatar || '🔮';
+      }
+    }
+
     function renderAvatarGrid(current) {
-      return AVATARS.map(a => `
-        <div class="avatar-opt ${a === current ? 'active' : ''}" onclick="selectAvatar('${a}')">${a}</div>
-      `).join('');
+      return AVATARS.map(function(a) {
+        return '<div class="avatar-opt ' + (a === current ? 'active' : '') + '" onclick="selectAvatar(\'' + a + '\')">' +
+          '<img src="' + a + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' +
+          '</div>';
+      }).join('');
     }
 
     window.selectAvatar = function(avatar) {
       localStorage.setItem('userAvatar', avatar);
-      document.getElementById('avatarDisplay').textContent = avatar;
-      document.querySelectorAll('.avatar-opt').forEach(el => {
-        el.classList.toggle('active', el.textContent === avatar);
+      setAvatarDisplay(avatar);
+      document.querySelectorAll('.avatar-opt').forEach(function(el) {
+        var src = el.querySelector('img') ? el.querySelector('img').getAttribute('src') : '';
+        el.classList.toggle('active', src === avatar);
       });
     };
 
     window.editName = function() {
-      const input = document.getElementById('profileNameInput');
+      var input = document.getElementById('profileNameInput');
       input.focus();
       input.select();
     };
@@ -195,14 +203,12 @@
     };
 
     window.saveName = function() {
-      const name = document.getElementById('profileNameInput').value.trim();
+      var name = document.getElementById('profileNameInput').value.trim();
       if (!name) return;
       localStorage.setItem('userDisplayName', name);
-      document.getElementById('btnSaveName').style.display = 'none';
-      // แจ้งสำเร็จ
-      const btn = document.getElementById('btnSaveName');
+      var btn = document.getElementById('btnSaveName');
       btn.textContent = '✓ บันทึกแล้ว';
-      setTimeout(() => {
+      setTimeout(function() {
         btn.textContent = 'บันทึกชื่อ';
         btn.style.display = 'none';
       }, 1500);
@@ -221,18 +227,18 @@
       await signOut(auth);
     };
 
-    onAuthStateChanged(auth, user => {
-      const guestSection = document.getElementById('guestSection');
-      const profileSection = document.getElementById('profileSection');
+    onAuthStateChanged(auth, function(user) {
+      var guestSection = document.getElementById('guestSection');
+      var profileSection = document.getElementById('profileSection');
 
       if (user) {
         guestSection.style.display = 'none';
         profileSection.style.display = 'block';
 
-        const avatar = getSavedAvatar();
-        const savedName = getSavedName() || user.displayName || 'ผู้ใช้';
+        var avatar = getSavedAvatar();
+        var savedName = getSavedName() || user.displayName || 'ผู้ใช้';
 
-        document.getElementById('avatarDisplay').textContent = avatar;
+        setAvatarDisplay(avatar);
         document.getElementById('profileNameInput').value = savedName;
         document.getElementById('profileEmail').textContent = user.email;
         document.getElementById('avatarGrid').innerHTML = renderAvatarGrid(avatar);
@@ -262,7 +268,6 @@
 
 <div class="page-content">
 
-  <!-- Guest -->
   <div id="guestSection" class="guest-section">
     <div class="guest-icon">🔮</div>
     <div class="guest-title">เข้าสู่ระบบ</div>
@@ -273,23 +278,13 @@
     </button>
   </div>
 
-  <!-- Logged in -->
   <div id="profileSection" class="profile-section">
 
-    <!-- Avatar & Name -->
     <div class="avatar-card">
-      <div class="avatar-display">
-        <span id="avatarDisplay">🔮</span>
-      </div>
+      <div class="avatar-display" id="avatarDisplay">🔮</div>
       <div class="profile-name-wrap">
-        <input
-          class="profile-name"
-          id="profileNameInput"
-          type="text"
-          maxlength="20"
-          oninput="onNameInput()"
-          onkeydown="if(event.key==='Enter') saveName()"
-        >
+        <input class="profile-name" id="profileNameInput" type="text" maxlength="20"
+          oninput="onNameInput()" onkeydown="if(event.key==='Enter') saveName()">
         <span class="edit-icon" onclick="editName()">✏️</span>
       </div>
       <div class="profile-email" id="profileEmail"></div>
@@ -298,7 +293,6 @@
       <div class="avatar-grid" id="avatarGrid"></div>
     </div>
 
-    <!-- Coins -->
     <div class="coins-card">
       <div class="coins-icon">🪙</div>
       <div class="coins-info">
@@ -308,7 +302,6 @@
       <button class="btn-coins" onclick="alert('เร็วๆ นี้ค่ะ!')">ซื้อเพิ่ม</button>
     </div>
 
-    <!-- Menu -->
     <div class="menu-card">
       <div class="menu-item" onclick="window.location.href='history.html'">
         <div class="menu-item-icon">📜</div>
@@ -340,7 +333,7 @@
 </nav>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
 });
 </script>
