@@ -196,4 +196,29 @@ function colorizeReading(text) {
     .replace(/คำแนะนำ/g, '<span style="color:#f59e0b;font-weight:700">คำแนะนำ</span>')
     .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
     .replace(/\n/g, '<br>');
+    // Save Reading to Firestore
+async function saveReading(type, question, result) {
+  const userId = localStorage.getItem('userId');
+  if (!userId) return; // ไม่ login ไม่เก็บ
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+      authDomain: "my-tarot67.firebaseapp.com",
+      projectId: "my-tarot67",
+      storageBucket: "my-tarot67.firebasestorage.app",
+      messagingSenderId: "33661162829",
+      appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+    };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    await addDoc(collection(db, 'users', userId, 'readings'), {
+      type: type,
+      question: question || '',
+      result: result.slice(0, 300),
+      createdAt: new Date().toISOString()
+    });
+  } catch(e) { console.error('saveReading error:', e); }
+}
 }
