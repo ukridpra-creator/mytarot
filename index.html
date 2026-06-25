@@ -23,14 +23,17 @@
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, user => {
-    if (user) {
-      localStorage.setItem('userId', user.uid);
-      localStorage.setItem('userName', user.displayName || '');
-      localStorage.setItem('userEmail', user.email || '');
-      
-      const avatar = localStorage.getItem('userAvatar') || '🔮';
-      const avatarEl = document.getElementById('avatarEl');
-      if (avatarEl) avatarEl.textContent = avatar;
+  if (user) {
+    // ...
+    const avatar = localStorage.getItem('userAvatar') || '';
+    const avatarEl = document.getElementById('avatarEl');
+    if (avatarEl) {
+      if (avatar && avatar.includes('.png')) {
+        avatarEl.innerHTML = `<img src="${avatar.replace('../', '')}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+      } else {
+        avatarEl.textContent = avatar || '👤';
+      }
+    }
 
       // update user menu
       const guestView = document.getElementById('guestView');

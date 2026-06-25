@@ -121,48 +121,39 @@
     }
     .nav-item span:first-child { font-size: 20px; }
     .nav-item.active { color: var(--purple-light); }
-    /* Glitter particles */
-.glitter {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-}
-.glitter::before, .glitter::after {
-  content: '';
-  position: absolute;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: #d4af37;
-  box-shadow:
-    10vw 20vh 0 rgba(212,175,55,0.6),
-    25vw 60vh 0 rgba(255,255,255,0.4),
-    40vw 30vh 0 rgba(212,175,55,0.5),
-    55vw 80vh 0 rgba(255,255,255,0.3),
-    70vw 45vh 0 rgba(212,175,55,0.6),
-    85vw 15vh 0 rgba(255,255,255,0.5),
-    15vw 75vh 0 rgba(212,175,55,0.4),
-    90vw 65vh 0 rgba(255,255,255,0.6),
-    60vw 10vh 0 rgba(212,175,55,0.3),
-    35vw 90vh 0 rgba(255,255,255,0.4);
-  animation: sparkle 3s ease-in-out infinite alternate;
-}
-.glitter::after {
-  animation-delay: 1.5s;
-  box-shadow:
-    20vw 40vh 0 rgba(255,255,255,0.5),
-    45vw 15vh 0 rgba(212,175,55,0.4),
-    75vw 70vh 0 rgba(255,255,255,0.6),
-    5vw 55vh 0 rgba(212,175,55,0.3),
-    92vw 30vh 0 rgba(255,255,255,0.5);
-}
-@keyframes sparkle {
-  0% { opacity: 0.2; transform: scale(0.8); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
+
+    /* Glitter */
+    .glitter { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .glitter::before, .glitter::after {
+      content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%;
+      background: #d4af37;
+      box-shadow:
+        10vw 20vh 0 rgba(212,175,55,0.6), 25vw 60vh 0 rgba(255,255,255,0.4),
+        40vw 30vh 0 rgba(212,175,55,0.5), 55vw 80vh 0 rgba(255,255,255,0.3),
+        70vw 45vh 0 rgba(212,175,55,0.6), 85vw 15vh 0 rgba(255,255,255,0.5),
+        15vw 75vh 0 rgba(212,175,55,0.4), 90vw 65vh 0 rgba(255,255,255,0.6),
+        60vw 10vh 0 rgba(212,175,55,0.3), 35vw 90vh 0 rgba(255,255,255,0.4);
+      animation: sparkle 3s ease-in-out infinite alternate;
+    }
+    .glitter::after {
+      animation-delay: 1.5s;
+      box-shadow:
+        20vw 40vh 0 rgba(255,255,255,0.5), 45vw 15vh 0 rgba(212,175,55,0.4),
+        75vw 70vh 0 rgba(255,255,255,0.6), 5vw 55vh 0 rgba(212,175,55,0.3),
+        92vw 30vh 0 rgba(255,255,255,0.5);
+    }
+    @keyframes sparkle {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
   </style>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
@@ -175,32 +166,20 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
     const AVATARS = [
-      '../images/iconprofile/av1.png',
-      '../images/iconprofile/av2.png',
-      '../images/iconprofile/av3.png',
-      '../images/iconprofile/av4.png',
-      '../images/iconprofile/av5.png',
-      '../images/iconprofile/av6.png',
-      '../images/iconprofile/av7.png',
-      '../images/iconprofile/av8.png',
-      '../images/iconprofile/av9.png',
-      '../images/iconprofile/av10.png',
-      '../images/iconprofile/av11.png',
-      '../images/iconprofile/av12.png',
-      '../images/iconprofile/av13.png',
-      '../images/iconprofile/av14.png',
+      '../images/iconprofile/av1.png', '../images/iconprofile/av2.png',
+      '../images/iconprofile/av3.png', '../images/iconprofile/av4.png',
+      '../images/iconprofile/av5.png', '../images/iconprofile/av6.png',
+      '../images/iconprofile/av7.png', '../images/iconprofile/av8.png',
+      '../images/iconprofile/av9.png', '../images/iconprofile/av10.png',
+      '../images/iconprofile/av11.png', '../images/iconprofile/av12.png',
+      '../images/iconprofile/av13.png', '../images/iconprofile/av14.png',
     ];
 
-    function getSavedAvatar() {
-      return localStorage.getItem('userAvatar') || '';
-    }
-
-    function getSavedName() {
-      return localStorage.getItem('userDisplayName') || '';
-    }
+    let currentUid = null;
 
     function setAvatarDisplay(avatar) {
       const el = document.getElementById('avatarDisplay');
@@ -219,29 +198,44 @@
       }).join('');
     }
 
-    window.selectAvatar = function(avatar) {
-      localStorage.setItem('userAvatar', avatar);
+    async function saveToFirestore(data) {
+      if (!currentUid) return;
+      try {
+        await setDoc(doc(db, 'users', currentUid), data, { merge: true });
+      } catch(e) { console.error('Firestore save error:', e); }
+    }
+
+    async function loadFromFirestore(uid) {
+      try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        return snap.exists() ? snap.data() : null;
+      } catch(e) { return null; }
+    }
+
+    window.selectAvatar = async function(avatar) {
       setAvatarDisplay(avatar);
+      localStorage.setItem('userAvatar', avatar);
       document.querySelectorAll('.avatar-opt').forEach(function(el) {
         var src = el.querySelector('img') ? el.querySelector('img').getAttribute('src') : '';
         el.classList.toggle('active', src === avatar);
       });
+      await saveToFirestore({ avatar: avatar });
     };
 
     window.editName = function() {
       var input = document.getElementById('profileNameInput');
-      input.focus();
-      input.select();
+      input.focus(); input.select();
     };
 
     window.onNameInput = function() {
       document.getElementById('btnSaveName').style.display = 'inline-block';
     };
 
-    window.saveName = function() {
+    window.saveName = async function() {
       var name = document.getElementById('profileNameInput').value.trim();
       if (!name) return;
       localStorage.setItem('userDisplayName', name);
+      await saveToFirestore({ displayName: name });
       var btn = document.getElementById('btnSaveName');
       btn.textContent = '✓ บันทึกแล้ว';
       setTimeout(function() {
@@ -253,41 +247,64 @@
     window.loginGoogle = async function() {
       try {
         await signInWithPopup(auth, provider);
-      } catch(e) {
-        alert('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่');
-      }
+      } catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่'); }
     };
 
     window.logoutUser = async function() {
       if (!confirm('ออกจากระบบใช่ไหม?')) return;
       await signOut(auth);
+      localStorage.removeItem('userAvatar');
+      localStorage.removeItem('userDisplayName');
     };
 
-    onAuthStateChanged(auth, function(user) {
-      var guestSection = document.getElementById('guestSection');
-      var profileSection = document.getElementById('profileSection');
+    onAuthStateChanged(auth, async function(user) {
+      const guestSection = document.getElementById('guestSection');
+      const profileSection = document.getElementById('profileSection');
 
       if (user) {
+        currentUid = user.uid;
         guestSection.style.display = 'none';
         profileSection.style.display = 'block';
 
-        var avatar = getSavedAvatar();
-        var savedName = getSavedName() || user.displayName || 'ผู้ใช้';
+        // โหลดจาก Firestore ก่อน
+        const firestoreData = await loadFromFirestore(user.uid);
 
-        setAvatarDisplay(avatar);
-        document.getElementById('profileNameInput').value = savedName;
-        document.getElementById('profileEmail').textContent = user.email;
-        document.getElementById('avatarGrid').innerHTML = renderAvatarGrid(avatar);
-        document.getElementById('coinAmount').textContent = parseInt(localStorage.getItem('coins') || '0');
+        let avatar = '';
+        let displayName = user.displayName || 'ผู้ใช้';
+        let coins = parseInt(localStorage.getItem('coins') || '0');
 
+        if (firestoreData) {
+          avatar = firestoreData.avatar || '';
+          displayName = firestoreData.displayName || user.displayName || 'ผู้ใช้';
+          if (firestoreData.coins) coins = firestoreData.coins;
+        }
+
+        // sync กลับ localStorage
+        localStorage.setItem('userAvatar', avatar);
+        localStorage.setItem('userDisplayName', displayName);
         localStorage.setItem('userId', user.uid);
         localStorage.setItem('userName', user.displayName || '');
         localStorage.setItem('userEmail', user.email || '');
-        if (!localStorage.getItem('userDisplayName')) {
-          localStorage.setItem('userDisplayName', user.displayName || '');
+
+        setAvatarDisplay(avatar);
+        document.getElementById('profileNameInput').value = displayName;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('avatarGrid').innerHTML = renderAvatarGrid(avatar);
+        document.getElementById('coinAmount').textContent = coins;
+
+        // save ข้อมูลพื้นฐานถ้ายังไม่มี
+        if (!firestoreData) {
+          await saveToFirestore({
+            displayName: displayName,
+            email: user.email,
+            avatar: '',
+            coins: coins,
+            createdAt: new Date().toISOString()
+          });
         }
 
       } else {
+        currentUid = null;
         guestSection.style.display = 'block';
         profileSection.style.display = 'none';
         localStorage.removeItem('userId');
@@ -296,7 +313,7 @@
   </script>
 </head>
 <body>
-  <div class="glitter"></div>
+<div class="glitter"></div>
 
 <div class="page-header">
   <div class="page-title">👤 โปรไฟล์</div>
@@ -308,7 +325,7 @@
   <div id="guestSection" class="guest-section">
     <div class="guest-icon">🔮</div>
     <div class="guest-title">เข้าสู่ระบบ</div>
-    <div class="guest-desc">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
+    <div class="guest-desc">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย<br>ข้อมูลจะ sync ทุกอุปกรณ์</div>
     <button class="btn-google" onclick="loginGoogle()">
       <img src="https://www.google.com/favicon.ico">
       เข้าสู่ระบบด้วย Google
