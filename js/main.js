@@ -196,6 +196,7 @@ function colorizeReading(text) {
     .replace(/คำแนะนำ/g, '<span style="color:#f59e0b;font-weight:700">คำแนะนำ</span>')
     .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
     .replace(/\n/g, '<br>');
+}
     // Save Reading to Firestore
 async function saveReading(type, question, result) {
   const userId = localStorage.getItem('userId');
@@ -220,5 +221,4 @@ async function saveReading(type, question, result) {
       createdAt: new Date().toISOString()
     });
   } catch(e) { console.error('saveReading error:', e); }
-}
 }
