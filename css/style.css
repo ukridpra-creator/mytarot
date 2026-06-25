@@ -166,9 +166,11 @@ body {
 .card-icon {
   width: 56px;
   height: 56px;
-  border-radius: 16px;
+  border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
+  border: 1.5px solid rgba(212,175,55,0.4);
+  background: rgba(212,175,55,0.08);
 }
 .card-icon img {
   width: 100%;
