@@ -8,120 +8,40 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
-    .checkin-day img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4));
-}
-    /* CHECK-IN POPUP */
-    .checkin-overlay {
-      position: fixed; inset: 0; z-index: 500;
-      background: rgba(0,0,0,0.7); display: none;
-      align-items: center; justify-content: center;
-    }
+    .checkin-day img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4)); }
+    .checkin-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; }
     .checkin-overlay.show { display: flex; }
-    .checkin-sheet {
-      background: linear-gradient(180deg, #1a0e2e, #0d0820);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 24px; padding: 24px 20px 28px;
-      width: 90%; max-width: 340px;
-      text-align: center; position: relative;
-    }
-    .checkin-close {
-      position: absolute; top: 14px; right: 16px;
-      font-size: 20px; color: rgba(255,255,255,0.3);
-      cursor: pointer; background: none; border: none;
-    }
+    .checkin-sheet { background: linear-gradient(180deg, #1a0e2e, #0d0820); border: 1px solid rgba(212,175,55,0.3); border-radius: 24px; padding: 24px 20px 28px; width: 90%; max-width: 340px; text-align: center; position: relative; }
+    .checkin-close { position: absolute; top: 14px; right: 16px; font-size: 20px; color: rgba(255,255,255,0.3); cursor: pointer; background: none; border: none; }
     .checkin-title { font-size: 20px; font-weight: 800; color: #d4af37; margin-bottom: 4px; }
     .checkin-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
     .checkin-days { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
-    .checkin-day {
-  width: 44px; height: 54px; border-radius: 12px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  font-size: 9px; color: rgba(255,255,255,0.4);
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.03); gap: 3px;
-}
-.checkin-day img {
-  width: 36px; height: 36px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4));
-}
-    .checkin-day.done {
-      background: rgba(212,175,55,0.2); border-color: #d4af37; color: #d4af37;
-    }
-    .checkin-day.today {
-      background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(212,175,55,0.3));
-      border-color: #a78bfa; color: white;
-      transform: scale(1.1);
-    }
-    .checkin-day-num { font-size: 14px; font-weight: 700; }
-    .checkin-reward {
-      font-size: 36px; margin-bottom: 8px;
-    }
-    .checkin-reward-text {
-      font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px;
-    }
+    .checkin-day { width: 44px; height: 54px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 9px; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); gap: 3px; }
+    .checkin-day img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(212,175,55,0.4)); }
+    .checkin-day.done { background: rgba(212,175,55,0.2); border-color: #d4af37; color: #d4af37; }
+    .checkin-day.today { background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(212,175,55,0.3)); border-color: #a78bfa; color: white; transform: scale(1.1); }
+    .checkin-reward { font-size: 36px; margin-bottom: 8px; }
+    .checkin-reward-text { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
     .checkin-reward-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
-    .btn-checkin {
-      width: 100%; padding: 14px; border-radius: 16px;
-      background: linear-gradient(135deg, #7c3aed, #d4af37);
-      border: none; color: white; font-size: 16px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .btn-checkin:disabled {
-      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed;
-    }
+    .btn-checkin { width: 100%; padding: 14px; border-radius: 16px; background: linear-gradient(135deg, #7c3aed, #d4af37); border: none; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; }
+    .btn-checkin:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; }
     .checkin-done-text { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 12px; }
-
-    /* LOGIN REQUIRED POPUP */
-    .login-required-overlay {
-      position: fixed; inset: 0; z-index: 500;
-      background: rgba(0,0,0,0.7); display: none;
-      align-items: center; justify-content: center;
-    }
+    .login-required-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; }
     .login-required-overlay.show { display: flex; }
-    .login-required-sheet {
-      background: linear-gradient(180deg, #1a0e2e, #0d0820);
-      border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 24px; padding: 32px 24px;
-      width: 90%; max-width: 320px; text-align: center;
-    }
+    .login-required-sheet { background: linear-gradient(180deg, #1a0e2e, #0d0820); border: 1px solid rgba(212,175,55,0.3); border-radius: 24px; padding: 32px 24px; width: 90%; max-width: 320px; text-align: center; }
     .login-required-icon { font-size: 48px; margin-bottom: 12px; }
     .login-required-title { font-size: 18px; font-weight: 800; color: white; margin-bottom: 8px; }
     .login-required-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
-    .btn-login-now {
-      width: 100%; padding: 14px; border-radius: 16px;
-      background: white; border: none; color: #333;
-      font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-cancel-login {
-      width: 100%; padding: 10px; margin-top: 10px; border-radius: 12px;
-      background: none; border: none; color: rgba(255,255,255,0.3);
-      font-size: 14px; font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-
-    /* coin animation */
-    @keyframes coinPop {
-      0% { transform: scale(0) translateY(0); opacity: 1; }
-      60% { transform: scale(1.3) translateY(-60px); opacity: 1; }
-      100% { transform: scale(1) translateY(-80px); opacity: 0; }
-    }
-    .coin-pop {
-      position: fixed; font-size: 28px; pointer-events: none; z-index: 600;
-      animation: coinPop 1s ease-out forwards;
-    }
+    .btn-login-now { width: 100%; padding: 14px; border-radius: 16px; background: white; border: none; color: #333; font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-cancel-login { width: 100%; padding: 10px; margin-top: 10px; border-radius: 12px; background: none; border: none; color: rgba(255,255,255,0.3); font-size: 14px; font-family: 'Sarabun', sans-serif; cursor: pointer; }
+    @keyframes coinPop { 0% { transform: scale(0) translateY(0); opacity: 1; } 60% { transform: scale(1.3) translateY(-60px); opacity: 1; } 100% { transform: scale(1) translateY(-80px); opacity: 0; } }
+    .coin-pop { position: fixed; font-size: 28px; pointer-events: none; z-index: 600; animation: coinPop 1s ease-out forwards; }
   </style>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider }
-      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-    import { getFirestore, doc, getDoc, setDoc, updateDoc }
-      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
@@ -136,7 +56,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
-
     let currentUser = null;
 
     function setAvatarDisplay(avatar) {
@@ -152,22 +71,18 @@
     onAuthStateChanged(auth, async user => {
       currentUser = user;
       if (user) {
-        // โหลดข้อมูลจาก Firestore
         try {
           const snap = await getDoc(doc(db, 'users', user.uid));
           const data = snap.exists() ? snap.data() : {};
           const avatar = data.avatar || localStorage.getItem('userAvatar') || '';
           const displayName = data.displayName || user.displayName || '';
           const coins = data.coins || parseInt(localStorage.getItem('coins') || '0');
-
           localStorage.setItem('userAvatar', avatar);
           localStorage.setItem('userDisplayName', displayName);
           localStorage.setItem('userId', user.uid);
           localStorage.setItem('userEmail', user.email || '');
           localStorage.setItem('coins', String(coins));
-
           setAvatarDisplay(avatar);
-
           const guestView = document.getElementById('guestView');
           const loggedView = document.getElementById('loggedView');
           if (guestView) guestView.style.display = 'none';
@@ -176,69 +91,49 @@
           const menuEmail = document.getElementById('menuEmail');
           if (menuName) menuName.textContent = displayName;
           if (menuEmail) menuEmail.textContent = user.email;
-
-          // update coin badge
           const badge = document.querySelector('.coin-badge');
           if (badge) badge.textContent = '🪙 ' + coins + ' เหรียญ';
-
         } catch(e) { console.error(e); }
-
       } else {
         localStorage.removeItem('userId');
         setAvatarDisplay('');
       }
     });
 
-    // CHECK-IN SYSTEM
     window.openCheckin = async function() {
-      if (!currentUser) {
-        document.getElementById('loginRequiredOverlay').classList.add('show');
-        return;
-      }
-
+      if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
       try {
         const snap = await getDoc(doc(db, 'users', currentUser.uid));
         const data = snap.exists() ? snap.data() : {};
         const today = new Date().toDateString();
-        const lastCheckin = data.lastCheckin || '';
-        const streak = data.checkinStreak || 0;
-        const alreadyDone = lastCheckin === today;
-
-        renderCheckinPopup(streak, alreadyDone);
+        const alreadyDone = (data.lastCheckin || '') === today;
+        renderCheckinPopup(data.checkinStreak || 0, alreadyDone);
         document.getElementById('checkinOverlay').classList.add('show');
-      } catch(e) {
-        console.error(e);
-      }
+      } catch(e) { console.error(e); }
     };
 
     function renderCheckinPopup(streak, alreadyDone) {
-      const days = ['วัน1','วัน2','วัน3','วัน4','วัน5','วัน6','วัน7'];
-      const coins = streak === 6 ? 50 : 10; // วันที่ 7 รับ 50
+      const coins = streak === 6 ? 50 : 10;
       const nextDay = (streak % 7) + 1;
-
       let daysHtml = '';
       for (let i = 0; i < 7; i++) {
-  let cls = 'checkin-day';
-  if (i < streak % 7) cls += ' done';
-  else if (i === streak % 7 && !alreadyDone) cls += ' today';
-  else if (i < streak && alreadyDone) cls += ' done';
-  const imgSrc = i === 6 ? 'images/coin50.png' : 'images/coin10.png';
-  daysHtml += '<div class="' + cls + '"><img src="' + imgSrc + '"><div>วันที่' + (i+1) + '</div></div>';
-}
-
+        let cls = 'checkin-day';
+        if (i < streak % 7) cls += ' done';
+        else if (i === streak % 7 && !alreadyDone) cls += ' today';
+        else if (i < streak && alreadyDone) cls += ' done';
+        const imgSrc = i === 6 ? 'images/coin50.png' : 'images/coin10.png';
+        daysHtml += '<div class="' + cls + '"><img src="' + imgSrc + '"><div>วันที่' + (i+1) + '</div></div>';
+      }
       document.getElementById('checkinDays').innerHTML = daysHtml;
       document.getElementById('checkinRewardIcon').textContent = nextDay === 7 ? '👑' : '🪙';
       document.getElementById('checkinRewardText').textContent = 'รับ ' + coins + ' เหรียญ';
       document.getElementById('checkinRewardSub').textContent = 'วันที่ ' + nextDay + ' ติดต่อกัน' + (nextDay === 7 ? ' — โบนัสพิเศษ!' : '');
-
       const btn = document.getElementById('btnDoCheckin');
       if (alreadyDone) {
-        btn.disabled = true;
-        btn.textContent = '✅ เช็คอินแล้ววันนี้';
+        btn.disabled = true; btn.textContent = '✅ เช็คอินแล้ววันนี้';
         document.getElementById('checkinDoneText').textContent = 'กลับมาพรุ่งนี้เพื่อรับเหรียญต่อเนื่อง 🌟';
       } else {
-        btn.disabled = false;
-        btn.textContent = '🎁 รับ ' + coins + ' เหรียญ';
+        btn.disabled = false; btn.textContent = '🎁 รับ ' + coins + ' เหรียญ';
         document.getElementById('checkinDoneText').textContent = '';
       }
     }
@@ -249,64 +144,36 @@
         const snap = await getDoc(doc(db, 'users', currentUser.uid));
         const data = snap.exists() ? snap.data() : {};
         const today = new Date().toDateString();
-        const lastCheckin = data.lastCheckin || '';
         const yesterday = new Date(Date.now() - 86400000).toDateString();
-
         let streak = data.checkinStreak || 0;
-        if (lastCheckin === yesterday) {
-          streak = Math.min(streak + 1, 7);
-        } else if (lastCheckin !== today) {
-          streak = 1;
-        }
-
+        if ((data.lastCheckin || '') === yesterday) streak = Math.min(streak + 1, 7);
+        else if ((data.lastCheckin || '') !== today) streak = 1;
         const reward = streak === 7 ? 50 : 10;
-        if (streak === 7) streak = 0; // reset หลังครบ 7 วัน
-
-        const currentCoins = data.coins || parseInt(localStorage.getItem('coins') || '0');
-        const newCoins = currentCoins + reward;
-
-        await setDoc(doc(db, 'users', currentUser.uid), {
-          lastCheckin: today,
-          checkinStreak: streak,
-          coins: newCoins
-        }, { merge: true });
-
+        if (streak === 7) streak = 0;
+        const newCoins = (data.coins || parseInt(localStorage.getItem('coins') || '0')) + reward;
+        await setDoc(doc(db, 'users', currentUser.uid), { lastCheckin: today, checkinStreak: streak, coins: newCoins }, { merge: true });
         localStorage.setItem('coins', String(newCoins));
         const badge = document.querySelector('.coin-badge');
         if (badge) badge.textContent = '🪙 ' + newCoins + ' เหรียญ';
-
-        // coin pop animation
         const pop = document.createElement('div');
-        pop.className = 'coin-pop';
-        pop.textContent = '+' + reward + '🪙';
-        pop.style.left = '50%';
-        pop.style.top = '50%';
+        pop.className = 'coin-pop'; pop.textContent = '+' + reward + '🪙';
+        pop.style.left = '50%'; pop.style.top = '50%';
         document.body.appendChild(pop);
         setTimeout(() => pop.remove(), 1000);
-
         renderCheckinPopup(streak, true);
       } catch(e) { console.error(e); }
     };
 
-    window.closeCheckin = function() {
-      document.getElementById('checkinOverlay').classList.remove('show');
-    };
-
-    window.closeLoginRequired = function() {
-      document.getElementById('loginRequiredOverlay').classList.remove('show');
-    };
-
+    window.closeCheckin = function() { document.getElementById('checkinOverlay').classList.remove('show'); };
+    window.closeLoginRequired = function() { document.getElementById('loginRequiredOverlay').classList.remove('show'); };
     window.loginNow = async function() {
-      try {
-        await signInWithPopup(auth, provider);
-        document.getElementById('loginRequiredOverlay').classList.remove('show');
-      } catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ'); }
+      try { await signInWithPopup(auth, provider); document.getElementById('loginRequiredOverlay').classList.remove('show'); }
+      catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ'); }
     };
   </script>
 </head>
 <body>
 
-<!-- CHECK-IN POPUP -->
 <div class="checkin-overlay" id="checkinOverlay" onclick="if(event.target===this)closeCheckin()">
   <div class="checkin-sheet">
     <button class="checkin-close" onclick="closeCheckin()">✕</button>
@@ -321,16 +188,12 @@
   </div>
 </div>
 
-<!-- LOGIN REQUIRED -->
 <div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)closeLoginRequired()">
   <div class="login-required-sheet">
     <div class="login-required-icon">🔐</div>
     <div class="login-required-title">กรุณาเข้าสู่ระบบก่อน</div>
     <div class="login-required-sub">เข้าสู่ระบบเพื่อรับเหรียญเช็คอินประจำวัน<br>และ sync ข้อมูลทุกอุปกรณ์</div>
-    <button class="btn-login-now" onclick="loginNow()">
-      <img src="https://www.google.com/favicon.ico" width="18">
-      เข้าสู่ระบบด้วย Google
-    </button>
+    <button class="btn-login-now" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
     <button class="btn-cancel-login" onclick="closeLoginRequired()">ยกเลิก</button>
   </div>
 </div>
@@ -349,10 +212,7 @@
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
     <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button class="btn-google" onclick="loginGoogle()">
-      <img src="https://www.google.com/favicon.ico" width="18">
-      เข้าสู่ระบบด้วย Google
-    </button>
+    <button class="btn-google" onclick="loginGoogle()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
     <div class="menu-user-info">
@@ -380,71 +240,62 @@
     <div class="card" onclick="go('tarot')">
       <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์"></div>
       <div class="card-title">ไพ่ทาโรต์</div>
-      <div class="card-desc">เปิดไพ่รับคำทำนายจากพลังจักรวาล วิเคราะห์ความรัก การงาน และเส้นทางชีวิตด้วย AI</div>
+      <div class="card-desc">เปิดไพ่รับคำทำนายจาก AI วิเคราะห์ความรัก การงาน การเงิน</div>
     </div>
     <div class="card" onclick="go('oracle')">
       <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล"></div>
       <div class="card-title">ไพ่ออราเคิล</div>
-      <div class="card-desc">ถามจักรวาล รับสารจากดวงดาวและสิ่งศักดิ์สิทธิ์ที่คอยชี้นำเส้นทางของคุณ</div>
-      
+      <div class="card-desc">รับสารจากจักรวาลและสิ่งศักดิ์สิทธิ์ที่ชี้นำเส้นทางคุณ</div>
     </div>
     <div class="card" onclick="go('deity')">
       <div class="card-icon"><img src="images/icon-deity.png" alt="เทพประจำตัว"></div>
       <div class="card-title">เทพประจำตัว</div>
-      <div class="card-desc">ค้นหาเทพองค์ที่คุ้มครองและเกื้อหนุนดวงชะตาของคุณ พร้อมคำแนะนำจากเทพ</div>
-      
+      <div class="card-desc">ค้นหาเทพที่คุ้มครองดวงชะตา พร้อมคำแนะนำจากเทพ</div>
+    </div>
     <div class="card" onclick="go('saju')">
       <div class="card-icon"><img src="images/icon-saju.png" alt="ซาจูเกาหลี"></div>
       <div class="card-title">ซาจูเกาหลี</div>
-      <div class="card-desc">โชคชะตาแบบเกาหลีโบราณ วิเคราะห์จากวันเดือนปีเกิด เผยความลับแห่งชีวิต</div>
-     
+      <div class="card-desc">โชคชะตาเกาหลีโบราณ วิเคราะห์จากวันเดือนปีเกิด</div>
     </div>
     <div class="card" onclick="go('palm')">
       <div class="card-icon"><img src="images/icon-palm.png" alt="ลายมือ"></div>
       <div class="card-title">ดูลายมือ</div>
-      <div class="card-desc">เส้นมือบอกชะตาที่ซ่อนอยู่ วิเคราะห์เส้นชีวิต เส้นหัวใจ และโชคลาภด้วย AI</div>
-      
+      <div class="card-desc">เส้นมือบอกชะตา วิเคราะห์เส้นชีวิตและโชคลาภด้วย AI</div>
     </div>
     <div class="card" onclick="go('face')">
       <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
       <div class="card-title">โหงวเฮ้ง</div>
-      <div class="card-desc">วิเคราะห์ดวงจากใบหน้าตามศาสตร์จีนโบราณ เผยบุคลิก โชคลาภ และอนาคต</div>
-      
+      <div class="card-desc">วิเคราะห์ดวงจากใบหน้าตามศาสตร์จีน เผยโชคลาภอนาคต</div>
     </div>
     <div class="card" onclick="window.location.href='pages/divination.html'">
       <div class="card-icon"><img src="images/icon-divination.png" alt="การทำนาย"></div>
       <div class="card-title">การทำนาย</div>
-      <div class="card-desc">เซียมซีญี่ปุ่น เซียมซีเจ้าแม่กวนอิม และศาสตร์ทำนายจากหลากหลายวัฒนธรรม</div>
-      
+      <div class="card-desc">เซียมซีญี่ปุ่น กวนอิม และศาสตร์ทำนายหลากวัฒนธรรม</div>
+    </div>
     <div class="card" onclick="go('numerology')">
       <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
       <div class="card-title">เลขศาสตร์</div>
-      <div class="card-desc">ความลับของชีวิตซ่อนอยู่ในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อของคุณ</div>
-      
+      <div class="card-desc">ความลับในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อ</div>
     </div>
     <div class="card" onclick="go('iching')">
       <div class="card-icon"><img src="images/icon-iching.png" alt="อี้จิง"></div>
       <div class="card-title">อี้จิง</div>
-      <div class="card-desc">ปัญญาจีนโบราณกว่า 3,000 ปี ถามคำถามแล้วรับคำตอบจากคัมภีร์แห่งการเปลี่ยนแปลง</div>
-      
+      <div class="card-desc">ปัญญาจีน 3,000 ปี รับคำตอบจากคัมภีร์แห่งการเปลี่ยนแปลง</div>
     </div>
     <div class="card" onclick="go('rune')">
       <div class="card-icon"><img src="images/icon-rune.png" alt="ไพ่รูน"></div>
       <div class="card-title">ไพ่รูน</div>
-      <div class="card-desc">อักษรนอร์สโบราณแห่งชะตา ปลุกพลังไวกิ้งเพื่อเผยความจริงที่ซ่อนอยู่</div>
-      
+      <div class="card-desc">อักษรนอร์สโบราณ เผยความจริงที่ซ่อนอยู่แห่งชะตา</div>
     </div>
     <div class="card" onclick="go('western')">
       <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก"></div>
       <div class="card-title">โหราศาสตร์ตะวันตก</div>
-      <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์ดวงชะตาจากตำแหน่งดาวเคราะห์ในวันที่คุณเกิด</div>
-      
+      <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์จากตำแหน่งดาวเคราะห์</div>
     </div>
     <div class="card" onclick="go('chinese')">
       <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน"></div>
       <div class="card-title">โหราศาสตร์จีน</div>
-      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา ศาสตร์จีนโบราณที่เปิดเผยดวงชะตาตลอดชีวิต</div>
-      
+      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา เปิดเผยดวงชะตาตลอดชีวิต</div>
     </div>
   </div>
 </main>
@@ -469,9 +320,6 @@
 </nav>
 
 <script src="js/main.js"></script>
-<button onclick="localStorage.setItem('coins','9999');location.reload();" 
-  style="position:fixed;bottom:80px;right:16px;z-index:999;background:#f59e0b;border:none;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;">
-  🪙
-</button>
+<button onclick="localStorage.setItem('coins','9999');location.reload();" style="position:fixed;bottom:80px;right:16px;z-index:999;background:#f59e0b;border:none;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;">🪙</button>
 </body>
 </html>
