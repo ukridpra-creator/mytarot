@@ -27,7 +27,8 @@ const db = getFirestore();
 // (ไม่งั้นคนแก้ JS ฝั่งหน้าเว็บส่ง amount: 1 มาแทนได้)
 const SERVICE_COSTS = {
   bazi: 40,
-  // เพิ่มบริการอื่นในเว็บตรงนี้ เช่น tarot: 20, lenormand: 15, ...
+  tarot: 20,
+  tarot_followup: 5,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)

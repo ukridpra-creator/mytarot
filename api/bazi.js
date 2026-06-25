@@ -1,10 +1,6 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
-  const authHeader = req.headers.authorization || '';
-  const idToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-  if (!idToken) return res.status(401).json({ error: 'unauthorized' });
-  try { await getAuth().verifyIdToken(idToken); }
-  catch (e) { return res.status(401).json({ error: 'invalid_token' }); }
+  
 
   const { year, month, day, hour, minute, lat, lng, city, sex } = req.body;
 

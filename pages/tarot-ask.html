@@ -24,7 +24,8 @@
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
     .hero { text-align: center; padding: 12px 0 20px; }
-    .hero-icon { font-size: 40px; margin-bottom: 8px; }
+    .hero-icon { margin-bottom: 8px; }
+    .hero-icon img { width: 80px; height: 80px; object-fit: contain; }
     .hero-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
     .hero-desc { font-size: 13px; color: var(--dim); }
     .question-box {
@@ -204,7 +205,7 @@
 <div class="page-header">
   <a href="tarot.html" class="back-btn">←</a>
   <div class="page-title">ถามอะไรก็ได้</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
 </div>
 
 <div class="reveal-overlay" id="revealOverlay">
@@ -215,7 +216,9 @@
 
 <div class="page-content">
   <div class="hero">
-    <div class="hero-icon">🔮</div>
+    <div class="hero-icon">
+      <img src="../images/mascotask.png" alt="mascot" onerror="this.style.fontSize='40px';this.outerHTML='<div style=\'font-size:40px\'>🔮</div>'">
+    </div>
     <div class="hero-title">ถามอะไรก็ได้</div>
     <div class="hero-desc">ไพ่ 3 ใบ อดีต ปัจจุบัน อนาคต ตอบทุกคำถามในใจค่ะ</div>
   </div>
@@ -238,15 +241,15 @@
 
   <div class="cards-section">
     <div class="cards-title">🃏 ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบค่ะ</div>
-<div class="cards-scroll" id="cardsScroll"></div>
-<div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">
-  ← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →
-</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">
+      ← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →
+    </div>
   </div>
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🔮 ให้ไพ่ทำนาย</button>
@@ -350,6 +353,7 @@ const BACK = '../images/tarot/back.png';
 const positions = ['อดีต','ปัจจุบัน','อนาคต'];
 let shuffled = [], selectedCards = [], followupHistory = [];
 const MAX_CARDS = 3;
+let currentUser = null;
 
 function colorizeReading(text) {
   const cards = [
@@ -379,6 +383,19 @@ function colorizeReading(text) {
     }
   );
   return result.replace(/\n/g, '<br>');
+}
+
+async function saveReading(type, question, result) {
+  if (!currentUser) return;
+  if (!result || result.length === 0) return;
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), { type, question: question || '', result: result.slice(0, 300), createdAt: new Date().toISOString() });
+  } catch(e) { console.error('saveReading error:', e); }
 }
 
 function shuffle() {
@@ -462,13 +479,8 @@ function startReading() {
 }
 
 async function acceptReading() {
+  if (!currentUser) { alert('กรุณาเข้าสู่ระบบก่อนค่ะ'); return; }
   document.getElementById('revealOverlay').classList.remove('show');
-
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 20));
-  document.getElementById('coinCount').textContent = coins - 20;
-  document.getElementById('coinDisplay').textContent = coins - 20;
 
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
@@ -490,14 +502,29 @@ async function acceptReading() {
   const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'tarot',
         model: 'claude-sonnet-4-6', max_tokens: 4000,
         system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดตรงๆ มีพลังงาน ให้กำลังใจ ชื่อไพ่ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role: 'user', content: `ทำนายไพ่ทาโรต์\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้บอกสิ่งที่ไพ่อยากสื่อ'}\nไพ่ที่จั่วได้: ${cardInfo}\nทำนายจากไพ่ทั้ง 3 ใบเชื่อมโยงกัน บอกอดีต ปัจจุบัน อนาคต และคำแนะนำให้ครบค่ะ` }]
       })
     });
+
+    if (res.status === 402) { alert('เหรียญไม่พอค่ะ กรุณาซื้อเหรียญเพิ่มค่ะ 🪙'); btn.disabled = false; return; }
+    if (res.status === 401) { alert('กรุณาเข้าสู่ระบบใหม่ค่ะ'); btn.disabled = false; return; }
+    if (!res.ok) { alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'); btn.disabled = false; return; }
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) {
+      const b = parseInt(newBalance);
+      localStorage.setItem('coins', String(b));
+      document.getElementById('coinCount').textContent = b;
+      document.getElementById('coinDisplay').textContent = b;
+    }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -517,22 +544,22 @@ async function acceptReading() {
     cursor.remove();
     resultText.innerHTML = colorizeReading(text);
 
+    saveReading('ไพ่ทาโรต์ ถามอะไรก็ได้', question, text);
     followupHistory = [];
     document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
+    console.error(e);
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
   btn.disabled = false;
 }
 
 async function askFollowup() {
+  if (!currentUser) return;
   const input = document.getElementById('followupInput');
   const question = input.value.trim();
   if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
-
-  const coins = parseInt(localStorage.getItem('coins') || '500');
-  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
 
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
@@ -545,40 +572,50 @@ async function askFollowup() {
   const time = Date.now();
   resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
   const answerDiv = document.getElementById(`ans_${time}`);
-
   const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'tarot_followup',
         model: 'claude-sonnet-4-6', max_tokens: 600,
         system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากไพ่เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
         messages: [{ role: 'user', content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำถาม: ${question}` }]
       })
     });
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let text = '';
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    answerDiv.appendChild(cursor);
+    if (res.status === 402) { answerDiv.textContent = 'เหรียญไม่พอค่ะ'; }
+    else if (!res.ok) { answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'; }
+    else {
+      const newBalance = res.headers.get('X-New-Coin-Balance');
+      if (newBalance != null) {
+        const b = parseInt(newBalance);
+        localStorage.setItem('coins', String(b));
+        document.getElementById('coinCount').textContent = b;
+        document.getElementById('coinDisplay').textContent = b;
+      }
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      text += decoder.decode(value);
-      answerDiv.textContent = text;
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
       answerDiv.appendChild(cursor);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value);
+        answerDiv.textContent = text;
+        answerDiv.appendChild(cursor);
+      }
+      cursor.remove();
+      answerDiv.textContent = text;
+      followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
     }
-    cursor.remove();
-    answerDiv.textContent = text;
-    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
-
-    localStorage.setItem('coins', String(coins - 5));
-    document.getElementById('coinCount').textContent = coins - 5;
-
   } catch(e) {
     answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
@@ -591,11 +628,36 @@ async function askFollowup() {
   answerDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '500');
+document.addEventListener('DOMContentLoaded', async () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
   document.getElementById('coinCount').textContent = coins;
   document.getElementById('coinDisplay').textContent = coins;
   shuffle();
+
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      if (user) {
+        localStorage.setItem('userId', user.uid);
+        try {
+          const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+          const db = getFirestore(app);
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          const realCoins = snap.exists() ? (snap.data().coins ?? 0) : 0;
+          localStorage.setItem('coins', String(realCoins));
+          document.getElementById('coinCount').textContent = realCoins;
+          document.getElementById('coinDisplay').textContent = realCoins;
+        } catch(e) { console.error(e); }
+      } else {
+        window.location.href = '../index.html';
+      }
+    });
+  } catch(e) { console.error(e); }
 });
 </script>
 </body>
