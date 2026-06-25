@@ -559,21 +559,15 @@ function closeShare(e) {
 
 async function doSave() {
   const canvas = await getSlipCanvas();
-  
-  canvas.toBlob(async (blob) => {
-    // iOS Safari รองรับ
-    if (navigator.share && navigator.canShare({ files: [new File([blob], 'omikuji.png', { type: 'image/png' })] })) {
-      const file = new File([blob], `omikuji-${currentEntry.level_jp}.png`, { type: 'image/png' });
-      await navigator.share({ files: [file] });
-    } else {
-      // Android / Desktop
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `omikuji-${currentEntry.level_jp}.png`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `omikuji-${currentEntry.level_jp}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
     closeShare();
   }, 'image/png');
 }
