@@ -394,9 +394,10 @@ async function startReading() {
   if (!await useCoins(40)) return;
 
   const coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-
+  const coinCountEl = document.getElementById('coinCount');
+  const coinDisplayEl = document.getElementById('coinDisplay');
+  if (coinCountEl) coinCountEl.textContent = coins;
+  if (coinDisplayEl) coinDisplayEl.textContent = coins;
   const { lat, lng } = getCityCoords(city);
 
   let baziData = null;
