@@ -135,6 +135,8 @@ function updateUserUI() {
   const guestView = document.getElementById('guestView');
   const loggedView = document.getElementById('loggedView');
 
+  if (!guestView || !loggedView) return; // ← เพิ่มบรรทัดนี้
+
   if(currentUser) {
     guestView.style.display = 'none';
     loggedView.style.display = 'block';
