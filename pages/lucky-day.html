@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วันดี/วันห้าม — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--purple-light); font-size: 16px; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .free-badge {
+      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
+      color: white; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 8px 0 20px; }
+    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 12px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+
+    .select-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 16px;
+    }
+    .select-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
+    .zodiac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .zodiac-btn {
+      padding: 10px 6px; border-radius: 14px; text-align: center;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+    }
+    .zodiac-btn:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
+    .zodiac-btn.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
+    .zodiac-icon { font-size: 24px; margin-bottom: 4px; }
+    .zodiac-name { font-size: 11px; color: white; font-weight: 600; }
+    .zodiac-date { font-size: 9px; color: var(--dim); }
+
+    .btn-check {
+      width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
+    }
+    .btn-check:hover { transform: translateY(-2px); }
+    .btn-check:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Result */
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .result-title {
+      font-size: 18px; font-weight: 800; color: white;
+      text-align: center; margin-bottom: 16px;
+    }
+
+    .day-section { margin-bottom: 12px; border-radius: 16px; overflow: hidden; }
+    .day-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; font-size: 14px; font-weight: 700;
+    }
+    .day-good .day-header { background: rgba(16,185,129,0.2); color: #10b981; }
+    .day-bad .day-header { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .day-neutral .day-header { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .day-body { padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-top: none; border-radius: 0 0 16px 16px; }
+    .day-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .day-tag {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    }
+    .day-good .day-tag { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .day-bad .day-tag { background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .day-neutral .day-tag { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .day-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+
+    .activity-section {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 16px;
+    }
+    .activity-title { font-size: 14px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
+    .activity-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .activity-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .activity-icon { font-size: 20px; flex-shrink: 0; }
+    .activity-info { flex: 1; }
+    .activity-name { font-size: 13px; color: white; font-weight: 700; margin-bottom: 2px; }
+    .activity-day { font-size: 12px; color: #10b981; }
+    .activity-avoid { font-size: 12px; color: #ef4444; }
+
+    .btn-again {
+      width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
+      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+      color: var(--purple-light); font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+    .upsell-box {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
+      border: 1px solid rgba(124,58,237,0.3); border-radius: 20px;
+      padding: 20px; text-align: center;
+    }
+    .upsell-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .upsell-desc { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.6; }
+    .btn-upsell {
+      width: 100%; padding: 14px; border-radius: 16px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; color: white; font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+    .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="free.html" class="back-btn">←</a>
+  <div class="page-title">📅 วันดี/วันห้าม</div>
+  <div class="free-badge">FREE</div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-mascot">
+      <img src="../images/mascot-lucyday.png" alt="mascot" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">📅 วันดี/วันห้าม</div>
+    <div class="hero-desc">น้องจะบอกคุณพี่ว่าวันไหนดี วันไหนควรเลี่ยง<br>ตามราศีของคุณพี่เลยค่ะ</div>
+  </div>
+
+  <div class="select-box">
+    <label class="select-label">⭐ เลือกราศีของคุณพี่</label>
+    <div class="zodiac-grid" id="zodiacGrid"></div>
+  </div>
+
+  <button class="btn-check" id="btnCheck" onclick="showResult()" disabled>📅 ดูวันดี/วันห้าม</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-title" id="resultTitle"></div>
+
+    <div class="day-section day-good">
+      <div class="day-header">✅ วันดีของคุณพี่</div>
+      <div class="day-body">
+        <div class="day-tags" id="goodDays"></div>
+        <div class="day-desc" id="goodDesc"></div>
+      </div>
+    </div>
+
+    <div class="day-section day-bad" style="margin-top:12px">
+      <div class="day-header">⛔ วันที่ควรเลี่ยง</div>
+      <div class="day-body">
+        <div class="day-tags" id="badDays"></div>
+        <div class="day-desc" id="badDesc"></div>
+      </div>
+    </div>
+
+    <div class="day-section day-neutral" style="margin-top:12px">
+      <div class="day-header">⚡ วันกลางๆ</div>
+      <div class="day-body">
+        <div class="day-tags" id="neutralDays"></div>
+        <div class="day-desc" id="neutralDesc"></div>
+      </div>
+    </div>
+
+    <div class="activity-section" style="margin-top:16px">
+      <div class="activity-title">🎯 แนะนำวันทำกิจกรรมสำคัญ</div>
+      <div id="activityList"></div>
+    </div>
+
+    <button class="btn-again" onclick="resetResult()">🔄 เลือกราศีใหม่</button>
+
+    <div class="upsell-box">
+      <div class="upsell-title">🔮 อยากรู้ดวงละเอียดกว่านี้?</div>
+      <div class="upsell-desc">ให้ AI วิเคราะห์ดวงชะตาเชิงลึก ทั้งการงาน การเงิน ความรัก<br>จากข้อมูลวันเดือนปีเกิดของคุณพี่</div>
+      <button class="btn-upsell" onclick="window.location.href='chinese.html'">✨ ดูดวงบาจื้อละเอียด</button>
+      <div class="upsell-price">ใช้ 40 เหรียญ • วิเคราะห์ครบทุกด้าน</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ZODIACS = [
+  { name: 'เมษ', icon: '♈', date: '21 มี.ค. - 19 เม.ย.' },
+  { name: 'พฤษภ', icon: '♉', date: '20 เม.ย. - 20 พ.ค.' },
+  { name: 'เมถุน', icon: '♊', date: '21 พ.ค. - 20 มิ.ย.' },
+  { name: 'กรกฎ', icon: '♋', date: '21 มิ.ย. - 22 ก.ค.' },
+  { name: 'สิงห์', icon: '♌', date: '23 ก.ค. - 22 ส.ค.' },
+  { name: 'กันย์', icon: '♍', date: '23 ส.ค. - 22 ก.ย.' },
+  { name: 'ตุลย์', icon: '♎', date: '23 ก.ย. - 22 ต.ค.' },
+  { name: 'พิจิก', icon: '♏', date: '23 ต.ค. - 21 พ.ย.' },
+  { name: 'ธนู', icon: '♐', date: '22 พ.ย. - 21 ธ.ค.' },
+  { name: 'มกร', icon: '♑', date: '22 ธ.ค. - 19 ม.ค.' },
+  { name: 'กุมภ์', icon: '♒', date: '20 ม.ค. - 18 ก.พ.' },
+  { name: 'มีน', icon: '♓', date: '19 ก.พ. - 20 มี.ค.' },
+];
+
+const LUCKY_DAYS = {
+  'เมษ': {
+    good: ['อังคาร', 'เสาร์'],
+    bad: ['พุธ', 'พฤหัส'],
+    neutral: ['จันทร์', 'ศุกร์', 'อาทิตย์'],
+    goodDesc: 'วันอังคารและเสาร์เป็นวันที่ดาวอังคารซึ่งเป็นดาวประจำราศีเมษส่งพลังมาให้คุณพี่โดยตรงค่ะ เหมาะสำหรับการเริ่มต้นสิ่งใหม่ ลงมือทำ และตัดสินใจสำคัญ',
+    badDesc: 'วันพุธและพฤหัสอาจมีความขัดแย้งกับพลังงานของราศีเมษค่ะ ควรเลี่ยงการเซ็นสัญญาหรือตัดสินใจใหญ่ๆ ในวันนี้',
+    neutralDesc: 'วันจันทร์ ศุกร์ อาทิตย์ เป็นวันกลางๆ ทำอะไรก็ได้ แต่ต้องระวังให้มากขึ้นหน่อยนะคะ',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'อังคาร', avoid: 'พุธ' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'เสาร์', avoid: 'พฤหัส' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'อังคาร', avoid: 'พุธ' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'อาทิตย์', avoid: 'พุธ' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'อังคาร', avoid: 'พฤหัส' },
+    ]
+  },
+  'พฤษภ': {
+    good: ['ศุกร์', 'จันทร์'],
+    bad: ['อังคาร', 'เสาร์'],
+    neutral: ['พุธ', 'พฤหัส', 'อาทิตย์'],
+    goodDesc: 'วันศุกร์และจันทร์เป็นวันที่ดาวศุกร์ซึ่งเป็นดาวประจำราศีพฤษภส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับเรื่องความรัก การเงิน และการลงทุน',
+    badDesc: 'วันอังคารและเสาร์อาจทำให้เกิดความขัดแย้งหรือความล่าช้าค่ะ ควรเลี่ยงการเซ็นสัญญาหรือตัดสินใจสำคัญ',
+    neutralDesc: 'วันพุธ พฤหัส อาทิตย์ เป็นวันที่พอทำได้ แต่ต้องรอบคอบมากขึ้นนะคะ',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'ศุกร์', avoid: 'อังคาร' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'จันทร์', avoid: 'เสาร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'ศุกร์', avoid: 'อังคาร' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'จันทร์', avoid: 'เสาร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'ศุกร์', avoid: 'อังคาร' },
+    ]
+  },
+  'เมถุน': {
+    good: ['พุธ', 'อาทิตย์'],
+    bad: ['พฤหัส', 'เสาร์'],
+    neutral: ['จันทร์', 'อังคาร', 'ศุกร์'],
+    goodDesc: 'วันพุธและอาทิตย์เป็นวันที่ดาวพุธซึ่งเป็นดาวประจำราศีเมถุนส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการสื่อสาร เจรจา และการเดินทาง',
+    badDesc: 'วันพฤหัสและเสาร์อาจทำให้การสื่อสารผิดพลาดหรือแผนเปลี่ยนกะทันหันค่ะ ควรระวัง',
+    neutralDesc: 'วันจันทร์ อังคาร ศุกร์ พอไปได้นะคะ แต่ต้องตรวจสอบรายละเอียดให้ดี',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'พุธ', avoid: 'พฤหัส' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'อาทิตย์', avoid: 'เสาร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'พุธ', avoid: 'เสาร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'พุธ', avoid: 'พฤหัส' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'อาทิตย์', avoid: 'เสาร์' },
+    ]
+  },
+  'กรกฎ': {
+    good: ['จันทร์', 'พฤหัส'],
+    bad: ['เสาร์', 'อังคาร'],
+    neutral: ['พุธ', 'ศุกร์', 'อาทิตย์'],
+    goodDesc: 'วันจันทร์และพฤหัสเป็นวันที่ดาวจันทร์ซึ่งเป็นดาวประจำราศีกรกฎส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับเรื่องครอบครัว บ้าน และการลงทุนระยะยาว',
+    badDesc: 'วันเสาร์และอังคารอาจทำให้รู้สึกหนักใจหรือมีอุปสรรคค่ะ ควรเลี่ยงการตัดสินใจสำคัญ',
+    neutralDesc: 'วันพุธ ศุกร์ อาทิตย์ เป็นวันกลางๆ ทำอะไรได้แต่ต้องระวังด้านอารมณ์',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'จันทร์', avoid: 'เสาร์' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'พฤหัส', avoid: 'อังคาร' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'จันทร์', avoid: 'เสาร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'พฤหัส', avoid: 'อังคาร' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'จันทร์', avoid: 'เสาร์' },
+    ]
+  },
+  'สิงห์': {
+    good: ['อาทิตย์', 'อังคาร'],
+    bad: ['เสาร์', 'พุธ'],
+    neutral: ['จันทร์', 'พฤหัส', 'ศุกร์'],
+    goodDesc: 'วันอาทิตย์และอังคารเป็นวันที่ดวงอาทิตย์ซึ่งเป็นดาวประจำราศีสิงห์ส่องแสงให้คุณพี่ค่ะ เหมาะสำหรับการแสดงออก ความเป็นผู้นำ และความสำเร็จ',
+    badDesc: 'วันเสาร์และพุธอาจทำให้พลังงานลดลงหรือมีความขัดแย้งค่ะ ระวังความหยิ่งทระนงในวันนี้',
+    neutralDesc: 'วันจันทร์ พฤหัส ศุกร์ ทำได้ปกติ แต่ต้องไม่ดื้อรั้นเกินไปนะคะ',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'อาทิตย์', avoid: 'เสาร์' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'อังคาร', avoid: 'พุธ' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'อาทิตย์', avoid: 'เสาร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'อาทิตย์', avoid: 'พุธ' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'อาทิตย์', avoid: 'เสาร์' },
+    ]
+  },
+  'กันย์': {
+    good: ['พุธ', 'ศุกร์'],
+    bad: ['พฤหัส', 'จันทร์'],
+    neutral: ['อาทิตย์', 'อังคาร', 'เสาร์'],
+    goodDesc: 'วันพุธและศุกร์เป็นวันที่ดาวพุธซึ่งเป็นดาวประจำราศีกันย์ส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการวิเคราะห์ วางแผน และทำงานละเอียด',
+    badDesc: 'วันพฤหัสและจันทร์อาจทำให้เกิดความสับสนหรือข้อมูลผิดพลาดค่ะ ควรตรวจสอบทุกอย่างซ้ำ',
+    neutralDesc: 'วันอาทิตย์ อังคาร เสาร์ พอทำได้ แต่ต้องรอบคอบเป็นพิเศษ',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'พุธ', avoid: 'พฤหัส' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'ศุกร์', avoid: 'จันทร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'ศุกร์', avoid: 'พฤหัส' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'พุธ', avoid: 'จันทร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'พุธ', avoid: 'พฤหัส' },
+    ]
+  },
+  'ตุลย์': {
+    good: ['ศุกร์', 'พุธ'],
+    bad: ['อังคาร', 'เสาร์'],
+    neutral: ['จันทร์', 'พฤหัส', 'อาทิตย์'],
+    goodDesc: 'วันศุกร์และพุธเป็นวันที่ดาวศุกร์ซึ่งเป็นดาวประจำราศีตุลย์ส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับความรัก ความสวยงาม และการเจรจาต่อรอง',
+    badDesc: 'วันอังคารและเสาร์อาจทำให้เกิดความขัดแย้งหรือการตัดสินใจที่ไม่สมดุลค่ะ ควรระวัง',
+    neutralDesc: 'วันจันทร์ พฤหัส อาทิตย์ ทำได้ปกติ แต่ต้องรักษาความสมดุลให้ดี',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'ศุกร์', avoid: 'อังคาร' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'พุธ', avoid: 'เสาร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'ศุกร์', avoid: 'อังคาร' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'ศุกร์', avoid: 'เสาร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'พุธ', avoid: 'อังคาร' },
+    ]
+  },
+  'พิจิก': {
+    good: ['อังคาร', 'อาทิตย์'],
+    bad: ['ศุกร์', 'จันทร์'],
+    neutral: ['พุธ', 'พฤหัส', 'เสาร์'],
+    goodDesc: 'วันอังคารและอาทิตย์เป็นวันที่ดาวอังคารซึ่งเป็นดาวประจำราศีพิจิกส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการลงมือทำ ความกล้า และการเผชิญความท้าทาย',
+    badDesc: 'วันศุกร์และจันทร์อาจทำให้พลังงานอ่อนแอลงหรือมีความลังเลค่ะ ควรหลีกเลี่ยงการตัดสินใจสำคัญ',
+    neutralDesc: 'วันพุธ พฤหัส เสาร์ ทำได้ แต่ต้องระวังความหุนหันพลันแล่น',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'อังคาร', avoid: 'ศุกร์' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'อาทิตย์', avoid: 'จันทร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'อาทิตย์', avoid: 'ศุกร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'อังคาร', avoid: 'จันทร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'อังคาร', avoid: 'ศุกร์' },
+    ]
+  },
+  'ธนู': {
+    good: ['พฤหัส', 'อาทิตย์'],
+    bad: ['พุธ', 'เสาร์'],
+    neutral: ['จันทร์', 'อังคาร', 'ศุกร์'],
+    goodDesc: 'วันพฤหัสและอาทิตย์เป็นวันที่ดาวพฤหัสซึ่งเป็นดาวประจำราศีธนูส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการขยายตัว การเดินทาง และความก้าวหน้า',
+    badDesc: 'วันพุธและเสาร์อาจทำให้แผนการเปลี่ยนแปลงหรือมีอุปสรรคค่ะ ควรเลี่ยงการตัดสินใจใหญ่',
+    neutralDesc: 'วันจันทร์ อังคาร ศุกร์ พอทำได้ แต่ต้องไม่หุนหันพลันแล่น',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'พฤหัส', avoid: 'พุธ' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'อาทิตย์', avoid: 'เสาร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'พฤหัส', avoid: 'พุธ' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'อาทิตย์', avoid: 'เสาร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'พฤหัส', avoid: 'เสาร์' },
+    ]
+  },
+  'มกร': {
+    good: ['เสาร์', 'พุธ'],
+    bad: ['จันทร์', 'ศุกร์'],
+    neutral: ['อังคาร', 'พฤหัส', 'อาทิตย์'],
+    goodDesc: 'วันเสาร์และพุธเป็นวันที่ดาวเสาร์ซึ่งเป็นดาวประจำราศีมกรส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการทำงานหนัก ความมุ่งมั่น และการสร้างความมั่นคง',
+    badDesc: 'วันจันทร์และศุกร์อาจทำให้รู้สึกเครียดหรือมีภาระเพิ่มค่ะ ควรพักผ่อนและไม่รับงานใหม่',
+    neutralDesc: 'วันอังคาร พฤหัส อาทิตย์ ทำได้ปกติ แต่ต้องไม่รีบร้อน',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'เสาร์', avoid: 'จันทร์' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'เสาร์', avoid: 'ศุกร์' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'พุธ', avoid: 'จันทร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'เสาร์', avoid: 'ศุกร์' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'เสาร์', avoid: 'จันทร์' },
+    ]
+  },
+  'กุมภ์': {
+    good: ['เสาร์', 'อาทิตย์'],
+    bad: ['จันทร์', 'พฤหัส'],
+    neutral: ['อังคาร', 'พุธ', 'ศุกร์'],
+    goodDesc: 'วันเสาร์และอาทิตย์เป็นวันที่ดาวยูเรนัสซึ่งเป็นดาวประจำราศีกุมภ์ส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับการสร้างสรรค์ นวัตกรรม และการเปลี่ยนแปลง',
+    badDesc: 'วันจันทร์และพฤหัสอาจทำให้แผนการสะดุดหรือมีความไม่แน่นอนค่ะ ควรยืดหยุ่น',
+    neutralDesc: 'วันอังคาร พุธ ศุกร์ ทำได้แต่ต้องรับมือกับสิ่งไม่คาดคิดให้ได้',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'เสาร์', avoid: 'จันทร์' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'อาทิตย์', avoid: 'พฤหัส' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'อาทิตย์', avoid: 'จันทร์' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'เสาร์', avoid: 'พฤหัส' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'อาทิตย์', avoid: 'จันทร์' },
+    ]
+  },
+  'มีน': {
+    good: ['พฤหัส', 'ศุกร์'],
+    bad: ['พุธ', 'อังคาร'],
+    neutral: ['จันทร์', 'เสาร์', 'อาทิตย์'],
+    goodDesc: 'วันพฤหัสและศุกร์เป็นวันที่ดาวเนปจูนซึ่งเป็นดาวประจำราศีมีนส่งพลังให้คุณพี่ค่ะ เหมาะสำหรับความรัก ศิลปะ จิตใจ และการบำเพ็ญบุญ',
+    badDesc: 'วันพุธและอังคารอาจทำให้ความคิดสับสนหรือตัดสินใจผิดพลาดค่ะ ควรรับฟังคนอื่นก่อน',
+    neutralDesc: 'วันจันทร์ เสาร์ อาทิตย์ พอทำได้ แต่ต้องระวังการหลงตัวเอง',
+    activities: [
+      { icon: '💼', name: 'สมัครงาน/เริ่มงานใหม่', good: 'พฤหัส', avoid: 'พุธ' },
+      { icon: '🏠', name: 'ซื้อบ้าน/ที่ดิน', good: 'ศุกร์', avoid: 'อังคาร' },
+      { icon: '💍', name: 'แต่งงาน/หมั้น', good: 'ศุกร์', avoid: 'พุธ' },
+      { icon: '📝', name: 'เซ็นสัญญา', good: 'พฤหัส', avoid: 'อังคาร' },
+      { icon: '🚀', name: 'เปิดธุรกิจ', good: 'พฤหัส', avoid: 'พุธ' },
+    ]
+  },
+};
+
+let selectedZodiac = null;
+let currentUser = null;
+
+// Render zodiac grid
+document.getElementById('zodiacGrid').innerHTML = ZODIACS.map((z, i) =>
+  `<div class="zodiac-btn" id="z${i}" onclick="selectZodiac('${z.name}', ${i})">
+    <div class="zodiac-icon">${z.icon}</div>
+    <div class="zodiac-name">ราศี${z.name}</div>
+    <div class="zodiac-date">${z.date}</div>
+  </div>`
+).join('');
+
+function selectZodiac(name, idx) {
+  selectedZodiac = name;
+  document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('z' + idx).classList.add('active');
+  document.getElementById('btnCheck').disabled = false;
+}
+
+function showResult() {
+  const data = LUCKY_DAYS[selectedZodiac];
+  const zodiac = ZODIACS.find(z => z.name === selectedZodiac);
+
+  document.getElementById('resultTitle').textContent = `${zodiac.icon} ราศี${selectedZodiac} วันดี/วันห้ามของคุณพี่`;
+
+  document.getElementById('goodDays').innerHTML = data.good.map(d =>
+    `<span class="day-tag">วัน${d}</span>`).join('');
+  document.getElementById('goodDesc').textContent = data.goodDesc;
+
+  document.getElementById('badDays').innerHTML = data.bad.map(d =>
+    `<span class="day-tag">วัน${d}</span>`).join('');
+  document.getElementById('badDesc').textContent = data.badDesc;
+
+  document.getElementById('neutralDays').innerHTML = data.neutral.map(d =>
+    `<span class="day-tag">วัน${d}</span>`).join('');
+  document.getElementById('neutralDesc').textContent = data.neutralDesc;
+
+  document.getElementById('activityList').innerHTML = data.activities.map(a =>
+    `<div class="activity-row">
+      <div class="activity-icon">${a.icon}</div>
+      <div class="activity-info">
+        <div class="activity-name">${a.name}</div>
+        <div class="activity-day">✅ วันที่ดีที่สุด: วัน${a.good}</div>
+        <div class="activity-avoid">⛔ ควรเลี่ยง: วัน${a.avoid}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  document.getElementById('resultBox').classList.add('show');
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+
+  saveReading(selectedZodiac);
+}
+
+function resetResult() {
+  selectedZodiac = null;
+  document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnCheck').disabled = true;
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function saveReading(zodiac) {
+  if (!currentUser) return;
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+    const db = getFirestore(app);
+    const data = LUCKY_DAYS[zodiac];
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'วันดี/วันห้าม', question: `ราศี${zodiac}`, result: `วันดี: ${data.good.join(', ')} | วันห้าม: ${data.bad.join(', ')}`, createdAt: new Date().toISOString()
+    });
+  } catch(e) { console.error(e); }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      if (!user) window.location.href = '../index.html';
+    });
+  } catch(e) { console.error(e); }
+});
+</script>
+</body>
+</html>
