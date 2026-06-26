@@ -228,7 +228,7 @@
     </div>
   </div>
 </div>
-
+<script src="../js/horoscope-data.js"></script>
 <script>
 // ข้อมูลดวง — เพิ่มทีหลัง
 // โครงสร้าง: HOROSCOPE_DATA[mode][zodiac][period] = { overall, love, work, money, health, scoreLove, scoreWork, scoreMoney, scoreHealth, luckyColor, luckyNumber, luckyDay }
@@ -320,7 +320,10 @@ function showResult() {
     ? `w${Math.ceil((now - new Date(now.getFullYear(), 0, 1)) / 604800000)}`
     : `m${now.getMonth() + 1}`;
 
-  const data = (HOROSCOPE_DATA[currentMode][selectedZodiac] || {})[period] || PLACEHOLDER;
+  const data = currentMode === 'monthly'
+    ? (MONTHLY_DATA[selectedZodiac] || {})[now.getMonth() + 1] || PLACEHOLDER
+    : PLACEHOLDER;
+  
 
   document.getElementById('resultPeriod').textContent = getCurrentPeriod();
   document.getElementById('resultTitle').textContent = `${zodiac.icon} ราศี${selectedZodiac}`;
