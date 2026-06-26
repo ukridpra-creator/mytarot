@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ดูดวงฟรี — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--purple-light); font-size: 16px; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .free-badge {
+      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
+      color: white; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 24px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .free-label {
+      display: inline-block; background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3); color: #10b981;
+      font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; cursor: pointer;
+      transition: all 0.2s; text-align: center; position: relative;
+      overflow: hidden;
+    }
+    .card:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.06); transform: translateY(-2px); }
+    .card-free-tag {
+      position: absolute; top: 10px; right: 10px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white; font-size: 9px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .card-icon { width: 64px; height: 64px; margin: 0 auto 8px; }
+    .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+    .card-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .card-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">✨ ดูดวงฟรี</div>
+  <div class="free-badge">FREE</div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">✨ ดูดวงฟรี ไม่มีค่าใช้จ่าย</div>
+    <div class="hero-desc">เลือกดูดวงฟรีได้เลย ไม่ต้องใช้เหรียญ<br>ไม่ต้องสมัครสมาชิกก็ใช้ได้</div>
+    <div class="free-label">🎁 ฟรีทุกอัน ไม่มีค่าใช้จ่าย</div>
+  </div>
+
+  <div class="grid">
+    <div class="card" onclick="window.location.href='tarot-yesno.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-yesno.png" alt="Yes/No ไพ่ทาโรต์"></div>
+      <div class="card-title">Yes/No ไพ่ทาโรต์</div>
+      <div class="card-desc">ถามไพ่ได้คำตอบทันที ใช่หรือไม่ใช่</div>
+    </div>
+    <div class="card" onclick="window.location.href='dream.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-dream.png" alt="ทำนายฝัน"></div>
+      <div class="card-title">ทำนายฝัน</div>
+      <div class="card-desc">พิมสิ่งที่ฝันเห็น รู้ความหมายทันที</div>
+    </div>
+    <div class="card" onclick="window.location.href='lucky-day.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-lucyday.png" alt="วันดี/วันห้าม"></div>
+      <div class="card-title">วันดี/วันห้าม</div>
+      <div class="card-desc">เช็กวันมงคลตามราศีก่อนทำสิ่งสำคัญ</div>
+    </div>
+    <div class="card" onclick="window.location.href='horoscope-weekly.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-weekly.png" alt="ดวงรายสัปดาห์"></div>
+      <div class="card-title">ดวงรายสัปดาห์</div>
+      <div class="card-desc">ดวงประจำสัปดาห์ตามราศีของคุณ</div>
+    </div>
+    <div class="card" onclick="window.location.href='horoscope-monthly.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-monthly.png" alt="ดวงรายเดือน"></div>
+      <div class="card-title">ดวงรายเดือน</div>
+      <div class="card-desc">ดวงประจำเดือนตามราศีของคุณ</div>
+    </div>
+    <div class="card" onclick="window.location.href='lucky-number.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-luckynumber.png" alt="เลขนำโชค"></div>
+      <div class="card-title">เลขนำโชค</div>
+      <div class="card-desc">เลขมงคลประจำวันจากวันเกิดของคุณ</div>
+    </div>
+    <div class="card" onclick="window.location.href='lucky-color.html'">
+      <div class="card-free-tag">FREE</div>
+      <div class="card-icon"><img src="../images/icon-luckycolor.png" alt="สีมงคลประจำวัน"></div>
+      <div class="card-title">สีมงคลประจำวัน</div>
+      <div class="card-desc">สีนำโชคตามวันเกิดและวันนี้</div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="window.location.href='../index.html#checkin'"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+</body>
+</html>
