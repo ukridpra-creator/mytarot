@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yes/No ไพ่ทาโรต์ฟรี — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--purple-light); font-size: 16px; text-decoration: none;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .free-badge {
+      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
+      color: white; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 8px 0 20px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .hero-desc { font-size: 13px; color: var(--dim); }
+
+    .question-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 16px;
+    }
+    .question-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .question-input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 16px; color: white; font-size: 14px;
+      font-family: 'Sarabun', sans-serif; outline: none;
+      transition: border-color 0.2s; resize: none; box-sizing: border-box;
+    }
+    .question-input:focus { border-color: var(--purple-light); }
+    .question-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .btn-ask {
+      width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
+    }
+    .btn-ask:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-ask:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Card flip */
+    .card-area { display: flex; justify-content: center; margin-bottom: 24px; display: none; }
+    .card-area.show { display: flex; }
+    .card-wrap { width: 140px; aspect-ratio: 2/3; perspective: 800px; cursor: pointer; }
+    .card-inner {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.8s ease;
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position: absolute; inset: 0;
+      backface-visibility: hidden; border-radius: 16px; overflow: hidden;
+      border: 2px solid rgba(124,58,237,0.5);
+    }
+    .card-back { transform: rotateY(0deg); }
+    .card-front { transform: rotateY(180deg); }
+    .card-front img, .card-back img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Result */
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .answer-badge {
+      text-align: center; padding: 20px; border-radius: 20px;
+      margin-bottom: 16px; border: 2px solid;
+    }
+    .answer-yes-sure  { background: rgba(16,185,129,0.15); border-color: #10b981; }
+    .answer-yes       { background: rgba(96,165,250,0.15); border-color: #60a5fa; }
+    .answer-maybe     { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
+    .answer-no-maybe  { background: rgba(249,115,22,0.15); border-color: #f97316; }
+    .answer-no        { background: rgba(239,68,68,0.15);  border-color: #ef4444; }
+
+    .answer-emoji { font-size: 48px; margin-bottom: 8px; }
+    .answer-text  { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .answer-yes-sure .answer-text  { color: #10b981; }
+    .answer-yes .answer-text       { color: #60a5fa; }
+    .answer-maybe .answer-text     { color: #f59e0b; }
+    .answer-no-maybe .answer-text  { color: #f97316; }
+    .answer-no .answer-text        { color: #ef4444; }
+    .answer-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+
+    .card-name-box { text-align: center; margin-bottom: 16px; }
+    .card-name { font-size: 14px; color: var(--gold); font-weight: 700; }
+    .card-meaning { font-size: 12px; color: var(--dim); margin-top: 2px; }
+
+    .btn-again {
+      width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
+      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+      color: var(--purple-light); font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+
+    /* Upsell */
+    .upsell-box {
+      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
+      border: 1px solid rgba(124,58,237,0.3); border-radius: 20px;
+      padding: 20px; text-align: center;
+    }
+    .upsell-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .upsell-desc { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.6; }
+    .btn-upsell {
+      width: 100%; padding: 14px; border-radius: 16px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      border: none; color: white; font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+    .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+
+    @keyframes flipIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+    .flip-in { animation: flipIn 0.4s ease-out forwards; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="free.html" class="back-btn">←</a>
+  <div class="page-title">🎴 Yes/No ไพ่ทาโรต์</div>
+  <div class="free-badge">FREE</div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🎴 ถามไพ่ได้คำตอบทันที</div>
+    <div class="hero-desc">ตั้งจิตอธิษฐาน แล้วถามคำถามในใจได้เลยค่ะ</div>
+  </div>
+
+  <div class="question-box">
+    <label class="question-label">💭 คำถามของคุณ</label>
+    <textarea class="question-input" id="question" rows="3"
+      placeholder="เช่น เขาชอบเราอยู่ไหม? / ควรเปลี่ยนงานไหม? / โปรเจคนี้จะสำเร็จไหม?"></textarea>
+  </div>
+
+  <button class="btn-ask" id="btnAsk" onclick="askCard()">🔮 ให้ไพ่ตอบ</button>
+
+  <!-- Card -->
+  <div class="card-area" id="cardArea">
+    <div class="card-wrap" onclick="flipCard()">
+      <div class="card-inner" id="cardInner">
+        <div class="card-back"><img src="../images/tarot/back.png" alt="ไพ่"></div>
+        <div class="card-front"><img id="cardImg" src="" alt="ไพ่"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-box" id="resultBox">
+    <div class="card-name-box">
+      <div class="card-name" id="cardName"></div>
+      <div class="card-meaning" id="cardMeaning"></div>
+    </div>
+    <div class="answer-badge" id="answerBadge">
+      <div class="answer-emoji" id="answerEmoji"></div>
+      <div class="answer-text" id="answerText"></div>
+      <div class="answer-desc" id="answerDesc"></div>
+    </div>
+    <button class="btn-again" onclick="resetAll()">🔄 ถามใหม่</button>
+    <div class="upsell-box">
+      <div class="upsell-title">🔮 อยากรู้ละเอียดกว่านี้?</div>
+      <div class="upsell-desc">ให้ AI วิเคราะห์ไพ่ 3 ใบ อดีต ปัจจุบัน อนาคต<br>พร้อมคำแนะนำเชิงลึกจากหมอดู AI</div>
+      <button class="btn-upsell" onclick="window.location.href='tarot-ask.html'">✨ ดูดวงละเอียด 3 ใบ</button>
+      <div class="upsell-price">ใช้ 20 เหรียญ • ถามต่อได้ไม่จำกัด</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CARDS = [
+  // Major Arcana
+  {id:0,  name:'The Fool',           img:'../images/tarot/0.png',   answer:'yes',      meaning:'จุดเริ่มต้นใหม่ที่เต็มไปด้วยความเป็นไปได้'},
+  {id:1,  name:'The Magician',       img:'../images/tarot/1.png',   answer:'yes-sure', meaning:'คุณมีพลังและทักษะทุกอย่างที่ต้องการ'},
+  {id:2,  name:'The High Priestess', img:'../images/tarot/2.png',   answer:'maybe',    meaning:'รอและสังเกตก่อน ยังไม่ถึงเวลา'},
+  {id:3,  name:'The Empress',        img:'../images/tarot/3.png',   answer:'yes-sure', meaning:'ความอุดมสมบูรณ์และความสำเร็จกำลังมา'},
+  {id:4,  name:'The Emperor',        img:'../images/tarot/4.png',   answer:'yes',      meaning:'ความมั่นคงและความสำเร็จอยู่ในมือคุณ'},
+  {id:5,  name:'The Hierophant',     img:'../images/tarot/5.png',   answer:'yes',      meaning:'ทำตามแนวทางที่ถูกต้อง ผลดีจะตามมา'},
+  {id:6,  name:'The Lovers',         img:'../images/tarot/6.png',   answer:'yes-sure', meaning:'ความรักและความสัมพันธ์ที่ดีกำลังมา'},
+  {id:7,  name:'The Chariot',        img:'../images/tarot/7.png',   answer:'yes',      meaning:'ความมุ่งมั่นและชัยชนะอยู่ข้างหน้า'},
+  {id:8,  name:'Strength',           img:'../images/tarot/8.png',   answer:'yes',      meaning:'คุณมีพลังภายในที่จะเอาชนะทุกอย่าง'},
+  {id:9,  name:'The Hermit',         img:'../images/tarot/9.png',   answer:'maybe',    meaning:'ต้องใช้เวลาคิดและรอก่อน'},
+  {id:10, name:'Wheel of Fortune',   img:'../images/tarot/10.png',  answer:'yes',      meaning:'โชคชะตากำลังเปลี่ยนในทางที่ดี'},
+  {id:11, name:'Justice',            img:'../images/tarot/11.png',  answer:'maybe',    meaning:'ผลขึ้นอยู่กับสิ่งที่คุณทำมา'},
+  {id:12, name:'The Hanged Man',     img:'../images/tarot/12.png',  answer:'maybe',    meaning:'ต้องรอและมองมุมใหม่ก่อน'},
+  {id:13, name:'Death',              img:'../images/tarot/13.png',  answer:'no-maybe', meaning:'ต้องปล่อยวางสิ่งเดิมก่อนถึงจะได้สิ่งใหม่'},
+  {id:14, name:'Temperance',         img:'../images/tarot/14.png',  answer:'yes',      meaning:'สมดุลและความอดทนจะนำไปสู่ความสำเร็จ'},
+  {id:15, name:'The Devil',          img:'../images/tarot/15.png',  answer:'no-maybe', meaning:'ระวังสิ่งที่ยึดติดอยู่ อาจขัดขวางความสำเร็จ'},
+  {id:16, name:'The Tower',          img:'../images/tarot/16.png',  answer:'no',       meaning:'การเปลี่ยนแปลงกะทันหัน ระวังแผนพัง'},
+  {id:17, name:'The Star',           img:'../images/tarot/17.png',  answer:'yes-sure', meaning:'ความหวังและโชคดีกำลังส่องแสงมา'},
+  {id:18, name:'The Moon',           img:'../images/tarot/18.png',  answer:'maybe',    meaning:'มีความไม่แน่นอน ระวังการหลอกลวง'},
+  {id:19, name:'The Sun',            img:'../images/tarot/19.png',  answer:'yes-sure', meaning:'ความสำเร็จและความสุขกำลังมาถึง'},
+  {id:20, name:'Judgement',          img:'../images/tarot/20.png',  answer:'yes',      meaning:'เวลาแห่งการตัดสินใจที่ถูกต้องมาถึงแล้ว'},
+  {id:21, name:'The World',          img:'../images/tarot/21.png',  answer:'yes-sure', meaning:'ความสำเร็จสมบูรณ์แบบกำลังมาถึง'},
+  // Wands
+  {id:22, name:'Ace of Wands',       img:'../images/tarot/w1.png',  answer:'yes-sure', meaning:'พลังงานใหม่และโอกาสดีกำลังมา'},
+  {id:23, name:'Two of Wands',       img:'../images/tarot/w2.png',  answer:'yes',      meaning:'แผนการและความเป็นไปได้อยู่ข้างหน้า'},
+  {id:24, name:'Three of Wands',     img:'../images/tarot/w3.png',  answer:'yes',      meaning:'การขยายและความสำเร็จกำลังปรากฏ'},
+  {id:25, name:'Four of Wands',      img:'../images/tarot/w4.png',  answer:'yes-sure', meaning:'การเฉลิมฉลองและความสุขกำลังมา'},
+  {id:26, name:'Five of Wands',      img:'../images/tarot/w5.png',  answer:'maybe',    meaning:'มีความขัดแย้งและการแข่งขัน'},
+  {id:27, name:'Six of Wands',       img:'../images/tarot/w6.png',  answer:'yes',      meaning:'ชัยชนะและการยอมรับจากคนอื่น'},
+  {id:28, name:'Seven of Wands',     img:'../images/tarot/w7.png',  answer:'yes',      meaning:'ยืนหยัดและคุณจะชนะ'},
+  {id:29, name:'Eight of Wands',     img:'../images/tarot/w8.png',  answer:'yes',      meaning:'ทุกอย่างจะเคลื่อนไหวเร็วมาก'},
+  {id:30, name:'Nine of Wands',      img:'../images/tarot/w9.png',  answer:'maybe',    meaning:'ต้องอดทนอีกนิด เกือบถึงแล้ว'},
+  {id:31, name:'Ten of Wands',       img:'../images/tarot/w10.png', answer:'no-maybe', meaning:'ภาระหนักเกินไป ต้องปล่อยวางบ้าง'},
+  {id:32, name:'Page of Wands',      img:'../images/tarot/w11.png', answer:'yes',      meaning:'ข่าวดีและพลังงานใหม่กำลังมา'},
+  {id:33, name:'Knight of Wands',    img:'../images/tarot/w12.png', answer:'yes',      meaning:'ความกล้าหาญและความเร็วจะนำสู่ความสำเร็จ'},
+  {id:34, name:'Queen of Wands',     img:'../images/tarot/w13.png', answer:'yes',      meaning:'ความมั่นใจและพลังจะนำทางคุณ'},
+  {id:35, name:'King of Wands',      img:'../images/tarot/w14.png', answer:'yes-sure', meaning:'ความเป็นผู้นำและวิสัยทัศน์จะทำให้สำเร็จ'},
+  // Cups
+  {id:36, name:'Ace of Cups',        img:'../images/tarot/c1.png',  answer:'yes-sure', meaning:'ความรักและอารมณ์ดีๆ กำลังไหลมา'},
+  {id:37, name:'Two of Cups',        img:'../images/tarot/c2.png',  answer:'yes-sure', meaning:'ความสัมพันธ์และความรักที่ดีกำลังบานสะพรั่ง'},
+  {id:38, name:'Three of Cups',      img:'../images/tarot/c3.png',  answer:'yes',      meaning:'ความสุขและการเฉลิมฉลองกำลังมา'},
+  {id:39, name:'Four of Cups',       img:'../images/tarot/c4.png',  answer:'maybe',    meaning:'อย่าเพิกเฉยต่อโอกาสที่อยู่ตรงหน้า'},
+  {id:40, name:'Five of Cups',       img:'../images/tarot/c5.png',  answer:'no-maybe', meaning:'ความสูญเสีย แต่ยังมีสิ่งดีๆ เหลืออยู่'},
+  {id:41, name:'Six of Cups',        img:'../images/tarot/c6.png',  answer:'yes',      meaning:'ความทรงจำดีๆ และความอบอุ่นกำลังกลับมา'},
+  {id:42, name:'Seven of Cups',      img:'../images/tarot/c7.png',  answer:'maybe',    meaning:'ระวังความฝันที่ไม่เป็นจริง'},
+  {id:43, name:'Eight of Cups',      img:'../images/tarot/c8.png',  answer:'no-maybe', meaning:'ถึงเวลาปล่อยวางและเดินหน้าต่อ'},
+  {id:44, name:'Nine of Cups',       img:'../images/tarot/c9.png',  answer:'yes-sure', meaning:'ความปรารถนาจะเป็นจริง'},
+  {id:45, name:'Ten of Cups',        img:'../images/tarot/c10.png', answer:'yes-sure', meaning:'ความสุขสมบูรณ์และครอบครัวที่อบอุ่น'},
+  {id:46, name:'Page of Cups',       img:'../images/tarot/c11.png', answer:'yes',      meaning:'ข่าวดีด้านความรักกำลังมา'},
+  {id:47, name:'Knight of Cups',     img:'../images/tarot/c12.png', answer:'yes',      meaning:'ความโรแมนติกและความฝันกำลังเป็นจริง'},
+  {id:48, name:'Queen of Cups',      img:'../images/tarot/c13.png', answer:'yes',      meaning:'ความเห็นอกเห็นใจและสัญชาตญาณจะนำทาง'},
+  {id:49, name:'King of Cups',       img:'../images/tarot/c14.png', answer:'yes',      meaning:'ความมั่นคงทางอารมณ์จะนำสู่ความสำเร็จ'},
+  // Swords
+  {id:50, name:'Ace of Swords',      img:'../images/tarot/s1.png',  answer:'yes',      meaning:'ความจริงและความชัดเจนกำลังปรากฏ'},
+  {id:51, name:'Two of Swords',      img:'../images/tarot/s2.png',  answer:'maybe',    meaning:'ยังตัดสินใจไม่ได้ ต้องการข้อมูลเพิ่ม'},
+  {id:52, name:'Three of Swords',    img:'../images/tarot/s3.png',  answer:'no',       meaning:'ความเจ็บปวดและความผิดหวังกำลังมา'},
+  {id:53, name:'Four of Swords',     img:'../images/tarot/s4.png',  answer:'maybe',    meaning:'ต้องพักผ่อนและรอก่อน'},
+  {id:54, name:'Five of Swords',     img:'../images/tarot/s5.png',  answer:'no',       meaning:'ความขัดแย้งและการสูญเสีย ระวัง'},
+  {id:55, name:'Six of Swords',      img:'../images/tarot/s6.png',  answer:'yes',      meaning:'การเดินทางสู่สถานการณ์ที่ดีกว่า'},
+  {id:56, name:'Seven of Swords',    img:'../images/tarot/s7.png',  answer:'no-maybe', meaning:'ระวังการโกงและความไม่ซื่อสัตย์'},
+  {id:57, name:'Eight of Swords',    img:'../images/tarot/s8.png',  answer:'no-maybe', meaning:'รู้สึกติดอยู่ แต่ทางออกมีอยู่'},
+  {id:58, name:'Nine of Swords',     img:'../images/tarot/s9.png',  answer:'no',       meaning:'ความวิตกกังวลและความกลัวกำลังครอบงำ'},
+  {id:59, name:'Ten of Swords',      img:'../images/tarot/s10.png', answer:'no',       meaning:'จุดสิ้นสุดที่เจ็บปวด แต่การเริ่มต้นใหม่กำลังมา'},
+  {id:60, name:'Page of Swords',     img:'../images/tarot/s11.png', answer:'maybe',    meaning:'ระวังการสื่อสารที่ผิดพลาด'},
+  {id:61, name:'Knight of Swords',   img:'../images/tarot/s12.png', answer:'yes',      meaning:'ความเร็วและความตัดสินใจเด็ดขาดจะช่วยได้'},
+  {id:62, name:'Queen of Swords',    img:'../images/tarot/s13.png', answer:'maybe',    meaning:'ใช้ความคิดมากกว่าอารมณ์'},
+  {id:63, name:'King of Swords',     img:'../images/tarot/s14.png', answer:'yes',      meaning:'ความยุติธรรมและความฉลาดจะนำทาง'},
+  // Pentacles
+  {id:64, name:'Ace of Pentacles',   img:'../images/tarot/p1.png',  answer:'yes-sure', meaning:'โอกาสทางการเงินและวัตถุใหม่กำลังมา'},
+  {id:65, name:'Two of Pentacles',   img:'../images/tarot/p2.png',  answer:'maybe',    meaning:'ต้องรักษาสมดุลให้ดี'},
+  {id:66, name:'Three of Pentacles', img:'../images/tarot/p3.png',  answer:'yes',      meaning:'การทำงานร่วมกันจะนำสู่ความสำเร็จ'},
+  {id:67, name:'Four of Pentacles',  img:'../images/tarot/p4.png',  answer:'maybe',    meaning:'ระวังการยึดถือมากเกินไป'},
+  {id:68, name:'Five of Pentacles',  img:'../images/tarot/p5.png',  answer:'no-maybe', meaning:'ความยากลำบากชั่วคราว ยังมีความช่วยเหลือ'},
+  {id:69, name:'Six of Pentacles',   img:'../images/tarot/p6.png',  answer:'yes',      meaning:'ความใจกว้างและการแบ่งปันจะนำผลดี'},
+  {id:70, name:'Seven of Pentacles', img:'../images/tarot/p7.png',  answer:'yes',      meaning:'รอผลที่กำลังเติบโต ใกล้ได้เก็บเกี่ยวแล้ว'},
+  {id:71, name:'Eight of Pentacles', img:'../images/tarot/p8.png',  answer:'yes',      meaning:'ความขยันและทักษะจะนำสู่ความสำเร็จ'},
+  {id:72, name:'Nine of Pentacles',  img:'../images/tarot/p9.png',  answer:'yes-sure', meaning:'ความมั่งคั่งและความพึงพอใจกำลังมา'},
+  {id:73, name:'Ten of Pentacles',   img:'../images/tarot/p10.png', answer:'yes-sure', meaning:'ความมั่งคั่งและความสุขระยะยาวกำลังมา'},
+  {id:74, name:'Page of Pentacles',  img:'../images/tarot/p11.png', answer:'yes',      meaning:'โอกาสใหม่ด้านการเงินและการเรียนรู้'},
+  {id:75, name:'Knight of Pentacles',img:'../images/tarot/p12.png', answer:'yes',      meaning:'ความอดทนและความขยันจะนำสู่ความสำเร็จ'},
+  {id:76, name:'Queen of Pentacles', img:'../images/tarot/p13.png', answer:'yes',      meaning:'ความอุดมสมบูรณ์และความมั่นคงกำลังมา'},
+  {id:77, name:'King of Pentacles',  img:'../images/tarot/p14.png', answer:'yes-sure', meaning:'ความมั่งคั่งและความสำเร็จอยู่ในมือคุณ'},
+];
+
+const ANSWERS = {
+  'yes-sure': { emoji: '✅', text: 'ได้แน่นอน!',  cls: 'answer-yes-sure',  desc: 'ไพ่บอกว่าสิ่งที่คุณต้องการจะเกิดขึ้นแน่นอนค่ะ จงมั่นใจและเดินหน้าต่อไป' },
+  'yes':      { emoji: '👍', text: 'ได้',           cls: 'answer-yes',       desc: 'ไพ่บอกว่าโอกาสสำเร็จมีสูงค่ะ แต่ต้องลงมือทำด้วยนะคะ' },
+  'maybe':    { emoji: '🤔', text: 'ไม่แน่',       cls: 'answer-maybe',     desc: 'ไพ่บอกว่ายังไม่ชัดเจนค่ะ ขึ้นอยู่กับสิ่งที่คุณเลือกทำในช่วงนี้' },
+  'no-maybe': { emoji: '⚠️', text: 'ไม่น่าได้',   cls: 'answer-no-maybe',  desc: 'ไพ่บอกว่ามีอุปสรรคอยู่ค่ะ ต้องระวังและเตรียมรับมือให้ดี' },
+  'no':       { emoji: '❌', text: 'ไม่ได้',       cls: 'answer-no',        desc: 'ไพ่บอกว่าไม่ใช่เวลาที่เหมาะสมค่ะ ลองมองหาทางเลือกอื่น' },
+};
+
+let currentCard = null;
+let flipped = false;
+
+function askCard() {
+  const q = document.getElementById('question').value.trim();
+  if (!q) { alert('กรุณาพิมพ์คำถามก่อนนะคะ'); return; }
+
+  currentCard = CARDS[Math.floor(Math.random() * CARDS.length)];
+  flipped = false;
+
+  document.getElementById('cardImg').src = currentCard.img;
+  document.getElementById('cardInner').classList.remove('flipped');
+  document.getElementById('cardArea').classList.add('show');
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('btnAsk').disabled = true;
+
+  setTimeout(() => {
+    document.getElementById('cardArea').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+
+  setTimeout(() => flipCard(), 600);
+}
+
+function flipCard() {
+  if (flipped) return;
+  flipped = true;
+  document.getElementById('cardInner').classList.add('flipped');
+  setTimeout(() => showResult(), 900);
+}
+
+function showResult() {
+  const ans = ANSWERS[currentCard.answer];
+  const badge = document.getElementById('answerBadge');
+  badge.className = 'answer-badge ' + ans.cls + ' flip-in';
+  document.getElementById('answerEmoji').textContent = ans.emoji;
+  document.getElementById('answerText').textContent = ans.text;
+  document.getElementById('answerDesc').textContent = ans.desc;
+  document.getElementById('cardName').textContent = currentCard.name;
+  document.getElementById('cardMeaning').textContent = currentCard.meaning;
+  document.getElementById('resultBox').classList.add('show');
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAll() {
+  document.getElementById('question').value = '';
+  document.getElementById('cardArea').classList.remove('show');
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('btnAsk').disabled = false;
+  flipped = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
