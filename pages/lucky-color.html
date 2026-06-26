@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เลขนำโชค — My Tarot</title>
+  <title>สีมงคลประจำวัน — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <style>
@@ -32,81 +32,89 @@
     .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
     .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
 
+    /* Today card */
+    .today-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 16px; text-align: center;
+    }
+    .today-label { font-size: 12px; color: var(--dim); margin-bottom: 4px; }
+    .today-day { font-size: 24px; font-weight: 800; color: white; }
+    .today-date { font-size: 12px; color: var(--dim); margin-top: 2px; }
+
+    /* Birthday select */
     .input-box {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; padding: 16px; margin-bottom: 16px;
     }
     .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
-    .date-row { display: flex; gap: 8px; }
-    .date-select {
-      flex: 1; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 12px 8px; color: white; font-size: 14px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      appearance: none; text-align: center;
+    .day-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .day-btn {
+      padding: 10px 4px; border-radius: 14px; text-align: center;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
+      font-size: 12px; color: white; font-weight: 600;
     }
-    .date-select:focus { border-color: var(--purple-light); }
-    .date-select option { background: #1a0e2e; color: white; }
+    .day-btn:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
+    .day-btn.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
+    .day-btn-color { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 4px; }
 
-    .btn-calc {
+    .btn-check {
       width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
       border: none; border-radius: 16px; padding: 16px; color: white;
       font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
       cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
     }
-    .btn-calc:hover { transform: translateY(-2px); }
-    .btn-calc:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-check:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* Result */
     .result-box { display: none; }
     .result-box.show { display: block; }
 
-    .life-number-card {
-      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
-      border: 1px solid rgba(124,58,237,0.4); border-radius: 24px;
-      padding: 24px; text-align: center; margin-bottom: 16px;
+    .color-hero {
+      border-radius: 24px; padding: 28px 20px; text-align: center;
+      margin-bottom: 16px; position: relative; overflow: hidden;
     }
-    .life-num-label { font-size: 13px; color: var(--dim); margin-bottom: 8px; }
-    .life-num-display {
-      font-size: 80px; font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      line-height: 1; margin-bottom: 8px;
+    .color-swatch-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .color-swatch {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
-    .life-num-name { font-size: 18px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .life-num-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .color-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .color-subtitle { font-size: 13px; color: rgba(255,255,255,0.7); }
 
-    .lucky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .lucky-card {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; text-align: center;
+    .info-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 16px; margin-bottom: 12px;
     }
-    .lucky-card-icon { font-size: 28px; margin-bottom: 6px; }
-    .lucky-card-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
-    .lucky-card-value { font-size: 20px; font-weight: 800; color: #f59e0b; }
+    .info-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .info-text { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.8; }
 
-    .numbers-card {
+    .avoid-card {
+      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 20px; padding: 16px; margin-bottom: 16px;
+    }
+    .avoid-title { font-size: 13px; color: #ef4444; font-weight: 700; margin-bottom: 10px; }
+    .avoid-colors { display: flex; gap: 8px; flex-wrap: wrap; }
+    .avoid-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+    }
+    .avoid-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .avoid-text { font-size: 12px; color: #ef4444; }
+
+    .weekly-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; padding: 16px; margin-bottom: 16px;
     }
-    .numbers-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
-    .numbers-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .num-ball {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 800; color: white;
-      box-shadow: 0 4px 12px rgba(245,158,11,0.4);
-    }
-
-    .traits-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .traits-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
-    .trait-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .trait-icon { font-size: 18px; flex-shrink: 0; }
-    .trait-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+    .weekly-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
+    .weekly-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .weekly-row:last-child { border-bottom: none; }
+    .weekly-day { font-size: 12px; color: white; font-weight: 600; width: 48px; flex-shrink: 0; }
+    .weekly-dots { display: flex; gap: 4px; flex: 1; }
+    .weekly-dot { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
+    .weekly-color-name { font-size: 11px; color: var(--dim); }
 
     .btn-again {
       width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
@@ -134,76 +142,70 @@
 
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
-  <div class="page-title">🔢 เลขนำโชค</div>
+  <div class="page-title">🎨 สีมงคลประจำวัน</div>
   <div class="free-badge">FREE</div>
 </div>
 
 <div class="page-content">
   <div class="hero">
     <div class="hero-mascot">
-      <img src="../images/mascot-luckynumber.png" alt="mascot" onerror="this.style.display='none'">
+      <img src="../images/mascot-luckycolor.png" alt="mascot" onerror="this.style.display='none'">
     </div>
-    <div class="hero-title">🔢 เลขนำโชคของคุณพี่</div>
-    <div class="hero-desc">น้องจะคำนวณเลขชีวิตและเลขนำโชค<br>จากวันเกิดของคุณพี่เลยค่ะ</div>
+    <div class="hero-title">🎨 สีมงคลของคุณพี่</div>
+    <div class="hero-desc">น้องจะบอกสีนำโชคประจำวันนี้<br>และสีมงคลตามวันเกิดของคุณพี่ค่ะ</div>
   </div>
 
+  <!-- วันนี้ -->
+  <div class="today-card">
+    <div class="today-label">วันนี้คือ</div>
+    <div class="today-day" id="todayDay"></div>
+    <div class="today-date" id="todayDate"></div>
+  </div>
+
+  <!-- เลือกวันเกิด -->
   <div class="input-box">
-    <label class="input-label">🎂 วันเกิดของคุณพี่</label>
-    <div class="date-row">
-      <select class="date-select" id="selDay"></select>
-      <select class="date-select" id="selMonth"></select>
-      <select class="date-select" id="selYear"></select>
-    </div>
+    <label class="input-label">🎂 เกิดวันอะไรคะ?</label>
+    <div class="day-grid" id="dayGrid"></div>
   </div>
 
-  <button class="btn-calc" id="btnCalc" onclick="calculate()">🔢 คำนวณเลขนำโชค</button>
+  <button class="btn-check" id="btnCheck" onclick="showResult()" disabled>🎨 ดูสีมงคล</button>
 
+  <!-- Result -->
   <div class="result-box" id="resultBox">
-    <div class="life-number-card">
-      <div class="life-num-label">เลขชีวิตของคุณพี่คือ</div>
-      <div class="life-num-display" id="lifeNum"></div>
-      <div class="life-num-name" id="lifeNumName"></div>
-      <div class="life-num-desc" id="lifeNumDesc"></div>
+
+    <!-- สีมงคลวันนี้ -->
+    <div class="color-hero" id="colorHero">
+      <div class="color-swatch-row" id="colorSwatches"></div>
+      <div class="color-title" id="colorTitle"></div>
+      <div class="color-subtitle" id="colorSubtitle"></div>
     </div>
 
-    <div class="lucky-grid">
-      <div class="lucky-card">
-        <div class="lucky-card-icon">🎰</div>
-        <div class="lucky-card-label">เลขนำโชคหลัก</div>
-        <div class="lucky-card-value" id="luckyMain"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">⭐</div>
-        <div class="lucky-card-label">เลขเสริมดวง</div>
-        <div class="lucky-card-value" id="luckySecond"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">🎨</div>
-        <div class="lucky-card-label">สีนำโชค</div>
-        <div class="lucky-card-value" id="luckyColor"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">📅</div>
-        <div class="lucky-card-label">วันมงคล</div>
-        <div class="lucky-card-value" id="luckyDay"></div>
-      </div>
+    <div class="info-card">
+      <div class="info-title">✨ ทำไมสีนี้ถึงนำโชคให้คุณพี่?</div>
+      <div class="info-text" id="colorMeaning"></div>
     </div>
 
-    <div class="numbers-card">
-      <div class="numbers-title">🎰 เลขนำโชคของคุณพี่</div>
-      <div class="numbers-row" id="luckyNumbers"></div>
+    <div class="info-card">
+      <div class="info-title">👗 ใส่สีไหนดีวันนี้?</div>
+      <div class="info-text" id="colorAdvice"></div>
     </div>
 
-    <div class="traits-card">
-      <div class="traits-title">✨ บุคลิกและพลังงานของคุณพี่</div>
-      <div id="traitsList"></div>
+    <div class="avoid-card">
+      <div class="avoid-title">⛔ สีที่ควรเลี่ยงวันนี้</div>
+      <div class="avoid-colors" id="avoidColors"></div>
     </div>
 
-    <button class="btn-again" onclick="resetCalc()">🔄 คำนวณใหม่</button>
+    <!-- สีมงคลตลอดสัปดาห์ -->
+    <div class="weekly-card">
+      <div class="weekly-title">📅 สีมงคลประจำสัปดาห์ของคุณพี่</div>
+      <div id="weeklyList"></div>
+    </div>
+
+    <button class="btn-again" onclick="resetResult()">🔄 เลือกใหม่</button>
 
     <div class="upsell-box">
-      <div class="upsell-title">🔮 อยากรู้ดวงชะตาลึกกว่านี้?</div>
-      <div class="upsell-desc">ให้ AI วิเคราะห์เลขศาสตร์เชิงลึก<br>รู้ดวงความรัก การงาน การเงิน จากชื่อและวันเกิด</div>
+      <div class="upsell-title">🔮 อยากรู้ดวงลึกกว่านี้?</div>
+      <div class="upsell-desc">ให้ AI วิเคราะห์เลขศาสตร์เชิงลึก<br>สีมงคล เลขมงคล และดวงชะตาตลอดปี</div>
       <button class="btn-upsell" onclick="window.location.href='numerology.html'">✨ ดูเลขศาสตร์ละเอียด</button>
       <div class="upsell-price">ใช้เหรียญ • วิเคราะห์ครบทุกด้าน</div>
     </div>
@@ -211,199 +213,166 @@
 </div>
 
 <script>
-const LIFE_NUMBERS = {
-  1: {
-    name: 'ผู้นำ — เลขแห่งความเป็นหนึ่ง',
-    desc: 'คุณพี่มีพลังงานของผู้นำตัวจริงเลยค่ะ มีความคิดริเริ่ม กล้าตัดสินใจ และมุ่งมั่นสู่เป้าหมาย เกิดมาเพื่อนำทางคนอื่นค่ะ',
-    luckyNums: [1, 10, 19, 28, 37], luckyColor: 'แดง', luckyDay: 'อาทิตย์',
-    traits: [
-      { icon: '👑', text: 'มีความเป็นผู้นำสูง กล้าตัดสินใจ ไม่กลัวความท้าทาย' },
-      { icon: '🔥', text: 'มีพลังงานและแรงบันดาลใจที่แรงกล้า ทำให้คนรอบข้างได้รับแรงบันดาลใจด้วย' },
-      { icon: '💡', text: 'ความคิดสร้างสรรค์และนวัตกรรม มักเป็นคนแรกที่คิดสิ่งใหม่ๆ' },
-      { icon: '⚡', text: 'ต้องระวังความดื้อรั้นและอยากได้ทุกอย่างคนเดียวนะคะ' },
-    ]
+// สีมงคลตามวันในสัปดาห์ (ตามโหราศาสตร์ไทย)
+const DAY_COLORS = {
+  0: { // อาทิตย์
+    name: 'วันอาทิตย์',
+    lucky: ['แดง', 'ส้ม'],
+    luckyHex: ['#ef4444', '#f97316'],
+    avoid: ['น้ำเงิน', 'ดำ'],
+    avoidHex: ['#3b82f6', '#111827'],
+    meaning: 'ดาวอาทิตย์ครองวันนี้ค่ะ สีแดงและสีส้มจะเสริมพลังงาน ความมั่นใจ และความเป็นผู้นำให้คุณพี่ได้เลย',
+    advice: 'ใส่เสื้อสีแดงหรือสีส้มวันนี้ได้เลยค่ะ หรือจะเป็นกระเป๋า รองเท้า หรือเครื่องประดับสีนี้ก็ได้นะคะ ดึงดูดโชคและความสำเร็จได้ดีมากค่ะ'
   },
-  2: {
-    name: 'นักประสาน — เลขแห่งความร่วมมือ',
-    desc: 'คุณพี่มีพลังงานของนักประสานสัมพันธ์ค่ะ ใจดี อ่อนโยน รับฟังคนอื่น และเก่งเรื่องการทำงานเป็นทีม',
-    luckyNums: [2, 11, 20, 29, 38], luckyColor: 'ส้ม', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '🤝', text: 'เก่งเรื่องความสัมพันธ์และการประสานงาน ทุกคนรักคุณพี่ค่ะ' },
-      { icon: '💕', text: 'มีความเห็นอกเห็นใจสูง รับรู้ความรู้สึกคนอื่นได้ดีมาก' },
-      { icon: '🌸', text: 'อ่อนโยนและมีเสน่ห์ ทำให้คนรอบข้างรู้สึกสบายใจ' },
-      { icon: '⚡', text: 'ต้องระวังการตัดสินใจที่ลังเลเกินไป และการยึดติดกับความคิดเห็นคนอื่น' },
-    ]
+  1: { // จันทร์
+    name: 'วันจันทร์',
+    lucky: ['เหลือง', 'ครีม'],
+    luckyHex: ['#fbbf24', '#fef3c7'],
+    avoid: ['แดง', 'ดำ'],
+    avoidHex: ['#ef4444', '#111827'],
+    meaning: 'ดาวจันทร์ครองวันนี้ค่ะ สีเหลืองและสีครีมจะเสริมความอ่อนโยน ความเมตตา และความโชคดีในเรื่องความรักและครอบครัว',
+    advice: 'ใส่โทนสีเหลืองอ่อนหรือสีครีมวันนี้ค่ะ เหมาะกับการประชุม การพบปะ และการสร้างความสัมพันธ์ที่ดีค่ะ'
   },
-  3: {
-    name: 'นักสร้างสรรค์ — เลขแห่งการแสดงออก',
-    desc: 'คุณพี่มีพลังงานของนักสร้างสรรค์ตัวจริงค่ะ ชอบแสดงออก มีศิลปะ และมีความสนุกสนานในตัว',
-    luckyNums: [3, 12, 21, 30, 39], luckyColor: 'เหลือง', luckyDay: 'พุธ',
-    traits: [
-      { icon: '🎨', text: 'มีความคิดสร้างสรรค์และพรสวรรค์ด้านศิลปะ ดนตรี หรือการแสดง' },
-      { icon: '😄', text: 'มีอารมณ์ขันและพลังงานที่สดใส ทำให้ทุกคนรอบข้างมีความสุข' },
-      { icon: '💬', text: 'เก่งด้านการสื่อสารและการพูด มีเสน่ห์ในการเล่าเรื่อง' },
-      { icon: '⚡', text: 'ต้องระวังการกระจัดกระจายพลังงานไปทุกทิศ ควรโฟกัสให้มากขึ้น' },
-    ]
+  2: { // อังคาร
+    name: 'วันอังคาร',
+    lucky: ['ชมพู', 'ม่วง'],
+    luckyHex: ['#ec4899', '#a855f7'],
+    avoid: ['เหลือง', 'เขียว'],
+    avoidHex: ['#fbbf24', '#22c55e'],
+    meaning: 'ดาวอังคารครองวันนี้ค่ะ สีชมพูและสีม่วงจะเสริมพลังงานความรัก ความกล้าหาญ และการกระทำ ทำให้คุณพี่โดดเด่นและน่าดึงดูดมากค่ะ',
+    advice: 'ใส่สีชมพูหรือสีม่วงวันนี้ได้เลยค่ะ เหมาะกับการออกเดต การเจรจา และการแสดงออกถึงตัวตน'
   },
-  4: {
-    name: 'นักสร้าง — เลขแห่งความมั่นคง',
-    desc: 'คุณพี่มีพลังงานของผู้สร้างรากฐานค่ะ ขยัน มีระเบียบ และเชื่อถือได้ ทุกอย่างที่คุณพี่สร้างจะยั่งยืนมากค่ะ',
-    luckyNums: [4, 13, 22, 31, 40], luckyColor: 'เขียว', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '🏗️', text: 'มีความสามารถในการวางแผนและสร้างสิ่งต่างๆ ให้มั่นคงและยั่งยืน' },
-      { icon: '📋', text: 'ชอบความเป็นระเบียบ ทำงานอย่างมีแบบแผน และพิถีพิถัน' },
-      { icon: '💪', text: 'ขยันและทนทาน ไม่กลัวความยากลำบาก พร้อมทำงานหนัก' },
-      { icon: '⚡', text: 'ต้องระวังความแข็งกระด้างเกินไป และการยึดติดกับกฎระเบียบ' },
-    ]
+  3: { // พุธ
+    name: 'วันพุธ',
+    lucky: ['เขียว', 'เขียวอ่อน'],
+    luckyHex: ['#22c55e', '#86efac'],
+    avoid: ['ส้ม', 'แดง'],
+    avoidHex: ['#f97316', '#ef4444'],
+    meaning: 'ดาวพุธครองวันนี้ค่ะ สีเขียวจะเสริมสติปัญญา การสื่อสาร และความโชคดีในเรื่องธุรกิจและการค้าขาย',
+    advice: 'ใส่สีเขียววันนี้ค่ะ ไม่ว่าจะเป็นสีเขียวเข้มหรือสีเขียวอ่อนก็ได้ เหมาะกับวันที่ต้องประชุม เจรจา หรือเรียนรู้สิ่งใหม่ค่ะ'
   },
-  5: {
-    name: 'นักผจญภัย — เลขแห่งอิสรภาพ',
-    desc: 'คุณพี่มีพลังงานของนักผจญภัยค่ะ รักอิสระ ชอบการเปลี่ยนแปลง และพร้อมสำรวจโลกใบใหม่เสมอ',
-    luckyNums: [5, 14, 23, 32, 41], luckyColor: 'ฟ้า', luckyDay: 'พุธ',
-    traits: [
-      { icon: '🌍', text: 'รักการเดินทางและการสำรวจ ชีวิตที่หลากหลายทำให้คุณพี่มีความสุข' },
-      { icon: '🦋', text: 'ปรับตัวได้ดีกับทุกสถานการณ์ ไม่กลัวการเปลี่ยนแปลง' },
-      { icon: '⚡', text: 'มีพลังงานสูงและกระตือรือร้น ทำให้คนรอบข้างมีชีวิตชีวา' },
-      { icon: '⚠️', text: 'ต้องระวังการเบื่อง่ายและการทิ้งสิ่งที่เริ่มไว้กลางคัน' },
-    ]
+  4: { // พฤหัส
+    name: 'วันพฤหัสบดี',
+    lucky: ['ส้ม', 'น้ำตาล'],
+    luckyHex: ['#f97316', '#92400e'],
+    avoid: ['ม่วง', 'ชมพู'],
+    avoidHex: ['#a855f7', '#ec4899'],
+    meaning: 'ดาวพฤหัสครองวันนี้ค่ะ สีส้มและสีน้ำตาลจะเสริมความมั่นคง ความเจริญรุ่งเรือง และโชคลาภ เหมาะกับการขยายกิจการและสร้างความมั่งคั่ง',
+    advice: 'ใส่สีส้มหรือสีน้ำตาลอุ่นๆ วันนี้ค่ะ เหมาะกับการทำธุรกิจ ลงทุน หรือขอความช่วยเหลือจากผู้ใหญ่ค่ะ'
   },
-  6: {
-    name: 'นักดูแล — เลขแห่งความรัก',
-    desc: 'คุณพี่มีพลังงานของผู้ดูแลและปกป้องค่ะ รักครอบครัว ห่วงใยคนอื่น และมีหัวใจที่อบอุ่น',
-    luckyNums: [6, 15, 24, 33, 42], luckyColor: 'ชมพู', luckyDay: 'ศุกร์',
-    traits: [
-      { icon: '💝', text: 'มีความรักและความห่วงใยที่ลึกซึ้ง ครอบครัวและคนที่รักคือทุกอย่าง' },
-      { icon: '🏠', text: 'ชอบสร้างบรรยากาศที่อบอุ่นและสวยงาม ทั้งบ้านและความสัมพันธ์' },
-      { icon: '🌹', text: 'มีความรับผิดชอบสูง พร้อมเสียสละเพื่อคนที่รักเสมอ' },
-      { icon: '⚡', text: 'ต้องระวังการแบกรับภาระมากเกินไป และการควบคุมคนอื่นมากเกินไป' },
-    ]
+  5: { // ศุกร์
+    name: 'วันศุกร์',
+    lucky: ['ฟ้า', 'ฟ้าอ่อน'],
+    luckyHex: ['#60a5fa', '#bfdbfe'],
+    avoid: ['น้ำตาล', 'ดำ'],
+    avoidHex: ['#92400e', '#111827'],
+    meaning: 'ดาวศุกร์ครองวันนี้ค่ะ สีฟ้าจะเสริมความสวยงาม ความรัก และความสุขสบาย ทำให้คุณพี่ดูดีและดึงดูดความรักได้ดีมากค่ะ',
+    advice: 'ใส่สีฟ้าหรือสีฟ้าอ่อนวันนี้ค่ะ เหมาะกับการออกเดต งานสังสรรค์ และทุกโอกาสที่อยากดูดี ดูมีเสน่ห์ค่ะ'
   },
-  7: {
-    name: 'นักค้นหา — เลขแห่งปัญญา',
-    desc: 'คุณพี่มีพลังงานของนักปราชญ์ค่ะ ชอบค้นคว้า ใฝ่รู้ และมีสัญชาตญาณที่แหลมคม',
-    luckyNums: [7, 16, 25, 34, 43], luckyColor: 'ม่วง', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '🔍', text: 'มีความสามารถในการวิเคราะห์และค้นหาความจริงที่ซ่อนอยู่' },
-      { icon: '🧠', text: 'สติปัญญาสูง ชอบเรียนรู้และศึกษาในแบบที่ลึกกว่าคนอื่น' },
-      { icon: '🔮', text: 'มีสัญชาตญาณและความรู้สึกไวต่อพลังงานรอบข้าง' },
-      { icon: '⚡', text: 'ต้องระวังการแยกตัวออกจากสังคมมากเกินไป และความสงสัยในคนอื่น' },
-    ]
-  },
-  8: {
-    name: 'นักสร้างอาณาจักร — เลขแห่งอำนาจ',
-    desc: 'คุณพี่มีพลังงานของนักธุรกิจและผู้มีอำนาจค่ะ เก่งเรื่องการบริหาร มีวิสัยทัศน์ และดึงดูดความสำเร็จ',
-    luckyNums: [8, 17, 26, 35, 44], luckyColor: 'ดำ/ทอง', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '💎', text: 'มีความสามารถด้านธุรกิจและการเงินที่โดดเด่น เกิดมาเพื่อความสำเร็จ' },
-      { icon: '🏆', text: 'มีความทะเยอทะยานสูง มุ่งมั่นสู่เป้าหมายและไม่ยอมแพ้ง่ายๆ' },
-      { icon: '⚡', text: 'มีพลังงานของผู้นำและมีอิทธิพลต่อคนรอบข้าง' },
-      { icon: '⚠️', text: 'ต้องระวังความโลภและการใช้อำนาจในทางที่ผิด' },
-    ]
-  },
-  9: {
-    name: 'นักให้ — เลขแห่งมนุษยธรรม',
-    desc: 'คุณพี่มีพลังงานของผู้ให้ค่ะ มีจิตใจกว้างขวาง รักมนุษยชาติ และพร้อมช่วยเหลือทุกคน',
-    luckyNums: [9, 18, 27, 36, 45], luckyColor: 'ทอง', luckyDay: 'พฤหัส',
-    traits: [
-      { icon: '🌟', text: 'มีจิตใจที่กว้างขวางและเมตตากรุณา พร้อมช่วยเหลือทุกคนเสมอ' },
-      { icon: '🌍', text: 'มีวิสัยทัศน์กว้างไกล มองเห็นภาพรวมและต้องการทำให้โลกดีขึ้น' },
-      { icon: '🎭', text: 'มีพรสวรรค์ด้านศิลปะและความคิดสร้างสรรค์ในระดับสูง' },
-      { icon: '⚡', text: 'ต้องระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลตัวเอง' },
-    ]
-  },
-  11: {
-    name: 'นักส่องแสง — เลขมาสเตอร์แห่งแรงบันดาลใจ',
-    desc: 'คุณพี่มีเลขมาสเตอร์ 11 ค่ะ! มีพลังงานสูงมาก มีสัญชาตญาณและความสามารถพิเศษที่โดดเด่นกว่าใคร',
-    luckyNums: [11, 22, 33, 44, 55], luckyColor: 'เงิน', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '✨', text: 'มีพลังจิตและสัญชาตญาณที่แข็งแกร่งเป็นพิเศษ รับรู้สิ่งที่คนอื่นไม่รับรู้' },
-      { icon: '💫', text: 'เป็นแรงบันดาลใจให้คนรอบข้าง มีพลังงานที่ดึงดูดคนเข้ามาหา' },
-      { icon: '🔮', text: 'มีความสามารถด้านจิตวิญญาณและความเข้าใจในระดับที่ลึกกว่าปกติ' },
-      { icon: '⚡', text: 'ต้องระวังความเครียดสูงและความรู้สึกไวเกินไปต่อพลังงานรอบข้าง' },
-    ]
-  },
-  22: {
-    name: 'นักสร้างใหญ่ — เลขมาสเตอร์แห่งการสร้างสรรค์',
-    desc: 'คุณพี่มีเลขมาสเตอร์ 22 ค่ะ! เลขที่ทรงพลังที่สุด มีความสามารถสร้างสิ่งยิ่งใหญ่ที่ส่งผลต่อโลกได้จริงๆ',
-    luckyNums: [22, 4, 44, 13, 31], luckyColor: 'ทอง', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '🏛️', text: 'มีความสามารถในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืนที่ส่งผลต่อคนหมู่มาก' },
-      { icon: '🌐', text: 'มีวิสัยทัศน์ระดับโลก มองเห็นภาพที่ใหญ่กว่าคนอื่น' },
-      { icon: '💪', text: 'มีพลังและความอดทนในระดับที่เกินกว่าคนทั่วไป' },
-      { icon: '⚡', text: 'ต้องระวังความกดดันที่สูงมากและความคาดหวังจากตัวเองและคนอื่น' },
-    ]
-  },
+  6: { // เสาร์
+    name: 'วันเสาร์',
+    lucky: ['ม่วงเข้ม', 'ดำ'],
+    luckyHex: ['#7c3aed', '#1f2937'],
+    avoid: ['เหลือง', 'ครีม'],
+    avoidHex: ['#fbbf24', '#fef3c7'],
+    meaning: 'ดาวเสาร์ครองวันนี้ค่ะ สีม่วงเข้มและสีดำจะเสริมความลึกลับ ความเข้มแข็ง และพลังแห่งการปกป้อง เหมาะกับการทำงานหนักและสร้างความมั่นคง',
+    advice: 'ใส่สีม่วงเข้มหรือสีดำวันนี้ค่ะ ดูดีและน่าเกรงขาม เหมาะกับวันที่ต้องการความจริงจังและความน่าเชื่อถือค่ะ'
+  }
 };
 
+// สีมงคลตามวันเกิด × วันในสัปดาห์
+const BIRTH_DAY_BOOST = {
+  0: { boost: ['แดง', 'ทอง'], boostHex: ['#ef4444', '#d97706'] },
+  1: { boost: ['ขาว', 'เงิน'], boostHex: ['#f8fafc', '#94a3b8'] },
+  2: { boost: ['ชมพู', 'แดงเข้ม'], boostHex: ['#ec4899', '#be123c'] },
+  3: { boost: ['เขียว', 'เหลือง'], boostHex: ['#22c55e', '#fbbf24'] },
+  4: { boost: ['ส้ม', 'เขียว'], boostHex: ['#f97316', '#22c55e'] },
+  5: { boost: ['ฟ้า', 'ขาว'], boostHex: ['#60a5fa', '#f8fafc'] },
+  6: { boost: ['ม่วง', 'ดำ'], boostHex: ['#a855f7', '#1f2937'] },
+};
+
+const DAYS_TH = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์'];
+let selectedBirthDay = null;
 let currentUser = null;
 
-// Populate dropdowns
-const selDay = document.getElementById('selDay');
-const selMonth = document.getElementById('selMonth');
-const selYear = document.getElementById('selYear');
+// วันนี้
+const now = new Date();
+const todayIdx = now.getDay();
+document.getElementById('todayDay').textContent = `วัน${DAYS_TH[todayIdx]}`;
+const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+document.getElementById('todayDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear() + 543}`;
 
-selDay.innerHTML = '<option value="">วัน</option>' +
-  Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+// Day grid
+document.getElementById('dayGrid').innerHTML = DAYS_TH.map((d, i) =>
+  `<div class="day-btn" id="db${i}" onclick="selectBirthDay(${i})">
+    <div class="day-btn-color" style="background:${DAY_COLORS[i].luckyHex[0]}"></div>
+    วัน${d}
+  </div>`
+).join('');
 
-const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-selMonth.innerHTML = '<option value="">เดือน</option>' +
-  months.map((m,i) => `<option value="${i+1}">${m}</option>`).join('');
-
-const currentYear = new Date().getFullYear();
-selYear.innerHTML = '<option value="">ปี (ค.ศ.)</option>' +
-  Array.from({length:80}, (_,i) => currentYear - i).map(y => `<option value="${y}">${y} (${y+543})</option>`).join('');
-
-function calcLifeNumber(day, month, year) {
-  const digits = String(day) + String(month) + String(year);
-  let sum = digits.split('').reduce((a, d) => a + parseInt(d), 0);
-  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    sum = String(sum).split('').reduce((a, d) => a + parseInt(d), 0);
-  }
-  return sum;
+function selectBirthDay(idx) {
+  selectedBirthDay = idx;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('db' + idx).classList.add('active');
+  document.getElementById('btnCheck').disabled = false;
+  document.getElementById('resultBox').classList.remove('show');
 }
 
-function calculate() {
-  const day = parseInt(selDay.value);
-  const month = parseInt(selMonth.value);
-  const year = parseInt(selYear.value);
-  if (!day || !month || !year) { alert('กรุณากรอกวันเกิดให้ครบนะคะ'); return; }
+function showResult() {
+  const todayData = DAY_COLORS[todayIdx];
+  const birthData = BIRTH_DAY_BOOST[selectedBirthDay];
 
-  const lifeNum = calcLifeNumber(day, month, year);
-  const data = LIFE_NUMBERS[lifeNum] || LIFE_NUMBERS[9];
+  // สีมงคลวันนี้ + boost จากวันเกิด
+  const allLucky = [...new Set([...todayData.lucky, ...birthData.boost])];
+  const allHex = [...new Set([...todayData.luckyHex, ...birthData.boostHex])];
 
-  document.getElementById('lifeNum').textContent = lifeNum;
-  document.getElementById('lifeNumName').textContent = data.name;
-  document.getElementById('lifeNumDesc').textContent = data.desc;
+  // Color hero bg
+  const heroEl = document.getElementById('colorHero');
+  heroEl.style.background = `linear-gradient(135deg, ${allHex[0]}33, ${allHex[1] || allHex[0]}22)`;
+  heroEl.style.border = `1px solid ${allHex[0]}44`;
 
-  document.getElementById('luckyMain').textContent = data.luckyNums[0];
-  document.getElementById('luckySecond').textContent = data.luckyNums[1];
-  document.getElementById('luckyColor').textContent = data.luckyColor;
-  document.getElementById('luckyDay').textContent = 'วัน' + data.luckyDay;
+  document.getElementById('colorSwatches').innerHTML = allHex.slice(0, 4).map(h =>
+    `<div class="color-swatch" style="background:${h}"></div>`).join('');
 
-  document.getElementById('luckyNumbers').innerHTML = data.luckyNums.map(n =>
-    `<div class="num-ball">${n}</div>`).join('');
+  document.getElementById('colorTitle').textContent = `สีมงคลของคุณพี่วันนี้`;
+  document.getElementById('colorSubtitle').textContent = allLucky.join(' • ');
+  document.getElementById('colorMeaning').textContent = todayData.meaning;
+  document.getElementById('colorAdvice').textContent = todayData.advice +
+    (selectedBirthDay === todayIdx ? ' และวันนี้ตรงกับวันเกิดของคุณพี่พอดี พลังงานจะแรงเป็นพิเศษเลยค่ะ! ✨' :
+      ` เพิ่มเติมด้วยสี${birthData.boost.join('/')}ซึ่งเป็นสีเสริมดวงจากวันเกิดของคุณพี่ด้วยนะคะ`);
 
-  document.getElementById('traitsList').innerHTML = data.traits.map(t =>
-    `<div class="trait-row">
-      <div class="trait-icon">${t.icon}</div>
-      <div class="trait-text">${t.text}</div>
+  document.getElementById('avoidColors').innerHTML = todayData.avoid.map((c, i) =>
+    `<div class="avoid-chip">
+      <div class="avoid-dot" style="background:${todayData.avoidHex[i]}"></div>
+      <div class="avoid-text">${c}</div>
     </div>`).join('');
+
+  // สีตลอดสัปดาห์
+  document.getElementById('weeklyList').innerHTML = DAYS_TH.map((d, i) => {
+    const dc = DAY_COLORS[i];
+    const isToday = i === todayIdx;
+    return `<div class="weekly-row" style="${isToday ? 'opacity:1' : 'opacity:0.6'}">
+      <div class="weekly-day">${isToday ? '👉 ' : ''}วัน${d}</div>
+      <div class="weekly-dots">${dc.luckyHex.map(h => `<div class="weekly-dot" style="background:${h}"></div>`).join('')}</div>
+      <div class="weekly-color-name">${dc.lucky.join(' / ')}</div>
+    </div>`;
+  }).join('');
 
   document.getElementById('resultBox').classList.add('show');
   document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
 
-  saveReading(day, month, year, lifeNum, data.name);
+  saveReading();
 }
 
-function resetCalc() {
-  selDay.value = '';
-  selMonth.value = '';
-  selYear.value = '';
+function resetResult() {
+  selectedBirthDay = null;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnCheck').disabled = true;
   document.getElementById('resultBox').classList.remove('show');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-async function saveReading(day, month, year, lifeNum, name) {
+async function saveReading() {
   if (!currentUser) return;
   try {
     const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
@@ -411,8 +380,12 @@ async function saveReading(day, month, year, lifeNum, name) {
     const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
     const app = getApps().length ? getApps()[0] : initializeApp(cfg);
     const db = getFirestore(app);
+    const todayData = DAY_COLORS[todayIdx];
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'เลขนำโชค', question: `${day}/${month}/${year}`, result: `เลขชีวิต ${lifeNum} — ${name}`, createdAt: new Date().toISOString()
+      type: 'สีมงคลประจำวัน',
+      question: `เกิดวัน${DAYS_TH[selectedBirthDay]}`,
+      result: `สีมงคลวันนี้: ${todayData.lucky.join(', ')}`,
+      createdAt: new Date().toISOString()
     });
   } catch(e) { console.error(e); }
 }
