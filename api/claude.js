@@ -32,6 +32,9 @@ const SERVICE_COSTS = {
 "han-oracle-1": 10,
 "han-oracle-3": 20,
 "han-oracle-5": 30,
+"noh-oracle-1": 10,
+"noh-oracle-3": 20,
+"noh-oracle-5": 30,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
