@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ดูลายเท้า — My Tarot</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<style>
+  :root {
+    --bg: #0d0820;
+    --card: #1a1330;
+    --purple: #7c3aed;
+    --purple-light: #a855f7;
+    --gold: #f59e0b;
+    --gold-light: #fbbf24;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+    --text: #e9d5ff;
+    --text-mid: #9ca3af;
+    --text-dim: #6b7280;
+    --border: rgba(124,58,237,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    font-family: 'Noto Sans Thai', sans-serif;
+    color: var(--text);
+    padding-bottom: 60px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(20,184,166,0.1) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ─── HEADER ─── */
+  .page-header {
+    display: flex; align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13,8,32,0.9);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--purple-light);
+    font-size: 16px; text-decoration: none; flex-shrink: 0;
+  }
+
+  .page-title {
+    font-size: 18px; font-weight: 700; color: white;
+    margin-left: 12px; flex: 1;
+  }
+
+  .coin-badge {
+    font-size: 13px; color: var(--gold-light);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 50px; padding: 4px 12px;
+  }
+
+  /* ─── HERO ─── */
+  .reading-hero {
+    text-align: center;
+    padding: 24px 20px 16px;
+  }
+
+  .reading-icon {
+    width: 80px; height: 80px;
+    border-radius: 20px; overflow: hidden;
+    margin: 0 auto 12px;
+    border: 2px solid rgba(20,184,166,0.4);
+    background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+
+  .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+  .reading-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 22px; font-weight: 700;
+    color: white; margin-bottom: 4px;
+  }
+
+  .reading-ref {
+    font-size: 11px; color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .reading-desc {
+    font-size: 13px; color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  /* ─── UPLOAD ─── */
+  .upload-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; padding: 0 20px; margin-bottom: 16px;
+  }
+
+  .upload-col { display: flex; flex-direction: column; }
+
+  .upload-box {
+    border: 2px dashed rgba(20,184,166,0.4);
+    border-radius: 16px; aspect-ratio: 3/4;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: rgba(20,184,166,0.05);
+    transition: all 0.3s; overflow: hidden; position: relative;
+  }
+
+  .upload-box.has-image { border: none; }
+
+  .upload-box-icon { font-size: 32px; margin-bottom: 6px; }
+  .upload-box-label { font-size: 12px; font-weight: 700; color: white; margin-bottom: 8px; }
+
+  .upload-btns { display: flex; gap: 6px; }
+
+  .upload-btn {
+    background: rgba(20,184,166,0.2);
+    border: 1px solid rgba(20,184,166,0.4);
+    border-radius: 8px; padding: 6px 10px;
+    color: white; font-size: 11px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    cursor: pointer;
+  }
+
+  .upload-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .upload-box-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    padding: 12px 8px 8px; text-align: center;
+    font-size: 11px; color: white;
+  }
+
+  .upload-foot-label {
+    text-align: center; font-size: 12px;
+    color: var(--text-dim); margin-top: 6px;
+  }
+
+  .foot-meaning {
+    font-size: 11px; color: var(--teal);
+    text-align: center; margin-top: 2px; margin-bottom: 16px;
+  }
+
+  /* ─── TIPS ─── */
+  .tips-box {
+    background: rgba(20,184,166,0.06);
+    border: 1px solid rgba(20,184,166,0.2);
+    border-radius: 16px; padding: 14px;
+    margin: 0 20px 16px;
+  }
+
+  .tips-title { font-size: 13px; color: var(--teal); font-weight: 700; margin-bottom: 8px; }
+
+  .tip-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-dim); margin-bottom: 5px;
+  }
+
+  .tip-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--teal); flex-shrink: 0;
+  }
+
+  /* ─── COIN BOX ─── */
+  .coin-box {
+    background: rgba(245,158,11,0.06);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 16px; padding: 14px;
+    margin: 0 20px 16px; text-align: center;
+  }
+
+  .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+  .coin-hint { font-size: 11px; color: var(--text-dim); }
+
+  /* ─── BTN ─── */
+  .btn-read {
+    width: calc(100% - 40px); margin: 0 20px 24px;
+    background: linear-gradient(135deg, #0d9488, #7c3aed);
+    border: none; border-radius: 16px; padding: 16px;
+    color: white; font-size: 16px; font-weight: 700;
+    font-family: 'Noto Serif Thai', sans-serif;
+    cursor: pointer; transition: all 0.3s;
+    display: block;
+  }
+
+  .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(20,184,166,0.3); }
+  .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ─── RESULT ─── */
+  .result-section { display: none; padding: 0 20px; }
+  .result-section.show { display: block; }
+
+  .preview-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 20px;
+  }
+
+  .preview-box {
+    border-radius: 16px; overflow: hidden;
+    position: relative; aspect-ratio: 3/4;
+    background: #0a0618;
+  }
+
+  .preview-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .preview-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 20px 8px 8px; text-align: center;
+    font-size: 12px; font-weight: 700; color: white;
+  }
+
+  /* ─── RESULT SECTIONS ─── */
+  .result-card {
+    border-radius: 16px; padding: 18px 16px;
+    margin-bottom: 12px; border: 1px solid;
+  }
+
+  .result-card-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .result-card-icon { font-size: 18px; }
+
+  .result-card-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 14px; font-weight: 600;
+  }
+
+  .result-card-text {
+    font-size: 13px; line-height: 2.1;
+    color: var(--text); white-space: pre-wrap;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-weight: 300;
+  }
+
+  /* card colors */
+  .card-shape { background: rgba(20,184,166,0.08); border-color: rgba(20,184,166,0.25); }
+  .card-shape .result-card-title { color: #5eead4; }
+
+  .card-toes { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.25); }
+  .card-toes .result-card-title { color: #c084fc; }
+
+  .card-arch { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+  .card-arch .result-card-title { color: var(--gold-light); }
+
+  .card-reflex { background: rgba(236,72,153,0.08); border-color: rgba(236,72,153,0.25); }
+  .card-reflex .result-card-title { color: #f9a8d4; }
+
+  .card-summary { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.35); }
+  .card-summary .result-card-title { color: #a78bfa; }
+
+  /* loading */
+  .loading-wrap {
+    text-align: center; padding: 24px;
+    color: var(--text-dim); font-size: 13px;
+  }
+
+  .loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%,80%,100% { opacity: 0.2; }
+    40% { opacity: 1; }
+  }
+
+  /* cursor */
+  .cursor {
+    display: inline-block; width: 2px; height: 14px;
+    background: var(--teal); margin-left: 2px;
+    animation: cursorBlink 0.8s infinite; vertical-align: middle;
+  }
+  @keyframes cursorBlink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+  /* followup */
+  .followup-box {
+    background: rgba(124,58,237,0.06);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 16px; padding: 16px; margin-top: 12px;
+  }
+
+  .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+
+  .followup-input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px; color: white; font-size: 14px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    outline: none; resize: none; margin-bottom: 10px;
+  }
+
+  .followup-input:focus { border-color: var(--teal); }
+  .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .followup-btn {
+    width: 100%; background: rgba(20,184,166,0.15);
+    border: 1px solid rgba(20,184,166,0.3);
+    border-radius: 12px; padding: 12px;
+    color: var(--teal); font-size: 14px; font-weight: 700;
+    font-family: 'Noto Sans Thai', sans-serif;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .followup-result { font-size: 13px; line-height: 2; color: var(--text); }
+  .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+  .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 6px; }
+
+  /* modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: var(--card); border: 1px solid var(--gold);
+    border-radius: 24px; padding: 32px 24px;
+    text-align: center; width: 85%; max-width: 320px;
+  }
+
+  .modal-box h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 17px; margin-bottom: 8px; color: var(--text);
+  }
+
+  .modal-box p { font-size: 13px; color: var(--text-mid); margin-bottom: 20px; line-height: 1.8; }
+
+  .btn-google {
+    width: 100%; padding: 12px; background: white;
+    border: none; border-radius: 50px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: #333;
+  }
+
+  .btn-close-modal {
+    margin-top: 12px; background: none; border: none;
+    color: var(--text-dim); font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">ดูลายเท้า</div>
+  <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+</div>
+
+<!-- HERO -->
+<div class="reading-hero">
+  <div class="reading-icon">
+    <img src="../images/icon-foot.png" alt="ลายเท้า"
+         onerror="this.style.display='none'; this.parentElement.textContent='🦶'">
+  </div>
+  <div class="reading-title">ดูลายเท้า</div>
+  <div class="reading-ref">📖 อ้างอิง: Chinese Foot Reading + Western Podology</div>
+  <div class="reading-desc">ถ่ายรูปฝ่าเท้าทั้ง 2 ข้าง AI จะวิเคราะห์รูปทรงเท้า นิ้วเท้า และอุ้งเท้า เพื่อเปิดเผยนิสัย สุขภาพ และชะตาชีวิตค่ะ</div>
+</div>
+
+<!-- UPLOAD -->
+<div class="upload-grid">
+  <div class="upload-col">
+    <div class="upload-box" id="leftBox">
+      <div class="upload-box-icon">🦶</div>
+      <div class="upload-box-label">เท้าซ้าย</div>
+      <div class="upload-btns">
+        <button class="upload-btn" onclick="document.getElementById('leftCamera').click()">📷 ถ่าย</button>
+        <button class="upload-btn" onclick="document.getElementById('leftGallery').click()">🖼️ แกล</button>
+      </div>
+    </div>
+    <div class="upload-foot-label">เท้าซ้าย</div>
+    <div class="foot-meaning">ศักยภาพ / กำเนิด</div>
+  </div>
+  <div class="upload-col">
+    <div class="upload-box" id="rightBox">
+      <div class="upload-box-icon">🦶</div>
+      <div class="upload-box-label">เท้าขวา</div>
+      <div class="upload-btns">
+        <button class="upload-btn" onclick="document.getElementById('rightCamera').click()">📷 ถ่าย</button>
+        <button class="upload-btn" onclick="document.getElementById('rightGallery').click()">🖼️ แกล</button>
+      </div>
+    </div>
+    <div class="upload-foot-label">เท้าขวา</div>
+    <div class="foot-meaning">ชะตา / อนาคต</div>
+  </div>
+</div>
+
+<input type="file" id="leftCamera" accept="image/*" capture="environment" style="display:none" onchange="previewFoot(event,'left')">
+<input type="file" id="leftGallery" accept="image/*" style="display:none" onchange="previewFoot(event,'left')">
+<input type="file" id="rightCamera" accept="image/*" capture="environment" style="display:none" onchange="previewFoot(event,'right')">
+<input type="file" id="rightGallery" accept="image/*" style="display:none" onchange="previewFoot(event,'right')">
+
+<!-- TIPS -->
+<div class="tips-box">
+  <div class="tips-title">📸 วิธีถ่ายให้ได้ผลแม่น</div>
+  <div class="tip-item"><div class="tip-dot"></div>วางเท้าบนพื้นราบ ถ่ายจากด้านล่างตรงๆ</div>
+  <div class="tip-item"><div class="tip-dot"></div>ถ่ายให้เห็นฝ่าเท้าชัดเจนทั้งหมด</div>
+  <div class="tip-item"><div class="tip-dot"></div>แสงสว่างเพียงพอ ไม่มีเงา</div>
+  <div class="tip-item"><div class="tip-dot"></div>ไม่ต้องถอดเล็บทาสีก็ได้ค่ะ</div>
+  <div class="tip-item"><div class="tip-dot"></div>iPhone ถ่ายได้เลยค่ะ ระบบแปลงรูปให้อัตโนมัติ</div>
+</div>
+
+<!-- COIN -->
+<div class="coin-box">
+  <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
+  <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+</div>
+
+<button class="btn-read" id="readBtn" onclick="startReading()" disabled>🦶 วิเคราะห์ลายเท้า</button>
+
+<!-- RESULT -->
+<div class="result-section" id="resultSection">
+
+  <div class="preview-grid">
+    <div class="preview-box">
+      <img id="previewLeft" src="" style="display:none">
+      <div class="preview-label">เท้าซ้าย — ศักยภาพ</div>
+    </div>
+    <div class="preview-box">
+      <img id="previewRight" src="" style="display:none">
+      <div class="preview-label">เท้าขวา — ชะตา</div>
+    </div>
+  </div>
+
+  <!-- Section 1: รูปทรงเท้า -->
+  <div class="result-card card-shape">
+    <div class="result-card-header">
+      <span class="result-card-icon">👣</span>
+      <span class="result-card-title">รูปทรงเท้าและบุคลิก</span>
+    </div>
+    <div class="result-card-text" id="sec-shape">
+      <div class="loading-wrap">กำลังอ่านดวง <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    </div>
+  </div>
+
+  <!-- Section 2: นิ้วเท้า -->
+  <div class="result-card card-toes">
+    <div class="result-card-header">
+      <span class="result-card-icon">🦶</span>
+      <span class="result-card-title">นิ้วเท้าและนิสัย</span>
+    </div>
+    <div class="result-card-text" id="sec-toes"></div>
+  </div>
+
+  <!-- Section 3: อุ้งเท้า -->
+  <div class="result-card card-arch">
+    <div class="result-card-header">
+      <span class="result-card-icon">🌊</span>
+      <span class="result-card-title">อุ้งเท้าและพลังงาน</span>
+    </div>
+    <div class="result-card-text" id="sec-arch"></div>
+  </div>
+
+  <!-- Section 4: Reflexology -->
+  <div class="result-card card-reflex">
+    <div class="result-card-header">
+      <span class="result-card-icon">⚡</span>
+      <span class="result-card-title">โซนสุขภาพ Reflexology</span>
+    </div>
+    <div class="result-card-text" id="sec-reflex"></div>
+  </div>
+
+  <!-- Section 5: สรุป -->
+  <div class="result-card card-summary">
+    <div class="result-card-header">
+      <span class="result-card-icon">🔮</span>
+      <span class="result-card-title">สรุปดวงชะตาและคำแนะนำ</span>
+    </div>
+    <div class="result-card-text" id="sec-summary"></div>
+  </div>
+
+  <!-- Followup -->
+  <div class="followup-box" id="followupBox" style="display:none">
+    <div class="followup-result" id="followupResult"></div>
+    <div class="followup-title" id="followupTitle">💬 คุณพี่มีคำถามเพิ่มเติมไหมคะ?</div>
+    <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามเพิ่มเติมได้เลยค่ะ"></textarea>
+    <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+  </div>
+
+</div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>🦶 เข้าสู่ระบบก่อนนะคะ</h3>
+    <p>ต้องล็อกอินเพื่อดูลายเท้า<br>และบันทึกผลการวิเคราะห์</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button class="btn-close-modal" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var currentUser = null;
+var leftImage = null;
+var rightImage = null;
+var analysisResult = '';
+var followupHistory = [];
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async function(user) {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, "users", user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    updateCoinUI(coins);
+  } else {
+    updateCoinUI(null);
+  }
+});
+
+function updateCoinUI(coins) {
+  var el = document.getElementById("coinCount");
+  var el2 = document.getElementById("coinDisplay");
+  if (coins === null) {
+    el.textContent = "ล็อกอิน";
+    if (el2) el2.textContent = "—";
+  } else {
+    el.textContent = coins;
+    if (el2) el2.textContent = coins;
+  }
+}
+
+window.loginGoogle = async function() {
+  var provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
+};
+
+window.loginNow = function() {
+  document.getElementById("loginModal").classList.add("show");
+};
+
+window.closeModal = function() {
+  document.getElementById("loginModal").classList.remove("show");
+};
+
+// ─── IMAGE UTILS ───
+function getBase64(dataUrl) {
+  if (!dataUrl) return null;
+  var parts = dataUrl.split(',');
+  if (parts.length < 2) return null;
+  var b64 = parts[1];
+  if (!b64 || b64.length < 10) return null;
+  return b64;
+}
+
+async function convertToJpeg(file) {
+  return new Promise(async function(resolve) {
+    var isHeic = file.type === 'image/heic' || file.type === 'image/heif' ||
+      file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif') ||
+      file.type === '' || file.type === 'application/octet-stream';
+
+    if (isHeic && typeof heic2any !== 'undefined') {
+      try {
+        var blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
+        var reader = new FileReader();
+        reader.onload = function(e) { resolve(e.target.result); };
+        reader.readAsDataURL(blob instanceof Array ? blob[0] : blob);
+        return;
+      } catch(e) {}
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) { resolve(e.target.result); };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function compressImage(dataUrl, maxWidth) {
+  maxWidth = maxWidth || 600;
+  return new Promise(function(resolve) {
+    var img = new Image();
+    img.onload = function() {
+      if (img.width === 0 || img.height === 0) { resolve(null); return; }
+      var canvas = document.createElement('canvas');
+      var w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = function() { resolve(null); };
+    img.src = dataUrl;
+  });
+}
+
+// ─── PARSE DELIMITER ───
+function parseDelimiter(text, keys) {
+  var result = {};
+  keys.forEach(function(key, i) {
+    var start = text.indexOf("[" + key + "]");
+    if (start === -1) return;
+    start += ("[" + key + "]").length;
+    var nextKey = keys[i + 1];
+    var end = nextKey ? text.indexOf("[" + nextKey + "]") : text.length;
+    if (end === -1) end = text.length;
+    result[key.toLowerCase()] = text.slice(start, end).trim();
+  });
+  return result;
+}
+
+function updateSection(id, text) {
+  var el = document.getElementById("sec-" + id);
+  if (el && text) el.textContent = text;
+}
+
+// ─── PREVIEW ───
+window.previewFoot = async function(e, side) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var boxId = side === 'left' ? 'leftBox' : 'rightBox';
+  var box = document.getElementById(boxId);
+  box.innerHTML = '<div class="upload-box-icon">⏳</div><div class="upload-box-label">กำลังโหลด...</div>';
+
+  try {
+    var dataUrl = await convertToJpeg(file);
+    var compressed = await compressImage(dataUrl);
+    if (!compressed || !getBase64(compressed)) {
+      box.innerHTML = '<div class="upload-box-icon">❌</div><div class="upload-box-label">โหลดรูปไม่ได้ค่ะ</div>';
+      return;
+    }
+    if (side === 'left') leftImage = compressed;
+    else rightImage = compressed;
+    box.innerHTML = '<img src="' + compressed + '"><div class="upload-box-overlay">✅ เท้า' + (side === 'left' ? 'ซ้าย' : 'ขวา') + '</div>';
+    box.classList.add('has-image');
+    checkReady();
+  } catch(err) {
+    box.innerHTML = '<div class="upload-box-icon">❌</div><div class="upload-box-label">เกิดข้อผิดพลาดค่ะ</div>';
+  }
+};
+
+function checkReady() {
+  var btn = document.getElementById('readBtn');
+  if (leftImage && rightImage) {
+    btn.disabled = false;
+    btn.textContent = '🦶 วิเคราะห์ลายเท้าทั้ง 2 ข้าง';
+  } else if (leftImage || rightImage) {
+    btn.disabled = false;
+    btn.textContent = '🦶 วิเคราะห์ลายเท้า (1 ข้าง)';
+  }
+}
+
+// ─── MAIN ───
+window.startReading = async function() {
+  if (!currentUser) { loginNow(); return; }
+
+  var btn = document.getElementById('readBtn');
+  var resultSection = document.getElementById('resultSection');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
+  resultSection.classList.add('show');
+
+  // reset sections
+  var secs = ["shape","toes","arch","reflex","summary"];
+  secs.forEach(function(id) {
+    var el = document.getElementById("sec-" + id);
+    if (el) el.innerHTML = '<div class="loading-wrap">กำลังอ่านดวง <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  });
+
+  // preview รูป
+  if (leftImage) {
+    var el = document.getElementById('previewLeft');
+    el.src = leftImage; el.style.display = 'block';
+  }
+  if (rightImage) {
+    var el = document.getElementById('previewRight');
+    el.src = rightImage; el.style.display = 'block';
+  }
+
+  setTimeout(function() { resultSection.scrollIntoView({ behavior: 'smooth' }); }, 100);
+
+  try {
+    var idToken = await currentUser.getIdToken();
+
+    // สร้าง content
+    var content = [];
+    if (leftImage) {
+      var b64L = getBase64(leftImage);
+      if (b64L) {
+        content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64L } });
+        content.push({ type: 'text', text: 'นี่คือรูปเท้าซ้าย (ศักยภาพ/กำเนิด)' });
+      }
+    }
+    if (rightImage) {
+      var b64R = getBase64(rightImage);
+      if (b64R) {
+        content.push({ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64R } });
+        content.push({ type: 'text', text: 'นี่คือรูปเท้าขวา (ชะตา/อนาคต)' });
+      }
+    }
+
+    content.push({
+      type: 'text',
+      text: 'วิเคราะห์ลายเท้าตามตำรา Chinese Foot Reading และ Western Podology\n' +
+            'เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ภาษาไทย อบอุ่น เป็นกันเอง\n' +
+            'ห้ามใช้ # * _ markdown ใดๆ เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n' +
+            'เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น:\n' +
+            '[SHAPE]\n[TOES]\n[ARCH]\n[REFLEX]\n[SUMMARY]\n\n' +
+            '[SHAPE] = รูปทรงเท้า (Greek/Egyptian/Roman/Square) บอกบุคลิกและนิสัยหลัก\n' +
+            '[TOES] = นิ้วเท้าแต่ละนิ้ว ความยาว รูปร่าง บอกนิสัยละเอียด\n' +
+            '[ARCH] = อุ้งเท้า สูง/กลาง/แบน บอกพลังงานและความสมดุลในชีวิต\n' +
+            '[REFLEX] = โซน Reflexology อวัยวะที่ควรระวัง และสิ่งที่ต้องดูแล\n' +
+            '[SUMMARY] = สรุปดวงชะตา คำแนะนำ และข้อความถึงคุณพี่'
+    });
+
+    var res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + idToken
+      },
+      body: JSON.stringify({
+        service: 'foot-reading',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        messages: [{ role: 'user', content: content }]
+      })
+    });
+
+    var newCoins = res.headers.get('X-New-Coin-Balance');
+    if (newCoins !== null) updateCoinUI(parseInt(newCoins));
+
+    if (!res.ok) {
+      var err = await res.json();
+      if (err.error === 'insufficient_coins') {
+        alert('เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนค่ะ');
+      } else {
+        alert('เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏');
+      }
+      btn.disabled = false;
+      btn.textContent = '🦶 วิเคราะห์อีกครั้ง';
+      return;
+    }
+
+    // stream
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = '';
+    var keys = ["SHAPE","TOES","ARCH","REFLEX","SUMMARY"];
+
+    // clear loading
+    secs.forEach(function(id) {
+      var el = document.getElementById("sec-" + id);
+      if (el) el.textContent = '';
+    });
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      fullText += decoder.decode(chunk.value, { stream: true });
+      var parsed = parseDelimiter(fullText, keys);
+      Object.keys(parsed).forEach(function(id) {
+        if (parsed[id]) updateSection(id, parsed[id]);
+      });
+    }
+
+    // final parse
+    var finalParsed = parseDelimiter(fullText, keys);
+    Object.keys(finalParsed).forEach(function(id) {
+      if (finalParsed[id]) updateSection(id, finalParsed[id]);
+    });
+
+    analysisResult = fullText;
+
+    // บันทึก Firestore
+    await addDoc(collection(db, "users", currentUser.uid, "readings"), {
+      type: "foot-reading",
+      reading: fullText,
+      createdAt: serverTimestamp()
+    });
+
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
+    alert('เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🦶 วิเคราะห์อีกครั้ง';
+};
+
+// ─── FOLLOWUP ───
+window.askFollowup = async function() {
+  if (!currentUser) { loginNow(); return; }
+
+  var input = document.getElementById('followupInput');
+  var question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  var followupBtn = document.getElementById('followupBtn');
+  var resultDiv = document.getElementById('followupResult');
+
+  followupBtn.disabled = true;
+
+  var time = Date.now();
+  resultDiv.innerHTML += '<hr class="followup-divider"><div class="followup-q">❓ ' + question + '</div><div id="ans_' + time + '"></div>';
+  var ansDiv = document.getElementById('ans_' + time);
+
+  try {
+    var idToken = await currentUser.getIdToken();
+
+    var res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + idToken
+      },
+      body: JSON.stringify({
+        service: 'tarot_followup',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: 'ผลวิเคราะห์ลายเท้า: ' + analysisResult + '\nคำถาม: ' + question +
+                   '\nตอบสั้นๆ 3-4 บรรทัด เรียกผู้ถามว่า "คุณพี่" ห้ามใช้ markdown'
+        }]
+      })
+    });
+
+    var newCoins = res.headers.get('X-New-Coin-Balance');
+    if (newCoins !== null) updateCoinUI(parseInt(newCoins));
+
+    if (!res.ok) {
+      var err = await res.json();
+      ansDiv.textContent = err.error === 'insufficient_coins' ? 'เหรียญไม่พอค่ะ 🪙' : 'เกิดข้อผิดพลาดค่ะ';
+      followupBtn.disabled = false;
+      return;
+    }
+
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var text = '';
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      text += decoder.decode(chunk.value, { stream: true });
+      ansDiv.textContent = text;
+    }
+
+    input.value = '';
+    ansDiv.scrollIntoView({ behavior: 'smooth' });
+
+  } catch(e) {
+    ansDiv.textContent = 'เกิดข้อผิดพลาดค่ะ';
+    console.error(e);
+  }
+
+  followupBtn.disabled = false;
+};
+
+</script>
+</body>
+</html>
