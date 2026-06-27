@@ -369,20 +369,67 @@
   <div class="form-group">
     <label class="form-label">วันเกิด</label>
     <div class="form-row">
-      <input class="form-input" id="inputDay" type="number" placeholder="วัน" min="1" max="31">
-      <input class="form-input" id="inputMonth" type="number" placeholder="เดือน" min="1" max="12">
-      <input class="form-input" id="inputYear" type="number" placeholder="ปี ค.ศ." min="1900" max="2010">
+      <select class="form-input" id="inputDay"></select>
+      <select class="form-input" id="inputMonth"></select>
+      <select class="form-input" id="inputYear"></select>
     </div>
   </div>
 
   <div class="form-group">
     <label class="form-label">เวลาเกิด</label>
     <div class="form-row-2">
-      <input class="form-input" id="inputHour" type="number" placeholder="ชั่วโมง (0-23)" min="0" max="23">
-      <input class="form-input" id="inputMinute" type="number" placeholder="นาที (0-59)" min="0" max="59">
+      <select class="form-input" id="inputHour"></select>
+      <select class="form-input" id="inputMinute"></select>
     </div>
   </div>
 </div>
+
+<script>
+// สร้าง dropdown options
+(function() {
+  // วัน
+  var dayEl = document.getElementById("inputDay");
+  for (var d = 1; d <= 31; d++) {
+    var o = document.createElement("option");
+    o.value = d; o.textContent = d + " วัน";
+    dayEl.appendChild(o);
+  }
+
+  // เดือน
+  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
+                "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl = document.getElementById("inputMonth");
+  months.forEach(function(m, i) {
+    var o = document.createElement("option");
+    o.value = i + 1; o.textContent = m;
+    monthEl.appendChild(o);
+  });
+
+  // ปี เริ่มที่ 2000
+  var yearEl = document.getElementById("inputYear");
+  for (var y = 2000; y >= 1940; y--) {
+    var o = document.createElement("option");
+    o.value = y; o.textContent = "ค.ศ. " + y + " (พ.ศ. " + (y + 543) + ")";
+    yearEl.appendChild(o);
+  }
+
+  // ชั่วโมง
+  var hourEl = document.getElementById("inputHour");
+  for (var h = 0; h <= 23; h++) {
+    var o = document.createElement("option");
+    o.value = h; o.textContent = (h < 10 ? "0" + h : h) + ":00 น.";
+    hourEl.appendChild(o);
+  }
+
+  // นาที
+  var minEl = document.getElementById("inputMinute");
+  for (var m = 0; m <= 59; m++) {
+    var o = document.createElement("option");
+    o.value = m; o.textContent = (m < 10 ? "0" + m : m) + " นาที";
+    minEl.appendChild(o);
+  }
+})();
+</script>
 
 <!-- SUBMIT -->
 <div class="submit-wrap">
@@ -564,14 +611,19 @@ window.closeModal = function() {
   document.getElementById("loginModal").classList.remove("show");
 };
 
-// ─── PARSE JSON ───
-function parseJSON(text) {
-  try {
-    var clean = text.replace(/```json|```/g, '').trim();
-    return JSON.parse(clean);
-  } catch(e) {
-    return null;
-  }
+// ─── PARSE DELIMITER ───
+function parseDelimiter(text, keys) {
+  var result = {};
+  keys.forEach(function(key, i) {
+    var start = text.indexOf("[" + key + "]");
+    if (start === -1) return;
+    start += ("[" + key + "]").length;
+    var nextKey = keys[i + 1];
+    var end = nextKey ? text.indexOf("[" + nextKey + "]") : text.length;
+    if (end === -1) end = text.length;
+    result[key.toLowerCase()] = text.slice(start, end).trim();
+  });
+  return result;
 }
 
 function updateSection(id, text) {
@@ -677,56 +729,67 @@ window.startReading = async function() {
       return kws.join(", ") || "ไม่มี keyword พิเศษ";
     }
 
-    // ─── CALL 1: นิสัย วัยเด็ก ภารกิจ ความรัก การงาน ───
+    // ─── CALL 1 ───
+    var keys1 = ["PERSONALITY","CHILDHOOD","MISSION","LOVE","CAREER"];
     var prompt1 =
       "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนาย 'เจาะดวงชะตา' ให้ " + name + "\n" +
-      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n\n" +
+      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n" +
+      "ห้ามใช้ # * _ หรือ markdown ใดๆ ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
       "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
       " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
       " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
-      "keyword ที่ดวงบ่งบอก:\n" +
-      "นิสัย: " + getKW(["personality"]) + "\n" +
-      "ความรัก: " + getKW(["love_positive","love_warning"]) + "\n" +
-      "การงาน: " + getKW(["career_positive","career_warning"]) + "\n\n" +
-      "ตอบเป็น JSON เท่านั้น ห้ามมี markdown หรือข้อความอื่น:\n" +
-      '{"personality":"...","childhood":"...","mission":"...","love":"...","career":"..."}';
+      "keyword: นิสัย=" + getKW(["personality"]) +
+      " ความรัก=" + getKW(["love_positive","love_warning"]) +
+      " การงาน=" + getKW(["career_positive","career_warning"]) + "\n\n" +
+      "เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น ห้ามเพิ่มข้อความอื่นก่อน tag:\n" +
+      "[PERSONALITY]\n[CHILDHOOD]\n[MISSION]\n[LOVE]\n[CAREER]\n\n" +
+      "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
 
-    var text1 = await streamAPI(prompt1, "destiny", null);
-    var json1 = parseJSON(text1);
-    if (json1) {
-      Object.keys(json1).forEach(function(id) {
-        updateSection(id, json1[id]);
+    var text1 = await streamAPI(prompt1, "destiny", function(partial) {
+      var parsed = parseDelimiter(partial, keys1);
+      Object.keys(parsed).forEach(function(id) {
+        if (parsed[id]) updateSection(id, parsed[id]);
       });
-    }
+    });
 
-    // clear loading ที่ยังค้างอยู่
+    var final1 = parseDelimiter(text1, keys1);
+    Object.keys(final1).forEach(function(id) {
+      if (final1[id]) updateSection(id, final1[id]);
+    });
+
     ["money","health","lucky","thisyear","future"].forEach(function(id) {
       var el = document.getElementById("sec-" + id);
       if (el && el.querySelector('.loading-dots')) el.textContent = "";
     });
 
-    // ─── CALL 2: การเงิน สุขภาพ โชคดี ดวงปีนี้ อนาคต ───
+    // ─── CALL 2 ───
+    var keys2 = ["MONEY","HEALTH","LUCKY","THISYEAR","FUTURE"];
     var prompt2 =
       "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนายต่อให้ " + name + "\n" +
-      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n\n" +
+      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n" +
+      "ห้ามใช้ # * _ หรือ markdown ใดๆ ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
       "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
       " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
       " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
-      "keyword ที่ดวงบ่งบอก:\n" +
-      "การเงิน: " + getKW(["money_positive","money_warning"]) + "\n" +
-      "สุขภาพ: " + getKW(["health_positive","health_warning"]) + "\n" +
-      "โชคดี: " + getKW(["lucky"]) + "\n" +
-      "อนาคต: " + getKW(["future_positive","future_warning"]) + "\n\n" +
-      "ตอบเป็น JSON เท่านั้น ห้ามมี markdown หรือข้อความอื่น:\n" +
-      '{"money":"...","health":"...","lucky":"...","thisyear":"...","future":"..."}';
+      "keyword: การเงิน=" + getKW(["money_positive","money_warning"]) +
+      " สุขภาพ=" + getKW(["health_positive","health_warning"]) +
+      " โชคดี=" + getKW(["lucky"]) +
+      " อนาคต=" + getKW(["future_positive","future_warning"]) + "\n\n" +
+      "เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น:\n" +
+      "[MONEY]\n[HEALTH]\n[LUCKY]\n[THISYEAR]\n[FUTURE]\n\n" +
+      "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
 
-    var text2 = await streamAPI(prompt2, "destiny-2", null);
-    var json2 = parseJSON(text2);
-    if (json2) {
-      Object.keys(json2).forEach(function(id) {
-        updateSection(id, json2[id]);
+    var text2 = await streamAPI(prompt2, "destiny-2", function(partial) {
+      var parsed = parseDelimiter(partial, keys2);
+      Object.keys(parsed).forEach(function(id) {
+        if (parsed[id]) updateSection(id, parsed[id]);
       });
-    }
+    });
+
+    var final2 = parseDelimiter(text2, keys2);
+    Object.keys(final2).forEach(function(id) {
+      if (final2[id]) updateSection(id, final2[id]);
+    });
 
     // บันทึก Firestore
     await addDoc(collection(db, "users", currentUser.uid, "readings"), {
