@@ -613,13 +613,15 @@ window.closeModal = function() {
 
 // ─── PARSE DELIMITER ───
 function parseDelimiter(text, keys) {
+  var upperText = text.toUpperCase();
   var result = {};
   keys.forEach(function(key, i) {
-    var start = text.indexOf("[" + key + "]");
+    var tag = "[" + key.toUpperCase() + "]";
+    var start = upperText.indexOf(tag);
     if (start === -1) return;
-    start += ("[" + key + "]").length;
+    start += tag.length;
     var nextKey = keys[i + 1];
-    var end = nextKey ? text.indexOf("[" + nextKey + "]") : text.length;
+    var end = nextKey ? upperText.indexOf("[" + nextKey.toUpperCase() + "]") : text.length;
     if (end === -1) end = text.length;
     result[key.toLowerCase()] = text.slice(start, end).trim();
   });
