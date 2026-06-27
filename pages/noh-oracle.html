@@ -1,442 +1,892 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>หน้ากากโนะ — My Tarot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="../js/firebase-config.js"></script>
-  <style>
-    body { padding-bottom: 60px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โนะ ออราเคิล | MyTarot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&family=Noto+Serif+JP:wght@300;400;600&display=swap');
 
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(180,30,30,0.2); border: 1px solid rgba(180,30,30,0.4);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: #ef4444; font-size: 16px; text-decoration: none; flex-shrink: 0;
-    }
-    .page-title { font-size: 18px; font-weight: 700; color: white; }
-    .page-content { padding: 20px 20px 40px; }
+  :root {
+    --paper: #f0e6d0;
+    --paper-dark: #d4c4a0;
+    --ink: #1a1008;
+    --ink-mid: #3d2b10;
+    --ink-light: #6b4e28;
+    --crimson: #8b1a1a;
+    --crimson-light: #c0392b;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --ash: #4a4040;
+    --mist: rgba(240,230,208,0.85);
+  }
 
-    /* Hero */
-    .hero { text-align: center; padding: 12px 0 20px; }
-    .mascot-img { width: 90px; height: 90px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 0 16px rgba(180,30,30,0.5)); }
-    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Slots */
-    .slots-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
-    .slot {
-      width: 78px; aspect-ratio: 2/3;
-      background: rgba(180,30,30,0.06);
-      border: 2px dashed rgba(180,30,30,0.35);
-      border-radius: 10px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      transition: all 0.3s; position: relative; overflow: hidden;
-    }
-    .slot.filled { border: 2px solid rgba(180,30,30,0.7); box-shadow: 0 0 12px rgba(180,30,30,0.25); }
-    .slot-num { font-size: 18px; }
-    .slot-label { font-size: 9px; color: #ef4444; margin-top: 3px; text-align: center; }
-    .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .slot-overlay {
-      position: absolute; inset: 0; border-radius: 8px;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 4px;
-    }
-    .slot-pos { font-size: 8px; color: #fca5a5; text-align: center; font-weight: 700; }
-    .slots-hint { text-align: center; font-size: 11px; color: var(--dim); margin-bottom: 20px; }
+  body {
+    background: #120a04;
+    min-height: 100vh;
+    font-family: 'Noto Sans Thai', sans-serif;
+    color: var(--paper);
+    overflow-x: hidden;
+  }
 
-    /* Deck section */
-    .deck-section { margin-bottom: 20px; }
-    .deck-label {
-      font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-      margin-bottom: 8px; padding: 6px 14px; border-radius: 20px; display: inline-block;
-      background: rgba(180,30,30,0.15); color: #fca5a5; border: 1px solid rgba(180,30,30,0.35);
-    }
-    .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
-    .cards-scroll::-webkit-scrollbar { height: 3px; }
-    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(180,30,30,0.4); border-radius: 2px; }
-    .card-item {
-      width: 52px; aspect-ratio: 2/3; flex-shrink: 0;
-      border-radius: 8px; overflow: hidden; cursor: pointer;
-      transition: all 0.2s; border: 2px solid transparent;
-    }
-    .card-item:hover { transform: translateY(-4px); border-color: #ef4444; }
-    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-    .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .card-placeholder {
-      width: 100%; height: 100%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; padding: 4px;
-      background: linear-gradient(135deg, #1a0000, #4a0000, #7f1d1d);
-      text-align: center;
-    }
-    .card-placeholder-emoji { font-size: 16px; margin-bottom: 3px; }
-    .card-placeholder-name { font-size: 6px; color: #fca5a5; font-weight: 700; line-height: 1.2; }
-    .scroll-hint { text-align: center; font-size: 11px; color: var(--dim); margin-top: 4px; margin-bottom: 12px; }
+  /* ─── BG TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(139,26,26,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(184,134,11,0.06) 0%, transparent 50%),
+      repeating-linear-gradient(
+        0deg, transparent, transparent 60px,
+        rgba(240,230,208,0.015) 60px, rgba(240,230,208,0.015) 61px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    /* Slots label row */
-    .slots-label-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 4px; }
-    .slot-type-label { width: 78px; text-align: center; font-size: 9px; color: var(--dim); }
+  .page-wrap { position: relative; z-index: 1; }
 
-    /* Coin & Button */
-    .coin-box {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
-    }
-    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
-    .coin-hint { font-size: 11px; color: var(--dim); }
-    .btn-read {
-      width: 100%;
-      background: linear-gradient(135deg, #7f1d1d, #ef4444, #b91c1c);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(180,30,30,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    padding: 36px 20px 20px;
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+    margin-bottom: 4px;
+  }
 
-    /* Reveal overlay */
-    .reveal-overlay {
-      position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.95); display: none;
-      flex-direction: column; align-items: center; justify-content: center; padding: 16px;
-    }
-    .reveal-overlay.show { display: flex; }
-    .reveal-title { font-size: 16px; color: #fca5a5; font-weight: 700; margin-bottom: 6px; text-align: center; }
-    .reveal-subtitle { font-size: 12px; color: var(--dim); margin-bottom: 20px; text-align: center; }
-    .reveal-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
-    .reveal-card { text-align: center; }
-    .reveal-card-wrap {
-      width: 86px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
-      margin-bottom: 8px; border: 2px solid rgba(180,30,30,0.5); perspective: 600px;
-    }
-    .reveal-card-inner {
-      width: 100%; height: 100%; position: relative;
-      transform-style: preserve-3d; transition: transform 0.6s ease;
-    }
-    .reveal-card-inner.flipped { transform: rotateY(180deg); }
-    .reveal-card-front, .reveal-card-back {
-      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
-    }
-    .reveal-card-back { transform: rotateY(0deg); }
-    .reveal-card-front { transform: rotateY(180deg); }
-    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
-    .reveal-card-front .card-placeholder { border-radius: 8px; }
-    .reveal-card-name { font-size: 10px; color: #fca5a5; font-weight: 700; }
-    .reveal-card-role { font-size: 9px; color: var(--dim); margin-top: 1px; }
-    .btn-accept {
-      background: linear-gradient(135deg, #7f1d1d, #ef4444);
-      border: none; border-radius: 16px; padding: 14px 32px;
-      color: white; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    }
-    .btn-accept.show { opacity: 1; pointer-events: all; }
+  .mascot-wrap {
+    width: 100px; height: 100px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    overflow: hidden;
+    box-shadow: 0 0 24px rgba(184,134,11,0.3), inset 0 0 20px rgba(0,0,0,0.4);
+    background: #1a0e06;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-    /* Result */
-    .result-box {
-      background: rgba(180,30,30,0.04); border: 1px solid rgba(180,30,30,0.2);
-      border-radius: 20px; padding: 20px; display: none;
-    }
-    .result-box.show { display: block; }
-    .result-cards-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
-    .result-card { text-align: center; }
-    .result-card-img { width: 58px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; margin-bottom: 4px; border: 1px solid rgba(180,30,30,0.4); }
-    .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .result-card-img .card-placeholder { border-radius: 7px; }
-    .result-card-name { font-size: 9px; color: #fca5a5; font-weight: 700; line-height: 1.2; }
-    .result-card-role { font-size: 8px; color: var(--dim); }
+  .mascot-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .mascot-placeholder { font-size: 52px; }
 
-    /* Result sections */
-    .result-section { border-radius: 14px; padding: 14px; margin-bottom: 12px; }
-    .result-section.outer-sec  { background: rgba(180,30,30,0.08); border: 1px solid rgba(180,30,30,0.25); }
-    .result-section.inner-sec  { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); }
-    .result-section.release-sec{ background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); }
-    .result-section.summary-sec{ background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.25); }
-    .result-section-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .outer-sec .result-section-title   { color: #fca5a5; }
-    .inner-sec .result-section-title   { color: #a78bfa; }
-    .release-sec .result-section-title { color: #fbbf24; }
-    .summary-sec .result-section-title { color: #34d399; }
-    .result-section-text { font-size: 13px; line-height: 2; color: var(--text); word-break: break-word; }
+  .title-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
 
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
-    .loading-dots { display: flex; gap: 8px; }
-    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; animation: bounce 1.2s ease-in-out infinite; }
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
-    .loading-text { font-size: 14px; color: var(--dim); }
-  </style>
+  .title-th {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: 4px;
+    text-shadow: 0 0 20px rgba(184,134,11,0.4);
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* ─── COIN ─── */
+  .coin-bar {
+    display: flex; justify-content: center; align-items: center;
+    gap: 6px; margin: 14px 0 0;
+    font-size: 13px; color: var(--paper-dark);
+  }
+  .coin-count { font-weight: 600; color: var(--gold-light); font-size: 15px; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 24px; margin: 16px 0;
+    opacity: 0.4;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--gold);
+  }
+  .divider span { font-family: 'Noto Serif JP', serif; font-size: 12px; color: var(--gold); }
+
+  /* ─── MOOD SELECT ─── */
+  .mood-label {
+    text-align: center;
+    font-size: 12px;
+    color: var(--paper-dark);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 16px;
+  }
+
+  .mood-btn {
+    padding: 10px 8px;
+    background: rgba(240,230,208,0.04);
+    border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 8px;
+    color: var(--paper);
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .mood-btn:hover { background: rgba(184,134,11,0.1); border-color: var(--gold); }
+
+  .mood-btn.selected {
+    background: rgba(139,26,26,0.3);
+    border-color: var(--crimson-light);
+    color: var(--paper);
+    box-shadow: 0 0 12px rgba(139,26,26,0.3);
+  }
+
+  /* ─── MODE TABS ─── */
+  .mode-tabs {
+    display: flex; gap: 8px;
+    justify-content: center;
+    padding: 0 20px;
+    margin-bottom: 10px;
+  }
+
+  .tab-btn {
+    flex: 1; max-width: 110px;
+    padding: 10px 6px;
+    border: 1px solid rgba(184,134,11,0.3);
+    border-radius: 4px;
+    background: rgba(240,230,208,0.03);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  .tab-btn .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+  .tab-btn .tab-name { font-size: 12px; color: var(--paper-dark); display: block; }
+  .tab-btn .tab-cost { font-size: 11px; color: var(--gold); display: block; margin-top: 2px; }
+
+  .tab-btn.active {
+    background: rgba(139,26,26,0.25);
+    border-color: var(--crimson);
+    box-shadow: 0 0 14px rgba(139,26,26,0.2);
+  }
+  .tab-btn.active .tab-name { color: var(--paper); }
+
+  .mode-desc {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+    padding: 0 24px;
+    line-height: 1.8;
+    min-height: 32px;
+    font-style: italic;
+  }
+
+  /* ─── DRAW BUTTON ─── */
+  .draw-btn-wrap { padding: 0 20px; margin-bottom: 24px; }
+
+  .draw-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #5a0a0a, #8b1a1a);
+    border: 1px solid var(--crimson-light);
+    border-radius: 4px;
+    color: var(--paper);
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 20px rgba(139,26,26,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    transition: all 0.2s;
+  }
+
+  .draw-btn:active { transform: scale(0.98); }
+  .draw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ─── CARDS AREA ─── */
+  .cards-area { padding: 0 20px; margin-bottom: 20px; }
+
+  .cards-layout-1 { display: flex; justify-content: center; }
+
+  .cards-layout-3 { display: flex; gap: 10px; justify-content: center; }
+
+  .cards-layout-5 {
+    display: grid;
+    grid-template-areas: ". top ." "left mid right" ". bot .";
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .card-slot.pos-top    { grid-area: top; }
+  .card-slot.pos-left   { grid-area: left; }
+  .card-slot.pos-mid    { grid-area: mid; }
+  .card-slot.pos-right  { grid-area: right; }
+  .card-slot.pos-bot    { grid-area: bot; }
+
+  /* Card flip */
+  .card-flip {
+    perspective: 700px;
+    width: 88px; height: 130px;
+    margin: 0 auto; cursor: pointer;
+  }
+
+  .cards-layout-1 .card-flip { width: 130px; height: 190px; }
+
+  .card-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(.4,0,.2,1);
+  }
+
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,134,11,0.2);
+  }
+
+  /* Card Back */
+  .card-back {
+    background: #0d0704;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .card-back img { width: 100%; height: 100%; object-fit: cover; }
+
+  .card-back-placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%; width: 100%;
+    background: radial-gradient(ellipse at center, #1a0a04 0%, #080402 100%);
+    gap: 6px;
+  }
+
+  .card-back-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.5;
+    text-shadow: 0 0 10px rgba(184,134,11,0.5);
+  }
+
+  .cards-layout-1 .card-back-kanji { font-size: 48px; }
+
+  .card-back-border {
+    position: absolute; inset: 5px;
+    border: 1px solid rgba(184,134,11,0.2);
+    border-radius: 3px;
+  }
+
+  /* Card Front */
+  .card-front {
+    transform: rotateY(180deg);
+    background: linear-gradient(160deg, #f5ead8 0%, #e8d5b0 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 8px 6px;
+    border: 1px solid var(--gold);
+  }
+
+  .card-front .card-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .cards-layout-1 .card-front .card-kanji { font-size: 32px; }
+
+  .card-front .card-gold-line {
+    width: 28px; height: 1px;
+    background: var(--gold); margin: 4px 0;
+  }
+
+  .card-front .card-name-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 9px;
+    color: var(--ink-light);
+    margin-bottom: 2px;
+  }
+
+  .card-front .card-name-th {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .cards-layout-1 .card-front .card-name-th { font-size: 12px; }
+
+  .card-front .card-pos-label {
+    font-size: 9px;
+    color: var(--crimson);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .card-front .card-seal {
+    position: absolute; bottom: 6px; right: 6px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8px;
+    color: var(--crimson);
+    opacity: 0.5;
+    border: 1px solid var(--crimson);
+    padding: 1px 2px;
+    border-radius: 1px;
+  }
+
+  /* ─── READING ─── */
+  .reading-wrap {
+    margin: 0 20px 32px;
+    background: rgba(10,5,2,0.85);
+    border: 1px solid rgba(184,134,11,0.25);
+    border-radius: 6px;
+    padding: 20px 18px;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    display: none;
+  }
+
+  .reading-wrap.show { display: block; }
+
+  .reading-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .reading-header .mask-icon {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px; color: var(--gold);
+  }
+
+  .reading-header h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+
+  .reading-text {
+    font-size: 14px;
+    line-height: 2.1;
+    color: var(--paper);
+    white-space: pre-wrap;
+    font-family: 'Noto Serif Thai', serif;
+    font-weight: 300;
+  }
+
+  .reading-loading {
+    text-align: center; padding: 20px;
+    color: var(--gold); font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .dots span { animation: blink 1.4s infinite; display: inline-block; }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%,80%,100% { opacity: 0.15; }
+    40% { opacity: 1; }
+  }
+
+  /* ─── LOGIN MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: #1a0e06;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 32px 24px;
+    text-align: center;
+    width: 85%; max-width: 320px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.8), 0 0 30px rgba(184,134,11,0.1);
+  }
+
+  .modal-box h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 17px; margin-bottom: 8px; color: var(--paper);
+  }
+
+  .modal-box p {
+    font-size: 13px; color: var(--paper-dark);
+    margin-bottom: 20px; line-height: 1.8;
+  }
+
+  .btn-google {
+    width: 100%; padding: 12px;
+    background: rgba(240,230,208,0.05);
+    border: 1px solid rgba(184,134,11,0.4);
+    border-radius: 4px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: var(--paper);
+    transition: all 0.2s;
+  }
+
+  .btn-google:hover { background: rgba(184,134,11,0.1); }
+
+  .btn-close-modal {
+    margin-top: 12px; background: none; border: none;
+    color: var(--ink-light); font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  /* ─── SMOKE PARTICLE ─── */
+  .smoke {
+    position: fixed; pointer-events: none; z-index: 50;
+    font-size: 20px;
+    animation: smokeRise linear forwards;
+  }
+
+  @keyframes smokeRise {
+    0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+    100% { transform: translateY(-120px) scale(2.5); opacity: 0; }
+  }
+</style>
 </head>
 <body>
+<div class="page-wrap">
 
-<div class="page-header">
-  <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title">🎭 หน้ากากโนะ</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
-</div>
-
-<!-- Reveal Overlay -->
-<div class="reveal-overlay" id="revealOverlay">
-  <div class="reveal-title">🎭 หน้ากากของเจ้า...</div>
-  <div class="reveal-subtitle">ข้ากำลังอ่านสิ่งที่ซ่อนอยู่</div>
-  <div id="revealRow" class="reveal-row"></div>
-  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🎭 เปิดเผยความจริง</button>
-</div>
-
-<div class="page-content">
-  <div class="hero">
-    <img src="../images/mascot.png" class="mascot-img" alt="mascot">
-    <div class="hero-title">🎭 หน้ากากโนะ</div>
-    <div class="hero-desc">ดึง 3 ใบ เพื่อเปิดเผยสิ่งที่ซ่อนอยู่<br>หน้ากากภายนอก • ความรู้สึกภายใน • สิ่งที่ต้องปล่อย</div>
+<!-- HEADER -->
+<div class="header">
+  <div class="mascot-wrap">
+    <img src="images/noh-mascot.png" alt="Noh Oracle"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+    <div class="mascot-placeholder" style="display:none">🎭</div>
   </div>
-
-  <!-- Slots -->
-  <div class="slots-label-row">
-    <div class="slot-type-label">ภายนอก</div>
-    <div class="slot-type-label">ภายใน</div>
-    <div class="slot-type-label">ปล่อยวาง</div>
-  </div>
-  <div style="margin-bottom:8px">
-    <div class="slots-row">
-      <div class="slot" id="slot0"><div class="slot-num">🎭</div><div class="slot-label">ใบที่ 1</div></div>
-      <div class="slot" id="slot1"><div class="slot-num">🌑</div><div class="slot-label">ใบที่ 2</div></div>
-      <div class="slot" id="slot2"><div class="slot-num">🌸</div><div class="slot-label">ใบที่ 3</div></div>
-    </div>
-  </div>
-  <div class="slots-hint">เลือกทีละ 1 ใบ • กดไพ่ใน slot เพื่อเอาออก</div>
-
-  <!-- Deck -->
-  <div class="deck-section">
-    <span class="deck-label">🎭 หน้ากากโนะ — 40 ใบ</span>
-    <div class="cards-scroll" id="cardScroll"></div>
-    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
-  </div>
-
-  <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อครั้ง</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
-  </div>
-
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🎭 เปิดเผยหน้ากาก</button>
-
-  <div class="result-box" id="resultBox">
-    <div class="result-cards-row" id="resultCardsRow"></div>
-    <div id="resultSections"></div>
+  <div class="title-jp">能 オラクル · NOH ORACLE</div>
+  <div class="title-th">โนะ ออราเคิล</div>
+  <div class="subtitle">ไพ่หน้ากากแห่งวิญญาณญี่ปุ่น</div>
+  <div class="coin-bar">
+    🪙 <span id="coinCount">—</span>
   </div>
 </div>
 
-<script src="../data/oracle-noh-data.js"></script>
-<script>
-var BACK = '../images/bnoh.png';
-var IMG = function(id) { return '../images/noh/noh' + id + '.png'; };
+<!-- MOOD -->
+<div class="divider"><span>能</span></div>
 
-var selected = [null, null, null];
-var slotRoles = ['หน้ากากภายนอก', 'ความรู้สึกภายใน', 'สิ่งที่ต้องปล่อย'];
-var slotEmoji = ['🎭', '🌑', '🌸'];
+<div class="mood-label">— นายท่านรู้สึกแบบใดในขณะนี้ —</div>
 
-function cardPlaceholder(card) {
-  return '<div class="card-placeholder"><div class="card-placeholder-emoji">🎭</div><div class="card-placeholder-name">' + card.name + '</div></div>';
-}
+<div class="mood-grid">
+  <button class="mood-btn" onclick="selectMood(this, 'สับสนและไม่แน่ใจในทิศทางชีวิต')">🌫️ สับสน</button>
+  <button class="mood-btn" onclick="selectMood(this, 'เจ็บปวดและบอบช้ำจากบางสิ่ง')">🔥 เจ็บปวด</button>
+  <button class="mood-btn" onclick="selectMood(this, 'โดดเดี่ยวและรู้สึกไม่มีใครเข้าใจ')">🌙 โดดเดี่ยว</button>
+  <button class="mood-btn" onclick="selectMood(this, 'อยากรู้ว่าอนาคตจะพาไปทางไหน')">✨ อยากรู้อนาคต</button>
+  <button class="mood-btn" onclick="selectMood(this, 'รู้สึกหนักใจและแบกรับมากเกินไป')">⛓️ หนักใจ</button>
+  <button class="mood-btn" onclick="selectMood(this, 'ไม่มีความรู้สึกชัดเจน ปล่อยให้วิญญาณนำทาง')">😶 ปล่อยให้วิญญาณนำ</button>
+</div>
 
-function renderDeck() {
-  var scroll = document.getElementById('cardScroll');
-  var selectedIds = selected.filter(function(c) { return c !== null; }).map(function(c) { return c.id; });
-  scroll.innerHTML = NOH_ORACLE.map(function(card, i) {
-    var isSel = selectedIds.indexOf(card.id) !== -1;
-    return '<div class="card-item ' + (isSel ? 'selected' : '') + '" onclick="selectCard(' + i + ')">' +
-      '<img src="' + BACK + '" alt="' + card.name + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
-      '<div class="card-placeholder" style="display:none"><div class="card-placeholder-emoji">🎭</div><div class="card-placeholder-name">' + card.name + '</div></div>' +
-      '</div>';
-  }).join('');
-}
+<!-- MODE TABS -->
+<div class="divider"><span>面</span></div>
 
-function selectCard(idx) {
-  var card = NOH_ORACLE[idx];
-  var selectedIds = selected.map(function(c) { return c ? c.id : null; });
-  if (selectedIds.indexOf(card.id) !== -1) return;
+<div class="mode-tabs">
+  <button class="tab-btn active" onclick="selectMode(1)">
+    <span class="tab-icon">🎭</span>
+    <span class="tab-name">1 ใบ</span>
+    <span class="tab-cost">10 🪙</span>
+  </button>
+  <button class="tab-btn" onclick="selectMode(3)">
+    <span class="tab-icon">🎭🎭</span>
+    <span class="tab-name">3 ใบ</span>
+    <span class="tab-cost">20 🪙</span>
+  </button>
+  <button class="tab-btn" onclick="selectMode(5)">
+    <span class="tab-icon">🎭🎭🎭</span>
+    <span class="tab-name">5 ใบ</span>
+    <span class="tab-cost">30 🪙</span>
+  </button>
+</div>
 
-  // หาช่องว่างแรก
-  var slot = -1;
-  for (var i = 0; i < 3; i++) { if (!selected[i]) { slot = i; break; } }
-  if (slot === -1) return;
+<div class="mode-desc" id="modeDesc">หน้ากากแห่งวันนี้ — วิญญาณจะเปิดเผยสิ่งที่ซ่อนอยู่</div>
 
-  selected[slot] = card;
-  updateSlots();
-  renderDeck();
+<!-- DRAW BUTTON -->
+<div class="draw-btn-wrap">
+  <button class="draw-btn" id="drawBtn" onclick="drawCards()">
+    🎭 เปิดเผยหน้ากาก
+  </button>
+</div>
 
-  var allFilled = selected[0] && selected[1] && selected[2];
-  document.getElementById('readBtn').disabled = !allFilled;
-}
+<!-- CARDS AREA -->
+<div class="cards-area" id="cardsArea"></div>
 
-function updateSlots() {
-  for (var i = 0; i < 3; i++) {
-    var el = document.getElementById('slot' + i);
-    var card = selected[i];
-    if (card) {
-      el.className = 'slot filled';
-      el.innerHTML = '<img class="slot-img" src="' + IMG(card.id) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
-        '<div class="card-placeholder" style="display:none; position:absolute; inset:0; border-radius:8px"></div>' +
-        '<div class="slot-overlay"><div class="slot-pos">' + card.name + '</div></div>';
-    } else {
-      el.className = 'slot';
-      el.innerHTML = '<div class="slot-num">' + slotEmoji[i] + '</div><div class="slot-label">ใบที่ ' + (i+1) + '</div>';
+<!-- READING -->
+<div class="reading-wrap" id="readingWrap">
+  <div class="reading-header">
+    <span class="mask-icon">面</span>
+    <h3>วิญญาณแห่งโนะกล่าวว่า...</h3>
+  </div>
+  <div class="reading-text" id="readingText"></div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>🎭 ต้องเข้าสู่ระบบก่อน</h3>
+    <p>ข้าจะเปิดเผยหน้ากากให้นายท่าน<br>หลังจากยืนยันตัวตนแล้วเท่านั้น</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button class="btn-close-modal" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var currentUser = null;
+
+// ─── CARD DATA 36 ใบ ───
+var allCards = [
+  // หมวด 1: หน้ากากหญิง
+  { kanji:"若女", jp:"Wakaonna",  th:"หญิงสาว",          kw:"ความหวัง ความบริสุทธิ์ จุดเริ่มต้นของความรัก",        cat:"female" },
+  { kanji:"小面", jp:"Ko-omote",  th:"หญิงงามอ่อนเยาว์", kw:"เสน่ห์ที่ซ่อนเร้น ความลึกลับ อำนาจที่อ่อนโยน",      cat:"female" },
+  { kanji:"深井", jp:"Fukai",     th:"หญิงกลางคน",        kw:"ความเศร้าลึก ความอาลัย ความรักที่ไม่มีวันลืม",       cat:"female" },
+  { kanji:"姥",   jp:"Uba",       th:"หญิงชรา",           kw:"ปัญญาแห่งกาลเวลา การยอมรับ ความงามของวัยชรา",        cat:"female" },
+  { kanji:"般若", jp:"Hannya",    th:"หญิงอิจฉาริษยา",   kw:"ความโกรธที่สะสม การปล่อยวาง พลังงานที่ต้องระบาย",    cat:"female" },
+  { kanji:"泥眼", jp:"Deigan",    th:"หญิงกลายเป็นวิญญาณ",kw:"จุดเปลี่ยนครั้งใหญ่ การแปลงร่าง ไม่มีทางกลับ",     cat:"female" },
+  { kanji:"山姥", jp:"Yamauba",   th:"แม่มดภูเขา",        kw:"พลังดิบแห่งธรรมชาติ สัญชาตญาณที่ไม่ถูกกัก",         cat:"female" },
+  { kanji:"静面", jp:"Shizuka",   th:"หญิงเงียบงัน",      kw:"ความสงบที่ซ่อนพลัง การรอคอยที่มีความหมาย",           cat:"female" },
+  { kanji:"増女", jp:"Masugami",  th:"หญิงบ้าคลั่ง",      kw:"อิสรภาพจากกรอบ ทลายขีดจำกัด พลังที่ถูกปลดปล่อย",   cat:"female" },
+  // หมวด 2: หน้ากากชาย
+  { kanji:"翁",   jp:"Okina",     th:"ผู้เฒ่าศักดิ์สิทธิ์",kw:"พรจากสวรรค์ ปัญญาสูงสุด ความเมตตาอันบริสุทธิ์",  cat:"male" },
+  { kanji:"中将", jp:"Chujo",     th:"แม่ทัพหนุ่ม",       kw:"ความกล้าหาญ ความรับผิดชอบ ผู้นำที่แท้จริง",          cat:"male" },
+  { kanji:"平太", jp:"Heita",     th:"นักรบ",              kw:"การต่อสู้ที่ยังไม่จบ ความแข็งแกร่ง ไม่ยอมแพ้",       cat:"male" },
+  { kanji:"三光", jp:"Sankojo",   th:"ผู้เฒ่าสามแสง",     kw:"ความสมดุลสามพลัง ฟ้า ดิน มนุษย์ กลมกลืน",           cat:"male" },
+  { kanji:"痩男", jp:"Yaseo",     th:"ชายผู้ทุกข์ทรมาน",  kw:"บทเรียนจากความเจ็บปวด การเติบโตผ่านความทุกข์",       cat:"male" },
+  { kanji:"邯鄲", jp:"Kantan",    th:"ชายในความฝัน",       kw:"ภาพลวงตา ตื่นขึ้นจากความหลง มองเห็นความจริง",        cat:"male" },
+  { kanji:"怪士", jp:"Kawazu",    th:"นักพรตลึกลับ",       kw:"การแสวงหาความจริง เส้นทางที่ต้องเดินคนเดียว",        cat:"male" },
+  { kanji:"朝倉", jp:"Asakura",   th:"ผู้พิพากษา",         kw:"กรรมและผลกรรม ความยุติธรรมที่ไม่มีวันหลบหนี",        cat:"male" },
+  { kanji:"童子", jp:"Doji",      th:"เด็กศักดิ์สิทธิ์",  kw:"ความบริสุทธิ์ที่แท้จริง เริ่มต้นใหม่ด้วยหัวใจเด็ก", cat:"male" },
+  // หมวด 3: หน้ากากวิญญาณ
+  { kanji:"幽霊", jp:"Yurei",     th:"วิญญาณลอยล่อน",     kw:"อดีตที่ยังไม่ปล่อย สิ่งที่ค้างคาใจ ต้องชำระให้จบ",  cat:"spirit" },
+  { kanji:"飛出", jp:"Tobide",    th:"วิญญาณโผล่",         kw:"สัญญาณเตือน สิ่งที่ถูกละเลยกำลังตะโกน",             cat:"spirit" },
+  { kanji:"猩々", jp:"Shojo",     th:"วิญญาณแห่งสุรา",     kw:"ความสุขที่แท้จริง ปลดปล่อยตัวเองบ้าง เฉลิมฉลองชีวิต",cat:"spirit"},
+  { kanji:"龍神", jp:"Ryujin",    th:"เทพมังกรน้ำ",        kw:"พลังลึกที่ยังไม่ถูกปลุก การเปลี่ยนแปลงครั้งใหญ่",   cat:"spirit" },
+  { kanji:"天神", jp:"Tenjin",    th:"เทพแห่งฟ้า",         kw:"แรงบันดาลใจจากสวรรค์ ความจริงที่เหนือกว่าโลก",       cat:"spirit" },
+  { kanji:"春日", jp:"Kasuga",    th:"เทพแห่งฤดูใบไม้ผลิ", kw:"การฟื้นฟู โอกาสใหม่ ความหวังกลับมา",                cat:"spirit" },
+  { kanji:"黒髭", jp:"Kurojige",  th:"วิญญาณเคราดำ",       kw:"ความลึกลับที่ยังไม่เปิดเผย สิ่งซ่อนอยู่ในเงามืด",   cat:"spirit" },
+  { kanji:"白頭", jp:"Hakuto",    th:"วิญญาณผมขาว",        kw:"กาลเวลาที่ไม่หยุด ความเป็นอมตะ รากเหง้าที่ยาวนาน",  cat:"spirit" },
+  { kanji:"石橋", jp:"Shakkyo",   th:"สิงโตศักดิ์สิทธิ์",  kw:"พลังปกป้องที่แข็งแกร่ง กล้าสู้เพื่อสิ่งที่รัก",     cat:"spirit" },
+  // หมวด 4: หน้ากากปีศาจ
+  { kanji:"天狗", jp:"Tengu",     th:"อสูรภูเขา",          kw:"ความเย่อหยิ่งที่ต้องเรียนรู้ บทเรียนที่เจ็บปวด",     cat:"demon" },
+  { kanji:"獅子口",jp:"Shishiguchi",th:"ปากสิงโตปีศาจ",   kw:"พลังดิบที่ต้องควบคุม ความโกรธที่ยังไม่ระบาย",        cat:"demon" },
+  { kanji:"大飛出",jp:"Otobide",  th:"ปีศาจโผล่ใหญ่",     kw:"ความกลัวที่ต้องเผชิญ สิ่งที่หนีอยู่กำลังตามมา",      cat:"demon" },
+  { kanji:"悪尉", jp:"Akujo",     th:"ผู้เฒ่าชั่วร้าย",    kw:"กรรมเก่าที่ต้องชำระ สิ่งที่ทำไว้จะย้อนกลับมา",      cat:"demon" },
+  { kanji:"鬼神", jp:"Kishin",    th:"เทพปีศาจ",           kw:"พลังทำลายล้างที่นำมาซึ่งการเกิดใหม่ ต้องพังก่อนสร้าง",cat:"demon"},
+  { kanji:"火焔", jp:"Kaen",      th:"ปีศาจไฟ",            kw:"ความหุนหันพลันแล่น ไฟที่เผาไหม้สิ่งเก่า",            cat:"demon" },
+  { kanji:"蛇",   jp:"Ja",        th:"งูปีศาจ",            kw:"การล่อลวงที่หอมหวาน สัญชาตญาณที่ต้องเชื่อ",          cat:"demon" },
+  { kanji:"夜叉", jp:"Yasha",     th:"ยักษ์ราตรี",         kw:"พลังกลางคืน ความจริงที่ซ่อนอยู่ในความมืด",           cat:"demon" },
+  { kanji:"鬼",   jp:"Oni",       th:"โอนิ",               kw:"เงาของตัวเอง สิ่งที่ปฏิเสธในตัวเอง ต้องยอมรับ",      cat:"demon" }
+];
+
+var posLabels1 = ["หน้ากากแห่งวันนี้"];
+var posLabels3 = ["หน้ากากที่โลกเห็น", "หน้ากากที่ซ่อนไว้", "หน้ากากที่ต้องถอด"];
+var posLabels5 = ["บทบาทที่เล่นอยู่", "อารมณ์ที่กดไว้", "แก่นแท้", "บทเรียนจากวิญญาณ", "การเปลี่ยนแปลงที่รอ"];
+
+var currentMode = 1;
+var selectedMood = "";
+var drawnCards = [];
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async function(user) {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, "users", user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    updateCoinUI(coins);
+  } else {
+    updateCoinUI(null);
+  }
+});
+
+window.updateCoinUI = function(coins) {
+  var el = document.getElementById("coinCount");
+  if (coins === null || coins === undefined) {
+    el.textContent = "กรุณาล็อกอิน";
+    el.style.color = "#6b4e28";
+  } else {
+    el.textContent = coins + " เหรียญ";
+    el.style.color = "var(--gold-light)";
+  }
+};
+
+window.loginGoogle = async function() {
+  var provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
+};
+
+window.loginNow = function() {
+  document.getElementById("loginModal").classList.add("show");
+};
+
+window.closeModal = function() {
+  document.getElementById("loginModal").classList.remove("show");
+};
+
+// ─── MOOD ───
+window.selectMood = function(btn, mood) {
+  document.querySelectorAll(".mood-btn").forEach(function(b) { b.classList.remove("selected"); });
+  btn.classList.add("selected");
+  selectedMood = mood;
+};
+
+// ─── MODE ───
+window.selectMode = function(n) {
+  currentMode = n;
+  document.querySelectorAll(".tab-btn").forEach(function(t, i) {
+    t.classList.toggle("active", [1,3,5][i] === n);
+  });
+  var descs = {
+    1: "หน้ากากแห่งวันนี้ — วิญญาณจะเปิดเผยสิ่งที่ซ่อนอยู่",
+    3: "หน้ากากที่โลกเห็น • ที่ซ่อนไว้ • ที่ต้องถอดออก",
+    5: "เวทีโนะแห่งชีวิต — ห้าหน้ากากแห่งจิตวิญญาณ"
+  };
+  document.getElementById("modeDesc").textContent = descs[n];
+  document.getElementById("cardsArea").innerHTML = "";
+  document.getElementById("readingWrap").classList.remove("show");
+  drawnCards = [];
+};
+
+// ─── DRAW ───
+window.drawCards = async function() {
+  if (!currentUser) { loginNow(); return; }
+
+  drawnCards = [];
+  var shuffled = allCards.slice().sort(function() { return Math.random() - 0.5; });
+  drawnCards = shuffled.slice(0, currentMode);
+
+  renderCards();
+
+  var btn = document.getElementById("drawBtn");
+  btn.disabled = true;
+
+  // เปิดทีละใบ
+  for (var i = 0; i < drawnCards.length; i++) {
+    await sleep(500 + i * 350);
+    var inner = document.getElementById("cardInner_" + i);
+    if (inner) inner.classList.add("flipped");
+    spawnSmoke();
+  }
+
+  await callReading();
+  btn.disabled = false;
+};
+
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+function renderCards() {
+  var area = document.getElementById("cardsArea");
+  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
+
+  if (currentMode === 1) {
+    area.innerHTML = '<div class="cards-layout-1">' + cardHTML(0, posLabels[0]) + '</div>';
+  } else if (currentMode === 3) {
+    var html = '<div class="cards-layout-3">';
+    for (var i = 0; i < 3; i++) html += cardHTML(i, posLabels[i]);
+    html += '</div>';
+    area.innerHTML = html;
+  } else {
+    var posClass = ["pos-top","pos-left","pos-mid","pos-right","pos-bot"];
+    var html = '<div class="cards-layout-5">';
+    for (var i = 0; i < 5; i++) {
+      html += '<div class="card-slot ' + posClass[i] + '">' + cardHTML(i, posLabels[i]) + '</div>';
     }
+    html += '</div>';
+    area.innerHTML = html;
   }
 }
 
-function startReading() {
-  if (!selected[0] || !selected[1] || !selected[2]) return;
-
-  document.getElementById('revealRow').innerHTML = selected.map(function(card, i) {
-    return '<div class="reveal-card">' +
-      '<div class="reveal-card-wrap">' +
-        '<div class="reveal-card-inner" id="revealInner' + i + '">' +
-          '<div class="reveal-card-back"><img src="' + BACK + '"></div>' +
-          '<div class="reveal-card-front">' +
-            '<img src="' + IMG(card.id) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
-            '<div class="card-placeholder" style="display:none"><div class="card-placeholder-emoji">🎭</div><div class="card-placeholder-name">' + card.name + '</div></div>' +
-          '</div>' +
+function cardHTML(idx, label) {
+  var card = drawnCards[idx];
+  return '<div class="card-flip">' +
+    '<div class="card-inner" id="cardInner_' + idx + '">' +
+      '<div class="card-face card-back">' +
+        '<img src="images/noh-card-back.png" alt="card back" ' +
+          'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
+        '<div class="card-back-placeholder" style="display:none">' +
+          '<div class="card-back-kanji">能</div>' +
+          '<div class="card-back-border"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="reveal-card-name" id="revealName' + i + '" style="opacity:0">' + card.name + '</div>' +
-      '<div class="reveal-card-role">' + slotRoles[i] + '</div>' +
-    '</div>';
-  }).join('');
-
-  document.getElementById('btnAccept').className = 'btn-accept';
-  document.getElementById('revealOverlay').classList.add('show');
-
-  var flipped = 0;
-  var flipNext = function() {
-    if (flipped >= 3) {
-      setTimeout(function() { document.getElementById('btnAccept').classList.add('show'); }, 300);
-      return;
-    }
-    setTimeout(function() {
-      document.getElementById('revealInner' + flipped).classList.add('flipped');
-      document.getElementById('revealName' + flipped).style.opacity = '1';
-      flipped++; flipNext();
-    }, 600);
-  };
-  setTimeout(flipNext, 300);
+      '<div class="card-face card-front">' +
+        '<div class="card-kanji">' + card.kanji + '</div>' +
+        '<div class="card-gold-line"></div>' +
+        '<div class="card-name-jp">' + card.jp + '</div>' +
+        '<div class="card-name-th">' + card.th + '</div>' +
+        '<div class="card-pos-label">' + label + '</div>' +
+        '<div class="card-seal">能</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 }
 
-async function acceptReading() {
-  document.getElementById('revealOverlay').classList.remove('show');
+// ─── API CALL ───
+async function callReading() {
+  var wrap = document.getElementById("readingWrap");
+  var textEl = document.getElementById("readingText");
+  wrap.classList.add("show");
+  textEl.innerHTML = '<div class="reading-loading">能 กำลังอ่านวิญญาณ <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>';
 
-  var coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
-  var newCoins = coins - 10;
-  localStorage.setItem('coins', String(newCoins));
-  document.getElementById('coinCount').textContent = newCoins;
-  document.getElementById('coinDisplay').textContent = newCoins;
+  var serviceMap = { 1: "noh-oracle-1", 3: "noh-oracle-3", 5: "noh-oracle-5" };
+  var service = serviceMap[currentMode];
 
-  var resultBox = document.getElementById('resultBox');
-  resultBox.classList.add('show');
+  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
 
-  document.getElementById('resultCardsRow').innerHTML = selected.map(function(card, i) {
-    return '<div class="result-card">' +
-      '<div class="result-card-img">' +
-        '<img src="' + IMG(card.id) + '" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
-        '<div class="card-placeholder" style="display:none; height:100%"><div class="card-placeholder-emoji">🎭</div><div class="card-placeholder-name">' + card.name + '</div></div>' +
-      '</div>' +
-      '<div class="result-card-name">' + card.thai + '</div>' +
-      '<div class="result-card-role">' + slotRoles[i] + '</div>' +
-    '</div>';
-  }).join('');
+  // bonus mechanic
+  var catCount = {};
+  drawnCards.forEach(function(c) { catCount[c.cat] = (catCount[c.cat] || 0) + 1; });
+  var bonus = "";
+  if ((catCount["demon"] || 0) >= 2) bonus = "\n\n⚠️ กติกาพิเศษ: จั่วได้หน้ากากปีศาจ 2 ใบขึ้นไป — วิญญาณกำลังทดสอบนายท่าน ให้เพิ่มข้อความพิเศษเรื่องการทดสอบและการผ่านพ้น";
+  if ((catCount["female"] || 0) >= 3) bonus = "\n\n✨ กติกาพิเศษ: จั่วได้หน้ากากหญิงล้วน — พลังหญิงกำลังตื่น ให้เพิ่มข้อความพิเศษเรื่องพลังงานหญิงและสัญชาตญาณ";
 
-  var sections = document.getElementById('resultSections');
-  sections.innerHTML = '<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ข้ากำลังอ่านหน้ากากของเจ้า...</div></div>';
-  resultBox.scrollIntoView({ behavior: 'smooth' });
+  var cardList = drawnCards.map(function(c, i) {
+    return "ตำแหน่ง "" + posLabels[i] + "": " + c.kanji + " " + c.jp + " — " + c.th + " (" + c.kw + ")";
+  }).join("\n");
 
-  var cardInfo = 'หน้ากากภายนอก: ' + selected[0].name + ' (' + selected[0].thai + ') — ' + selected[0].outer +
-    ' | ความรู้สึกภายใน: ' + selected[1].name + ' (' + selected[1].thai + ') — ' + selected[1].inner +
-    ' | สิ่งที่ต้องปล่อย: ' + selected[2].name + ' (' + selected[2].thai + ') — ' + selected[2].release;
+  var moodText = selectedMood ? "พลังงานของนายท่านในขณะนี้: " + selectedMood : "นายท่านไม่ได้ระบุพลังงาน ให้อ่านตามสิ่งที่หน้ากากบอก";
+
+  var promptText =
+    "ข้าคือวิญญาณแห่งโนะ ผู้อ่านหน้ากากแห่งจิตวิญญาณมาแต่โบราณ\n" +
+    "ข้าเรียกผู้ถามว่า 'นายท่าน' และแทนตัวเองว่า 'ข้า'\n" +
+    "โทนการพูด: โบราณ ลึกซึ้ง หนักแน่น ไม่หวาน ไม่พยักหน้าเยอะ เหมือนนักบวชที่อ่านวิญญาณ\n" +
+    "ใช้ภาษาไทยที่มีกลิ่นอายโบราณนิดๆ แต่ยังอ่านเข้าใจง่าย\n\n" +
+    moodText + "\n\n" +
+    "หน้ากากที่จั่วได้:\n" + cardList + bonus + "\n\n" +
+    "กรุณาทำนายโดยแบ่งเป็น:\n" +
+    "🎭 ความหมายของแต่ละหน้ากาก\n" +
+    "⛩️ สิ่งที่หน้ากากเหล่านี้รวมกันบอกนายท่าน\n" +
+    "🕯️ สิ่งที่ข้าขอกราบทูลนายท่านไว้\n\n" +
+    "ทำนายให้ลึก หนักแน่น และตรงไปตรงมาแบบวิญญาณที่ไม่โกหก";
 
   try {
-    var res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+    var idToken = await currentUser.getIdToken();
+
+    var res = await fetch("/api/claude", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + idToken
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 1500,
-        system: 'ข้าคือผู้อ่านหน้ากากโนะแห่งญี่ปุ่น ผู้มองเห็นสิ่งที่ซ่อนอยู่ใต้หน้ากากทุกบาน ข้าเรียกผู้ถามว่า "เจ้า" และเรียกตัวเองว่า "ข้า" ใช้ภาษาไทยกึ่งโบราณที่สง่างาม\n\nตอบในรูปแบบ JSON เท่านั้น ห้ามมี markdown ห้ามมี backtick:\n{\n  "outer": "อธิบายหน้ากากภายนอกที่เจ้าสวม 2-3 ประโยค",\n  "inner": "อธิบายความรู้สึกที่ซ่อนอยู่ภายใน 2-3 ประโยค",\n  "release": "อธิบายสิ่งที่เจ้าต้องปล่อยวาง 2-3 ประโยค",\n  "summary": "คำทำนายรวมจากทั้ง 3 ใบ เชื่อมเป็นเรื่องราวเดียวกัน 4-5 ประโยค ใช้ภาษากึ่งโบราณสง่างาม"\n}',
-        messages: [{ role: 'user', content: cardInfo }]
+        service: service,
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: promptText }]
       })
     });
 
-    var data = await res.json();
-    var raw = (data.content && data.content[0] && data.content[0].text) || '';
-    var parsed;
-    try {
-      parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    } catch(e) {
-      parsed = { outer: '', inner: '', release: '', summary: raw };
+    var newCoins = res.headers.get("X-New-Coin-Balance");
+    if (newCoins !== null) updateCoinUI(parseInt(newCoins) + " เหรียญ");
+
+    if (!res.ok) {
+      var err = await res.json();
+      textEl.textContent = err.error === "insufficient_coins"
+        ? "นายท่านมีเหรียญไม่เพียงพอ 🪙 กรุณาเติมเหรียญก่อน"
+        : "เกิดข้อผิดพลาด ข้าขอโทษ กรุณาลองใหม่อีกครั้ง";
+      return;
     }
 
-    sections.innerHTML =
-      '<div class="result-section outer-sec">' +
-        '<div class="result-section-title">🎭 ' + selected[0].name + ' — หน้ากากภายนอก</div>' +
-        '<div class="result-section-text">' + parsed.outer + '</div>' +
-      '</div>' +
-      '<div class="result-section inner-sec">' +
-        '<div class="result-section-title">🌑 ' + selected[1].name + ' — ความรู้สึกภายใน</div>' +
-        '<div class="result-section-text">' + parsed.inner + '</div>' +
-      '</div>' +
-      '<div class="result-section release-sec">' +
-        '<div class="result-section-title">🌸 ' + selected[2].name + ' — สิ่งที่ต้องปล่อย</div>' +
-        '<div class="result-section-text">' + parsed.release + '</div>' +
-      '</div>' +
-      '<div class="result-section summary-sec">' +
-        '<div class="result-section-title">✨ คำทำนายจากข้า</div>' +
-        '<div class="result-section-text">' + parsed.summary + '</div>' +
-      '</div>';
+    // stream
+    textEl.textContent = "";
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = "";
 
-    // บันทึก Firestore
-    try {
-      var user = firebase.auth().currentUser;
-      if (user && parsed.summary) {
-        await firebase.firestore().collection('readings').add({
-          uid: user.uid,
-          type: 'noh-oracle',
-          cards: {
-            outer:   { id: selected[0].id, name: selected[0].name, thai: selected[0].thai },
-            inner:   { id: selected[1].id, name: selected[1].name, thai: selected[1].thai },
-            release: { id: selected[2].id, name: selected[2].name, thai: selected[2].thai }
-          },
-          result: parsed,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      }
-    } catch(saveErr) { console.warn('save error', saveErr); }
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      var text = decoder.decode(chunk.value, { stream: true });
+      fullText += text;
+      textEl.textContent = fullText;
+    }
+
+    // save firestore
+    await addDoc(collection(db, "users", currentUser.uid, "readings"), {
+      type: "noh-oracle",
+      mode: currentMode,
+      mood: selectedMood,
+      cards: drawnCards.map(function(c) { return c.kanji + " " + c.th; }),
+      reading: fullText,
+      createdAt: serverTimestamp()
+    });
 
   } catch(e) {
-    sections.innerHTML = '<div class="result-section outer-sec"><div class="result-section-text">เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ</div></div>';
+    textEl.textContent = "เกิดข้อผิดพลาด ข้าขอโทษนายท่าน กรุณาลองใหม่อีกครั้ง";
+    console.error(e);
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  var coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-  renderDeck();
+// ─── SMOKE ───
+function spawnSmoke() {
+  var emojis = ["🎭","💨","🌫️"];
+  for (var i = 0; i < 5; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var s = document.createElement("div");
+        s.className = "smoke";
+        s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        s.style.left = (30 + Math.random() * 40) + "vw";
+        s.style.bottom = "40vh";
+        s.style.animationDuration = (1.5 + Math.random()) + "s";
+        document.body.appendChild(s);
+        setTimeout(function() { s.remove(); }, 3000);
+      }, i * 120);
+    })(i);
+  }
+}
 
-  setTimeout(function() {
-    var el = document.getElementById('cardScroll');
-    el.scrollTo({ left: 120, behavior: 'smooth' });
-    setTimeout(function() { el.scrollTo({ left: 0, behavior: 'smooth' }); }, 600);
-  }, 500);
-});
+window.drawCards = drawCards;
+window.selectMode = selectMode;
+window.selectMood = selectMood;
+
 </script>
 </body>
 </html>
