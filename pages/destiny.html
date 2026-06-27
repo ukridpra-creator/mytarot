@@ -564,43 +564,14 @@ window.closeModal = function() {
   document.getElementById("loginModal").classList.remove("show");
 };
 
-// ─── PARSE SECTIONS ───
-function parseSections(text) {
-  var result = {};
-  var sectionMap = {
-    "นิสัย":       "personality",
-    "มาจากไหน":    "childhood",
-    "ภารกิจ":      "mission",
-    "ความรัก":     "love",
-    "การงาน":      "career",
-    "การเงิน":     "money",
-    "สุขภาพ":      "health",
-    "โชคดี":       "lucky",
-    "ดวงปีนี้":    "thisyear",
-    "อนาคต":       "future",
-  };
-
-  var current = null;
-  var lines = text.split('\n');
-
-  lines.forEach(function(line) {
-    var matched = false;
-    Object.keys(sectionMap).forEach(function(key) {
-      if (line.includes(key) && (line.includes('🌟') || line.includes('👶') ||
-          line.includes('🎯') || line.includes('💕') || line.includes('💼') ||
-          line.includes('💰') || line.includes('🌿') || line.includes('✨') ||
-          line.includes('⚡') || line.includes('🔮') || line.startsWith('#'))) {
-        current = sectionMap[key];
-        result[current] = '';
-        matched = true;
-      }
-    });
-    if (!matched && current) {
-      result[current] += line + '\n';
-    }
-  });
-
-  return result;
+// ─── PARSE JSON ───
+function parseJSON(text) {
+  try {
+    var clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
+  } catch(e) {
+    return null;
+  }
 }
 
 function updateSection(id, text) {
@@ -717,26 +688,16 @@ window.startReading = async function() {
       "นิสัย: " + getKW(["personality"]) + "\n" +
       "ความรัก: " + getKW(["love_positive","love_warning"]) + "\n" +
       "การงาน: " + getKW(["career_positive","career_warning"]) + "\n\n" +
-      "เขียน 5 หัวข้อนี้ แต่ละหัวข้อขึ้นต้นด้วย emoji และชื่อหัวข้อ:\n" +
-      "🌟 นิสัยและบุคลิกที่แท้จริง\n" +
-      "👶 มาจากไหน\n" +
-      "🎯 ภารกิจชีวิต\n" +
-      "💕 ความรัก\n" +
-      "💼 การงาน\n\n" +
-      "keyword warning ให้เตือนตรงๆ แต่สุภาพ";
+      "ตอบเป็น JSON เท่านั้น ห้ามมี markdown หรือข้อความอื่น:\n" +
+      '{"personality":"...","childhood":"...","mission":"...","love":"...","career":"..."}';
 
-    var text1 = await streamAPI(prompt1, "destiny", function(partial) {
-      var sections = parseSections(partial);
-      Object.keys(sections).forEach(function(id) {
-        updateSection(id, sections[id]);
+    var text1 = await streamAPI(prompt1, "destiny", null);
+    var json1 = parseJSON(text1);
+    if (json1) {
+      Object.keys(json1).forEach(function(id) {
+        updateSection(id, json1[id]);
       });
-    });
-
-    // parse final call1
-    var sections1 = parseSections(text1);
-    Object.keys(sections1).forEach(function(id) {
-      updateSection(id, sections1[id]);
-    });
+    }
 
     // clear loading ที่ยังค้างอยู่
     ["money","health","lucky","thisyear","future"].forEach(function(id) {
@@ -756,25 +717,16 @@ window.startReading = async function() {
       "สุขภาพ: " + getKW(["health_positive","health_warning"]) + "\n" +
       "โชคดี: " + getKW(["lucky"]) + "\n" +
       "อนาคต: " + getKW(["future_positive","future_warning"]) + "\n\n" +
-      "เขียน 5 หัวข้อนี้ แต่ละหัวข้อขึ้นต้นด้วย emoji และชื่อหัวข้อ:\n" +
-      "💰 การเงิน\n" +
-      "🌿 สุขภาพ\n" +
-      "✨ โชคดีประจำชะตา\n" +
-      "⚡ ดวงปีนี้ 2568\n" +
-      "🔮 อนาคต\n\n" +
-      "keyword warning ให้เตือนตรงๆ แต่สุภาพ";
+      "ตอบเป็น JSON เท่านั้น ห้ามมี markdown หรือข้อความอื่น:\n" +
+      '{"money":"...","health":"...","lucky":"...","thisyear":"...","future":"..."}';
 
-    var text2 = await streamAPI(prompt2, "destiny-2", function(partial) {
-      var sections = parseSections(partial);
-      Object.keys(sections).forEach(function(id) {
-        updateSection(id, sections[id]);
+    var text2 = await streamAPI(prompt2, "destiny-2", null);
+    var json2 = parseJSON(text2);
+    if (json2) {
+      Object.keys(json2).forEach(function(id) {
+        updateSection(id, json2[id]);
       });
-    });
-
-    var sections2 = parseSections(text2);
-    Object.keys(sections2).forEach(function(id) {
-      updateSection(id, sections2[id]);
-    });
+    }
 
     // บันทึก Firestore
     await addDoc(collection(db, "users", currentUser.uid, "readings"), {
