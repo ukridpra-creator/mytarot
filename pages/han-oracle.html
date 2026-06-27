@@ -776,6 +776,8 @@ async function callReading(question) {
       },
       body: JSON.stringify({
         service: service,
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
         messages: [{ role: "user", content: promptText }]
       })
     });
@@ -783,15 +785,29 @@ async function callReading(question) {
     var newCoins = res.headers.get("X-New-Coin-Balance");
     if (newCoins !== null) updateCoinUI(parseInt(newCoins));
 
-    var data = await res.json();
-
     if (!res.ok) {
-      textEl.textContent = data.error || "เกิดข้อผิดพลาด ลองใหม่นะคะ 🙏";
+      var err = await res.json();
+      if (err.error === "insufficient_coins") {
+        textEl.textContent = "เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนเลยค่ะ";
+      } else {
+        textEl.textContent = "เกิดข้อผิดพลาด ลองใหม่นะคะ 🙏";
+      }
       return;
     }
 
-    var content = data.content && data.content[0] ? data.content[0].text : "";
-    textEl.textContent = content;
+    // อ่านแบบ stream
+    textEl.textContent = "";
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = "";
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      var text = decoder.decode(chunk.value, { stream: true });
+      fullText += text;
+      textEl.textContent = fullText;
+    }
 
     // save to firestore
     await addDoc(collection(db, "users", currentUser.uid, "readings"), {
@@ -799,7 +815,7 @@ async function callReading(question) {
       mode: currentMode,
       cards: drawnCards.map(function(c) { return c.name; }),
       question: question,
-      reading: content,
+      reading: fullText,
       createdAt: serverTimestamp()
     });
 
