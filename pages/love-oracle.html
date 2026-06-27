@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Oracle | MyTarot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&family=Playfair+Display:ital,wght@1,400&display=swap');
+
+  :root {
+    --rose: #e8a0b0;
+    --rose-deep: #c0607a;
+    --rose-light: #f5d0da;
+    --blush: #fdf0f3;
+    --cream: #fdf8f2;
+    --gold: #c9a84c;
+    --gold-light: #e8cc80;
+    --ink: #2d1820;
+    --ink-mid: #6b3848;
+    --ink-light: #9b6878;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: linear-gradient(160deg, #fdf0f3 0%, #f8e8ef 40%, #fdf5f0 100%);
+    min-height: 100vh;
+    font-family: 'Noto Sans Thai', sans-serif;
+    color: var(--ink);
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at 10% 10%, rgba(232,160,176,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 90%, rgba(201,168,76,0.08) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    padding: 32px 20px 16px;
+  }
+
+  .mascot-wrap {
+    width: 100px; height: 100px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose-light), #fde8f0);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(192,96,122,0.2);
+    overflow: hidden;
+  }
+
+  .mascot-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  .mascot-placeholder { font-size: 52px; }
+
+  .title-en {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--rose-deep);
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+
+  .title-th {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    text-shadow: 0 0 20px rgba(192,96,122,0.2);
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .coin-bar {
+    display: flex; justify-content: center; align-items: center;
+    gap: 6px; margin: 12px 0 0;
+    font-size: 13px; color: var(--ink-light);
+  }
+
+  .coin-count { font-weight: 600; color: var(--gold); font-size: 15px; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 24px; margin: 16px 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  }
+  .divider span { font-size: 16px; }
+
+  /* ─── STEP LABEL ─── */
+  .step-label {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* ─── GENDER SELECT ─── */
+  .gender-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 0 20px;
+    margin-bottom: 6px;
+  }
+
+  .gender-btn {
+    flex: 1; max-width: 140px;
+    padding: 14px 10px;
+    background: rgba(255,255,255,0.7);
+    border: 1.5px solid var(--rose-light);
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  .gender-btn .g-icon { font-size: 28px; display: block; margin-bottom: 4px; }
+  .gender-btn .g-name { font-size: 14px; font-weight: 500; color: var(--ink); display: block; }
+
+  .gender-btn.selected {
+    background: linear-gradient(135deg, var(--rose-deep), #e8708a);
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(192,96,122,0.35);
+  }
+
+  .gender-btn.selected .g-name { color: white; }
+
+  /* ─── STATUS SELECT ─── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 20px;
+    margin-bottom: 6px;
+  }
+
+  .status-btn {
+    padding: 12px 8px;
+    background: rgba(255,255,255,0.7);
+    border: 1.5px solid var(--rose-light);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  .status-btn .s-icon { font-size: 20px; display: block; margin-bottom: 3px; }
+  .status-btn .s-name { font-size: 13px; font-weight: 500; color: var(--ink); display: block; }
+  .status-btn .s-desc { font-size: 10px; color: var(--ink-light); display: block; margin-top: 2px; }
+
+  .status-btn.selected {
+    background: linear-gradient(135deg, #f5c0d0, var(--rose));
+    border-color: var(--rose-deep);
+    box-shadow: 0 3px 12px rgba(192,96,122,0.25);
+  }
+
+  .status-btn.selected .s-name { color: var(--ink); }
+
+  /* ─── MODE TABS ─── */
+  .mode-tabs {
+    display: flex; gap: 8px;
+    justify-content: center;
+    padding: 0 20px;
+    margin-bottom: 8px;
+  }
+
+  .tab-btn {
+    flex: 1; max-width: 110px;
+    padding: 10px 6px;
+    border: 1.5px solid var(--rose-light);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.6);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  .tab-btn .tab-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+  .tab-btn .tab-name { font-size: 12px; color: var(--ink); display: block; }
+  .tab-btn .tab-cost { font-size: 11px; color: var(--gold); display: block; margin-top: 2px; }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--rose-light), #fde0e8);
+    border-color: var(--rose-deep);
+    box-shadow: 0 3px 12px rgba(192,96,122,0.2);
+  }
+
+  .mode-desc {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+    padding: 0 24px;
+    min-height: 18px;
+    font-style: italic;
+  }
+
+  /* ─── DRAW BUTTON ─── */
+  .draw-btn-wrap { padding: 0 20px; margin-bottom: 24px; }
+
+  .draw-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--rose-deep), #e8708a);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(192,96,122,0.4);
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .draw-btn:active { transform: scale(0.97); }
+  .draw-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ─── CARDS AREA ─── */
+  .cards-area { padding: 0 20px; margin-bottom: 20px; }
+
+  .cards-layout-1 { display: flex; justify-content: center; }
+  .cards-layout-3 { display: flex; gap: 10px; justify-content: center; }
+
+  .cards-layout-5 {
+    display: grid;
+    grid-template-areas: ". top ." "left mid right" ". bot .";
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .card-slot.pos-top    { grid-area: top; }
+  .card-slot.pos-left   { grid-area: left; }
+  .card-slot.pos-mid    { grid-area: mid; }
+  .card-slot.pos-right  { grid-area: right; }
+  .card-slot.pos-bot    { grid-area: bot; }
+
+  /* Card flip */
+  .card-flip {
+    perspective: 600px;
+    width: 88px; height: 130px;
+    margin: 0 auto;
+  }
+
+  .cards-layout-1 .card-flip { width: 130px; height: 188px; }
+
+  .card-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+  }
+
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(192,96,122,0.2);
+  }
+
+  .card-back {
+    background: linear-gradient(135deg, var(--rose-deep) 0%, #e8708a 50%, var(--rose-light) 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .card-back img { width: 100%; height: 100%; object-fit: cover; }
+
+  .card-back-placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%; width: 100%;
+    gap: 4px;
+  }
+
+  .card-back-icon { font-size: 30px; opacity: 0.7; }
+  .cards-layout-1 .card-back-icon { font-size: 42px; }
+
+  .card-back-border {
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+  }
+
+  .card-front {
+    transform: rotateY(180deg);
+    background: var(--cream);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 8px 6px;
+    border: 1.5px solid var(--rose-light);
+  }
+
+  .card-front .card-level {
+    font-size: 16px; margin-bottom: 2px;
+  }
+
+  .cards-layout-1 .card-front .card-level { font-size: 22px; }
+
+  .card-front .card-divider {
+    width: 28px; height: 1px;
+    background: var(--rose); margin: 4px 0;
+  }
+
+  .card-front .card-name {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 10px; font-weight: 600;
+    color: var(--ink); text-align: center;
+    line-height: 1.4;
+  }
+
+  .cards-layout-1 .card-front .card-name { font-size: 12px; }
+
+  .card-front .card-pos {
+    font-size: 9px; color: var(--rose-deep);
+    margin-top: 4px; font-weight: 500;
+  }
+
+  /* ─── READING ─── */
+  .reading-wrap {
+    margin: 0 20px 32px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 20px;
+    padding: 20px 18px;
+    border: 1px solid var(--rose-light);
+    box-shadow: 0 4px 20px rgba(192,96,122,0.1);
+    display: none;
+  }
+
+  .reading-wrap.show { display: block; }
+
+  .reading-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rose-light);
+  }
+
+  .reading-header h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 14px; font-weight: 600;
+    color: var(--rose-deep);
+  }
+
+  .reading-text {
+    font-size: 14px; line-height: 2.1;
+    color: var(--ink); white-space: pre-wrap;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-weight: 300;
+  }
+
+  .reading-loading {
+    text-align: center; padding: 20px;
+    color: var(--rose-deep); font-size: 13px;
+  }
+
+  .dots span { animation: blink 1.2s infinite; display: inline-block; }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%,80%,100% { opacity: 0.2; }
+    40% { opacity: 1; }
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(45,24,32,0.6); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: white; border-radius: 24px;
+    padding: 32px 24px; text-align: center;
+    width: 85%; max-width: 320px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  }
+
+  .modal-box h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 17px; margin-bottom: 8px; color: var(--ink);
+  }
+
+  .modal-box p {
+    font-size: 13px; color: var(--ink-light);
+    margin-bottom: 20px; line-height: 1.8;
+  }
+
+  .btn-google {
+    width: 100%; padding: 12px;
+    background: white;
+    border: 1.5px solid var(--rose-light);
+    border-radius: 50px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .btn-close-modal {
+    margin-top: 12px; background: none; border: none;
+    color: var(--ink-light); font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+
+  /* ─── PETAL ─── */
+  .petal {
+    position: fixed; pointer-events: none; z-index: 50;
+    font-size: 14px;
+    animation: petalFall linear forwards;
+  }
+
+  @keyframes petalFall {
+    0%   { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(480deg) translateX(30px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="mascot-wrap">
+    <img src="images/love-mascot.png" alt="Love Oracle"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+    <div class="mascot-placeholder" style="display:none">💕</div>
+  </div>
+  <div class="title-en">LOVE ORACLE</div>
+  <div class="title-th">เลิฟ ออราเคิล</div>
+  <div class="subtitle">ไพ่แห่งหัวใจและความรัก</div>
+  <div class="coin-bar">
+    🪙 <span id="coinCount">—</span>
+  </div>
+</div>
+
+<!-- STEP 1: GENDER -->
+<div class="divider"><span>💕</span></div>
+<div class="step-label">— เลือกเพศของคุณก่อนนะคะ —</div>
+
+<div class="gender-grid">
+  <button class="gender-btn" onclick="selectGender(this, 'male', 'พี่ชาย')">
+    <span class="g-icon">👦</span>
+    <span class="g-name">พี่ชาย</span>
+  </button>
+  <button class="gender-btn" onclick="selectGender(this, 'female', 'พี่สาว')">
+    <span class="g-icon">👧</span>
+    <span class="g-name">พี่สาว</span>
+  </button>
+</div>
+
+<!-- STEP 2: STATUS -->
+<div class="divider"><span>🌹</span></div>
+<div class="step-label">— สถานะความรักตอนนี้ —</div>
+
+<div class="status-grid">
+  <button class="status-btn" onclick="selectStatus(this, 'โสดสนิท ยังไม่มีใครในใจ')">
+    <span class="s-icon">💔</span>
+    <span class="s-name">โสดสนิท</span>
+    <span class="s-desc">ยังไม่มีใครในใจ</span>
+  </button>
+  <button class="status-btn" onclick="selectStatus(this, 'มีแฟนอยู่แล้ว อยู่ในความสัมพันธ์')">
+    <span class="s-icon">💑</span>
+    <span class="s-name">มีแฟน</span>
+    <span class="s-desc">อยู่ในความสัมพันธ์</span>
+  </button>
+  <button class="status-btn" onclick="selectStatus(this, 'มีคนคุยอยู่ ยังไม่ได้ตกลงกัน')">
+    <span class="s-icon">💌</span>
+    <span class="s-name">มีคนคุย</span>
+    <span class="s-desc">ยังไม่ได้ตกลงกัน</span>
+  </button>
+  <button class="status-btn" onclick="selectStatus(this, 'สถานะซับซ้อน ยังไม่ชัดเจน')">
+    <span class="s-icon">🌀</span>
+    <span class="s-name">ซับซ้อน</span>
+    <span class="s-desc">ยังไม่ชัดเจน</span>
+  </button>
+</div>
+
+<!-- STEP 3: MODE -->
+<div class="divider"><span>🌙</span></div>
+
+<div class="mode-tabs">
+  <button class="tab-btn active" onclick="selectMode(1)">
+    <span class="tab-icon">💕</span>
+    <span class="tab-name">1 ใบ</span>
+    <span class="tab-cost">10 🪙</span>
+  </button>
+  <button class="tab-btn" onclick="selectMode(3)">
+    <span class="tab-icon">💕💕</span>
+    <span class="tab-name">3 ใบ</span>
+    <span class="tab-cost">20 🪙</span>
+  </button>
+  <button class="tab-btn" onclick="selectMode(5)">
+    <span class="tab-icon">💕💕💕</span>
+    <span class="tab-name">5 ใบ</span>
+    <span class="tab-cost">30 🪙</span>
+  </button>
+</div>
+
+<div class="mode-desc" id="modeDesc">พลังงานความรักในวันนี้</div>
+
+<!-- DRAW BUTTON -->
+<div class="draw-btn-wrap">
+  <button class="draw-btn" id="drawBtn" onclick="drawCards()">
+    💕 ให้น้องดูไพ่ให้
+  </button>
+</div>
+
+<!-- CARDS AREA -->
+<div class="cards-area" id="cardsArea"></div>
+
+<!-- READING -->
+<div class="reading-wrap" id="readingWrap">
+  <div class="reading-header">
+    <span>🌹</span>
+    <h3 id="readingTitle">น้องบอกเลยนะคะ...</h3>
+  </div>
+  <div class="reading-text" id="readingText"></div>
+</div>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>💕 เข้าสู่ระบบก่อนนะคะ</h3>
+    <p>ต้องล็อกอินก่อนถึงจะให้น้อง<br>ดูไพ่ความรักให้ได้นะคะ</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button class="btn-close-modal" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var currentUser = null;
+
+// ─── CARD DATA 36 ใบ ───
+var allCards = [
+  // หมวด 1: ความรู้สึก
+  { name:"หัวใจเต้น",          level:"💖", kw:"ตื่นเต้น มีความรู้สึกใหม่กำลังผลิบาน",                    cat:"feeling",  energy:"great" },
+  { name:"น้ำตาในฝัน",         level:"💔", kw:"เจ็บปวดที่ยังไม่หาย ต้องปล่อยวาง",                       cat:"feeling",  energy:"bad" },
+  { name:"ไฟอ่อนๆ",            level:"💛", kw:"ความรู้สึกที่กำลังโต ยังไม่แน่ใจ",                        cat:"feeling",  energy:"mid" },
+  { name:"คิดถึงทุกคืน",       level:"💗", kw:"ใจจดจ่ออยู่กับคนๆ หนึ่ง",                               cat:"feeling",  energy:"good" },
+  { name:"หึงเงียบๆ",           level:"🖤", kw:"ความหึงที่ซ่อนไว้ ต้องพูดออกมา",                         cat:"feeling",  energy:"warn" },
+  { name:"อบอุ่นใจ",            level:"💖", kw:"ความรู้สึกปลอดภัยและมั่นคง",                             cat:"feeling",  energy:"great" },
+  { name:"สับสนในหัวใจ",       level:"💛", kw:"ใจไม่นิ่ง ยังหาคำตอบไม่ได้",                             cat:"feeling",  energy:"mid" },
+  { name:"รักแรกพบ",            level:"💖", kw:"พลังงานใหม่สดใส โอกาสที่น่าคว้า",                        cat:"feeling",  energy:"great" },
+  { name:"บาดแผลเก่า",          level:"💔", kw:"อดีตยังส่งผลถึงปัจจุบัน",                               cat:"feeling",  energy:"bad" },
+  // หมวด 2: สัญลักษณ์รัก
+  { name:"กุหลาบแดง",           level:"💖", kw:"ความรักที่เข้มข้น ชัดเจน",                              cat:"symbol",   energy:"great" },
+  { name:"จดหมายที่ไม่ได้ส่ง", level:"💛", kw:"มีสิ่งที่อยากบอกแต่ยังไม่กล้า",                          cat:"symbol",   energy:"mid" },
+  { name:"แหวนทอง",             level:"💖", kw:"ความผูกพัน ความจริงจัง",                                cat:"symbol",   energy:"great" },
+  { name:"กุญแจหัวใจ",          level:"💗", kw:"มีคนถือกุญแจใจเราอยู่",                                 cat:"symbol",   energy:"good" },
+  { name:"เทียนสองเล่ม",        level:"💗", kw:"ความสัมพันธ์ที่ส่องสว่างกัน",                           cat:"symbol",   energy:"good" },
+  { name:"ดอกไม้ร่วง",          level:"💔", kw:"สิ่งสวยงามที่กำลังจะจบ",                               cat:"symbol",   energy:"bad" },
+  { name:"โบว์ผูกรัก",          level:"💗", kw:"ความผูกพันที่แน่นแฟ้น",                                cat:"symbol",   energy:"good" },
+  { name:"นาฬิกาทราย",          level:"🖤", kw:"เวลากำลังนับถอยหลัง ต้องตัดสินใจ",                      cat:"symbol",   energy:"warn" },
+  { name:"กระจกสองบาน",         level:"💛", kw:"ความสัมพันธ์ที่ส่องเห็นความจริง",                       cat:"symbol",   energy:"mid" },
+  // หมวด 3: บุคคล
+  { name:"หัวใจคู่แฝด",         level:"💖", kw:"คนที่ใช่จริงๆ กำลังอยู่ใกล้",                           cat:"person",   energy:"great" },
+  { name:"คนที่ผ่านมา",         level:"💛", kw:"อดีตที่ยังส่งผลถึงตอนนี้",                              cat:"person",   energy:"mid" },
+  { name:"คนที่กำลังจะมา",      level:"💗", kw:"มีคนใหม่กำลังเดินเข้ามา",                              cat:"person",   energy:"good" },
+  { name:"เพื่อนที่ซ่อนใจ",    level:"💗", kw:"คนใกล้ชิดที่มีใจให้แต่ไม่บอก",                         cat:"person",   energy:"good" },
+  { name:"คนในเงามืด",          level:"🖤", kw:"คนที่ยังไม่รู้จักตัวตนที่แท้จริง",                     cat:"person",   energy:"warn" },
+  { name:"กระจกแห่งรัก",        level:"💛", kw:"ต้องมองตัวเองให้ชัดก่อน",                              cat:"person",   energy:"mid" },
+  { name:"เงาที่สาม",            level:"💔", kw:"มือที่สามที่ซ่อนตัวอยู่ ระวัง",                        cat:"person",   energy:"bad",  special:"third" },
+  { name:"หน้ากากรัก",          level:"💔", kw:"คนที่แสร้งทำ ระวังคบซ้อน",                             cat:"person",   energy:"bad",  special:"fake" },
+  { name:"นักล่าหัวใจ",          level:"🖤", kw:"คู่แข่งที่กำลังเคลื่อนไหวอยู่",                        cat:"person",   energy:"warn", special:"rival" },
+  // หมวด 4: เวลาและทิศทาง
+  { name:"รุ่งอรุณ",             level:"💖", kw:"จุดเริ่มต้นใหม่ รักใหม่กำลังมา",                       cat:"time",     energy:"great" },
+  { name:"รอในความมืด",         level:"💛", kw:"ช่วงเวลาแห่งการรอคอย อย่าเพิ่งรีบ",                    cat:"time",     energy:"mid" },
+  { name:"ทางแยกหัวใจ",         level:"🖤", kw:"ต้องเลือก ไม่มีทางอยู่กลางได้อีกแล้ว",                 cat:"time",     energy:"warn" },
+  { name:"สะพานที่ขาด",          level:"🖤", kw:"ความสัมพันธ์ที่ต้องซ่อมแซม",                           cat:"time",     energy:"warn" },
+  { name:"ประตูที่ปิด",          level:"💔", kw:"โอกาสที่หมดไปแล้ว ต้องก้าวต่อ",                       cat:"time",     energy:"bad" },
+  { name:"ดาวนำทาง",            level:"💖", kw:"จักรวาลกำลังนำพาไปสู่คนที่ใช่",                        cat:"time",     energy:"great" },
+  { name:"คลื่นและชายหาด",      level:"💛", kw:"ความสัมพันธ์มีขึ้นมีลง แต่ยังไปต่อได้",               cat:"time",     energy:"mid" },
+  { name:"ฤดูใบไม้ผลิ",          level:"💗", kw:"ความรักกำลังผลิบาน เวลาดีมาถึงแล้ว",                   cat:"time",     energy:"good" },
+  { name:"พระจันทร์เต็มดวง",    level:"💖", kw:"ความสมบูรณ์ ความรักที่ถึงจุดสูงสุด",                   cat:"time",     energy:"great" }
+];
+
+var energyLabel = {
+  great: "ดีมาก 💖",
+  good:  "ดี 💗",
+  mid:   "กลาง 💛",
+  warn:  "ระวัง 🖤",
+  bad:   "แย่มาก 💔"
+};
+
+var posLabels1 = ["พลังงานความรักวันนี้"];
+var posLabels3 = ["อดีต", "ปัจจุบัน", "อนาคต"];
+var posLabels5 = ["รากของเรื่อง", "ความรู้สึกที่ซ่อน", "แก่นแท้", "อุปสรรค", "ทิศทาง"];
+
+var currentMode = 1;
+var selectedGender = "";
+var selectedGenderLabel = "";
+var selectedStatus = "";
+var drawnCards = [];
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async function(user) {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, "users", user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    updateCoinUI(coins);
+  } else {
+    updateCoinUI(null);
+  }
+});
+
+window.updateCoinUI = function(coins) {
+  var el = document.getElementById("coinCount");
+  if (coins === null || coins === undefined) {
+    el.textContent = "กรุณาล็อกอิน";
+    el.style.color = "#9b6878";
+  } else {
+    el.textContent = coins + " เหรียญ";
+    el.style.color = "var(--gold)";
+  }
+};
+
+window.loginGoogle = async function() {
+  var provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
+};
+
+window.loginNow = function() {
+  document.getElementById("loginModal").classList.add("show");
+};
+
+window.closeModal = function() {
+  document.getElementById("loginModal").classList.remove("show");
+};
+
+// ─── GENDER ───
+window.selectGender = function(btn, gender, label) {
+  document.querySelectorAll(".gender-btn").forEach(function(b) { b.classList.remove("selected"); });
+  btn.classList.add("selected");
+  selectedGender = gender;
+  selectedGenderLabel = label;
+  // update reading title
+  document.getElementById("readingTitle").textContent = "น้องบอก" + label + "เลยนะคะ...";
+};
+
+// ─── STATUS ───
+window.selectStatus = function(btn, status) {
+  document.querySelectorAll(".status-btn").forEach(function(b) { b.classList.remove("selected"); });
+  btn.classList.add("selected");
+  selectedStatus = status;
+};
+
+// ─── MODE ───
+window.selectMode = function(n) {
+  currentMode = n;
+  document.querySelectorAll(".tab-btn").forEach(function(t, i) {
+    t.classList.toggle("active", [1,3,5][i] === n);
+  });
+  var descs = {
+    1: "พลังงานความรักในวันนี้",
+    3: "อดีต • ปัจจุบัน • อนาคต ของความรัก",
+    5: "ลึกเข้าไปในหัวใจ — ห้ามิติแห่งความรัก"
+  };
+  document.getElementById("modeDesc").textContent = descs[n];
+  document.getElementById("cardsArea").innerHTML = "";
+  document.getElementById("readingWrap").classList.remove("show");
+  drawnCards = [];
+};
+
+// ─── DRAW ───
+window.drawCards = async function() {
+  if (!currentUser) { loginNow(); return; }
+  if (!selectedGender) { alert("เลือกเพศก่อนนะคะ 💕"); return; }
+  if (!selectedStatus) { alert("เลือกสถานะความรักก่อนนะคะ 💕"); return; }
+
+  drawnCards = [];
+  var shuffled = allCards.slice().sort(function() { return Math.random() - 0.5; });
+  drawnCards = shuffled.slice(0, currentMode);
+
+  renderCards();
+
+  var btn = document.getElementById("drawBtn");
+  btn.disabled = true;
+
+  for (var i = 0; i < drawnCards.length; i++) {
+    await sleep(400 + i * 300);
+    var inner = document.getElementById("cardInner_" + i);
+    if (inner) inner.classList.add("flipped");
+  }
+
+  spawnPetals();
+  await callReading();
+  btn.disabled = false;
+};
+
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+function renderCards() {
+  var area = document.getElementById("cardsArea");
+  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
+
+  if (currentMode === 1) {
+    area.innerHTML = '<div class="cards-layout-1">' + cardHTML(0, posLabels[0]) + '</div>';
+  } else if (currentMode === 3) {
+    var html = '<div class="cards-layout-3">';
+    for (var i = 0; i < 3; i++) html += cardHTML(i, posLabels[i]);
+    html += '</div>';
+    area.innerHTML = html;
+  } else {
+    var posClass = ["pos-top","pos-left","pos-mid","pos-right","pos-bot"];
+    var html = '<div class="cards-layout-5">';
+    for (var i = 0; i < 5; i++) {
+      html += '<div class="card-slot ' + posClass[i] + '">' + cardHTML(i, posLabels[i]) + '</div>';
+    }
+    html += '</div>';
+    area.innerHTML = html;
+  }
+}
+
+function cardHTML(idx, label) {
+  var card = drawnCards[idx];
+  return '<div class="card-flip">' +
+    '<div class="card-inner" id="cardInner_' + idx + '">' +
+      '<div class="card-face card-back">' +
+        '<img src="images/love-card-back.png" alt="card back" ' +
+          'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
+        '<div class="card-back-placeholder" style="display:none">' +
+          '<div class="card-back-icon">💕</div>' +
+          '<div class="card-back-border"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-face card-front">' +
+        '<div class="card-level">' + card.level + '</div>' +
+        '<div class="card-divider"></div>' +
+        '<div class="card-name">' + card.name + '</div>' +
+        '<div class="card-pos">' + label + '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ─── API CALL ───
+async function callReading() {
+  var wrap = document.getElementById("readingWrap");
+  var textEl = document.getElementById("readingText");
+  wrap.classList.add("show");
+  textEl.innerHTML = '<div class="reading-loading">💕 น้องกำลังดูไพ่ให้ <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>';
+
+  var serviceMap = { 1: "love-oracle-1", 3: "love-oracle-3", 5: "love-oracle-5" };
+  var service = serviceMap[currentMode];
+  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
+
+  // check special cards
+  var specials = drawnCards.filter(function(c) { return c.special; });
+  var specialText = "";
+  if (specials.length > 0) {
+    specials.forEach(function(c) {
+      if (c.special === "third") specialText += "\n⚠️ ไพ่พิเศษ: เงาที่สาม — มีมือที่สามเกี่ยวข้อง ให้เตือนอย่างจริงจัง";
+      if (c.special === "fake") specialText += "\n⚠️ ไพ่พิเศษ: หน้ากากรัก — ระวังการคบซ้อน ให้เตือนอย่างชัดเจน";
+      if (c.special === "rival") specialText += "\n⚠️ ไพ่พิเศษ: นักล่าหัวใจ — มีคู่แข่งเคลื่อนไหว ให้ระบุความเสี่ยง";
+    });
+  }
+
+  var cardList = drawnCards.map(function(c, i) {
+    return "ตำแหน่ง "" + posLabels[i] + "": " + c.name + " [" + energyLabel[c.energy] + "] — " + c.kw;
+  }).join("\n");
+
+  var promptText =
+    "น้องคือผู้ช่วยดูไพ่ความรัก อบอุ่น เป็นกันเอง เหมือนเพื่อนสนิทที่เข้าใจเรื่องหัวใจ\n" +
+    "น้องเรียกตัวเองว่า 'น้อง' และเรียกผู้ถามว่า '" + selectedGenderLabel + "'\n" +
+    "ใช้ภาษาไทยธรรมชาติ อ่านง่าย ไม่ทางการเกินไป มีความหวาน\n\n" +
+    "สถานะความรักของ" + selectedGenderLabel + ": " + selectedStatus + "\n\n" +
+    "ไพ่ที่จั่วได้:\n" + cardList + specialText + "\n\n" +
+    "กรุณาทำนายโดยแบ่งเป็น:\n" +
+    "💕 ความหมายของแต่ละไพ่ (ให้เชื่อมกับสถานะความรัก)\n" +
+    "🌹 สิ่งที่ไพ่บอกรวมกัน\n" +
+    "💌 คำแนะนำจากน้องถึง" + selectedGenderLabel + "\n\n" +
+    "ทำนายให้ตรงกับสถานะ '" + selectedStatus + "' และพลังงานของไพ่แต่ละใบ";
+
+  try {
+    var idToken = await currentUser.getIdToken();
+
+    var res = await fetch("/api/claude", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + idToken
+      },
+      body: JSON.stringify({
+        service: service,
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: promptText }]
+      })
+    });
+
+    var newCoins = res.headers.get("X-New-Coin-Balance");
+    if (newCoins !== null) updateCoinUI(parseInt(newCoins) + " เหรียญ");
+
+    if (!res.ok) {
+      var err = await res.json();
+      textEl.textContent = err.error === "insufficient_coins"
+        ? "เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนเลยค่ะ"
+        : "เกิดข้อผิดพลาด ลองใหม่นะคะ 🙏";
+      return;
+    }
+
+    // stream
+    textEl.textContent = "";
+    var reader = res.body.getReader();
+    var decoder = new TextDecoder();
+    var fullText = "";
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      var text = decoder.decode(chunk.value, { stream: true });
+      fullText += text;
+      textEl.textContent = fullText;
+    }
+
+    // save firestore
+    await addDoc(collection(db, "users", currentUser.uid, "readings"), {
+      type: "love-oracle",
+      mode: currentMode,
+      gender: selectedGender,
+      status: selectedStatus,
+      cards: drawnCards.map(function(c) { return c.name; }),
+      reading: fullText,
+      createdAt: serverTimestamp()
+    });
+
+  } catch(e) {
+    textEl.textContent = "เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏";
+    console.error(e);
+  }
+}
+
+// ─── PETALS ───
+function spawnPetals() {
+  var emojis = ["🌸","💕","🌹","💗","✨"];
+  for (var i = 0; i < 14; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var p = document.createElement("div");
+        p.className = "petal";
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.animationDuration = (2.5 + Math.random() * 2) + "s";
+        document.body.appendChild(p);
+        setTimeout(function() { p.remove(); }, 5000);
+      }, i * 130);
+    })(i);
+  }
+}
+
+window.drawCards = drawCards;
+window.selectMode = selectMode;
+window.selectGender = selectGender;
+window.selectStatus = selectStatus;
+
+</script>
+</body>
+</html>
