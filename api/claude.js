@@ -29,6 +29,9 @@ const SERVICE_COSTS = {
   bazi: 40,
   tarot: 20,
   tarot_followup: 5,
+"han-oracle-1": 10,
+"han-oracle-3": 20,
+"han-oracle-5": 30,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
