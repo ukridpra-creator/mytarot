@@ -304,9 +304,7 @@ function renderDeck(cards, scrollId, deckKey, imgFn) {
       (deckKey === 'vahana' && selectedVahana?.id === card.id);
     const emoji = deckKey === 'deity' ? '🙏' : deckKey === 'weapon' ? '⚔️' : '🦚';
     return `<div class="card-item ${isSelected ? 'selected' : ''}" onclick="selectCard('${deckKey}', ${i})">
-      <img src="${BACK}" alt="${card.name}" 
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-      <div class="card-placeholder" style="display:none">
+      <div class="card-placeholder">
         <div class="card-placeholder-emoji">${emoji}</div>
         <div class="card-placeholder-name">${card.name}</div>
       </div>
