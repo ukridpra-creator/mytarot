@@ -419,7 +419,7 @@
 <!-- TIPS -->
 <div class="tips-box">
   <div class="tips-title">📸 วิธีถ่ายให้ได้ผลแม่น</div>
-  <div class="tip-item"><div class="tip-dot"></div>วางเท้าบนพื้นราบ ถ่ายจากด้านล่างตรงๆ</div>
+  <div class="tip-item"><div class="tip-dot"></div>ถ่ายจากด้านล่างตรงๆ</div>
   <div class="tip-item"><div class="tip-dot"></div>ถ่ายให้เห็นฝ่าเท้าชัดเจนทั้งหมด</div>
   <div class="tip-item"><div class="tip-dot"></div>แสงสว่างเพียงพอ ไม่มีเงา</div>
   <div class="tip-item"><div class="tip-dot"></div>ไม่ต้องถอดเล็บทาสีก็ได้ค่ะ</div>
@@ -761,7 +761,7 @@ window.startReading = async function() {
       body: JSON.stringify({
         service: 'foot-reading',
         model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
+        max_tokens: 4000,
         messages: [{ role: 'user', content: content }]
       })
     });
