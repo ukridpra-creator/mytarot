@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hindu Oracle — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 60px; }
+
+    .page-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(251,146,60,0.2); border: 1px solid rgba(251,146,60,0.3);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #fb923c;
+      font-size: 16px; text-decoration: none; flex-shrink: 0;
+    }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 12px 0 20px; }
+    .mascot-img { width: 90px; height: 90px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 0 16px rgba(251,146,60,0.5)); }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+
+    /* Slots */
+    .slots-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
+    .slot {
+      width: 78px; aspect-ratio: 2/3;
+      background: rgba(251,146,60,0.06);
+      border: 2px dashed rgba(251,146,60,0.3);
+      border-radius: 10px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .slot.filled { border: 2px solid rgba(251,146,60,0.6); box-shadow: 0 0 12px rgba(251,146,60,0.2); }
+    .slot-num { font-size: 18px; }
+    .slot-label { font-size: 9px; color: #fb923c; margin-top: 2px; text-align: center; }
+    .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .slot-overlay {
+      position: absolute; inset: 0; border-radius: 8px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 4px;
+    }
+    .slot-pos { font-size: 8px; color: #fbbf24; text-align: center; font-weight: 700; }
+    .slots-hint { text-align: center; font-size: 11px; color: var(--dim); margin-bottom: 20px; }
+
+    /* Deck sections */
+    .deck-section { margin-bottom: 20px; }
+    .deck-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+      margin-bottom: 8px; padding: 6px 14px; border-radius: 20px;
+      display: inline-block;
+    }
+    .deck-label.deity   { background: rgba(251,146,60,0.15); color: #fb923c; border: 1px solid rgba(251,146,60,0.3); }
+    .deck-label.weapon  { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .deck-label.vahana  { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+
+    .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+    .cards-scroll::-webkit-scrollbar { height: 3px; }
+    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(251,146,60,0.4); border-radius: 2px; }
+
+    .card-item {
+      width: 52px; aspect-ratio: 2/3; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden; cursor: pointer;
+      transition: all 0.2s; border: 2px solid transparent;
+      position: relative;
+    }
+    .card-item:hover { transform: translateY(-4px); border-color: #fb923c; }
+    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .scroll-hint { text-align: center; font-size: 11px; color: var(--dim); margin-top: 4px; margin-bottom: 12px; }
+
+    /* Combo badge */
+    .combo-banner {
+      display: none; text-align: center; padding: 10px 16px;
+      border-radius: 12px; margin-bottom: 16px; font-size: 13px; font-weight: 700;
+    }
+    .combo-banner.match1 {
+      display: block;
+      background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.4);
+      color: #fbbf24;
+    }
+    .combo-banner.match2 {
+      display: block;
+      background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.5);
+      color: #fb923c;
+      animation: glowPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 0 8px rgba(251,146,60,0.3); }
+      50% { box-shadow: 0 0 20px rgba(251,146,60,0.7); }
+    }
+
+    /* Coin & Button */
+    .coin-box {
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
+    }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read {
+      width: 100%;
+      background: linear-gradient(135deg, #c2410c, #fb923c, #fbbf24);
+      border: none; border-radius: 16px; padding: 16px; color: white;
+      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
+    }
+    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(251,146,60,0.4); }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Reveal overlay */
+    .reveal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.95); display: none;
+      flex-direction: column; align-items: center; justify-content: center; padding: 16px;
+    }
+    .reveal-overlay.show { display: flex; }
+    .reveal-title { font-size: 16px; color: #fbbf24; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .reveal-subtitle { font-size: 12px; color: var(--dim); margin-bottom: 20px; text-align: center; }
+    .reveal-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
+    .reveal-card { text-align: center; }
+    .reveal-card-wrap {
+      width: 86px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
+      margin-bottom: 8px; border: 2px solid rgba(251,146,60,0.4); perspective: 600px;
+    }
+    .reveal-card-inner {
+      width: 100%; height: 100%; position: relative;
+      transform-style: preserve-3d; transition: transform 0.6s ease;
+    }
+    .reveal-card-inner.flipped { transform: rotateY(180deg); }
+    .reveal-card-front, .reveal-card-back {
+      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
+    }
+    .reveal-card-back { transform: rotateY(0deg); }
+    .reveal-card-front { transform: rotateY(180deg); }
+    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
+    .reveal-card-name { font-size: 10px; color: #fbbf24; font-weight: 700; }
+    .reveal-card-deck { font-size: 9px; color: var(--dim); margin-top: 1px; }
+    .btn-accept {
+      background: linear-gradient(135deg, #c2410c, #fb923c);
+      border: none; border-radius: 16px; padding: 14px 32px;
+      color: white; font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+      margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .btn-accept.show { opacity: 1; pointer-events: all; }
+
+    /* Result */
+    .result-box {
+      background: rgba(251,146,60,0.04); border: 1px solid rgba(251,146,60,0.2);
+      border-radius: 20px; padding: 20px; display: none;
+    }
+    .result-box.show { display: block; }
+
+    /* Result cards row */
+    .result-cards-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+    .result-card { text-align: center; }
+    .result-card-img { width: 58px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; margin-bottom: 4px; border: 1px solid rgba(251,146,60,0.4); }
+    .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .result-card-name { font-size: 9px; color: #fbbf24; font-weight: 700; line-height: 1.2; }
+    .result-card-deck { font-size: 8px; color: var(--dim); }
+
+    /* Result sections */
+    .result-section {
+      border-radius: 14px; padding: 14px; margin-bottom: 12px;
+    }
+    .result-section.deity-sec   { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.2); }
+    .result-section.weapon-sec  { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
+    .result-section.vahana-sec  { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); }
+    .result-section.summary-sec { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.3); }
+
+    .result-section-title {
+      font-size: 12px; font-weight: 700; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .deity-sec .result-section-title   { color: #fb923c; }
+    .weapon-sec .result-section-title  { color: #fbbf24; }
+    .vahana-sec .result-section-title  { color: #34d399; }
+    .summary-sec .result-section-title { color: #a78bfa; }
+
+    .result-section-text {
+      font-size: 13px; line-height: 1.9; color: var(--text); word-break: break-word;
+    }
+
+    .cursor { display: inline-block; width: 2px; height: 14px; background: #fb923c; margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #fb923c; animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+    .loading-text { font-size: 14px; color: var(--dim); }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🪔 Hindu Oracle</div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+</div>
+
+<!-- Reveal Overlay -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-title">🪔 ไพ่เทพของคุณ...</div>
+  <div class="reveal-subtitle">เทพกำลังส่งสารมาหาคุณ</div>
+  <div id="revealRow" class="reveal-row"></div>
+  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🙏 รับพรจากเทพ</button>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <img src="../images/mascot.png" class="mascot-img" alt="mascot">
+    <div class="hero-title">🪔 Hindu Oracle</div>
+    <div class="hero-desc">เลือกกองละ 1 ใบ • เทพ + อาวุธ + พาหนะ<br>ถ้าได้ครบเซ็ตเดียวกัน พลังทวีคูณ ✨</div>
+  </div>
+
+  <!-- Slots -->
+  <div style="margin-bottom:8px">
+    <div class="slots-row">
+      <div class="slot" id="slot0"><div class="slot-num">🙏</div><div class="slot-label">เทพ</div></div>
+      <div class="slot" id="slot1"><div class="slot-num">⚔️</div><div class="slot-label">อาวุธ</div></div>
+      <div class="slot" id="slot2"><div class="slot-num">🦚</div><div class="slot-label">พาหนะ</div></div>
+    </div>
+  </div>
+  <div class="slots-hint">เลือกกองละ 1 ใบ • กดไพ่ใน slot เพื่อเอาออก</div>
+
+  <!-- Combo Banner -->
+  <div class="combo-banner" id="comboBanner"></div>
+
+  <!-- Deity Deck -->
+  <div class="deck-section">
+    <span class="deck-label deity">🙏 เทพ — พลังงานที่ส่งมาหาคุณ</span>
+    <div class="cards-scroll" id="deityScroll"></div>
+    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <!-- Weapon Deck -->
+  <div class="deck-section">
+    <span class="deck-label weapon">⚔️ อาวุธ — เครื่องมือในมือคุณ</span>
+    <div class="cards-scroll" id="weaponScroll"></div>
+    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <!-- Vahana Deck -->
+  <div class="deck-section">
+    <span class="deck-label vahana">🦚 พาหนะ — สิ่งที่พาคุณไปถึงเป้าหมาย</span>
+    <div class="cards-scroll" id="vahanaScroll"></div>
+    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อครั้ง</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🪔 ขอพรจากเทพ</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-cards-row" id="resultCardsRow"></div>
+    <div id="resultSections"></div>
+  </div>
+</div>
+
+<script src="../data/oracle-hindu-data.js"></script>
+<script>
+const BACK = '../images/bhindu.png';
+const IMG_DEITY  = (id) => `../images/deity/${id}.png`;
+const IMG_WEAPON = (id) => `../images/weapons/${id}.png`;
+const IMG_VAHANA = (id) => `../images/vahanas/${id}.png`;
+
+let selectedDeity = null, selectedWeapon = null, selectedVahana = null;
+
+// ---- Render decks ----
+function renderDeck(cards, scrollId, deckKey, imgFn) {
+  const scroll = document.getElementById(scrollId);
+  scroll.innerHTML = cards.map((card, i) => {
+    const isSelected =
+      (deckKey === 'deity'  && selectedDeity?.id  === card.id) ||
+      (deckKey === 'weapon' && selectedWeapon?.id === card.id) ||
+      (deckKey === 'vahana' && selectedVahana?.id === card.id);
+    return `<div class="card-item ${isSelected ? 'selected' : ''}" onclick="selectCard('${deckKey}', ${i})">
+      <img src="${BACK}" alt="${card.name}" onerror="this.style.background='#333'">
+    </div>`;
+  }).join('');
+}
+
+function renderAllDecks() {
+  renderDeck(HINDU_ORACLE.deities, 'deityScroll',  'deity',  IMG_DEITY);
+  renderDeck(HINDU_ORACLE.weapons, 'weaponScroll', 'weapon', IMG_WEAPON);
+  renderDeck(HINDU_ORACLE.vahanas, 'vahanaScroll', 'vahana', IMG_VAHANA);
+}
+
+// ---- Select card ----
+function selectCard(deck, idx) {
+  if (deck === 'deity')  selectedDeity  = HINDU_ORACLE.deities[idx];
+  if (deck === 'weapon') selectedWeapon = HINDU_ORACLE.weapons[idx];
+  if (deck === 'vahana') selectedVahana = HINDU_ORACLE.vahanas[idx];
+
+  updateSlots();
+  renderAllDecks();
+  checkCombo();
+
+  document.getElementById('readBtn').disabled = !(selectedDeity && selectedWeapon && selectedVahana);
+}
+
+// ---- Slots ----
+function updateSlots() {
+  const slotData = [
+    { el: document.getElementById('slot0'), card: selectedDeity,  label: 'เทพ',   emoji: '🙏', imgFn: IMG_DEITY  },
+    { el: document.getElementById('slot1'), card: selectedWeapon, label: 'อาวุธ', emoji: '⚔️', imgFn: IMG_WEAPON },
+    { el: document.getElementById('slot2'), card: selectedVahana, label: 'พาหนะ', emoji: '🦚', imgFn: IMG_VAHANA },
+  ];
+  slotData.forEach(({ el, card, label, emoji, imgFn }) => {
+    if (card) {
+      el.className = 'slot filled';
+      el.innerHTML = `<img class="slot-img" src="${imgFn(card.id)}" onerror="this.src='${BACK}'">
+        <div class="slot-overlay"><div class="slot-pos">${card.name}</div></div>`;
+    } else {
+      el.className = 'slot';
+      el.innerHTML = `<div class="slot-num">${emoji}</div><div class="slot-label">${label}</div>`;
+    }
+  });
+}
+
+// ---- Combo check ----
+function checkCombo() {
+  const banner = document.getElementById('comboBanner');
+  if (!selectedDeity || !selectedWeapon || !selectedVahana) { banner.className = 'combo-banner'; return; }
+
+  const matchW = selectedWeapon.id === selectedDeity.weapon_id;
+  const matchV = selectedVahana.id === selectedDeity.vahana_id;
+  const count = (matchW ? 1 : 0) + (matchV ? 1 : 0);
+
+  if (count === 2) {
+    banner.className = 'combo-banner match2';
+    banner.textContent = `🌟🌟 Perfect Combo! พลังของ${selectedDeity.name}สมบูรณ์แบบ! พรทวีคูณ!`;
+  } else if (count === 1) {
+    const what = matchW ? `อาวุธ${selectedWeapon.name}` : `พาหนะ${selectedVahana.name}`;
+    banner.className = 'combo-banner match1';
+    banner.textContent = `✨ ${what} ตรงกับเทพ! พลังพิเศษเพิ่มขึ้น`;
+  } else {
+    banner.className = 'combo-banner';
+  }
+}
+
+// ---- Start reading (flip animation) ----
+function startReading() {
+  if (!selectedDeity || !selectedWeapon || !selectedVahana) return;
+
+  const cards = [
+    { card: selectedDeity,  label: 'เทพ',   imgFn: IMG_DEITY  },
+    { card: selectedWeapon, label: 'อาวุธ', imgFn: IMG_WEAPON },
+    { card: selectedVahana, label: 'พาหนะ', imgFn: IMG_VAHANA },
+  ];
+
+  document.getElementById('revealRow').innerHTML = cards.map(({ card, label, imgFn }, i) => `
+    <div class="reveal-card">
+      <div class="reveal-card-wrap">
+        <div class="reveal-card-inner" id="revealInner${i}">
+          <div class="reveal-card-back"><img src="${BACK}"></div>
+          <div class="reveal-card-front"><img src="${imgFn(card.id)}" onerror="this.src='${BACK}'"></div>
+        </div>
+      </div>
+      <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.name}</div>
+      <div class="reveal-card-deck">${label}</div>
+    </div>`).join('');
+
+  document.getElementById('btnAccept').className = 'btn-accept';
+  document.getElementById('revealOverlay').classList.add('show');
+
+  let flipped = 0;
+  const flipNext = () => {
+    if (flipped >= 3) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
+    setTimeout(() => {
+      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+      document.getElementById(`revealName${flipped}`).style.opacity = '1';
+      flipped++; flipNext();
+    }, 600);
+  };
+  setTimeout(flipNext, 300);
+}
+
+// ---- Accept reading ----
+async function acceptReading() {
+  document.getElementById('revealOverlay').classList.remove('show');
+
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
+  const newCoins = coins - 10;
+  localStorage.setItem('coins', String(newCoins));
+  document.getElementById('coinCount').textContent = newCoins;
+  document.getElementById('coinDisplay').textContent = newCoins;
+
+  // check combo
+  const matchW = selectedWeapon.id === selectedDeity.weapon_id;
+  const matchV = selectedVahana.id === selectedDeity.vahana_id;
+  const comboCount = (matchW ? 1 : 0) + (matchV ? 1 : 0);
+  const comboNote = comboCount === 2
+    ? 'ไพ่ที่ได้เป็น Perfect Combo ครบเซ็ตของเทพองค์เดียวกัน! จงเน้นพลังพิเศษทวีคูณในคำทำนาย'
+    : comboCount === 1
+    ? 'ไพ่ที่ได้ตรงกัน 1 ใบ มีพลังพิเศษเพิ่มขึ้น'
+    : '';
+
+  // show result box
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+
+  document.getElementById('resultCardsRow').innerHTML = [
+    { card: selectedDeity,  label: 'เทพ',   imgFn: IMG_DEITY  },
+    { card: selectedWeapon, label: 'อาวุธ', imgFn: IMG_WEAPON },
+    { card: selectedVahana, label: 'พาหนะ', imgFn: IMG_VAHANA },
+  ].map(({ card, label, imgFn }) => `
+    <div class="result-card">
+      <div class="result-card-img"><img src="${imgFn(card.id)}" onerror="this.src='${BACK}'"></div>
+      <div class="result-card-name">${card.name}</div>
+      <div class="result-card-deck">${label}</div>
+    </div>`).join('');
+
+  const sections = document.getElementById('resultSections');
+  sections.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">เทพกำลังส่งสาร...</div></div>`;
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+
+  // Build prompt
+  const cardInfo = `เทพ: ${selectedDeity.name} (${selectedDeity.meaning}) | อาวุธ: ${selectedWeapon.name} (${selectedWeapon.meaning}) | พาหนะ: ${selectedVahana.name} (${selectedVahana.meaning})`;
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 1500,
+        system: `คุณคือนักพยากรณ์เทพฮินดู ตอบเป็นภาษาไทย Gen Z เรียกผู้ถามว่า "คุณพี่"
+
+ตอบในรูปแบบ JSON เท่านั้น ห้ามมี markdown ห้ามมี backtick ห้ามมีข้อความอื่นนอก JSON:
+{
+  "deity": "ความหมายของเทพ 2-3 ประโยค",
+  "weapon": "ความหมายของอาวุธ/ของศักดิ์สิทธิ์ 2-3 ประโยค",
+  "vahana": "ความหมายของพาหนะ 2-3 ประโยค",
+  "summary": "คำทำนายรวม ผสม 3 ใบเข้าด้วยกัน 4-6 ประโยค ${comboNote}"
+}`,
+        messages: [{ role: 'user', content: cardInfo }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    let parsed;
+    try {
+      parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    } catch {
+      parsed = { deity: '', weapon: '', vahana: '', summary: raw };
+    }
+
+    sections.innerHTML = `
+      <div class="result-section deity-sec">
+        <div class="result-section-title">🙏 ${selectedDeity.name}</div>
+        <div class="result-section-text">${parsed.deity}</div>
+      </div>
+      <div class="result-section weapon-sec">
+        <div class="result-section-title">⚔️ ${selectedWeapon.name}</div>
+        <div class="result-section-text">${parsed.weapon}</div>
+      </div>
+      <div class="result-section vahana-sec">
+        <div class="result-section-title">🦚 ${selectedVahana.name}</div>
+        <div class="result-section-text">${parsed.vahana}</div>
+      </div>
+      <div class="result-section summary-sec">
+        <div class="result-section-title">✨ คำทำนายรวม${comboCount > 0 ? (comboCount === 2 ? ' 🌟🌟' : ' ✨') : ''}</div>
+        <div class="result-section-text">${parsed.summary}</div>
+      </div>`;
+
+  } catch(e) {
+    sections.innerHTML = `<div class="result-section deity-sec"><div class="result-section-text">เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ</div></div>`;
+  }
+}
+
+// ---- Init ----
+document.addEventListener('DOMContentLoaded', () => {
+  const coins = parseInt(localStorage.getItem('coins') || '0');
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+  renderAllDecks();
+
+  ['deityScroll','weaponScroll','vahanaScroll'].forEach(id => {
+    const el = document.getElementById(id);
+    setTimeout(() => {
+      el.scrollTo({ left: 100, behavior: 'smooth' });
+      setTimeout(() => el.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+    }, 500);
+  });
+});
+</script>
+</body>
+</html>
