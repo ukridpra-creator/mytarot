@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เจาะดวงชะตา | MyTarot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0d0820;
+    --card: #1a1330;
+    --purple: #7c3aed;
+    --purple-light: #a855f7;
+    --gold: #f59e0b;
+    --gold-light: #fbbf24;
+    --text: #e9d5ff;
+    --text-mid: #9ca3af;
+    --text-dim: #6b7280;
+    --border: rgba(124,58,237,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    font-family: 'Noto Sans Thai', sans-serif;
+    color: var(--text);
+    padding-bottom: 40px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: flex; align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-btn {
+    background: none; border: none;
+    color: var(--text); font-size: 20px;
+    cursor: pointer; padding: 4px 8px 4px 0;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 18px; font-weight: 600;
+    flex: 1; text-align: center;
+    margin-right: 32px;
+    color: var(--gold-light);
+  }
+
+  /* ─── MASCOT ─── */
+  .mascot-wrap {
+    text-align: center;
+    padding: 24px 20px 8px;
+  }
+
+  .mascot-wrap img {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    object-fit: cover;
+  }
+
+  .mascot-placeholder {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    background: var(--card);
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 40px;
+  }
+
+  .page-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 24px; font-weight: 700;
+    color: var(--gold-light);
+    text-align: center;
+    margin-top: 10px;
+    text-shadow: 0 0 20px rgba(251,191,36,0.4);
+  }
+
+  .page-desc {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-mid);
+    margin: 6px 20px 0;
+    line-height: 1.8;
+  }
+
+  /* ─── COIN ─── */
+  .coin-bar {
+    display: flex; justify-content: center; align-items: center;
+    gap: 6px; margin: 12px 0;
+    font-size: 13px; color: var(--text-dim);
+  }
+  .coin-count { font-weight: 600; color: var(--gold-light); font-size: 15px; }
+
+  /* ─── PRICE BADGE ─── */
+  .price-badge {
+    display: flex; justify-content: center; margin-bottom: 16px;
+  }
+
+  .price-tag {
+    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(245,158,11,0.2));
+    border: 1px solid var(--gold);
+    border-radius: 50px;
+    padding: 6px 20px;
+    font-size: 13px;
+    color: var(--gold-light);
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 24px; margin: 12px 0;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+  .divider span { font-size: 14px; color: var(--text-dim); }
+
+  /* ─── FORM ─── */
+  .form-wrap { padding: 0 20px; }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 12px; color: var(--text-mid);
+    margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--purple-light); }
+  .form-input::placeholder { color: var(--text-dim); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* ─── SUBMIT BTN ─── */
+  .submit-wrap { padding: 0 20px; margin: 20px 0; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--purple), var(--gold));
+    border: none; border-radius: 50px;
+    color: white;
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .submit-btn:active { transform: scale(0.97); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ─── RESULT ─── */
+  .result-wrap { padding: 0 20px; display: none; }
+  .result-wrap.show { display: block; }
+
+  .result-profile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .profile-tag {
+    background: rgba(124,58,237,0.2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--text-mid);
+  }
+
+  /* ─── SECTION CARDS ─── */
+  .section-card {
+    border-radius: 16px;
+    padding: 18px 16px;
+    margin-bottom: 12px;
+    border: 1px solid;
+  }
+
+  .section-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .section-icon { font-size: 20px; }
+
+  .section-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 15px; font-weight: 600;
+  }
+
+  .section-text {
+    font-size: 13px; line-height: 2.1;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-weight: 300;
+    white-space: pre-wrap;
+    min-height: 20px;
+  }
+
+  /* section colors */
+  .sec-personality { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.3); }
+  .sec-personality .section-title { color: #c084fc; }
+
+  .sec-childhood { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); }
+  .sec-childhood .section-title { color: #93c5fd; }
+
+  .sec-mission { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); }
+  .sec-mission .section-title { color: var(--gold-light); }
+
+  .sec-love { background: rgba(236,72,153,0.1); border-color: rgba(236,72,153,0.3); }
+  .sec-love .section-title { color: #f9a8d4; }
+
+  .sec-career { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); }
+  .sec-career .section-title { color: #6ee7b7; }
+
+  .sec-money { background: rgba(234,179,8,0.1); border-color: rgba(234,179,8,0.3); }
+  .sec-money .section-title { color: #fde047; }
+
+  .sec-health { background: rgba(132,204,22,0.1); border-color: rgba(132,204,22,0.3); }
+  .sec-health .section-title { color: #bef264; }
+
+  .sec-lucky { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.4); }
+  .sec-lucky .section-title { color: var(--gold-light); }
+
+  .sec-thisyear { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); }
+  .sec-thisyear .section-title { color: #fdba74; }
+
+  .sec-future { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.4); }
+  .sec-future .section-title { color: #a78bfa; }
+
+  /* loading dots */
+  .loading-dots { color: var(--text-dim); font-size: 12px; }
+  .loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes blink {
+    0%,80%,100% { opacity: 0.2; }
+    40% { opacity: 1; }
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8); z-index: 100;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--gold);
+    border-radius: 24px;
+    padding: 32px 24px; text-align: center;
+    width: 85%; max-width: 320px;
+  }
+
+  .modal-box h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 17px; margin-bottom: 8px; color: var(--text);
+  }
+
+  .modal-box p {
+    font-size: 13px; color: var(--text-mid);
+    margin-bottom: 20px; line-height: 1.8;
+  }
+
+  .btn-google {
+    width: 100%; padding: 12px;
+    background: white; border: none; border-radius: 50px;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: #333;
+  }
+
+  .btn-close-modal {
+    margin-top: 12px; background: none; border: none;
+    color: var(--text-dim); font-size: 13px; cursor: pointer;
+    font-family: 'Noto Sans Thai', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>🔮 เจาะดวงชะตา</h1>
+</div>
+
+<!-- MASCOT -->
+<div class="mascot-wrap">
+  <img src="../images/mascot.png" alt="mascot"
+       onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex'">
+  <div class="mascot-placeholder" style="display:none">🔮</div>
+  <div class="page-title">เจาะดวงชะตา</div>
+  <div class="page-desc">โหราศาสตร์ประยุกต์ ฉบับ MyTarot<br>วิเคราะห์ครบทุกมิติชีวิต นิสัย ความรัก การงาน การเงิน สุขภาพ และอนาคต</div>
+</div>
+
+<!-- COIN -->
+<div class="coin-bar">
+  🪙 <span id="coinCount">—</span>
+</div>
+
+<div class="price-badge">
+  <div class="price-tag">✨ ใช้ 49 เหรียญ</div>
+</div>
+
+<div class="divider"><span>🔮</span></div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <div class="form-group">
+    <label class="form-label">ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
+    <input class="form-input" id="inputName" type="text" placeholder="เช่น Somchai Jaidee">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">วันเกิด</label>
+    <div class="form-row">
+      <input class="form-input" id="inputDay" type="number" placeholder="วัน" min="1" max="31">
+      <input class="form-input" id="inputMonth" type="number" placeholder="เดือน" min="1" max="12">
+      <input class="form-input" id="inputYear" type="number" placeholder="ปี ค.ศ." min="1900" max="2010">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">เวลาเกิด</label>
+    <div class="form-row-2">
+      <input class="form-input" id="inputHour" type="number" placeholder="ชั่วโมง (0-23)" min="0" max="23">
+      <input class="form-input" id="inputMinute" type="number" placeholder="นาที (0-59)" min="0" max="59">
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-wrap">
+  <button class="submit-btn" id="submitBtn" onclick="startReading()">
+    🔮 เจาะดวงชะตาเลย
+  </button>
+</div>
+
+<!-- RESULT -->
+<div class="result-wrap" id="resultWrap">
+
+  <!-- Profile tags -->
+  <div class="result-profile" id="profileTags"></div>
+
+  <!-- Section 1: นิสัย -->
+  <div class="section-card sec-personality">
+    <div class="section-header">
+      <span class="section-icon">🌟</span>
+      <span class="section-title">นิสัยและบุคลิกที่แท้จริง</span>
+    </div>
+    <div class="section-text" id="sec-personality">
+      <div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div>
+    </div>
+  </div>
+
+  <!-- Section 2: วัยเด็ก -->
+  <div class="section-card sec-childhood">
+    <div class="section-header">
+      <span class="section-icon">👶</span>
+      <span class="section-title">มาจากไหน — ดวงวัยเด็กถึงวัยรุ่น</span>
+    </div>
+    <div class="section-text" id="sec-childhood"></div>
+  </div>
+
+  <!-- Section 3: ภารกิจ -->
+  <div class="section-card sec-mission">
+    <div class="section-header">
+      <span class="section-icon">🎯</span>
+      <span class="section-title">ภารกิจชีวิต — เกิดมาเพื่ออะไร</span>
+    </div>
+    <div class="section-text" id="sec-mission"></div>
+  </div>
+
+  <!-- Section 4: ความรัก -->
+  <div class="section-card sec-love">
+    <div class="section-header">
+      <span class="section-icon">💕</span>
+      <span class="section-title">ความรัก</span>
+    </div>
+    <div class="section-text" id="sec-love"></div>
+  </div>
+
+  <!-- Section 5: การงาน -->
+  <div class="section-card sec-career">
+    <div class="section-header">
+      <span class="section-icon">💼</span>
+      <span class="section-title">การงาน</span>
+    </div>
+    <div class="section-text" id="sec-career"></div>
+  </div>
+
+  <!-- Section 6: การเงิน -->
+  <div class="section-card sec-money">
+    <div class="section-header">
+      <span class="section-icon">💰</span>
+      <span class="section-title">การเงิน</span>
+    </div>
+    <div class="section-text" id="sec-money"></div>
+  </div>
+
+  <!-- Section 7: สุขภาพ -->
+  <div class="section-card sec-health">
+    <div class="section-header">
+      <span class="section-icon">🌿</span>
+      <span class="section-title">สุขภาพ</span>
+    </div>
+    <div class="section-text" id="sec-health"></div>
+  </div>
+
+  <!-- Section 8: โชคดี -->
+  <div class="section-card sec-lucky">
+    <div class="section-header">
+      <span class="section-icon">✨</span>
+      <span class="section-title">โชคดีประจำชะตา</span>
+    </div>
+    <div class="section-text" id="sec-lucky"></div>
+  </div>
+
+  <!-- Section 9: ดวงปีนี้ -->
+  <div class="section-card sec-thisyear">
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <span class="section-title">ดวงปีนี้ 2568</span>
+    </div>
+    <div class="section-text" id="sec-thisyear"></div>
+  </div>
+
+  <!-- Section 10: อนาคต -->
+  <div class="section-card sec-future">
+    <div class="section-header">
+      <span class="section-icon">🔮</span>
+      <span class="section-title">อนาคต</span>
+    </div>
+    <div class="section-text" id="sec-future"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>🔮 เข้าสู่ระบบก่อนนะคะ</h3>
+    <p>ต้องล็อกอินเพื่อเจาะดวงชะตา<br>และบันทึกผลการทำนาย</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button class="btn-close-modal" onclick="closeModal()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="../js/destiny-data.js"></script>
+<script src="../js/destiny-engine.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var currentUser = null;
+
+onAuthStateChanged(auth, async function(user) {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, "users", user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    updateCoinUI(coins);
+  } else {
+    updateCoinUI(null);
+  }
+});
+
+window.updateCoinUI = function(coins) {
+  var el = document.getElementById("coinCount");
+  if (coins === null) {
+    el.textContent = "กรุณาล็อกอิน";
+    el.style.color = "#6b7280";
+  } else {
+    el.textContent = coins + " เหรียญ";
+    el.style.color = "var(--gold-light)";
+  }
+};
+
+window.loginGoogle = async function() {
+  var provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
+};
+
+window.loginNow = function() {
+  document.getElementById("loginModal").classList.add("show");
+};
+
+window.closeModal = function() {
+  document.getElementById("loginModal").classList.remove("show");
+};
+
+// ─── PARSE SECTIONS ───
+function parseSections(text) {
+  var result = {};
+  var sectionMap = {
+    "นิสัย":       "personality",
+    "มาจากไหน":    "childhood",
+    "ภารกิจ":      "mission",
+    "ความรัก":     "love",
+    "การงาน":      "career",
+    "การเงิน":     "money",
+    "สุขภาพ":      "health",
+    "โชคดี":       "lucky",
+    "ดวงปีนี้":    "thisyear",
+    "อนาคต":       "future",
+  };
+
+  var current = null;
+  var lines = text.split('\n');
+
+  lines.forEach(function(line) {
+    var matched = false;
+    Object.keys(sectionMap).forEach(function(key) {
+      if (line.includes(key) && (line.includes('🌟') || line.includes('👶') ||
+          line.includes('🎯') || line.includes('💕') || line.includes('💼') ||
+          line.includes('💰') || line.includes('🌿') || line.includes('✨') ||
+          line.includes('⚡') || line.includes('🔮') || line.startsWith('#'))) {
+        current = sectionMap[key];
+        result[current] = '';
+        matched = true;
+      }
+    });
+    if (!matched && current) {
+      result[current] += line + '\n';
+    }
+  });
+
+  return result;
+}
+
+function updateSection(id, text) {
+  var el = document.getElementById("sec-" + id);
+  if (el) el.textContent = text.trim();
+}
+
+// ─── STREAM API ───
+async function streamAPI(prompt, service, onChunk) {
+  var idToken = await currentUser.getIdToken();
+  var res = await fetch("/api/claude", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + idToken
+    },
+    body: JSON.stringify({
+      service: service,
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+
+  var newCoins = res.headers.get("X-New-Coin-Balance");
+  if (newCoins !== null) updateCoinUI(parseInt(newCoins));
+
+  if (!res.ok) {
+    var err = await res.json();
+    throw new Error(err.error || "api_error");
+  }
+
+  var reader = res.body.getReader();
+  var decoder = new TextDecoder();
+  var fullText = "";
+
+  while (true) {
+    var chunk = await reader.read();
+    if (chunk.done) break;
+    var text = decoder.decode(chunk.value, { stream: true });
+    fullText += text;
+    if (onChunk) onChunk(fullText);
+  }
+
+  return fullText;
+}
+
+// ─── MAIN ───
+window.startReading = async function() {
+  if (!currentUser) { loginNow(); return; }
+
+  var name   = document.getElementById("inputName").value.trim();
+  var day    = parseInt(document.getElementById("inputDay").value);
+  var month  = parseInt(document.getElementById("inputMonth").value);
+  var year   = parseInt(document.getElementById("inputYear").value);
+  var hour   = parseInt(document.getElementById("inputHour").value) || 0;
+  var minute = parseInt(document.getElementById("inputMinute").value) || 0;
+
+  if (!name || !day || !month || !year) {
+    alert("กรุณากรอกข้อมูลให้ครบนะคะ 🙏"); return;
+  }
+
+  var btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "🔮 กำลังเจาะดวง...";
+
+  // แสดง result section
+  var resultWrap = document.getElementById("resultWrap");
+  resultWrap.classList.add("show");
+
+  // reset sections
+  ["personality","childhood","mission","love","career","money","health","lucky","thisyear","future"].forEach(function(id) {
+    var el = document.getElementById("sec-" + id);
+    if (el) el.innerHTML = '<div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div>';
+  });
+
+  // scroll to result
+  resultWrap.scrollIntoView({ behavior: 'smooth' });
+
+  try {
+    // คำนวณ 5 ศาสตร์ + แมทช์ keyword
+    var destiny = calculateDestiny(name, day, month, year, hour, minute);
+    var profile = destiny.profile;
+    var matched = destiny.matched;
+
+    // แสดง profile tags
+    var tagsHtml =
+      '<div class="profile-tag">♎ ' + profile.westernTh + '</div>' +
+      '<div class="profile-tag">🔢 เลขชีวิต ' + profile.lifeNumber + '</div>' +
+      '<div class="profile-tag">🐯 ' + profile.chineseTh + '</div>' +
+      '<div class="profile-tag">📅 วัน' + profile.thaiDay + '</div>' +
+      '<div class="profile-tag">🌊 ธาตุ' + profile.baziElements[0] + '</div>';
+    document.getElementById("profileTags").innerHTML = tagsHtml;
+
+    // build section keywords
+    function getKW(cats) {
+      var kws = [];
+      cats.forEach(function(cat) {
+        if (matched[cat]) {
+          matched[cat].forEach(function(m) { kws.push(m.keyword + "(" + m.score + ")"); });
+        }
+      });
+      return kws.join(", ") || "ไม่มี keyword พิเศษ";
+    }
+
+    // ─── CALL 1: นิสัย วัยเด็ก ภารกิจ ความรัก การงาน ───
+    var prompt1 =
+      "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนาย 'เจาะดวงชะตา' ให้ " + name + "\n" +
+      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n\n" +
+      "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
+      " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
+      " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
+      "keyword ที่ดวงบ่งบอก:\n" +
+      "นิสัย: " + getKW(["personality"]) + "\n" +
+      "ความรัก: " + getKW(["love_positive","love_warning"]) + "\n" +
+      "การงาน: " + getKW(["career_positive","career_warning"]) + "\n\n" +
+      "เขียน 5 หัวข้อนี้ แต่ละหัวข้อขึ้นต้นด้วย emoji และชื่อหัวข้อ:\n" +
+      "🌟 นิสัยและบุคลิกที่แท้จริง\n" +
+      "👶 มาจากไหน\n" +
+      "🎯 ภารกิจชีวิต\n" +
+      "💕 ความรัก\n" +
+      "💼 การงาน\n\n" +
+      "keyword warning ให้เตือนตรงๆ แต่สุภาพ";
+
+    var text1 = await streamAPI(prompt1, "destiny", function(partial) {
+      var sections = parseSections(partial);
+      Object.keys(sections).forEach(function(id) {
+        updateSection(id, sections[id]);
+      });
+    });
+
+    // parse final call1
+    var sections1 = parseSections(text1);
+    Object.keys(sections1).forEach(function(id) {
+      updateSection(id, sections1[id]);
+    });
+
+    // clear loading ที่ยังค้างอยู่
+    ["money","health","lucky","thisyear","future"].forEach(function(id) {
+      var el = document.getElementById("sec-" + id);
+      if (el && el.querySelector('.loading-dots')) el.textContent = "";
+    });
+
+    // ─── CALL 2: การเงิน สุขภาพ โชคดี ดวงปีนี้ อนาคต ───
+    var prompt2 =
+      "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนายต่อให้ " + name + "\n" +
+      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n\n" +
+      "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
+      " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
+      " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
+      "keyword ที่ดวงบ่งบอก:\n" +
+      "การเงิน: " + getKW(["money_positive","money_warning"]) + "\n" +
+      "สุขภาพ: " + getKW(["health_positive","health_warning"]) + "\n" +
+      "โชคดี: " + getKW(["lucky"]) + "\n" +
+      "อนาคต: " + getKW(["future_positive","future_warning"]) + "\n\n" +
+      "เขียน 5 หัวข้อนี้ แต่ละหัวข้อขึ้นต้นด้วย emoji และชื่อหัวข้อ:\n" +
+      "💰 การเงิน\n" +
+      "🌿 สุขภาพ\n" +
+      "✨ โชคดีประจำชะตา\n" +
+      "⚡ ดวงปีนี้ 2568\n" +
+      "🔮 อนาคต\n\n" +
+      "keyword warning ให้เตือนตรงๆ แต่สุภาพ";
+
+    var text2 = await streamAPI(prompt2, "destiny-2", function(partial) {
+      var sections = parseSections(partial);
+      Object.keys(sections).forEach(function(id) {
+        updateSection(id, sections[id]);
+      });
+    });
+
+    var sections2 = parseSections(text2);
+    Object.keys(sections2).forEach(function(id) {
+      updateSection(id, sections2[id]);
+    });
+
+    // บันทึก Firestore
+    await addDoc(collection(db, "users", currentUser.uid, "readings"), {
+      type: "destiny",
+      name: name,
+      birthday: day + "/" + month + "/" + year,
+      time: hour + ":" + (minute < 10 ? "0" + minute : minute),
+      profile: {
+        western: profile.westernTh,
+        lifeNumber: profile.lifeNumber,
+        chinese: profile.chineseTh,
+        thaiDay: profile.thaiDay,
+        baziElements: profile.baziElements.slice(0,2)
+      },
+      reading: text1 + "\n\n" + text2,
+      createdAt: serverTimestamp()
+    });
+
+  } catch(e) {
+    if (e.message === "insufficient_coins") {
+      alert("เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนค่ะ");
+    } else {
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏");
+    }
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "🔮 เจาะดวงชะตาใหม่";
+};
+
+</script>
+</body>
+</html>
