@@ -1,3 +1,9 @@
+* {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* โค้ดเดิมด้านล่าง */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
