@@ -411,16 +411,37 @@ function startReading() {
   setTimeout(flipNext, 300);
 }
 
+var currentUser = null;
+
+function updateCoinUI(amount) {
+  document.getElementById('coinCount').textContent = amount;
+  document.getElementById('coinDisplay').textContent = amount;
+}
+
+async function loginNow() {
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, signInWithPopup, GoogleAuthProvider } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    currentUser = result.user;
+    return true;
+  } catch(e) {
+    alert('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่ค่ะ');
+    return false;
+  }
+}
+
 // ---- Accept reading ----
 async function acceptReading() {
   document.getElementById('revealOverlay').classList.remove('show');
 
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
-  const newCoins = coins - 10;
-  localStorage.setItem('coins', String(newCoins));
-  document.getElementById('coinCount').textContent = newCoins;
-  document.getElementById('coinDisplay').textContent = newCoins;
+  if (!currentUser) {
+    const ok = await loginNow();
+    if (!ok) return;
+  }
 
   // check combo
   const matchW = selectedWeapon.id === selectedDeity.weapon_id;
@@ -432,7 +453,6 @@ async function acceptReading() {
     ? 'ไพ่ที่ได้ตรงกัน 1 ใบ มีพลังพิเศษเพิ่มขึ้น'
     : '';
 
-  // show result box
   const resultBox = document.getElementById('resultBox');
   resultBox.classList.add('show');
 
@@ -451,35 +471,35 @@ async function acceptReading() {
   sections.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">เทพกำลังส่งสาร...</div></div>`;
   resultBox.scrollIntoView({ behavior: 'smooth' });
 
-  // Build prompt
   const cardInfo = `เทพ: ${selectedDeity.name} (${selectedDeity.meaning}) | อาวุธ: ${selectedWeapon.name} (${selectedWeapon.meaning}) | พาหนะ: ${selectedVahana.name} (${selectedVahana.meaning})`;
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'hindu-oracle',
         model: 'claude-sonnet-4-6', max_tokens: 1500,
         system: `คุณคือนักพยากรณ์เทพฮินดู ตอบเป็นภาษาไทย Gen Z เรียกผู้ถามว่า "คุณพี่"
-
 ตอบในรูปแบบ JSON เท่านั้น ห้ามมี markdown ห้ามมี backtick ห้ามมีข้อความอื่นนอก JSON:
-{
-  "deity": "ความหมายของเทพ 2-3 ประโยค",
-  "weapon": "ความหมายของอาวุธ/ของศักดิ์สิทธิ์ 2-3 ประโยค",
-  "vahana": "ความหมายของพาหนะ 2-3 ประโยค",
-  "summary": "คำทำนายรวม ผสม 3 ใบเข้าด้วยกัน 4-6 ประโยค ${comboNote}"
-}`,
+{"deity":"ความหมายของเทพ 2-3 ประโยค","weapon":"ความหมายของอาวุธ 2-3 ประโยค","vahana":"ความหมายของพาหนะ 2-3 ประโยค","summary":"คำทำนายรวม 4-6 ประโยค ${comboNote}"}`,
         messages: [{ role: 'user', content: cardInfo }]
       })
     });
 
+    if (res.status === 402) { alert('เหรียญไม่พอค่ะ กรุณาซื้อเหรียญเพิ่มค่ะ 🪙'); return; }
+    if (res.status === 401) { alert('กรุณาเข้าสู่ระบบใหม่ค่ะ'); return; }
+    if (!res.ok) { alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'); return; }
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
     const data = await res.json();
     const raw = data.content?.[0]?.text || '';
     let parsed;
-    try {
-      parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    } catch {
-      parsed = { deity: '', weapon: '', vahana: '', summary: raw };
-    }
+    try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+    catch { parsed = { deity: '', weapon: '', vahana: '', summary: raw }; }
 
     sections.innerHTML = `
       <div class="result-section deity-sec">
@@ -501,21 +521,16 @@ async function acceptReading() {
 
     // บันทึก Firestore
     try {
-      const user = firebase.auth().currentUser;
-      if (user && parsed.summary) {
-        await firebase.firestore().collection('readings').add({
-          uid: user.uid,
-          type: 'hindu-oracle',
-          cards: {
-            deity:  { id: selectedDeity.id,  name: selectedDeity.name  },
-            weapon: { id: selectedWeapon.id, name: selectedWeapon.name },
-            vahana: { id: selectedVahana.id, name: selectedVahana.name },
-          },
-          comboCount,
-          result: parsed,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      }
+      const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+      const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+        type: 'hindu-oracle',
+        cards: { deity: { id: selectedDeity.id, name: selectedDeity.name }, weapon: { id: selectedWeapon.id, name: selectedWeapon.name }, vahana: { id: selectedVahana.id, name: selectedVahana.name } },
+        comboCount, result: parsed, createdAt: new Date().toISOString()
+      });
     } catch(saveErr) { console.warn('save error', saveErr); }
 
   } catch(e) {
@@ -524,12 +539,8 @@ async function acceptReading() {
 }
 
 // ---- Init ----
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
+document.addEventListener('DOMContentLoaded', async () => {
   renderAllDecks();
-
   ['deityScroll','weaponScroll','vahanaScroll'].forEach(id => {
     const el = document.getElementById(id);
     setTimeout(() => {
@@ -537,6 +548,26 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => el.scrollTo({ left: 0, behavior: 'smooth' }), 600);
     }, 500);
   });
+
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      if (user) {
+        try {
+          const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+          const db = getFirestore(app);
+          const snap = await getDoc(doc(db, 'users', user.uid));
+          const realCoins = snap.exists() ? (snap.data().coins ?? 0) : 0;
+          updateCoinUI(realCoins);
+        } catch(e) { console.error(e); }
+      }
+    });
+  } catch(e) { console.error(e); }
 });
 </script>
 </body>
