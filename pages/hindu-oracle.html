@@ -6,6 +6,10 @@
   <title>Hindu Oracle — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
   <style>
     body { padding-bottom: 60px; }
 
@@ -482,6 +486,25 @@ async function acceptReading() {
         <div class="result-section-title">✨ คำทำนายรวม${comboCount > 0 ? (comboCount === 2 ? ' 🌟🌟' : ' ✨') : ''}</div>
         <div class="result-section-text">${parsed.summary}</div>
       </div>`;
+
+    // บันทึก Firestore
+    try {
+      const user = firebase.auth().currentUser;
+      if (user && parsed.summary) {
+        await firebase.firestore().collection('readings').add({
+          uid: user.uid,
+          type: 'hindu-oracle',
+          cards: {
+            deity:  { id: selectedDeity.id,  name: selectedDeity.name  },
+            weapon: { id: selectedWeapon.id, name: selectedWeapon.name },
+            vahana: { id: selectedVahana.id, name: selectedVahana.name },
+          },
+          comboCount,
+          result: parsed,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    } catch(saveErr) { console.warn('save error', saveErr); }
 
   } catch(e) {
     sections.innerHTML = `<div class="result-section deity-sec"><div class="result-section-text">เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ</div></div>`;
