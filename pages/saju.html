@@ -27,52 +27,51 @@
     .reading-hero { text-align: center; padding: 16px 0 24px; }
     .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-    .form-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 20px;
-    }
+    .form-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
     .form-row { margin-bottom: 16px; }
     .form-row:last-child { margin-bottom: 0; }
     .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
     .date-row { display: flex; gap: 8px; }
-    .form-select {
-      flex: 1; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px 8px; color: white; font-size: 13px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; appearance: none; text-align: center;
-    }
+    .form-select { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; color: white; font-size: 13px; font-family: 'Sarabun', sans-serif; outline: none; transition: border-color 0.2s; appearance: none; text-align: center; }
     .form-select:focus { border-color: var(--purple-light); }
-    .time-row { display: flex; gap: 8px; }
     .gender-row { display: flex; gap: 10px; }
-    .gender-btn {
-      flex: 1; padding: 12px; border-radius: 12px;
-      border: 1px solid var(--border); background: rgba(255,255,255,0.03);
-      color: var(--dim); font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.2s;
-    }
+    .gender-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--dim); font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.2s; }
     .gender-btn.active { background: rgba(124,58,237,0.2); border-color: var(--purple-light); color: var(--purple-light); }
-    .coin-box {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
-    }
+    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
     .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
     .coin-hint { font-size: 11px; color: var(--dim); }
-    .btn-read {
-      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
+    .btn-read { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
-    .result-box {
-      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; display: none; margin-bottom: 16px;
-    }
+
+    /* GREETING */
+    .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(124,58,237,0.06); border-radius: 16px; border-left: 3px solid var(--purple-light); display: none; }
+    .greeting-box.show { display: block; }
+
+    /* RESULT SECTIONS */
+    .result-box { display: none; }
     .result-box.show { display: block; }
-    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
-    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
-    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
+    .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); }
+    .sec-element  { background: rgba(245,158,11,0.08);  border-color: #f59e0b; }
+    .sec-element h3 { color: #f59e0b; }
+    .sec-personality { background: rgba(168,85,247,0.08); border-color: #a855f7; }
+    .sec-personality h3 { color: #a855f7; }
+    .sec-love     { background: rgba(236,72,153,0.08);  border-color: #ec4899; }
+    .sec-love h3  { color: #ec4899; }
+    .sec-career   { background: rgba(96,165,250,0.08);  border-color: #60a5fa; }
+    .sec-career h3 { color: #60a5fa; }
+    .sec-money    { background: rgba(16,185,129,0.08);  border-color: #10b981; }
+    .sec-money h3 { color: #10b981; }
+    .sec-health   { background: rgba(52,211,153,0.08);  border-color: #34d399; }
+    .sec-health h3 { color: #34d399; }
+    .sec-year     { background: rgba(249,115,22,0.08);  border-color: #f97316; }
+    .sec-year h3  { color: #f97316; }
+    .sec-warning  { background: rgba(239,68,68,0.08);   border-color: #ef4444; }
+    .sec-warning h3 { color: #ef4444; }
+    .sec-summary  { background: rgba(6,182,212,0.08);   border-color: #06b6d4; }
+    .sec-summary h3 { color: #06b6d4; }
+
     .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 30px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
@@ -82,6 +81,7 @@
     .loading-text { font-size: 14px; color: var(--dim); }
     .cursor { display: inline-block; width: 2px; height: 16px; background: var(--purple-light); margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+
     .followup-box { margin-top: 16px; padding: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; }
     .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
     .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
@@ -96,7 +96,6 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">ซาจูเกาหลี</div>
@@ -108,14 +107,11 @@
   </div>
 </div>
 
-<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
     <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button class="btn-google" onclick="loginNow()">
-      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
-    </button>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
     <div class="menu-user-info">
@@ -142,7 +138,6 @@
   </div>
 
   <div class="form-box">
-    <!-- วันเกิด -->
     <div class="form-row">
       <label class="form-label">📅 วันเกิด</label>
       <div class="date-row">
@@ -151,17 +146,13 @@
         <select class="form-select" id="birthYear"></select>
       </div>
     </div>
-
-    <!-- เวลาเกิด -->
     <div class="form-row">
       <label class="form-label">🕐 เวลาเกิด (ไม่บังคับ)</label>
-      <div class="time-row">
+      <div class="date-row">
         <select class="form-select" id="birthHour"></select>
         <select class="form-select" id="birthMinute"></select>
       </div>
     </div>
-
-    <!-- เพศ -->
     <div class="form-row">
       <label class="form-label">👤 เพศ</label>
       <div class="gender-row">
@@ -178,19 +169,30 @@
 
   <button class="btn-read" id="readBtn" onclick="startReading()">🌸 ดูซาจูเกาหลี</button>
 
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
+
+  <!-- RESULT -->
   <div class="result-box" id="resultBox">
-    <div class="result-header"><span>🌸</span><div class="result-title">ซาจูบอกว่า...</div></div>
-    <div class="result-text" id="resultText"></div>
+    <div class="result-section sec-element"><h3>✦ ธาตุประจำตัว</h3><p id="secElement"></p></div>
+    <div class="result-section sec-personality"><h3>✦ ดวงชะตาโดยรวม</h3><p id="secPersonality"></p></div>
+    <div class="result-section sec-career"><h3>✦ การงานและความสำเร็จ</h3><p id="secCareer"></p></div>
+    <div class="result-section sec-money"><h3>✦ การเงินและทรัพย์สิน</h3><p id="secMoney"></p></div>
+    <div class="result-section sec-love"><h3>✦ ความรักและชีวิตคู่</h3><p id="secLove"></p></div>
+    <div class="result-section sec-health"><h3>✦ สุขภาพ</h3><p id="secHealth"></p></div>
+    <div class="result-section sec-year"><h3>✦ ปีนี้ดวงเป็นยังไง</h3><p id="secYear"></p></div>
+    <div class="result-section sec-warning"><h3>✦ สิ่งที่ต้องระวัง</h3><p id="secWarning"></p></div>
+    <div class="result-section sec-summary"><h3>✦ สรุปและคำแนะนำ</h3><p id="secSummary"></p></div>
+
     <div class="followup-box" id="followupBox" style="display:none">
       <div class="followup-result" id="followupResult"></div>
-      <div id="followupTitle" class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
+      <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
       <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
       <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -198,6 +200,19 @@
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌸</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -220,7 +235,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 let currentUser = null;
 let selectedGender = 'ชาย';
-let analysisResult = '';
+let lastFullText = '';
 
 window.updateCoinUI = function(coins) {
   document.getElementById('coinCount').textContent = coins;
@@ -238,12 +253,9 @@ function setAvatarDisplay(avatar) {
 window.loginNow = async function() {
   try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
 };
-
 window.logoutNow = async function() {
-  await signOut(auth);
-  window.location.href = '../index.html';
+  await signOut(auth); window.location.href = '../index.html';
 };
-
 window.setGender = function(g) {
   selectedGender = g;
   document.getElementById('genderM').className = g === 'ชาย' ? 'gender-btn active' : 'gender-btn';
@@ -257,130 +269,152 @@ onAuthStateChanged(auth, async user => {
     var data = snap.exists() ? snap.data() : {};
     updateCoinUI(data.coins || 0);
     setAvatarDisplay(data.avatar || '');
-    var guestView = document.getElementById('guestView');
-    var loggedView = document.getElementById('loggedView');
-    if (guestView) guestView.style.display = 'none';
-    if (loggedView) loggedView.style.display = 'block';
-    var menuName = document.getElementById('menuName');
-    var menuEmail = document.getElementById('menuEmail');
-    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
-    if (menuEmail) menuEmail.textContent = user.email;
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else {
-    updateCoinUI('—');
-    setAvatarDisplay('');
+    updateCoinUI('—'); setAvatarDisplay('');
     document.getElementById('loginRequiredOverlay').classList.add('show');
   }
 });
 
-// ─── INIT DROPDOWNS ───
 document.addEventListener('DOMContentLoaded', function() {
-  // วัน
   var dayEl = document.getElementById('birthDay');
   for (var d = 1; d <= 31; d++) {
-    var o = document.createElement('option'); o.value = d; o.textContent = d;
-    dayEl.appendChild(o);
+    var o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o);
   }
-
-  // เดือน
   var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
   var monthEl = document.getElementById('birthMonth');
-  months.forEach(function(m, i) {
-    var o = document.createElement('option'); o.value = i+1; o.textContent = m;
-    monthEl.appendChild(o);
-  });
-
-  // ปี ค.ศ.
+  months.forEach(function(m, i) { var o = document.createElement('option'); o.value = i+1; o.textContent = m; monthEl.appendChild(o); });
   var yearEl = document.getElementById('birthYear');
   for (var y = 2010; y >= 1940; y--) {
-    var o = document.createElement('option'); o.value = y;
-    o.textContent = 'ค.ศ. ' + y;
-    if (y === 1995) o.selected = true;
-    yearEl.appendChild(o);
+    var o = document.createElement('option'); o.value = y; o.textContent = 'ค.ศ. ' + y;
+    if (y === 1995) o.selected = true; yearEl.appendChild(o);
   }
-
-  // ชั่วโมง — ค่าแรก --
   var hourEl = document.getElementById('birthHour');
-  var oh = document.createElement('option'); oh.value = ''; oh.textContent = '--';
-  hourEl.appendChild(oh);
+  var oh = document.createElement('option'); oh.value = ''; oh.textContent = '--'; hourEl.appendChild(oh);
   for (var h = 0; h <= 23; h++) {
-    var o = document.createElement('option');
-    o.value = h; o.textContent = h < 10 ? '0'+h : String(h);
-    hourEl.appendChild(o);
+    var o = document.createElement('option'); o.value = h; o.textContent = (h<10?'0'+h:h) + ' น.'; hourEl.appendChild(o);
   }
-
-  // นาที — ค่าแรก --
   var minEl = document.getElementById('birthMinute');
-  var om = document.createElement('option'); om.value = ''; om.textContent = '--';
-  minEl.appendChild(om);
+  var om = document.createElement('option'); om.value = ''; om.textContent = '--'; minEl.appendChild(om);
   for (var m2 = 0; m2 <= 59; m2 += 5) {
-    var o = document.createElement('option');
-    o.value = m2; o.textContent = m2 < 10 ? '0'+m2 : String(m2);
-    minEl.appendChild(o);
+    var o = document.createElement('option'); o.value = m2; o.textContent = (m2<10?'0'+m2:m2) + ' นาที'; minEl.appendChild(o);
   }
 });
 
-function colorizeSaju(text) {
-  return text
-    .replace(/ธาตุไฟ/g, '<span style="color:#ef4444;font-weight:700">ธาตุไฟ</span>')
-    .replace(/ธาตุน้ำ/g, '<span style="color:#3b82f6;font-weight:700">ธาตุน้ำ</span>')
-    .replace(/ธาตุไม้/g, '<span style="color:#10b981;font-weight:700">ธาตุไม้</span>')
-    .replace(/ธาตุดิน/g, '<span style="color:#f59e0b;font-weight:700">ธาตุดิน</span>')
-    .replace(/ธาตุโลหะ/g, '<span style="color:#9ca3af;font-weight:700">ธาตุโลหะ</span>')
-    .replace(/การงาน/g, '<span style="color:#60a5fa;font-weight:700">การงาน</span>')
-    .replace(/การเงิน/g, '<span style="color:#f59e0b;font-weight:700">การเงิน</span>')
-    .replace(/ความรัก/g, '<span style="color:#ec4899;font-weight:700">ความรัก</span>')
-    .replace(/สุขภาพ/g, '<span style="color:#10b981;font-weight:700">สุขภาพ</span>')
-    .replace(/ดวงชะตา/g, '<span style="color:#818cf8;font-weight:700">ดวงชะตา</span>')
-    .replace(/ปีนี้/g, '<span style="color:#a855f7;font-weight:700">ปีนี้</span>')
-    .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
-    .replace(/\n/g, '<br>');
+// TAG MAP
+const TAG_MAP = {
+  '[GREETING]': 'greeting',
+  '[ELEMENT]': 'secElement',
+  '[PERSONALITY]': 'secPersonality',
+  '[CAREER]': 'secCareer',
+  '[MONEY]': 'secMoney',
+  '[LOVE]': 'secLove',
+  '[HEALTH]': 'secHealth',
+  '[YEAR]': 'secYear',
+  '[WARNING]': 'secWarning',
+  '[SUMMARY]': 'secSummary',
+};
+
+function parseByTag(text) {
+  const content = {};
+  let currentId = null;
+  for (const line of text.split('\n')) {
+    const t = line.trim();
+    if (TAG_MAP[t]) { currentId = TAG_MAP[t]; if (!content[currentId]) content[currentId] = ''; }
+    else if (currentId && t) content[currentId] += t + ' ';
+  }
+  // greeting
+  if (content['greeting']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show');
+    gb.innerHTML = content['greeting'] + '<span class="cursor"></span>';
+  }
+  // sections
+  for (const [id, txt] of Object.entries(content)) {
+    if (id === 'greeting') continue;
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = txt + '<span class="cursor"></span>';
+  }
+}
+
+function finalizeByTag(text) {
+  const content = {};
+  let currentId = null;
+  for (const line of text.split('\n')) {
+    const t = line.trim();
+    if (TAG_MAP[t]) { currentId = TAG_MAP[t]; if (!content[currentId]) content[currentId] = ''; }
+    else if (currentId && t) content[currentId] += t + ' ';
+  }
+  if (content['greeting']) {
+    document.getElementById('greetingBox').textContent = content['greeting'].trim();
+  }
+  for (const [id, txt] of Object.entries(content)) {
+    if (id === 'greeting') continue;
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt.trim();
+  }
 }
 
 window.startReading = async function() {
-  if (!currentUser) {
-    document.getElementById('loginRequiredOverlay').classList.add('show');
-    return;
-  }
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
 
   var day   = document.getElementById('birthDay').value;
   var month = document.getElementById('birthMonth').value;
   var year  = document.getElementById('birthYear').value;
   var hour  = document.getElementById('birthHour').value;
   var min   = document.getElementById('birthMinute').value;
-
-  var birthDate = year + '-' + (month < 10 ? '0'+month : month) + '-' + (day < 10 ? '0'+day : day);
-  var birthTime = (hour !== '' && min !== '') ? (hour < 10 ? '0'+hour : hour) + ':' + (min < 10 ? '0'+min : min) : 'ไม่ทราบเวลาเกิด';
+  var birthDate = year + '-' + (month<10?'0'+month:month) + '-' + (day<10?'0'+day:day);
+  var birthTime = (hour !== '' && min !== '') ? (hour<10?'0'+hour:hour)+':'+(min<10?'0'+min:min) : 'ไม่ทราบเวลาเกิด';
   var callName = selectedGender === 'ชาย' ? 'โอปป้า' : 'ออนนี่';
 
   var btn = document.getElementById('readBtn');
-  btn.disabled = true;
-  btn.textContent = '⏳ กำลังวิเคราะห์...';
+  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
 
-  var resultBox = document.getElementById('resultBox');
-  var resultText = document.getElementById('resultText');
+  // reset
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  const resultBox = document.getElementById('resultBox');
   resultBox.classList.add('show');
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์ซาจู กรุณารอสักครู่...</div></div>`;
-  setTimeout(function() { resultBox.scrollIntoView({ behavior:'smooth' }); }, 100);
+  Object.values(TAG_MAP).filter(id => id !== 'greeting').forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div>`;
+  });
+  resultBox.scrollIntoView({ behavior:'smooth' });
 
   var currentYear = new Date().getFullYear();
-  var prompt = `วิเคราะห์ซาจูเกาหลี (사주팔자) จากข้อมูลต่อไปนี้
+  var prompt = `วิเคราะห์ซาจูเกาหลี (사주팔자)
 วันเกิด (ค.ศ.): ${birthDate}
 เวลาเกิด: ${birthTime}
 ปีปัจจุบัน (ค.ศ.): ${currentYear}
 เพศ: ${selectedGender}
 
-เริ่มด้วยทักทายว่า "อันยองฮาเซโย ${callName}~" แบบ Gen Z อบอุ่น จากนั้นแบ่งเป็นหัวข้อ:
-ธาตุประจำตัว (บอกชื่อธาตุ ความหมาย จุดแข็ง จุดอ่อน)
-ดวงชะตาโดยรวม (ภาพรวมชีวิต บุคลิก นิสัย)
-การงานและความสำเร็จ (เส้นทางอาชีพที่เหมาะสม โอกาส)
-การเงินและทรัพย์สิน (ดวงเงิน วิธีสร้างความมั่งคั่ง)
-ความรักและชีวิตคู่ (ลักษณะคู่ที่เหมาะ ดวงความรัก)
-สุขภาพ (สิ่งที่ต้องดูแล อวัยวะที่ควรระวัง)
-ปีนี้ดวงเป็นยังไง (ภาพรวมปีนี้ โอกาส ระวัง)
-สิ่งที่ต้องระวัง (คำเตือนจากดวง)
-สรุปและคำแนะนำ (ข้อคิดปิดท้าย)
-เรียก${selectedGender === 'ชาย' ? 'ว่าโอปป้า' : 'ว่าออนนี่'}ตลอด เรียกตัวเองว่า "น้อง" ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
+ตอบโดยใช้ tag นำหน้าแต่ละส่วนเท่านั้น ห้ามมีข้อความนอก tag:
+[GREETING]
+ทักทายแบบ Gen Z สไตล์เกาหลี เรียก${callName} อบอุ่น 2-3 ประโยค
+[ELEMENT]
+ธาตุประจำตัว 3-4 ประโยค
+[PERSONALITY]
+ดวงชะตาโดยรวม บุคลิก นิสัย 3-4 ประโยค
+[CAREER]
+การงานและความสำเร็จ 3-4 ประโยค
+[MONEY]
+การเงินและทรัพย์สิน 3-4 ประโยค
+[LOVE]
+ความรักและชีวิตคู่ 3-4 ประโยค
+[HEALTH]
+สุขภาพ 3-4 ประโยค
+[YEAR]
+ปีนี้ดวงเป็นยังไง 3-4 ประโยค
+[WARNING]
+สิ่งที่ต้องระวัง 3-4 ประโยค
+[SUMMARY]
+สรุปและคำแนะนำ 3-4 ประโยค
+
+เรียก${callName}ตลอด เรียกตัวเองว่า "น้อง" ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
     var idToken = await currentUser.getIdToken();
@@ -391,51 +425,47 @@ window.startReading = async function() {
         service: 'foot-reading',
         model: 'claude-sonnet-4-6',
         max_tokens: 8000,
-        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี (사주팔자) พูดแบบ Gen Z อบอุ่น เป็นกันเอง สไตล์เกาหลี ทักทายด้วย "อันยองฮาเซโย" เรียกผู้ชายว่า "โอปป้า" เรียกผู้หญิงว่า "ออนนี่" เรียกตัวเองว่า "น้อง" แบ่งเป็นหัวข้อชัดเจน ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี (사주팔자) พูดแบบ Gen Z อบอุ่น สไตล์เกาหลี เรียกผู้ชายว่า "โอปป้า" เรียกผู้หญิงว่า "ออนนี่" เรียกตัวเองว่า "น้อง" ต้องใช้ tag [GREETING] [ELEMENT] [PERSONALITY] [CAREER] [MONEY] [LOVE] [HEALTH] [YEAR] [WARNING] [SUMMARY] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
-    if (!res.ok) { resultText.textContent = 'เกิดข้อผิดพลาดค่ะ'; btn.disabled = false; btn.textContent = '🌸 ดูซาจูอีกครั้ง'; return; }
+    var newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      var err = await res.json();
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = '🌸 ดูซาจูเกาหลี'; return;
+    }
 
     var reader = res.body.getReader();
     var decoder = new TextDecoder();
     var text = '';
-    resultText.innerHTML = '';
-    var cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    resultText.appendChild(cursor);
 
     while (true) {
       var result = await reader.read();
       if (result.done) break;
       text += decoder.decode(result.value);
-      resultText.innerHTML = colorizeSaju(text);
-      resultText.appendChild(cursor);
+      parseByTag(text);
     }
-    cursor.remove();
-    resultText.innerHTML = colorizeSaju(text);
-    analysisResult = text;
+    finalizeByTag(text);
+    lastFullText = text;
 
-    // บันทึก Firestore
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'ซาจูเกาหลี',
-      birthDate: birthDate,
-      birthTime: birthTime,
-      gender: selectedGender,
-      result: text,
-      createdAt: serverTimestamp()
+      type: 'ซาจูเกาหลี', birthDate, birthTime, gender: selectedGender,
+      result: text, createdAt: serverTimestamp()
     });
 
     document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
     console.error(e);
-    resultText.textContent = 'เกิดข้อผิดพลาดค่ะ';
+    document.getElementById('secElement').textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
-  btn.disabled = false;
-  btn.textContent = '🌸 ดูซาจูอีกครั้ง';
+  btn.disabled = false; btn.textContent = '🌸 ดูซาจูอีกครั้ง';
 };
 
 window.askFollowup = async function() {
@@ -461,56 +491,32 @@ window.askFollowup = async function() {
         service: 'tarot_followup',
         model: 'claude-sonnet-4-6',
         max_tokens: 500,
-        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี Gen Z เรียก${selectedGender === 'ชาย' ? 'ผู้ใช้ว่าโอปป้า' : 'ผู้ใช้ว่าออนนี่'} เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
-        messages: [{ role: 'user', content: `ผลวิเคราะห์ซาจู: ${analysisResult}\nคำถาม: ${question}` }]
+        system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี Gen Z เรียก${selectedGender==='ชาย'?'ผู้ใช้ว่าโอปป้า':'ผู้ใช้ว่าออนนี่'} เรียกตัวเองว่า "น้อง" ตอบสั้นๆ 3-5 บรรทัด ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ผลวิเคราะห์ซาจู: ${lastFullText}\nคำถาม: ${question}` }]
       })
     });
 
     var newBalance = res.headers.get('X-New-Coin-Balance');
     if (newBalance != null) updateCoinUI(parseInt(newBalance));
-
     if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
 
     var reader = res.body.getReader();
     var decoder = new TextDecoder();
     var text = '';
     var cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    answerDiv.appendChild(cursor);
+    cursor.className = 'cursor'; answerDiv.appendChild(cursor);
 
     while (true) {
-      var result = await reader.read();
-      if (result.done) break;
-      text += decoder.decode(result.value);
-      answerDiv.textContent = text;
-      answerDiv.appendChild(cursor);
+      var r = await reader.read(); if (r.done) break;
+      text += decoder.decode(r.value);
+      answerDiv.textContent = text; answerDiv.appendChild(cursor);
     }
-    cursor.remove();
-    answerDiv.textContent = text;
+    cursor.remove(); answerDiv.textContent = text;
     answerDiv.scrollIntoView({ behavior:'smooth' });
+  } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
 
-  } catch(e) {
-    answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ';
-  }
-
-  input.value = '';
-  followupBtn.disabled = false;
+  input.value = ''; followupBtn.disabled = false;
 };
 </script>
-
-<!-- LOGIN MODAL -->
-<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
-  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
-    <div style="font-size:48px;margin-bottom:12px;">🌸</div>
-    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และใช้งานได้ครบทุกฟีเจอร์</div>
-    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
-    </button>
-    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
-  </div>
-</div>
-<style>.login-required-overlay.show { display:flex !important; }</style>
-
 </body>
 </html>
