@@ -39,6 +39,7 @@ const SERVICE_COSTS = {
 "destiny-2": 0,
 "foot-reading": 30,
 "deity": 20,
+"love-code": 10,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
