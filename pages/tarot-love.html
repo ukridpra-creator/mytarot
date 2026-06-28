@@ -6,8 +6,9 @@
   <title>เจาะลึกความรัก — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 60px; }
+    body { padding-bottom: 80px; }
     .page-header {
       display: flex; align-items: center; gap: 12px;
       padding: 16px 20px; border-bottom: 1px solid var(--border);
@@ -16,9 +17,9 @@
     }
     .back-btn {
       width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
+      background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.3);
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--purple-light);
+      cursor: pointer; color: #ec4899;
       font-size: 16px; text-decoration: none; flex-shrink: 0;
     }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
@@ -39,7 +40,6 @@
       transition: all 0.3s; position: relative; overflow: hidden;
     }
     .slot.filled { border: 2px solid rgba(236,72,153,0.6); cursor: pointer; }
-    .slot.filled:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.5); }
     .slot-num { font-size: 10px; color: var(--dim); }
     .slot-label { font-size: 9px; color: #ec4899; margin-top: 2px; text-align: center; padding: 0 2px; line-height: 1.2; }
     .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
@@ -82,8 +82,7 @@
       font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
       cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
     }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(236,72,153,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
     .reveal-overlay {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(0,0,0,0.92); display: none;
@@ -156,8 +155,7 @@
     .loading-text { font-size: 14px; color: var(--dim); }
     .followup-box {
       margin-top: 16px; padding: 16px;
-      background: rgba(124,58,237,0.06);
-      border: 1px solid rgba(124,58,237,0.2);
+      background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2);
       border-radius: 16px;
     }
     .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
@@ -168,17 +166,15 @@
       font-family: 'Sarabun', sans-serif; outline: none;
       resize: none; margin-bottom: 10px; box-sizing: border-box;
     }
-    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input:focus { border-color: #ec4899; }
     .followup-input::placeholder { color: rgba(255,255,255,0.25); }
     .followup-btn {
-      width: 100%; background: rgba(124,58,237,0.2);
-      border: 1px solid rgba(124,58,237,0.4);
-      border-radius: 12px; padding: 12px; color: var(--purple-light);
+      width: 100%; background: rgba(236,72,153,0.2);
+      border: 1px solid rgba(236,72,153,0.4);
+      border-radius: 12px; padding: 12px; color: #ec4899;
       font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      transition: all 0.2s; margin-bottom: 12px;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px;
     }
-    .followup-btn:hover { background: rgba(124,58,237,0.3); }
     .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
     .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
@@ -187,18 +183,49 @@
 </head>
 <body>
 
-<div class="page-header">
-  <a href="tarot.html" class="back-btn">←</a>
-  <div class="page-title">เจาะลึกความรัก</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
-</div>
-
+<!-- REVEAL -->
 <div class="reveal-overlay" id="revealOverlay">
   <div class="reveal-title">❤️ ไพ่แห่งความรักของคุณพี่...</div>
   <div id="revealRow1" class="reveal-row"></div>
   <div id="revealRow2" class="reveal-row"></div>
   <button class="btn-accept" id="btnAccept" onclick="acceptReading()">❤️ รับคำทำนาย</button>
 </div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="tarot.html" class="back-btn">←</a>
+  <div class="page-title">เจาะลึกความรัก</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
 <div class="page-content">
   <div class="hero">
@@ -224,14 +251,12 @@
   <div class="cards-section">
     <div class="cards-title">🃏 ตั้งจิตนึกถึงเรื่องความรัก แล้วเลือกไพ่ 5 ใบค่ะ</div>
     <div class="cards-scroll" id="cardsScroll"></div>
-<div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">
-  ← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →
-</div>
+    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
   </div>
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()" disabled>❤️ อ่านดวงความรัก</button>
@@ -250,7 +275,80 @@
   </div>
 </div>
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+
+window.logoutNow = async function() {
+  await signOut(auth);
+  window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    var guestView = document.getElementById('guestView');
+    var loggedView = document.getElementById('loggedView');
+    if (guestView) guestView.style.display = 'none';
+    if (loggedView) loggedView.style.display = 'block';
+    var menuName = document.getElementById('menuName');
+    var menuEmail = document.getElementById('menuEmail');
+    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
+    if (menuEmail) menuEmail.textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+  }
+});
+
 const TAROT = [
   {id:0,name:'The Fool',img:'../images/tarot/0.png'},
   {id:1,name:'The Magician',img:'../images/tarot/1.png'},
@@ -334,11 +432,10 @@ const TAROT = [
 
 const BACK = '../images/tarot/back.png';
 const positions = ['อดีต','ปัจจุบัน','คู่ครอง','อุปสรรค','อนาคต'];
-let shuffled = [], selectedCards = [], followupHistory = [];
+let shuffled = [], selectedCards = [];
 const MAX_CARDS = 5;
 
-// colorize เฉพาะชื่อไพ่เท่านั้น
-function colorizeReading(text) {
+function colorize(text) {
   const cards = [
     ['The High Priestess','#a855f7'],['The Hanged Man','#a855f7'],
     ['Wheel of Fortune','#f59e0b'],['The Hierophant','#a855f7'],
@@ -353,62 +450,56 @@ function colorizeReading(text) {
     ['Death','#9ca3af'],['Temperance','#10b981'],
   ];
   let result = text;
-  // Major Arcana
-  cards.forEach(([name, color]) => {
-    result = result.replace(new RegExp(name, 'g'),
+  cards.forEach(([name,color]) => {
+    result = result.replace(new RegExp(name,'g'),
       `<span style="color:${color};font-weight:700">${name}</span>`);
   });
-  // Minor Arcana (Ace of Wands etc.)
   result = result.replace(
     /(Ace|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Page|Knight|Queen|King) of (Wands|Cups|Swords|Pentacles)/g,
-    (match) => {
-      const colors = {Wands:'#f59e0b', Cups:'#3b82f6', Swords:'#9ca3af', Pentacles:'#10b981'};
+    match => {
+      const colors = {Wands:'#f59e0b',Cups:'#3b82f6',Swords:'#9ca3af',Pentacles:'#10b981'};
       const suit = match.split(' of ')[1];
       return `<span style="color:${colors[suit]};font-weight:700">${match}</span>`;
     }
   );
-  return result.replace(/\n/g, '<br>');
+  return result.replace(/\n/g,'<br>');
 }
 
 function shuffle() {
   shuffled = [...TAROT].sort(() => Math.random() - 0.5);
   renderCards();
-  setTimeout(() => {
-    const scroll = document.getElementById('cardsScroll');
-    scroll.scrollTo({ left: 120, behavior: 'smooth' });
-    setTimeout(() => scroll.scrollTo({ left: 0, behavior: 'smooth' }), 600);
-  }, 500);
 }
 
 function renderCards() {
-  document.getElementById('cardsScroll').innerHTML = shuffled.map((card, i) => {
+  document.getElementById('cardsScroll').innerHTML = shuffled.map((card,i) => {
     const sel = selectedCards.find(s => s.id === card.id);
     return `<div class="card-item ${sel?'selected':''}" onclick="selectCard(${i})">
       <img src="${BACK}" alt="card"></div>`;
   }).join('');
 }
 
-function selectCard(idx) {
+window.selectCard = function(idx) {
+  if (!currentUser) { loginNow(); return; }
   if (selectedCards.length >= MAX_CARDS) return;
   const card = shuffled[idx];
   if (selectedCards.find(s => s.id === card.id)) return;
   selectedCards.push(card);
   updateSlots(); renderCards();
   if (selectedCards.length === MAX_CARDS) document.getElementById('readBtn').disabled = false;
-}
+};
 
-function removeCard(i) {
-  selectedCards.splice(i, 1);
+window.removeCard = function(i) {
+  selectedCards.splice(i,1);
   updateSlots(); renderCards();
   document.getElementById('readBtn').disabled = true;
-}
+};
 
 function updateSlots() {
   for (let i = 0; i < MAX_CARDS; i++) {
     const slot = document.getElementById(`slot${i}`);
     if (selectedCards[i]) {
       slot.className = 'slot filled';
-      slot.onclick = () => removeCard(i);
+      slot.onclick = () => window.removeCard(i);
       slot.innerHTML = `<div class="slot-remove">✕</div>
         <img class="slot-img" src="${BACK}">
         <div class="slot-overlay"><div class="slot-pos">${positions[i]}</div></div>`;
@@ -419,10 +510,11 @@ function updateSlots() {
   }
 }
 
-function startReading() {
+window.startReading = function() {
+  if (!currentUser) { loginNow(); return; }
   if (selectedCards.length < MAX_CARDS) return;
 
-  const makeCard = (card, i) => `
+  const makeCard = (card,i) => `
     <div class="reveal-card">
       <div class="reveal-card-wrap">
         <div class="reveal-card-inner" id="revealInner${i}">
@@ -441,7 +533,10 @@ function startReading() {
 
   let flipped = 0;
   const flipNext = () => {
-    if (flipped >= MAX_CARDS) { setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300); return; }
+    if (flipped >= MAX_CARDS) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
     setTimeout(() => {
       document.getElementById(`revealInner${flipped}`).classList.add('flipped');
       document.getElementById(`revealName${flipped}`).style.opacity = '1';
@@ -449,17 +544,11 @@ function startReading() {
     }, 600);
   };
   setTimeout(flipNext, 300);
-}
+};
 
-async function acceptReading() {
+window.acceptReading = async function() {
+  if (!currentUser) { loginNow(); return; }
   document.getElementById('revealOverlay').classList.remove('show');
-
-  // ตัดเหรียญหลัง user กดรับทำนาย
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 20) { alert('เหรียญไม่พอค่ะ ต้องใช้ 20 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 20));
-  document.getElementById('coinCount').textContent = coins - 20;
-  document.getElementById('coinDisplay').textContent = coins - 20;
 
   const btn = document.getElementById('readBtn');
   const resultBox = document.getElementById('resultBox');
@@ -467,35 +556,50 @@ async function acceptReading() {
   btn.disabled = true;
   resultBox.classList.add('show');
 
-  document.getElementById('resultRow1').innerHTML = selectedCards.slice(0,3).map((c,i)=>`
+  document.getElementById('resultRow1').innerHTML = selectedCards.slice(0,3).map((c,i) => `
     <div class="result-card">
       <div class="result-card-img"><img src="${c.img}"></div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-pos">${positions[i]}</div>
     </div>`).join('');
-  document.getElementById('resultRow2').innerHTML = selectedCards.slice(3,5).map((c,i)=>`
+  document.getElementById('resultRow2').innerHTML = selectedCards.slice(3,5).map((c,i) => `
     <div class="result-card">
       <div class="result-card-img"><img src="${c.img}"></div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-pos">${positions[i+3]}</div>
     </div>`).join('');
 
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ไพ่กำลังเปิดเผยความลับรัก...</div></div>`;
+  resultText.innerHTML = `<div class="loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <div class="loading-text">ไพ่กำลังเปิดเผยความลับรัก...</div>
+  </div>`;
   resultBox.scrollIntoView({ behavior: 'smooth' });
 
-  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.name}`).join(', ');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'tarot',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
-        system: `คุณคือหมอดูไพ่ทาโรต์ด้านความรัก Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ทำนายละเอียดครบทุกตำแหน่ง ชื่อไพ่ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
-        messages: [{ role: 'user', content: `ทำนายดวงความรักจากไพ่ทาโรต์ 5 ใบ ไพ่: ${cardInfo} พูดแบบหมอดู Gen Z เรียก "คุณพี่" บอกครบทุกตำแหน่ง ปิดท้ายด้วยคำแนะนำและกำลังใจค่ะ` }]
+        system: `คุณคือหมอดูไพ่ทาโรต์ด้านความรัก Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ชื่อไพ่ใช้ภาษาอังกฤษ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้ครบทุกตำแหน่ง แต่ละตำแหน่ง 3-4 ประโยค รวมประมาณ 800-1000 คำ จบด้วยคำแนะนำและกำลังใจ ต้องเขียนให้จบสมบูรณ์ทุกครั้ง ห้ามหยุดกลางคัน`,
+        messages: [{ role: 'user', content: `ทำนายดวงความรักจากไพ่ทาโรต์ 5 ใบ ไพ่: ${cardInfo} พูดแบบหมอดู Gen Z บอกครบทุกตำแหน่ง ปิดท้ายด้วยคำแนะนำและกำลังใจค่ะ` }]
       })
     });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json();
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏');
+      btn.disabled = false; return;
+    }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -509,30 +613,34 @@ async function acceptReading() {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value);
-      // colorize ระหว่าง stream เลยค่ะ
-      resultText.innerHTML = colorizeReading(text);
+      resultText.innerHTML = colorize(text);
       resultText.appendChild(cursor);
     }
     cursor.remove();
-    resultText.innerHTML = colorizeReading(text);
+    resultText.innerHTML = colorize(text);
 
-    followupHistory = [];
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'เจาะลึกความรัก',
+      cards: selectedCards.map((c,i) => ({ name: c.name, position: positions[i] })),
+      result: text,
+      createdAt: serverTimestamp()
+    });
+
     document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
     console.error(e);
+    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
   btn.disabled = false;
-}
+  btn.textContent = '❤️ อ่านดวงอีกครั้ง';
+};
 
-async function askFollowup() {
+window.askFollowup = async function() {
+  if (!currentUser) { loginNow(); return; }
   const input = document.getElementById('followupInput');
   const question = input.value.trim();
   if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
-
-  const coins = parseInt(localStorage.getItem('coins') || '500');
-  if (coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
 
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
@@ -541,22 +649,30 @@ async function askFollowup() {
   const time = Date.now();
   resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
   const answerDiv = document.getElementById(`ans_${time}`);
-
-  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.name}`).join(', ');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'tarot_followup',
         model: 'claude-sonnet-4-6',
-        max_tokens: 600,
-        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากไพ่เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
-        messages: [
-          { role: 'user', content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำถาม: ${question}` }
-        ]
+        max_tokens: 500,
+        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากไพ่เดิม สั้นๆ 3-5 บรรทัด ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role: 'user', content: `ไพ่: ${cardInfo}\nคำถาม: ${question}` }]
       })
     });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json();
+      answerDiv.textContent = err.error === 'insufficient_coins' ? 'เหรียญไม่พอค่ะ 🪙' : 'เกิดข้อผิดพลาดค่ะ';
+      followupBtn.disabled = false; return;
+    }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -574,26 +690,17 @@ async function askFollowup() {
     }
     cursor.remove();
     answerDiv.textContent = text;
-    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
-
-    // ตัดเหรียญหลัง AI ตอบแล้ว
-    localStorage.setItem('coins', String(coins - 5));
-    document.getElementById('coinCount').textContent = coins - 5;
+    answerDiv.scrollIntoView({ behavior: 'smooth' });
 
   } catch(e) {
-    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
   input.value = '';
   followupBtn.disabled = false;
-}
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '500');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-  shuffle();
-});
+shuffle();
 </script>
 </body>
 </html>
