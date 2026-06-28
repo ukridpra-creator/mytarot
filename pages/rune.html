@@ -6,432 +6,577 @@
   <title>ไพ่รูน — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 40px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--purple-light);
-      font-size: 16px; text-decoration: none; flex-shrink: 0;
-    }
+    body { padding-bottom: 80px; }
+    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(124,58,237,0.2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--purple-light); font-size: 16px; text-decoration: none; flex-shrink: 0; }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 24px 20px 40px; }
     .reading-hero { text-align: center; padding: 16px 0 24px; }
-    .reading-icon {
-      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
-      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
-    }
-    .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
     .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
     .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-    .question-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-    }
-    .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
-    .form-input {
-      width: 100%; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px 16px; color: white; font-size: 15px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; resize: none;
-    }
-    .form-input:focus { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
-    .form-input::placeholder { color: rgba(255,255,255,0.3); }
 
-    /* Rune Cards */
-    .rune-section { margin-bottom: 20px; }
-    .rune-section-title {
-      font-size: 13px; color: var(--gold); font-weight: 700;
-      margin-bottom: 12px; text-align: center;
-    }
-    .rune-grid {
-      display: grid; grid-template-columns: repeat(6, 1fr);
-      gap: 8px; margin-bottom: 12px;
-    }
-    .rune-card {
-      aspect-ratio: 2/3; background: rgba(124,58,237,0.15);
-      border: 1px solid var(--border); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; cursor: pointer; transition: all 0.3s;
-      color: rgba(168,85,247,0.6); font-family: serif;
-      position: relative; overflow: hidden;
-    }
-    .rune-card:hover { background: rgba(124,58,237,0.3); border-color: var(--purple-light); transform: translateY(-2px); }
-    .rune-card.selected {
-      background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(236,72,153,0.3));
-      border-color: var(--purple-light);
-      color: white;
-      box-shadow: 0 4px 16px rgba(124,58,237,0.4);
-    }
-    .rune-card.used { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-    .selected-runes {
-      display: flex; gap: 12px; justify-content: center;
-      margin-bottom: 16px;
-    }
-    .selected-slot {
-      width: 64px; aspect-ratio: 2/3;
-      background: rgba(255,255,255,0.05); border: 2px dashed var(--border);
-      border-radius: 12px; display: flex; align-items: center;
-      justify-content: center; flex-direction: column; gap: 4px;
-    }
-    .selected-slot.filled {
-      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
-      border: 2px solid var(--purple-light);
-    }
-    .slot-rune { font-size: 24px; font-family: serif; color: white; }
-    .slot-num { font-size: 10px; color: var(--dim); }
-    .slot-label { font-size: 9px; color: var(--purple-light); text-align: center; padding: 0 4px; }
-    .shuffle-btn {
-      width: 100%; background: rgba(124,58,237,0.15);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 12px; color: var(--purple-light);
-      font-size: 14px; font-weight: 600; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s; margin-bottom: 16px;
-    }
-    .shuffle-btn:hover { background: rgba(124,58,237,0.25); }
-    .tier-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
-    .tier-btn {
-      flex: 1; padding: 12px; border-radius: 14px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--dim); font-size: 13px; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s; font-weight: 600;
-    }
-    .tier-btn.active { background: var(--purple); border-color: var(--purple); color: white; }
-    .btn-read {
-      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .result-box {
-      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; display: none;
-    }
-    .result-box.show { display: block; }
-    .result-runes {
-      display: flex; gap: 12px; justify-content: center;
-      margin-bottom: 20px;
-    }
-    .result-rune-card {
-      text-align: center; flex: 1; max-width: 80px;
-    }
-    .result-rune-symbol {
-      width: 60px; height: 90px; margin: 0 auto 8px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.4), rgba(236,72,153,0.3));
-      border: 1px solid var(--purple-light); border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; font-family: serif; color: white;
-    }
-    .result-rune-name { font-size: 11px; color: var(--gold); font-weight: 700; }
-    .result-rune-pos { font-size: 10px; color: var(--dim); }
-    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
-    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
-    .result-text { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; }
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0; }
-    .loading-dots { display: flex; gap: 8px; }
-    .loading-dots span {
-      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
-      animation: bounce 1.2s ease-in-out infinite;
-    }
+    /* SLOTS */
+    .slots-row { display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; }
+    .slot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .slot-card { width: 72px; aspect-ratio: 2/3; border-radius: 10px; border: 2px dashed rgba(124,58,237,0.4); background: rgba(124,58,237,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; perspective: 600px; }
+    .slot-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s ease; }
+    .slot-card-inner.flipped { transform: rotateY(180deg); }
+    .slot-card-front, .slot-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
+    .slot-card-back { transform: rotateY(0deg); background: rgba(124,58,237,0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; color: rgba(168,85,247,0.3); }
+    .slot-card-front { transform: rotateY(180deg); }
+    .slot-card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot-card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot-label { font-size: 11px; color: var(--purple-light); font-weight: 700; }
+    .slot-name { font-size: 10px; color: var(--gold); }
+
+    /* CARDS SCROLL */
+    .cards-section { margin-bottom: 20px; }
+    .cards-title { font-size: 13px; color: var(--purple-light); font-weight: 700; margin-bottom: 10px; text-align: center; }
+    .cards-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px; }
+    .cards-scroll::-webkit-scrollbar { height: 3px; }
+    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 2px; }
+    .rune-card { width: 60px; aspect-ratio: 2/3; flex-shrink: 0; border-radius: 10px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+    .rune-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .rune-card:hover { transform: translateY(-6px); border-color: var(--purple-light); }
+    .rune-card.selected { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    .scroll-hint { text-align: center; font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+    /* QUESTION */
+    .question-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 16px; margin-bottom: 16px; }
+    .form-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; box-sizing: border-box; }
+    .form-input:focus { border-color: var(--purple-light); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 20px; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* GREETING */
+    .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(124,58,237,0.06); border-radius: 16px; border-left: 3px solid var(--purple-light); display: none; }
+    .greeting-box.show { display: block; }
+
+    /* RESULT */
+    #resultBox { display: none; }
+    #resultBox.show { display: block; }
+    .result-cards-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; }
+    .result-card { text-align: center; }
+    .result-card-img { width: 64px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; margin-bottom: 6px; border: 1px solid rgba(124,58,237,0.4); }
+    .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .result-card-name { font-size: 10px; color: var(--gold); font-weight: 700; }
+    .result-card-pos { font-size: 9px; color: var(--dim); }
+
+    .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+    .sec-past    { background: rgba(129,140,248,0.08); border-color: #818cf8; }
+    .sec-past h3 { color: #818cf8; }
+    .sec-present { background: rgba(124,58,237,0.08); border-color: #a855f7; }
+    .sec-present h3 { color: #a855f7; }
+    .sec-future  { background: rgba(236,72,153,0.08); border-color: #ec4899; }
+    .sec-future h3 { color: #ec4899; }
+    .sec-summary { background: rgba(6,182,212,0.08); border-color: #06b6d4; }
+    .sec-summary h3 { color: #06b6d4; }
+
+    .loading-wrap { text-align: center; padding: 16px; color: var(--dim); font-size: 13px; }
+    .loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); opacity: 0.4; }
-      50% { transform: translateY(-10px); opacity: 1; }
-    }
-    .loading-text { font-size: 14px; color: var(--dim); }
-    .upgrade-box {
-      margin-top: 20px;
-      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
-      border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 16px; padding: 20px; text-align: center;
-    }
-    .upgrade-text { font-size: 13px; color: #e9d5ff; margin-bottom: 12px; line-height: 1.7; }
-    .upgrade-btn {
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 12px; padding: 12px 24px;
-      color: white; font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
+    @keyframes blink { 0%,80%,100%{opacity:0.2}40%{opacity:1} }
+
+    .followup-box { margin-top: 16px; padding: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn { width: 100%; background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); border-radius: 12px; padding: 12px; color: var(--purple-light); font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px; }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
-  <div class="page-title">ไพ่รูน</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">20</span></div>
+  <div class="page-title">ᚱ ไพ่รูน</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">ᚱ</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="reading-hero">
-    <div class="reading-icon"><img src="../images/icon-rune.png" alt="ไพ่รูน"></div>
-    <div class="reading-title">ไพ่รูน</div>
-    <div class="reading-ref">📖 อ้างอิง: Elder Futhark 24 ตัว (นอร์สโบราณ)</div>
-    <div class="reading-desc">ตั้งจิตอธิษฐาน แล้วเลือกรูน 3 ตัวที่ดึงดูดใจค่ะ</div>
+    <div class="reading-title">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ</div>
+    <div class="reading-ref">📖 Elder Futhark — รูนนอร์สโบราณ 24 ตัว</div>
+    <div class="reading-desc">ตั้งจิตอธิษฐาน แล้วเลือกรูน 3 ใบที่ดึงดูดใจค่ะ</div>
   </div>
 
-  <!-- คำถาม -->
+  <!-- SLOTS -->
+  <div class="slots-row">
+    <div class="slot">
+      <div class="slot-card" id="slot0">
+        <div class="slot-card-inner" id="slotInner0">
+          <div class="slot-card-back">ᚠ</div>
+          <div class="slot-card-front"><img id="slotImg0" src=""></div>
+        </div>
+      </div>
+      <div class="slot-label">อดีต</div>
+      <div class="slot-name" id="slotName0">—</div>
+    </div>
+    <div class="slot">
+      <div class="slot-card" id="slot1">
+        <div class="slot-card-inner" id="slotInner1">
+          <div class="slot-card-back">ᚢ</div>
+          <div class="slot-card-front"><img id="slotImg1" src=""></div>
+        </div>
+      </div>
+      <div class="slot-label">ปัจจุบัน</div>
+      <div class="slot-name" id="slotName1">—</div>
+    </div>
+    <div class="slot">
+      <div class="slot-card" id="slot2">
+        <div class="slot-card-inner" id="slotInner2">
+          <div class="slot-card-back">ᚦ</div>
+          <div class="slot-card-front"><img id="slotImg2" src=""></div>
+        </div>
+      </div>
+      <div class="slot-label">อนาคต</div>
+      <div class="slot-name" id="slotName2">—</div>
+    </div>
+  </div>
+
+  <!-- CARDS SCROLL -->
+  <div class="cards-section">
+    <div class="cards-title">✨ ตั้งจิต แล้วเลือกรูน 3 ใบ</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+    <div class="scroll-hint">← เลื่อนซ้ายขวาเพื่อดูรูนทั้งหมด →</div>
+  </div>
+
+  <!-- QUESTION -->
   <div class="question-box">
-    <label class="form-label">💭 สิ่งที่อยากรู้หรือคำถามในใจ</label>
-    <textarea class="form-input" id="question" rows="3" placeholder="พิมพ์คำถามหรือเรื่องที่อยากรู้..."></textarea>
+    <label class="form-label">💭 คำถามในใจ (ไม่บังคับ)</label>
+    <textarea class="form-input" id="question" rows="2" placeholder="พิมพ์คำถามหรือเรื่องที่อยากรู้..."></textarea>
   </div>
 
-  <!-- เลือกรูน -->
-  <div class="rune-section">
-    <div class="rune-section-title">✨ เลือกรูน 3 ตัวที่ดึงดูดใจ</div>
-
-    <!-- ช่องที่เลือกแล้ว -->
-    <div class="selected-runes">
-      <div class="selected-slot" id="slot0">
-        <div class="slot-num">1</div>
-        <div class="slot-label">อดีต</div>
-      </div>
-      <div class="selected-slot" id="slot1">
-        <div class="slot-num">2</div>
-        <div class="slot-label">ปัจจุบัน</div>
-      </div>
-      <div class="selected-slot" id="slot2">
-        <div class="slot-num">3</div>
-        <div class="slot-label">อนาคต</div>
-      </div>
-    </div>
-
-    <!-- ปุ่มสับรูน -->
-    <button class="shuffle-btn" onclick="shuffleRunes()">🔀 สับรูนใหม่</button>
-
-    <!-- กริดรูน -->
-    <div class="rune-grid" id="runeGrid"></div>
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
-  <div class="tier-toggle">
-    <button class="tier-btn active" id="tierFree" onclick="setTier('free')">🆓 ฟรี</button>
-    <button class="tier-btn" id="tierPremium" onclick="setTier('premium')">💎 พรีเมียม</button>
-  </div>
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>ᚱ วิเคราะห์ไพ่รูน</button>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>
-    ᚱ วิเคราะห์ไพ่รูน
-  </button>
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
 
-  <div class="result-box" id="resultBox">
-    <div class="result-runes" id="resultRunes"></div>
-    <div class="result-header">
-      <span>🔮</span>
-      <div class="result-title">ผลการทำนายไพ่รูน</div>
-    </div>
-    <div class="result-text" id="resultText"></div>
-    <div class="upgrade-box" id="upgradeBox" style="display:none">
-      <div class="upgrade-text">
-        ✨ อยากรู้ลึกกว่านี้?<br>
-        อัปเกรดพรีเมียมเพื่อดูละเอียด อดีต/ปัจจุบัน/อนาคต<br>
-        แนะนำการดำเนินชีวิตรายด้าน
-      </div>
-      <button class="upgrade-btn" onclick="window.location.href='premium.html'">
-        👑 สมัครพรีเมียม 99 บาท/เดือน
-      </button>
+  <!-- RESULT -->
+  <div id="resultBox">
+    <div class="result-cards-row" id="resultCardsRow"></div>
+    <div class="result-section sec-past"><h3>✦ อดีต</h3><p id="secPast"><div class="loading-wrap">กำลังอ่านพลังรูน <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-present"><h3>✦ ปัจจุบัน</h3><p id="secPresent"></p></div>
+    <div class="result-section sec-future"><h3>✦ อนาคต</h3><p id="secFuture"></p></div>
+    <div class="result-section sec-summary"><h3>✦ สรุปและคำแนะนำ</h3><p id="secSummary"></p></div>
+
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามเพิ่มเติมได้เลยค่ะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
 </div>
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+let lastFullText = '';
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
+
+const BACK = '../images/rune/back.png';
 const RUNES = [
-  {symbol:'ᚠ',name:'เฟฮู',meaning:'ความมั่งคั่ง'},
-  {symbol:'ᚢ',name:'อูรุซ',meaning:'พละกำลัง'},
-  {symbol:'ᚦ',name:'ทูริซาซ',meaning:'การปกป้อง'},
-  {symbol:'ᚨ',name:'อันซุซ',meaning:'ปัญญา'},
-  {symbol:'ᚱ',name:'ไรโดว',meaning:'การเดินทาง'},
-  {symbol:'ᚲ',name:'เคนาซ',meaning:'แสงสว่าง'},
-  {symbol:'ᚷ',name:'เกโบ',meaning:'ของขวัญ'},
-  {symbol:'ᚹ',name:'วุนโจ',meaning:'ความสุข'},
-  {symbol:'ᚺ',name:'ฮากาลาซ',meaning:'การเปลี่ยนแปลง'},
-  {symbol:'ᚾ',name:'เนาทิซ',meaning:'ความจำเป็น'},
-  {symbol:'ᛁ',name:'อีซา',meaning:'การหยุดนิ่ง'},
-  {symbol:'ᛃ',name:'เยรา',meaning:'ผลลัพธ์'},
-  {symbol:'ᛇ',name:'อีวาซ',meaning:'ความยืดหยุ่น'},
-  {symbol:'ᛈ',name:'เพอร์โธ',meaning:'ความลึกลับ'},
-  {symbol:'ᛉ',name:'อัลจิซ',meaning:'การคุ้มครอง'},
-  {symbol:'ᛊ',name:'โซวิโล',meaning:'ความสำเร็จ'},
-  {symbol:'ᛏ',name:'ทิวาซ',meaning:'ความยุติธรรม'},
-  {symbol:'ᛒ',name:'เบอร์คาโน',meaning:'การเริ่มต้นใหม่'},
-  {symbol:'ᛖ',name:'เอฮวาซ',meaning:'การเคลื่อนไหว'},
-  {symbol:'ᛗ',name:'มานนาซ',meaning:'มนุษยชาติ'},
-  {symbol:'ᛚ',name:'ลากุซ',meaning:'สัญชาตญาณ'},
-  {symbol:'ᛜ',name:'อิงวาซ',meaning:'ความอุดมสมบูรณ์'},
-  {symbol:'ᛞ',name:'ดากาซ',meaning:'การตื่นรู้'},
-  {symbol:'ᛟ',name:'โอทาลา',meaning:'มรดก'}
+  {id:1, symbol:'ᚠ', name:'Fehu',     nameTh:'เฟฮู',     meaning:'ความมั่งคั่ง ทรัพย์สิน พลังงานใหม่'},
+  {id:2, symbol:'ᚢ', name:'Uruz',     nameTh:'อูรุซ',     meaning:'พละกำลัง สุขภาพ ความกล้าหาญ'},
+  {id:3, symbol:'ᚦ', name:'Thurisaz', nameTh:'ทูริซาซ',   meaning:'การปกป้อง พลังทำลาย การเปลี่ยนแปลง'},
+  {id:4, symbol:'ᚨ', name:'Ansuz',    nameTh:'อันซุซ',    meaning:'ปัญญา การสื่อสาร ข้อความ'},
+  {id:5, symbol:'ᚱ', name:'Raidho',   nameTh:'ไรโดว',    meaning:'การเดินทาง จังหวะ ความก้าวหน้า'},
+  {id:6, symbol:'ᚲ', name:'Kenaz',    nameTh:'เคนาซ',    meaning:'แสงสว่าง ความรู้ ความคิดสร้างสรรค์'},
+  {id:7, symbol:'ᚷ', name:'Gebo',     nameTh:'เกโบ',     meaning:'ของขวัญ ความสัมพันธ์ การแลกเปลี่ยน'},
+  {id:8, symbol:'ᚹ', name:'Wunjo',    nameTh:'วุนโจ',    meaning:'ความสุข ความสำเร็จ ความสามัคคี'},
+  {id:9, symbol:'ᚺ', name:'Hagalaz',  nameTh:'ฮากาลาซ',  meaning:'การเปลี่ยนแปลงฉับพลัน วิกฤต'},
+  {id:10,symbol:'ᚾ', name:'Nauthiz',  nameTh:'เนาทิซ',   meaning:'ความจำเป็น อุปสรรค ความอดทน'},
+  {id:11,symbol:'ᛁ', name:'Isa',      nameTh:'อีซา',     meaning:'การหยุดนิ่ง การรอคอย ความชัดเจน'},
+  {id:12,symbol:'ᛃ', name:'Jera',     nameTh:'เยรา',     meaning:'ผลลัพธ์ วัฏจักร การเก็บเกี่ยว'},
+  {id:13,symbol:'ᛇ', name:'Eihwaz',   nameTh:'อีวาซ',    meaning:'ความแข็งแกร่ง ความยืดหยุ่น การต่อสู้'},
+  {id:14,symbol:'ᛈ', name:'Perthro',  nameTh:'เพอร์โธ',  meaning:'ความลึกลับ โชคชะตา สิ่งซ่อนเร้น'},
+  {id:15,symbol:'ᛉ', name:'Algiz',    nameTh:'อัลจิซ',   meaning:'การคุ้มครอง สัญชาตญาณ การตื่นรู้'},
+  {id:16,symbol:'ᛊ', name:'Sowilo',   nameTh:'โซวิโล',   meaning:'ชัยชนะ ความสำเร็จ พลังแห่งดวงอาทิตย์'},
+  {id:17,symbol:'ᛏ', name:'Tiwaz',    nameTh:'ทิวาซ',    meaning:'ความยุติธรรม ความกล้าหาญ การเสียสละ'},
+  {id:18,symbol:'ᛒ', name:'Berkano',  nameTh:'เบอร์คาโน', meaning:'การเริ่มต้นใหม่ การเจริญเติบโต'},
+  {id:19,symbol:'ᛖ', name:'Ehwaz',    nameTh:'เอฮวาซ',   meaning:'การเคลื่อนไหว ความก้าวหน้า ความเป็นหุ้นส่วน'},
+  {id:20,symbol:'ᛗ', name:'Mannaz',   nameTh:'มานนาซ',   meaning:'มนุษย์ ตัวตน สติปัญญา'},
+  {id:21,symbol:'ᛚ', name:'Laguz',    nameTh:'ลากุซ',    meaning:'น้ำ สัญชาตญาณ ความรู้สึก'},
+  {id:22,symbol:'ᛜ', name:'Ingwaz',   nameTh:'อิงวาซ',   meaning:'ความอุดมสมบูรณ์ ศักยภาพ ความสงบ'},
+  {id:23,symbol:'ᛞ', name:'Dagaz',    nameTh:'ดากาซ',    meaning:'รุ่งอรุณ การตื่นรู้ จุดเปลี่ยน'},
+  {id:24,symbol:'ᛟ', name:'Othala',   nameTh:'โอทาลา',   meaning:'มรดก บ้าน ต้นกำเนิด ครอบครัว'},
 ];
 
-let shuffledRunes = [...RUNES];
-let selectedRunes = [];
-let currentTier = 'free';
+let shuffled = [];
+let selected = []; // max 3
 
-function shuffleRunes() {
-  shuffledRunes = [...RUNES].sort(() => Math.random() - 0.5);
-  selectedRunes = [];
-  renderGrid();
-  updateSlots();
+function shuffle() {
+  shuffled = [...RUNES].sort(() => Math.random() - 0.5);
+  selected = [];
+  renderCards();
+  resetSlots();
   document.getElementById('readBtn').disabled = true;
+  // animate scroll hint
+  setTimeout(() => {
+    const s = document.getElementById('cardsScroll');
+    s.scrollTo({ left: 200, behavior: 'smooth' });
+    setTimeout(() => s.scrollTo({ left: 0, behavior: 'smooth' }), 700);
+  }, 500);
 }
 
-function renderGrid() {
-  const grid = document.getElementById('runeGrid');
-  grid.innerHTML = shuffledRunes.map((r, i) => `
-    <div class="rune-card ${selectedRunes.find(s=>s.idx===i) ? 'selected' : ''}"
-         onclick="selectRune(${i})" title="${r.name} — ${r.meaning}">
-      ${r.symbol}
-    </div>
-  `).join('');
+function renderCards() {
+  document.getElementById('cardsScroll').innerHTML = shuffled.map((rune, i) => {
+    const isSel = selected.find(s => s.id === rune.id);
+    return `<div class="rune-card ${isSel?'selected':''}" onclick="selectRune(${i})">
+      <img src="../images/rune/back.png" alt="${rune.name}">
+    </div>`;
+  }).join('');
 }
 
-function selectRune(idx) {
-  const already = selectedRunes.findIndex(s => s.idx === idx);
-  if (already >= 0) {
-    selectedRunes.splice(already, 1);
-  } else {
-    if (selectedRunes.length >= 3) return;
-    selectedRunes.push({ idx, rune: shuffledRunes[idx] });
+function resetSlots() {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('slotInner' + i).classList.remove('flipped');
+    document.getElementById('slotImg' + i).src = '';
+    document.getElementById('slotName' + i).textContent = '—';
   }
-  renderGrid();
-  updateSlots();
-  document.getElementById('readBtn').disabled = selectedRunes.length < 3;
 }
+
+window.selectRune = function(idx) {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  const rune = shuffled[idx];
+  const alreadyIdx = selected.findIndex(s => s.id === rune.id);
+  if (alreadyIdx >= 0) {
+    selected.splice(alreadyIdx, 1);
+  } else {
+    if (selected.length >= 3) return;
+    selected.push(rune);
+  }
+  updateSlots();
+  renderCards();
+  document.getElementById('readBtn').disabled = selected.length < 3;
+};
 
 function updateSlots() {
-  const positions = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
+  const posNames = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
   for (let i = 0; i < 3; i++) {
-    const slot = document.getElementById(`slot${i}`);
-    if (selectedRunes[i]) {
-      slot.className = 'selected-slot filled';
-      slot.innerHTML = `
-        <div class="slot-rune">${selectedRunes[i].rune.symbol}</div>
-        <div class="slot-label">${positions[i]}</div>
-      `;
+    const rune = selected[i];
+    const inner = document.getElementById('slotInner' + i);
+    const img = document.getElementById('slotImg' + i);
+    const name = document.getElementById('slotName' + i);
+    if (rune) {
+      img.src = '../images/rune/back.png'; // ยังคว่ำอยู่
+      name.textContent = '?';
     } else {
-      slot.className = 'selected-slot';
-      slot.innerHTML = `<div class="slot-num">${i+1}</div><div class="slot-label">${positions[i]}</div>`;
+      inner.classList.remove('flipped');
+      img.src = '';
+      name.textContent = '—';
     }
   }
 }
 
-function setTier(tier) {
-  currentTier = tier;
-  document.getElementById('tierFree').classList.toggle('active', tier === 'free');
-  document.getElementById('tierPremium').classList.toggle('active', tier === 'premium');
+// PARSE DELIMITER
+const RUNE_KEYS = ['GREETING','PAST','PRESENT','FUTURE','SUMMARY'];
+const RUNE_IDS = { PAST:'secPast', PRESENT:'secPresent', FUTURE:'secFuture', SUMMARY:'secSummary' };
+
+function parseDelimiter(text, keys) {
+  const result = {};
+  keys.forEach((key, i) => {
+    const tag = '[' + key + ']';
+    const start = text.indexOf(tag);
+    if (start === -1) return;
+    const cs = start + tag.length;
+    const nk = keys[i+1];
+    const nt = nk ? '[' + nk + ']' : null;
+    const end = nt ? text.indexOf(nt) : text.length;
+    result[key] = text.slice(cs, end === -1 ? text.length : end).trim();
+  });
+  return result;
 }
 
-async function startReading() {
-  if (selectedRunes.length < 3) return;
+function updateSections(text) {
+  const parsed = parseDelimiter(text, RUNE_KEYS);
+  if (parsed['GREETING']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show'); gb.textContent = parsed['GREETING'];
+  }
+  Object.entries(RUNE_IDS).forEach(([key, id]) => {
+    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+  });
+}
+
+window.startReading = async function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  if (selected.length < 3) return;
+
+  const btn = document.getElementById('readBtn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
+
+  // พลิกไพ่ทีละใบ
+  for (let i = 0; i < 3; i++) {
+    const rune = selected[i];
+    document.getElementById('slotImg' + i).src = '../images/rune/r' + rune.id + '.png';
+    document.getElementById('slotName' + i).textContent = rune.nameTh;
+    await new Promise(r => setTimeout(r, 300));
+    document.getElementById('slotInner' + i).classList.add('flipped');
+    await new Promise(r => setTimeout(r, 400));
+  }
+
+  // แสดงผล cards row
+  document.getElementById('resultCardsRow').innerHTML = selected.map((rune, i) => `
+    <div class="result-card">
+      <div class="result-card-img"><img src="../images/rune/r${rune.id}.png"></div>
+      <div class="result-card-name">${rune.nameTh}</div>
+      <div class="result-card-pos">${['อดีต','ปัจจุบัน','อนาคต'][i]}</div>
+    </div>`).join('');
+
+  // reset sections
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  Object.values(RUNE_IDS).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading-wrap">กำลังอ่านพลังรูน <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  });
+
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
 
   const question = document.getElementById('question').value.trim() || 'ภาพรวมชีวิตตอนนี้';
-  const btn = document.getElementById('readBtn');
-  const resultBox = document.getElementById('resultBox');
-  const resultText = document.getElementById('resultText');
-  const upgradeBox = document.getElementById('upgradeBox');
-  const resultRunes = document.getElementById('resultRunes');
-
-  btn.disabled = true;
-  upgradeBox.style.display = 'none';
-  resultBox.classList.add('show');
-
-  const positions = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
-  resultRunes.innerHTML = selectedRunes.map((s, i) => `
-    <div class="result-rune-card">
-      <div class="result-rune-symbol">${s.rune.symbol}</div>
-      <div class="result-rune-name">${s.rune.name}</div>
-      <div class="result-rune-pos">${positions[i]}</div>
-    </div>
-  `).join('');
-
-  resultText.innerHTML = `
-    <div class="loading">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div class="loading-text">AI กำลังอ่านพลังรูน...</div>
-    </div>`;
-  resultBox.scrollIntoView({ behavior: 'smooth' });
-
-  const isPremium = currentTier === 'premium';
-  const runeInfo = selectedRunes.map((s, i) => `รูนที่ ${i+1} (${positions[i]}): ${s.rune.symbol} ${s.rune.name} — ${s.rune.meaning}`).join('\n');
-
-  const systemPrompt = `คุณคือหมอดูไพ่รูนระดับปรมาจารย์ อ้างอิง Elder Futhark 24 ตัว
-กฎที่ต้องทำตามทุกข้อ:
-- ทำนายดวงชะตาโดยตรง เหมือนหมอดูนั่งอ่านดวงให้ฟัง
-- ตอบเป็นภาษาไทยเท่านั้น ห้ามใช้คำภาษาอังกฤษ
-- ห้ามใช้เลขไทย ใช้เลขอารบิกเท่านั้น
-- แต่ละหัวข้อต้องเขียนให้จบในตัวเอง ไม่ตัดกลางคัน
-- พูดเหมือนหมอดูที่เห็นพลังงานรูนชัดเจน`;
-
-  const freePrompt = `ทำนายดวงจากไพ่รูน สำหรับคำถาม: ${question}
-
-รูนที่เลือก:
-${runeInfo}
-
-บอกครบ 4 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบ:
-1. ตำราอ้างอิงและรูนที่ได้รับ — บอกชื่อรูนและความหมายโดยรวม
-2. ทำนายจากรูนทั้ง 3 ตัว — อดีต ปัจจุบัน อนาคต สั้นๆ
-3. คำแนะนำจากพลังรูน — ควรทำอะไรในช่วงนี้
-4. สิ่งที่ต้องระวัง`;
-
-  const premiumPrompt = `ทำนายดวงจากไพ่รูนแบบพรีเมียมละเอียดมาก สำหรับคำถาม: ${question}
-
-รูนที่เลือก:
-${runeInfo}
-
-บอกครบ 10 หัวข้อนี้ แต่ละหัวข้อเขียนให้จบในตัวเอง:
-1. ตำราอ้างอิงและภาพรวมพลังงานรูนทั้ง 3 ตัว
-2. รูนตัวที่ 1 (อดีต) — ทำนายละเอียด ความหมายและผลกระทบ
-3. รูนตัวที่ 2 (ปัจจุบัน) — ทำนายละเอียด สถานการณ์ตอนนี้
-4. รูนตัวที่ 3 (อนาคต) — ทำนายละเอียด สิ่งที่กำลังจะมา
-5. ความสัมพันธ์ระหว่างรูนทั้ง 3 ตัว — พลังงานรวม
-6. การงานและการเงิน — รูนบอกอะไร
-7. ความรักและความสัมพันธ์ — รูนบอกอะไร
-8. สุขภาพและพลังงาน — รูนบอกอะไร
-9. คำแนะนำจากพลังรูน — ควรทำอะไร ไม่ควรทำอะไร
-10. สิ่งที่ต้องระวัง และกำลังใจจากรูน`;
+  const runeInfo = selected.map((r, i) =>
+    `${['อดีต','ปัจจุบัน','อนาคต'][i]}: ${r.symbol} ${r.nameTh} (${r.name}) — ${r.meaning}`
+  ).join('\n');
 
   try {
-    const res = await fetch('/.netlify/functions/claude', {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'han-oracle-3',
         model: 'claude-sonnet-4-6',
-        max_tokens: isPremium ? 3000 : 600,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: isPremium ? premiumPrompt : freePrompt }]
+        max_tokens: 4000,
+        system: `คุณคือหมอดูไพ่รูนระดับปรมาจารย์ อ้างอิง Elder Futhark ตอบเป็นภาษาไทย เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" Gen Z อบอุ่น ต้องใช้ tag [GREETING][PAST][PRESENT][FUTURE][SUMMARY] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role:'user', content:`คำถาม: ${question}
+
+รูนที่จั่วได้:
+${runeInfo}
+
+ตอบโดยใช้ tag นำหน้าแต่ละส่วน:
+[GREETING]
+ทักทาย Gen Z เรียก "คุณพี่" 1-2 ประโยค
+[PAST]
+อดีต: ${selected[0].symbol} ${selected[0].nameTh} — อธิบายพลังงานอดีต 3-4 ประโยค
+[PRESENT]
+ปัจจุบัน: ${selected[1].symbol} ${selected[1].nameTh} — อธิบายสถานการณ์ตอนนี้ 3-4 ประโยค
+[FUTURE]
+อนาคต: ${selected[2].symbol} ${selected[2].nameTh} — ทำนายสิ่งที่กำลังจะมา 3-4 ประโยค
+[SUMMARY]
+สรุปภาพรวม คำแนะนำ และกำลังใจ 3-4 ประโยค
+ห้ามมีข้อความนอก tag ห้ามใช้ markdown` }]
       })
     });
 
-    const data = await res.json();
-    const text = data.content?.map(c => c.text || '').join('') || 'ไม่สามารถวิเคราะห์ได้ค่ะ';
-    resultText.textContent = text;
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
 
-    if (!isPremium) {
-      upgradeBox.style.display = 'block';
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = 'ᚱ วิเคราะห์ไพ่รูน'; return;
     }
 
-  } catch (e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งค่ะ';
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    Object.values(RUNE_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      fullText += decoder.decode(value, { stream:true });
+      updateSections(fullText);
+    }
+    updateSections(fullText);
+    lastFullText = fullText;
+
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'ไพ่รูน',
+      runes: selected.map(r => r.nameTh).join(' + '),
+      result: fullText, createdAt: serverTimestamp()
+    });
+
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
     console.error(e);
+    document.getElementById('secSummary').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
 
-  btn.disabled = false;
-}
+  btn.disabled = false; btn.textContent = 'ᚱ วิเคราะห์อีกครั้ง';
+};
 
-// Init
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '20');
-  shuffleRunes();
-});
+window.askFollowup = async function() {
+  if (!currentUser) return;
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+  followupBtn.disabled = true;
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById('ans_' + time);
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({
+        service: 'tarot_followup', model: 'claude-sonnet-4-6', max_tokens: 500,
+        messages: [{ role:'user', content:`ผลทำนายไพ่รูน: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณพี่" ห้ามใช้ markdown` }]
+      })
+    });
+    const nb = res.headers.get('X-New-Coin-Balance');
+    if (nb != null) updateCoinUI(parseInt(nb));
+    if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+    }
+    answerDiv.scrollIntoView({ behavior:'smooth' });
+  } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
+  input.value = ''; followupBtn.disabled = false;
+};
+
+document.addEventListener('DOMContentLoaded', () => { shuffle(); });
 </script>
 </body>
 </html>
