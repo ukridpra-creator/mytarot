@@ -395,6 +395,42 @@ window.previewFace = async function(e) {
   }
 };
 
+// TAG MAP & PARSE
+const FACE_TAG_MAP = {
+  '[GREETING]': 'greeting',
+  '[FACE]':     'secFace',
+  '[FOREHEAD]': 'secForehead',
+  '[EYES]':     'secEyes',
+  '[NOSE]':     'secNose',
+  '[MOUTH]':    'secMouth',
+  '[EAR]':      'secEar',
+  '[CHEEK]':    'secCheek',
+  '[CHIN]':     'secChin',
+  '[SUMMARY]':  'secSummary',
+};
+
+function parseByTag(text) {
+  const content = {};
+  let currentId = null;
+  for (const line of text.split('\n')) {
+    const t = line.trim();
+    if (FACE_TAG_MAP[t]) { currentId = FACE_TAG_MAP[t]; if (!content[currentId]) content[currentId] = ''; }
+    else if (currentId && t) content[currentId] += t + ' ';
+  }
+  if (content['greeting']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show');
+    gb.textContent = content['greeting'];
+  }
+  for (const [id, txt] of Object.entries(content)) {
+    if (id === 'greeting') continue;
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  }
+}
+
+function finalizeByTag(text) { parseByTag(text); }
+
 window.startReading = async function() {
   if (!currentUser) {
     document.getElementById('loginRequiredOverlay').classList.add('show');
