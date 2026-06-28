@@ -361,12 +361,14 @@ if (monthEl && monthEl.tagName === 'SELECT') {
   });
 }
 
-// สร้าง dropdown ปี เริ่มที่ 2000
+// สร้าง dropdown ปี 1940-2030 ค่าแรก 2000
 var yearEl = document.getElementById('inYear');
 if (yearEl && yearEl.tagName === 'SELECT') {
-  for (var y = 2000; y >= 1940; y--) {
+  for (var y = 2030; y >= 1940; y--) {
     var o = document.createElement('option');
-    o.value = y; o.textContent = 'ค.ศ. ' + y + ' (พ.ศ. ' + (y+543) + ')';
+    o.value = y;
+    o.textContent = 'ค.ศ. ' + y + ' (พ.ศ. ' + (y+543) + ')';
+    if (y === 2000) o.selected = true;
     yearEl.appendChild(o);
   }
 }
