@@ -6,6 +6,7 @@
   <title>Yes/No ไพ่ทาโรต์ฟรี — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
     .page-header {
@@ -28,8 +29,7 @@
     }
     .page-content { padding: 20px 20px 40px; }
     .hero { text-align: center; padding: 8px 0 20px; }
-    .hero-mascot { margin-bottom: 12px; }
-    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; }
+    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 12px; }
     .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
     .hero-desc { font-size: 13px; color: var(--dim); }
     .question-box {
@@ -52,9 +52,8 @@
       font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
       cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
     }
-    .btn-ask:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
     .btn-ask:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .card-area { display: flex; justify-content: center; margin-bottom: 24px; display: none; }
+    .card-area { display: none; justify-content: center; margin-bottom: 24px; }
     .card-area.show { display: flex; }
     .card-wrap { width: 140px; aspect-ratio: 2/3; perspective: 800px; cursor: pointer; }
     .card-inner {
@@ -76,18 +75,18 @@
       text-align: center; padding: 20px; border-radius: 20px;
       margin-bottom: 16px; border: 2px solid;
     }
-    .answer-yes-sure  { background: rgba(16,185,129,0.15); border-color: #10b981; }
-    .answer-yes       { background: rgba(96,165,250,0.15); border-color: #60a5fa; }
-    .answer-maybe     { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
-    .answer-no-maybe  { background: rgba(249,115,22,0.15); border-color: #f97316; }
-    .answer-no        { background: rgba(239,68,68,0.15);  border-color: #ef4444; }
+    .answer-yes-sure { background: rgba(16,185,129,0.15); border-color: #10b981; }
+    .answer-yes      { background: rgba(96,165,250,0.15); border-color: #60a5fa; }
+    .answer-maybe    { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
+    .answer-no-maybe { background: rgba(249,115,22,0.15); border-color: #f97316; }
+    .answer-no       { background: rgba(239,68,68,0.15);  border-color: #ef4444; }
     .answer-emoji { font-size: 48px; margin-bottom: 8px; }
     .answer-text  { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-    .answer-yes-sure .answer-text  { color: #10b981; }
-    .answer-yes .answer-text       { color: #60a5fa; }
-    .answer-maybe .answer-text     { color: #f59e0b; }
-    .answer-no-maybe .answer-text  { color: #f97316; }
-    .answer-no .answer-text        { color: #ef4444; }
+    .answer-yes-sure .answer-text { color: #10b981; }
+    .answer-yes .answer-text      { color: #60a5fa; }
+    .answer-maybe .answer-text    { color: #f59e0b; }
+    .answer-no-maybe .answer-text { color: #f97316; }
+    .answer-no .answer-text       { color: #ef4444; }
     .answer-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; }
     .card-name-box { text-align: center; margin-bottom: 16px; }
     .card-name { font-size: 14px; color: var(--gold); font-weight: 700; }
@@ -112,7 +111,7 @@
       font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
     .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
-    @keyframes flipIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+    @keyframes flipIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
     .flip-in { animation: flipIn 0.4s ease-out forwards; }
   </style>
 </head>
@@ -170,7 +169,49 @@
   </div>
 </div>
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if (!user) {
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  } else {
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  }
+});
+
 const CARDS = [
   {id:0,  name:'The Fool',           img:'../images/tarot/0.png',   answer:'yes',      meaning:'จุดเริ่มต้นใหม่ที่เต็มไปด้วยความเป็นไปได้'},
   {id:1,  name:'The Magician',       img:'../images/tarot/1.png',   answer:'yes-sure', meaning:'คุณพี่มีพลังและทักษะทุกอย่างที่ต้องการ'},
@@ -253,18 +294,18 @@ const CARDS = [
 ];
 
 const ANSWERS = {
-  'yes-sure': { emoji: '✅', text: 'ได้แน่นอน!',  cls: 'answer-yes-sure',  desc: 'ไพ่บอกว่าสิ่งที่คุณพี่ต้องการจะเกิดขึ้นแน่นอนค่ะ จงมั่นใจและเดินหน้าต่อไปเลย!' },
-  'yes':      { emoji: '👍', text: 'ได้!',          cls: 'answer-yes',       desc: 'ไพ่บอกว่าโอกาสสำเร็จมีสูงค่ะ แต่ต้องลงมือทำด้วยนะคะ น้องเชียร์คุณพี่อยู่!' },
-  'maybe':    { emoji: '🤔', text: 'ไม่แน่...',    cls: 'answer-maybe',     desc: 'ไพ่บอกว่ายังไม่ชัดเจนค่ะ ขึ้นอยู่กับสิ่งที่คุณพี่เลือกทำในช่วงนี้เลย' },
-  'no-maybe': { emoji: '⚠️', text: 'ไม่น่าได้',   cls: 'answer-no-maybe',  desc: 'ไพ่บอกว่ามีอุปสรรคอยู่ค่ะ ต้องระวังและเตรียมรับมือให้ดีนะคะ' },
-  'no':       { emoji: '❌', text: 'ไม่ได้',       cls: 'answer-no',        desc: 'ไพ่บอกว่าไม่ใช่เวลาที่เหมาะสมค่ะ ลองมองหาทางเลือกอื่นดูนะคะ' },
+  'yes-sure': { emoji:'✅', text:'ได้แน่นอน!',  cls:'answer-yes-sure', desc:'ไพ่บอกว่าสิ่งที่คุณพี่ต้องการจะเกิดขึ้นแน่นอนค่ะ จงมั่นใจและเดินหน้าต่อไปเลย!' },
+  'yes':      { emoji:'👍', text:'ได้!',          cls:'answer-yes',      desc:'ไพ่บอกว่าโอกาสสำเร็จมีสูงค่ะ แต่ต้องลงมือทำด้วยนะคะ น้องเชียร์คุณพี่อยู่!' },
+  'maybe':    { emoji:'🤔', text:'ไม่แน่...', cls:'answer-maybe',    desc:'ไพ่บอกว่ายังไม่ชัดเจนค่ะ ขึ้นอยู่กับสิ่งที่คุณพี่เลือกทำในช่วงนี้เลย' },
+  'no-maybe': { emoji:'⚠️', text:'ไม่น่าได้', cls:'answer-no-maybe', desc:'ไพ่บอกว่ามีอุปสรรคอยู่ค่ะ ต้องระวังและเตรียมรับมือให้ดีนะคะ' },
+  'no':       { emoji:'❌', text:'ไม่ได้',     cls:'answer-no',       desc:'ไพ่บอกว่าไม่ใช่เวลาที่เหมาะสมค่ะ ลองมองหาทางเลือกอื่นดูนะคะ' },
 };
 
 let currentCard = null;
 let flipped = false;
-let currentUser = null;
 
-function askCard() {
+window.askCard = function() {
+  if (!currentUser) { loginNow(); return; }
   const q = document.getElementById('question').value.trim();
   if (!q) { alert('พิมคำถามก่อนนะคะ คุณพี่ 🙏'); return; }
   currentCard = CARDS[Math.floor(Math.random() * CARDS.length)];
@@ -274,16 +315,16 @@ function askCard() {
   document.getElementById('cardArea').classList.add('show');
   document.getElementById('resultBox').classList.remove('show');
   document.getElementById('btnAsk').disabled = true;
-  setTimeout(() => { document.getElementById('cardArea').scrollIntoView({ behavior: 'smooth' }); }, 100);
+  setTimeout(() => document.getElementById('cardArea').scrollIntoView({ behavior:'smooth' }), 100);
   setTimeout(() => flipCard(), 600);
-}
+};
 
-function flipCard() {
+window.flipCard = function() {
   if (flipped) return;
   flipped = true;
   document.getElementById('cardInner').classList.add('flipped');
   setTimeout(() => showResult(), 900);
-}
+};
 
 function showResult() {
   const ans = ANSWERS[currentCard.answer];
@@ -295,46 +336,44 @@ function showResult() {
   document.getElementById('cardName').textContent = currentCard.name;
   document.getElementById('cardMeaning').textContent = currentCard.meaning;
   document.getElementById('resultBox').classList.add('show');
-  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-  saveReading(document.getElementById('question').value.trim(), ans.text, currentCard.name);
+  document.getElementById('resultBox').scrollIntoView({ behavior:'smooth' });
+
+  // บันทึก Firestore
+  if (currentUser) {
+    addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'Yes/No ไพ่ทาโรต์',
+      question: document.getElementById('question').value.trim(),
+      result: currentCard.name + ' — ' + ans.text,
+      createdAt: serverTimestamp()
+    }).catch(e => console.error(e));
+  }
 }
 
-function resetAll() {
+window.resetAll = function() {
   document.getElementById('question').value = '';
   document.getElementById('cardArea').classList.remove('show');
   document.getElementById('resultBox').classList.remove('show');
   document.getElementById('btnAsk').disabled = false;
   flipped = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-async function saveReading(question, answer, cardName) {
-  if (!currentUser) return;
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const db = getFirestore(app);
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'Yes/No ไพ่ทาโรต์', question, result: `${cardName} — ${answer}`, createdAt: new Date().toISOString()
-    });
-  } catch(e) { console.error(e); }
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (!user) window.location.href = '../index.html';
-    });
-  } catch(e) { console.error(e); }
-});
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
 </script>
+
+<!-- LOGIN MODAL (inject โดย checkin.js อัตโนมัติ) -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔮</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และใช้งานได้ครบทุกฟีเจอร์</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="window.location.href='../index.html'" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">กลับหน้าหลัก</button>
+  </div>
+</div>
+<style>
+.login-required-overlay.show { display: flex !important; }
+</style>
+
 </body>
 </html>
