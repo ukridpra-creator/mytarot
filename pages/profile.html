@@ -6,6 +6,7 @@
   <title>โปรไฟล์ — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
     .page-header {
@@ -16,34 +17,39 @@
     }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
+
+    /* GUEST */
     .guest-section { text-align: center; padding: 40px 20px; }
-    .guest-icon { font-size: 64px; margin-bottom: 16px; }
+    .guest-icon { margin-bottom: 16px; }
+    .guest-icon img { width: 160px; height: 160px; object-fit: contain; }
     .guest-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 8px; }
     .guest-desc { font-size: 14px; color: var(--dim); line-height: 1.7; margin-bottom: 28px; }
-    .btn-google {
+    .btn-google-big {
       display: flex; align-items: center; justify-content: center; gap: 10px;
       width: 100%; padding: 14px; border-radius: 16px;
       background: white; border: none; cursor: pointer;
       font-size: 15px; font-weight: 700; color: #333;
-      font-family: 'Sarabun', sans-serif; transition: all 0.2s;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      font-family: 'Sarabun', sans-serif;
     }
-    .btn-google:hover { transform: translateY(-2px); }
-    .btn-google img { width: 20px; height: 20px; }
+
+    /* PROFILE */
     .profile-section { display: none; }
+
     .avatar-card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px; text-align: center;
+      border-radius: 20px; padding: 24px 20px; margin-bottom: 16px; text-align: center;
     }
     .avatar-display {
       width: 90px; height: 90px; border-radius: 50%;
       margin: 0 auto 12px; border: 3px solid rgba(124,58,237,0.4);
       display: flex; align-items: center; justify-content: center;
       font-size: 48px; background: rgba(124,58,237,0.1); overflow: hidden;
+      cursor: pointer; position: relative; transition: all 0.2s;
     }
-    .profile-name-wrap {
-      display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;
-    }
+    .avatar-display:hover { border-color: var(--purple-light); }
+    .avatar-display img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .avatar-edit-hint { font-size: 11px; color: var(--dim); margin-bottom: 12px; }
+    .profile-name-wrap { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px; }
     .profile-name {
       font-size: 20px; font-weight: 800; color: white;
       border: none; background: transparent;
@@ -52,24 +58,14 @@
     }
     .profile-name:focus { border-bottom: 1px solid rgba(124,58,237,0.6); }
     .edit-icon { font-size: 14px; color: rgba(255,255,255,0.3); cursor: pointer; }
-    .profile-email { font-size: 13px; color: var(--dim); margin-bottom: 16px; }
+    .profile-email { font-size: 13px; color: var(--dim); margin-bottom: 12px; }
     .btn-save-name {
       display: none; padding: 6px 16px; border-radius: 20px;
       background: rgba(124,58,237,0.3); border: 1px solid rgba(124,58,237,0.5);
-      color: white; font-size: 12px; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; margin-bottom: 12px;
+      color: white; font-size: 12px; font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
-    .avatar-label { font-size: 11px; color: var(--dim); margin-bottom: 10px; }
-    .avatar-grid { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .avatar-opt {
-      width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; border: 2px solid transparent;
-      background: rgba(255,255,255,0.05); transition: all 0.2s; overflow: hidden;
-    }
-    .avatar-opt:hover { transform: scale(1.1); }
-    .avatar-opt.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
-    .avatar-opt img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    /* COINS CARD */
     .coins-card {
       background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
       border: 1px solid rgba(245,158,11,0.3);
@@ -86,262 +82,112 @@
       color: var(--gold); font-size: 13px; font-weight: 700;
       font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
-    .menu-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; overflow: hidden; margin-bottom: 16px;
-    }
-    .menu-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 16px 20px; cursor: pointer; transition: background 0.2s;
-      border-bottom: 1px solid var(--border);
-    }
+
+    /* MENU */
+    .menu-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
+    .menu-item { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid var(--border); }
     .menu-item:last-child { border-bottom: none; }
     .menu-item:hover { background: rgba(255,255,255,0.03); }
     .menu-item-icon { font-size: 20px; width: 28px; text-align: center; }
     .menu-item-text { flex: 1; font-size: 14px; color: white; font-weight: 600; }
     .menu-item-arrow { color: var(--dim); font-size: 16px; }
+
     .btn-logout {
       width: 100%; padding: 14px; border-radius: 16px;
       background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
       color: #ef4444; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      transition: all 0.2s; margin-top: 8px;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 8px;
     }
-    .btn-logout:hover { background: rgba(239,68,68,0.2); }
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(13,8,32,0.95); backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      display: flex; padding: 8px 0 12px;
-    }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; gap: 3px; cursor: pointer;
-      color: var(--dim); font-size: 10px; transition: color 0.2s;
-    }
-    .nav-item span:first-child { font-size: 20px; }
-    .nav-item.active { color: var(--purple-light); }
 
-    /* Glitter */
+    /* AVATAR SHEET */
+    .avatar-sheet-overlay {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,0.7); display: none; align-items: flex-end;
+    }
+    .avatar-sheet-overlay.show { display: flex; }
+    .avatar-sheet {
+      width: 100%; background: linear-gradient(180deg, #1a0e2e, #0d0820);
+      border-top: 1px solid var(--border); border-radius: 24px 24px 0 0;
+      padding: 20px 20px 40px;
+    }
+    .sheet-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0 auto 16px; }
+    .sheet-title { font-size: 15px; font-weight: 700; color: white; text-align: center; margin-bottom: 16px; }
+    .avatar-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 16px; }
+    .avatar-scroll::-webkit-scrollbar { height: 3px; }
+    .avatar-scroll::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 2px; }
+    .avatar-opt {
+      width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+      border: 3px solid transparent; cursor: pointer; overflow: hidden;
+      transition: all 0.2s;
+    }
+    .avatar-opt:hover { transform: scale(1.1); }
+    .avatar-opt.selected { border-color: var(--purple-light); box-shadow: 0 0 12px rgba(168,85,247,0.5); }
+    .avatar-opt img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .btn-save-avatar {
+      width: 100%; padding: 14px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none; color: white; font-size: 15px; font-weight: 700;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 10px;
+    }
+    .btn-cancel-avatar {
+      width: 100%; padding: 12px; border-radius: 16px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: rgba(255,255,255,0.4); font-size: 14px;
+      font-family: 'Sarabun', sans-serif; cursor: pointer;
+    }
+
+    /* GLITTER */
     .glitter { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .glitter::before, .glitter::after {
-      content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%;
-      background: #d4af37;
-      box-shadow:
-        10vw 20vh 0 rgba(212,175,55,0.6), 25vw 60vh 0 rgba(255,255,255,0.4),
-        40vw 30vh 0 rgba(212,175,55,0.5), 55vw 80vh 0 rgba(255,255,255,0.3),
-        70vw 45vh 0 rgba(212,175,55,0.6), 85vw 15vh 0 rgba(255,255,255,0.5),
-        15vw 75vh 0 rgba(212,175,55,0.4), 90vw 65vh 0 rgba(255,255,255,0.6),
-        60vw 10vh 0 rgba(212,175,55,0.3), 35vw 90vh 0 rgba(255,255,255,0.4);
+      content: ''; position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #d4af37;
+      box-shadow: 10vw 20vh 0 rgba(212,175,55,0.6), 25vw 60vh 0 rgba(255,255,255,0.4), 40vw 30vh 0 rgba(212,175,55,0.5), 55vw 80vh 0 rgba(255,255,255,0.3), 70vw 45vh 0 rgba(212,175,55,0.6), 85vw 15vh 0 rgba(255,255,255,0.5), 15vw 75vh 0 rgba(212,175,55,0.4), 90vw 65vh 0 rgba(255,255,255,0.6);
       animation: sparkle 3s ease-in-out infinite alternate;
     }
-    .glitter::after {
-      animation-delay: 1.5s;
-      box-shadow:
-        20vw 40vh 0 rgba(255,255,255,0.5), 45vw 15vh 0 rgba(212,175,55,0.4),
-        75vw 70vh 0 rgba(255,255,255,0.6), 5vw 55vh 0 rgba(212,175,55,0.3),
-        92vw 30vh 0 rgba(255,255,255,0.5);
-    }
-    @keyframes sparkle {
-      0% { opacity: 0.2; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1.2); }
-    }
+    .glitter::after { animation-delay: 1.5s; box-shadow: 20vw 40vh 0 rgba(255,255,255,0.5), 45vw 15vh 0 rgba(212,175,55,0.4), 75vw 70vh 0 rgba(255,255,255,0.6); }
+    @keyframes sparkle { 0%{opacity:0.2;transform:scale(0.8)} 100%{opacity:1;transform:scale(1.2)} }
   </style>
-
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
-      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-    import { getFirestore, doc, getDoc, setDoc }
-      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-      authDomain: "my-tarot67.firebaseapp.com",
-      projectId: "my-tarot67",
-      storageBucket: "my-tarot67.firebasestorage.app",
-      messagingSenderId: "33661162829",
-      appId: "1:33661162829:web:9e06a7cd5a00d613785304"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    const AVATARS = [
-      '../images/iconprofile/av1.png', '../images/iconprofile/av2.png',
-      '../images/iconprofile/av3.png', '../images/iconprofile/av4.png',
-      '../images/iconprofile/av5.png', '../images/iconprofile/av6.png',
-      '../images/iconprofile/av7.png', '../images/iconprofile/av8.png',
-      '../images/iconprofile/av9.png', '../images/iconprofile/av10.png',
-      '../images/iconprofile/av11.png', '../images/iconprofile/av12.png',
-      '../images/iconprofile/av13.png', '../images/iconprofile/av14.png',
-    ];
-
-    let currentUid = null;
-
-    function setAvatarDisplay(avatar) {
-      const el = document.getElementById('avatarDisplay');
-      if (avatar && avatar.includes('.png')) {
-        el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-      } else {
-        el.textContent = avatar || '🔮';
-      }
-    }
-
-    function renderAvatarGrid(current) {
-      return AVATARS.map(function(a) {
-        return '<div class="avatar-opt ' + (a === current ? 'active' : '') + '" onclick="selectAvatar(\'' + a + '\')">' +
-          '<img src="' + a + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">' +
-          '</div>';
-      }).join('');
-    }
-
-    async function saveToFirestore(data) {
-      if (!currentUid) return;
-      try {
-        await setDoc(doc(db, 'users', currentUid), data, { merge: true });
-      } catch(e) { console.error('Firestore save error:', e); }
-    }
-
-    async function loadFromFirestore(uid) {
-      try {
-        const snap = await getDoc(doc(db, 'users', uid));
-        return snap.exists() ? snap.data() : null;
-      } catch(e) { return null; }
-    }
-
-    window.selectAvatar = async function(avatar) {
-      setAvatarDisplay(avatar);
-      localStorage.setItem('userAvatar', avatar);
-      document.querySelectorAll('.avatar-opt').forEach(function(el) {
-        var src = el.querySelector('img') ? el.querySelector('img').getAttribute('src') : '';
-        el.classList.toggle('active', src === avatar);
-      });
-      await saveToFirestore({ avatar: avatar });
-    };
-
-    window.editName = function() {
-      var input = document.getElementById('profileNameInput');
-      input.focus(); input.select();
-    };
-
-    window.onNameInput = function() {
-      document.getElementById('btnSaveName').style.display = 'inline-block';
-    };
-
-    window.saveName = async function() {
-      var name = document.getElementById('profileNameInput').value.trim();
-      if (!name) return;
-      localStorage.setItem('userDisplayName', name);
-      await saveToFirestore({ displayName: name });
-      var btn = document.getElementById('btnSaveName');
-      btn.textContent = '✓ บันทึกแล้ว';
-      setTimeout(function() {
-        btn.textContent = 'บันทึกชื่อ';
-        btn.style.display = 'none';
-      }, 1500);
-    };
-
-    window.loginGoogle = async function() {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่'); }
-    };
-
-    window.logoutUser = async function() {
-  if (!confirm('ออกจากระบบใช่ไหม?')) return;
-  await signOut(auth);
-  localStorage.removeItem('userAvatar');
-  localStorage.removeItem('userDisplayName');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('userName');
-  localStorage.removeItem('userEmail');
-  localStorage.removeItem('coins'); // ← เพิ่มตรงนี้
-};
-
-    onAuthStateChanged(auth, async function(user) {
-      const guestSection = document.getElementById('guestSection');
-      const profileSection = document.getElementById('profileSection');
-
-      if (user) {
-        currentUid = user.uid;
-        guestSection.style.display = 'none';
-        profileSection.style.display = 'block';
-
-        // โหลดจาก Firestore ก่อน
-        const firestoreData = await loadFromFirestore(user.uid);
-
-        let avatar = '';
-        let displayName = user.displayName || 'ผู้ใช้';
-        let coins = parseInt(localStorage.getItem('coins') || '0');
-
-        if (firestoreData) {
-          avatar = firestoreData.avatar || '';
-          displayName = firestoreData.displayName || user.displayName || 'ผู้ใช้';
-          if (firestoreData.coins) coins = firestoreData.coins;
-        }
-
-        // sync กลับ localStorage
-        localStorage.setItem('userAvatar', avatar);
-        localStorage.setItem('userDisplayName', displayName);
-        localStorage.setItem('userId', user.uid);
-        localStorage.setItem('userName', user.displayName || '');
-        localStorage.setItem('userEmail', user.email || '');
-
-        setAvatarDisplay(avatar);
-        document.getElementById('profileNameInput').value = displayName;
-        document.getElementById('profileEmail').textContent = user.email;
-        document.getElementById('avatarGrid').innerHTML = renderAvatarGrid(avatar);
-        document.getElementById('coinAmount').textContent = coins;
-
-        // save ข้อมูลพื้นฐานถ้ายังไม่มี
-        if (!firestoreData) {
-          await saveToFirestore({
-            displayName: displayName,
-            email: user.email,
-            avatar: '',
-            coins: coins,
-            createdAt: new Date().toISOString()
-          });
-        }
-
-      } else {
-        currentUid = null;
-        guestSection.style.display = 'block';
-        profileSection.style.display = 'none';
-        localStorage.removeItem('userId');
-      }
-    });
-  </script>
 </head>
 <body>
 <div class="glitter"></div>
 
+<!-- AVATAR SHEET -->
+<div class="avatar-sheet-overlay" id="avatarSheetOverlay" onclick="if(event.target===this)closeAvatarSheet()">
+  <div class="avatar-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">เลือก Avatar ของคุณ</div>
+    <div class="avatar-scroll" id="avatarScroll"></div>
+    <button class="btn-save-avatar" onclick="saveAvatar()">✅ บันทึก Avatar</button>
+    <button class="btn-cancel-avatar" onclick="closeAvatarSheet()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- HEADER -->
 <div class="page-header">
   <div class="page-title">👤 โปรไฟล์</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">—</span></div>
 </div>
 
-<div class="page-content">
+<div class="page-content" style="position:relative;z-index:1;">
 
+  <!-- GUEST -->
   <div id="guestSection" class="guest-section">
     <div class="guest-icon">
-  <img src="../images/mascot.png" style="width:200px;height:200px;object-fit:contain;">
-</div>
+      <img src="../images/mascot.png" onerror="this.style.display='none'">
+    </div>
     <div class="guest-title">เข้าสู่ระบบ</div>
-    <div class="guest-desc">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย<br>ข้อมูลจะ sync ทุกอุปกรณ์</div>
-    <button class="btn-google" onclick="loginGoogle()">
-      <img src="https://www.google.com/favicon.ico">
+    <div class="guest-desc">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
+    <button class="btn-google-big" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="20">
       เข้าสู่ระบบด้วย Google
     </button>
   </div>
 
+  <!-- PROFILE -->
   <div id="profileSection" class="profile-section">
 
     <div class="avatar-card">
-      <div class="avatar-display" id="avatarDisplay">🔮</div>
+      <div class="avatar-display" id="avatarDisplay" onclick="openAvatarSheet()">🔮</div>
+      <div class="avatar-edit-hint">กดที่รูปเพื่อเปลี่ยน Avatar</div>
       <div class="profile-name-wrap">
         <input class="profile-name" id="profileNameInput" type="text" maxlength="20"
           oninput="onNameInput()" onkeydown="if(event.key==='Enter') saveName()">
@@ -349,17 +195,15 @@
       </div>
       <div class="profile-email" id="profileEmail"></div>
       <button class="btn-save-name" id="btnSaveName" onclick="saveName()">บันทึกชื่อ</button>
-      <div class="avatar-label">เลือก avatar ของคุณ</div>
-      <div class="avatar-grid" id="avatarGrid"></div>
     </div>
 
     <div class="coins-card">
       <div class="coins-icon">🪙</div>
       <div class="coins-info">
         <div class="coins-label">เหรียญคงเหลือ</div>
-        <div class="coins-amount" id="coinAmount">0</div>
+        <div class="coins-amount" id="coinAmount">—</div>
       </div>
-      <button class="btn-coins" onclick="alert('เร็วๆ นี้ค่ะ!')">ซื้อเพิ่ม</button>
+      <button class="btn-coins" onclick="window.location.href='coins.html'">ซื้อเพิ่ม</button>
     </div>
 
     <div class="menu-card">
@@ -368,33 +212,161 @@
         <div class="menu-item-text">ประวัติดูดวง</div>
         <div class="menu-item-arrow">›</div>
       </div>
-      <div class="menu-item" onclick="alert('เร็วๆ นี้ค่ะ!')">
-        <div class="menu-item-icon">🔔</div>
-        <div class="menu-item-text">การแจ้งเตือน</div>
-        <div class="menu-item-arrow">›</div>
-      </div>
-      <div class="menu-item" onclick="alert('เร็วๆ นี้ค่ะ!')">
-        <div class="menu-item-icon">❓</div>
-        <div class="menu-item-text">ช่วยเหลือ</div>
-        <div class="menu-item-arrow">›</div>
-      </div>
     </div>
 
     <button class="btn-logout" onclick="logoutUser()">🚪 ออกจากระบบ</button>
-
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item active"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUid = null;
+let selectedAvatar = '';
+let currentAvatar = '';
+
+const AVATARS = [
+  '../images/iconprofile/av1.png','../images/iconprofile/av2.png',
+  '../images/iconprofile/av3.png','../images/iconprofile/av4.png',
+  '../images/iconprofile/av5.png','../images/iconprofile/av6.png',
+  '../images/iconprofile/av7.png','../images/iconprofile/av8.png',
+  '../images/iconprofile/av9.png','../images/iconprofile/av10.png',
+  '../images/iconprofile/av11.png','../images/iconprofile/av12.png',
+  '../images/iconprofile/av13.png','../images/iconprofile/av14.png',
+];
+
+function setAvatarDisplay(avatar) {
+  const el = document.getElementById('avatarDisplay');
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+  } else {
+    el.textContent = '🔮';
+  }
+}
+
+async function saveToFirestore(data) {
+  if (!currentUid) return;
+  try { await setDoc(doc(db, 'users', currentUid), data, { merge: true }); } catch(e) { console.error(e); }
+}
+
+// AVATAR SHEET
+window.openAvatarSheet = function() {
+  selectedAvatar = currentAvatar;
+  const scroll = document.getElementById('avatarScroll');
+  scroll.innerHTML = AVATARS.map(a => `
+    <div class="avatar-opt ${a === selectedAvatar ? 'selected' : ''}" onclick="selectAvatarOpt('${a}')">
+      <img src="${a}">
+    </div>`).join('');
+  document.getElementById('avatarSheetOverlay').classList.add('show');
+};
+
+window.closeAvatarSheet = function() {
+  document.getElementById('avatarSheetOverlay').classList.remove('show');
+};
+
+window.selectAvatarOpt = function(avatar) {
+  selectedAvatar = avatar;
+  document.querySelectorAll('.avatar-opt').forEach(el => {
+    const img = el.querySelector('img');
+    el.classList.toggle('selected', img && img.getAttribute('src') === avatar);
+  });
+};
+
+window.saveAvatar = async function() {
+  if (!selectedAvatar) return;
+  currentAvatar = selectedAvatar;
+  setAvatarDisplay(currentAvatar);
+  closeAvatarSheet();
+  await saveToFirestore({ avatar: currentAvatar });
+};
+
+// NAME
+window.editName = function() {
+  const input = document.getElementById('profileNameInput');
+  input.focus(); input.select();
+};
+
+window.onNameInput = function() {
+  document.getElementById('btnSaveName').style.display = 'inline-block';
+};
+
+window.saveName = async function() {
+  const name = document.getElementById('profileNameInput').value.trim();
+  if (!name) return;
+  await saveToFirestore({ displayName: name });
+  const btn = document.getElementById('btnSaveName');
+  btn.textContent = '✓ บันทึกแล้ว';
+  setTimeout(() => { btn.textContent = 'บันทึกชื่อ'; btn.style.display = 'none'; }, 1500);
+};
+
+window.loginGoogle = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { alert('เข้าสู่ระบบไม่สำเร็จค่ะ'); }
+};
+
+window.logoutUser = async function() {
+  if (!confirm('ออกจากระบบใช่ไหมคะ?')) return;
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async user => {
+  const guestSection = document.getElementById('guestSection');
+  const profileSection = document.getElementById('profileSection');
+
+  if (user) {
+    currentUid = user.uid;
+    guestSection.style.display = 'none';
+    profileSection.style.display = 'block';
+
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    const data = snap.exists() ? snap.data() : {};
+
+    currentAvatar = data.avatar || '';
+    const displayName = data.displayName || user.displayName || 'ผู้ใช้';
+    const coins = data.coins || 0;
+
+    setAvatarDisplay(currentAvatar);
+    document.getElementById('profileNameInput').value = displayName;
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('coinAmount').textContent = coins;
+    document.getElementById('coinCount').textContent = coins;
+
+    if (!snap.exists()) {
+      await saveToFirestore({ displayName, email: user.email, avatar: '', coins: 0 });
+    }
+
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+
+  } else {
+    currentUid = null;
+    guestSection.style.display = 'block';
+    profileSection.style.display = 'none';
+    document.getElementById('coinCount').textContent = '—';
+  }
 });
 </script>
 </body>
