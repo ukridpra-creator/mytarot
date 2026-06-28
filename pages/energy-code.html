@@ -514,7 +514,7 @@ window.calculate = async function() {
   var year  = parseInt(document.getElementById('inYear').value);
 
   if (!day || !month || !year) { alert('กรอกวันเกิดให้ครบนะคะ 🙏'); return; }
-  if (year < 1900 || year > 2010) { alert('กรอกปี ค.ศ. ให้ถูกต้องนะคะ'); return; }
+  if (year < 1940 || year > 2030) { alert('กรอกปี ค.ศ. ให้ถูกต้องนะคะ'); return; }
 
   document.getElementById('btnCalc').disabled = true;
   document.getElementById('btnCalc').textContent = '⏳ กำลังคำนวณ...';
