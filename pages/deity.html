@@ -104,6 +104,7 @@
     .scores-detail { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
     .scores-title { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
     .score-row { display: flex; align-items: center; margin-bottom: 12px; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .btn-retry {
       width: 100%; background: rgba(124,58,237,0.15);
       border: 1px solid rgba(124,58,237,0.3); border-radius: 16px;
@@ -132,6 +133,9 @@
   <div class="share-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">แชร์เทพประจำตัว</div>
+    <div style="text-align:center;margin-bottom:12px;">
+      <img id="sharePreviewImg" src="" style="width:160px;height:160px;object-fit:cover;border-radius:16px;border:2px solid rgba(212,175,55,0.4);">
+    </div>
     <div class="sheet-row">
       <div class="sheet-btn" onclick="doSave()">
         <div class="sheet-btn-icon">💾</div>
@@ -193,17 +197,30 @@
     <div class="input-card">
       <label class="input-label">📅 วันเกิดของคุณ (ปีพุทธศักราช)</label>
       <div class="date-row">
-        <input class="date-input" id="inputDay" type="number" placeholder="วัน" min="1" max="31">
-        <input class="date-input" id="inputMonth" type="number" placeholder="เดือน" min="1" max="12">
-        <input class="date-input" id="inputYear" type="number" placeholder="ปี พ.ศ." min="2400" max="2600">
+        <select class="date-input" id="inputDay" style="font-size:14px;appearance:none;"></select>
+        <select class="date-input" id="inputMonth" style="font-size:12px;appearance:none;"></select>
+        <select class="date-input" id="inputYear" style="font-size:12px;appearance:none;"></select>
       </div>
-      <div class="date-hint">เช่น เกิด 25 กันยายน 2529 → กรอก 25 / 9 / 2529</div>
     </div>
     <div class="coin-box">
       <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
       <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
     </div>
-    <button class="btn-start" onclick="startQuiz()">🙏 เริ่มค้นหาเทพประจำตัว</button>
+    <button class="btn-start" id="btnStart" onclick="startQuiz()">🙏 เริ่มค้นหาเทพประจำตัว</button>
+  </div>
+
+  <!-- CONNECTING -->
+  <div id="connectingSection" style="display:none;text-align:center;padding:60px 20px;">
+    <div style="font-size:64px;margin-bottom:20px;" id="connectingEmoji">🔮</div>
+    <div style="font-size:18px;font-weight:800;color:var(--gold);margin-bottom:8px;" id="connectingText">กำลังเชื่อมสายญาณ...</div>
+    <div style="font-size:13px;color:var(--dim);">โปรดรอสักครู่ค่ะ 🙏</div>
+  </div>
+
+  <!-- REVEAL BTN -->
+  <div id="revealSection" style="display:none;text-align:center;padding:40px 20px;">
+    <div style="font-size:48px;margin-bottom:16px;">✨</div>
+    <div style="font-size:16px;color:var(--dim);margin-bottom:24px;">สายญาณบารมีเชื่อมสำเร็จแล้วค่ะ</div>
+    <button class="btn-start" onclick="revealResult()">🕉️ เชื่อมความผูกพันธ์แห่งสายญาณบารมี</button>
   </div>
 
   <!-- QUIZ -->
@@ -362,6 +379,10 @@ const FILE_MAP = {
 };
 
 window.openShare = function() {
+  // แสดง preview รูปก่อน
+  var englishName = FILE_MAP[currentDeityName] || 'brahma';
+  var previewImg = document.getElementById('sharePreviewImg');
+  if (previewImg) previewImg.src = '../images/deity/' + englishName + 'c.png';
   document.getElementById('shareOverlay').classList.add('show');
 };
 window.closeShare = function() {
@@ -414,6 +435,28 @@ async function saveReading(name) {
   } catch(e) { console.error(e); }
 }
 
+// ─── INIT DROPDOWNS ───
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl = document.getElementById('inputDay');
+  for (var d = 1; d <= 31; d++) {
+    var o = document.createElement('option'); o.value = d; o.textContent = d;
+    dayEl.appendChild(o);
+  }
+  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl = document.getElementById('inputMonth');
+  months.forEach(function(m, i) {
+    var o = document.createElement('option'); o.value = i+1; o.textContent = m;
+    monthEl.appendChild(o);
+  });
+  var yearEl = document.getElementById('inputYear');
+  for (var y = 2550; y >= 2480; y--) {
+    var o = document.createElement('option'); o.value = y;
+    o.textContent = 'พ.ศ. ' + y;
+    if (y === 2543) o.selected = true;
+    yearEl.appendChild(o);
+  }
+});
+
 // ─── QUIZ LOGIC ───
 const DEITIES = {
   'พระศิวะ': { img:'../images/deity/shiva.png', desc:'ท่านเป็นผู้มีพลังอำนาจและความเด็ดเดี่ยวสูง มีความกล้าหาญ ยืนหยัดในสิ่งที่เชื่อ พระศิวะคุ้มครองผู้ที่เผชิญความท้าทายด้วยความแข็งแกร่งและไม่ย่อท้อ', offering:'น้ำเปล่า, นมสด (รสจืด), ดอกดาวเรือง, ดอกบัว หรือกำยานกลิ่นจันทน์หอม', prayer:'โอม นมัส ศิวายะ (3 จบ)', color:'สีขาว, สีเทาเงิน, สีแดง', direction:'ทิศเหนือ', taboo:'ห้ามถวายเนื้อสัตว์ทุกชนิด' },
@@ -449,12 +492,39 @@ let scores = {}, currentQ = 0, birthDay, birthMonth, birthYear;
 
 function initScores() { scores = {}; Object.keys(DEITIES).forEach(d => scores[d] = 0); }
 
-window.startQuiz = function() {
+window.startQuiz = async function() {
   if (!currentUser) { loginNow(); return; }
   birthDay = parseInt(document.getElementById('inputDay').value);
   birthMonth = parseInt(document.getElementById('inputMonth').value);
   birthYear = parseInt(document.getElementById('inputYear').value);
   if (!birthDay || !birthMonth || !birthYear || birthYear < 2400) { alert('กรุณากรอกวันเกิดให้ครบถ้วนค่ะ'); return; }
+
+  // หักเหรียญก่อน
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('btnStart').textContent = '⏳ กำลังโหลด...';
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      body: JSON.stringify({ service: 'deity' })
+    });
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+    if (!res.ok) {
+      const err = await res.json();
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      document.getElementById('btnStart').disabled = false;
+      document.getElementById('btnStart').textContent = '🙏 เริ่มค้นหาเทพประจำตัว';
+      return;
+    }
+  } catch(e) {
+    console.error(e);
+    document.getElementById('btnStart').disabled = false;
+    document.getElementById('btnStart').textContent = '🙏 เริ่มค้นหาเทพประจำตัว';
+    return;
+  }
 
   initScores();
   const yearCE = birthYear - 543;
@@ -496,6 +566,25 @@ window.selectOption = function(idx) {
 
 function showResult() {
   document.getElementById('quizSection').style.display = 'none';
+  // แสดง connecting animation ก่อน
+  const conn = document.getElementById('connectingSection');
+  conn.style.display = 'block';
+  const msgs = ['กำลังเชื่อมสายญาณ...', 'กำลังค้นหาองค์เทพ...', 'เกือบถึงแล้วค่ะ... 🙏'];
+  let i = 0;
+  const iv = setInterval(function() {
+    i++;
+    if (i < msgs.length) document.getElementById('connectingText').textContent = msgs[i];
+  }, 800);
+  setTimeout(function() {
+    clearInterval(iv);
+    conn.style.display = 'none';
+    document.getElementById('revealSection').style.display = 'block';
+    document.getElementById('revealSection').scrollIntoView({ behavior: 'smooth' });
+  }, 2500);
+}
+
+window.revealResult = function() {
+  document.getElementById('revealSection').style.display = 'none';
   document.getElementById('resultSection').style.display = 'block';
 
   const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
@@ -535,7 +624,11 @@ window.resetAll = function() {
   initScores(); currentQ = 0;
   document.getElementById('inputSection').style.display = 'block';
   document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('connectingSection').style.display = 'none';
+  document.getElementById('revealSection').style.display = 'none';
   document.getElementById('resultSection').style.display = 'none';
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnStart').textContent = '🙏 เริ่มค้นหาเทพประจำตัว';
   window.scrollTo({ top:0, behavior:'smooth' });
 };
 </script>
