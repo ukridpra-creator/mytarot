@@ -6,6 +6,7 @@
   <title>ดูดวงฟรี — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
     .page-header {
@@ -38,6 +39,10 @@
       font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px;
       margin-bottom: 16px;
     }
+    .section-label {
+      font-size: 11px; font-weight: 700; color: var(--dim);
+      letter-spacing: 1px; margin: 16px 0 10px; padding-left: 2px;
+    }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .card {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
@@ -46,20 +51,26 @@
       overflow: hidden;
     }
     .card:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.06); transform: translateY(-2px); }
-    .card-free-tag {
+    .card.coming-soon { opacity: 0.6; cursor: default; }
+    .card.coming-soon:hover { transform: none; border-color: var(--border); background: rgba(255,255,255,0.03); }
+    .card-tag {
       position: absolute; top: 10px; right: 10px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white; font-size: 9px; font-weight: 700;
+      font-size: 9px; font-weight: 700;
       padding: 2px 8px; border-radius: 10px;
     }
+    .tag-free { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .tag-activity { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; }
+    .tag-soon { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
     .card-icon { width: 64px; height: 64px; margin: 0 auto 8px; }
     .card-icon img { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
+    .card-icon-emoji { font-size: 36px; line-height: 64px; }
     .card-title { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
     .card-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">✨ ดูดวงฟรี</div>
@@ -76,53 +87,102 @@
     <div class="free-label">🎁 ฟรีทุกอัน ไม่มีค่าใช้จ่าย</div>
   </div>
 
+  <!-- หมวดฟรี -->
+  <div class="section-label">✨ ดูดวงฟรี</div>
   <div class="grid">
     <div class="card" onclick="window.location.href='tarot-yesno.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-yesno.png" alt="Yes/No ไพ่ทาโรต์"></div>
       <div class="card-title">Yes/No ไพ่ทาโรต์</div>
       <div class="card-desc">ถามไพ่ได้คำตอบทันที ใช่หรือไม่ใช่</div>
     </div>
     <div class="card" onclick="window.location.href='dream.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-dream.png" alt="ทำนายฝัน"></div>
       <div class="card-title">ทำนายฝัน</div>
       <div class="card-desc">พิมสิ่งที่ฝันเห็น รู้ความหมายทันที</div>
     </div>
     <div class="card" onclick="window.location.href='lucky-day.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-lucyday.png" alt="วันดี/วันห้าม"></div>
       <div class="card-title">วันดี/วันห้าม</div>
       <div class="card-desc">เช็กวันมงคลตามราศีก่อนทำสิ่งสำคัญ</div>
     </div>
     <div class="card" onclick="window.location.href='horoscope.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-weekly.png" alt="ดวงราศี"></div>
       <div class="card-title">ดวงราศี</div>
       <div class="card-desc">ดวงรายสัปดาห์และรายเดือนตามราศีของคุณ</div>
     </div>
     <div class="card" onclick="window.location.href='lucky-number.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-luckynumber.png" alt="เลขนำโชค"></div>
       <div class="card-title">เลขนำโชค</div>
       <div class="card-desc">เลขมงคลจากวันเกิดของคุณ</div>
     </div>
     <div class="card" onclick="window.location.href='lucky-color.html'">
-      <div class="card-free-tag">FREE</div>
+      <div class="card-tag tag-free">FREE</div>
       <div class="card-icon"><img src="../images/icon-luckycolor.png" alt="สีมงคลประจำวัน"></div>
       <div class="card-title">สีมงคลประจำวัน</div>
       <div class="card-desc">สีนำโชคตามวันเกิดและวันนี้</div>
     </div>
+    <div class="card" onclick="window.location.href='energy-code.html'">
+      <div class="card-tag tag-free">FREE</div>
+      <div class="card-icon"><div class="card-icon-emoji">🔢</div></div>
+      <div class="card-title">Energy Code</div>
+      <div class="card-desc">ค้นพบพลังงานภายในตัวคุณจากวันเกิด</div>
+    </div>
   </div>
+
+  <!-- หมวดกิจกรรม -->
+  <div class="section-label" style="margin-top:24px">🎮 กิจกรรม</div>
+  <div class="grid">
+    <div class="card coming-soon">
+      <div class="card-tag tag-soon">เร็วๆ นี้</div>
+      <div class="card-icon"><div class="card-icon-emoji">🌳</div></div>
+      <div class="card-title">ต้นไม้แห่งโชคลาภ</div>
+      <div class="card-desc">กำลังจะมาเร็วๆ นี้ค่ะ รอติดตามด้วยนะคะ 🌱</div>
+    </div>
+  </div>
+
 </div>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
-  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
 
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  }
+});
+</script>
 </body>
 </html>
