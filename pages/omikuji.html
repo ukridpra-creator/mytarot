@@ -6,21 +6,15 @@
   <title>おみくじ เซียมซีญี่ปุ่น — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <script src="../js/omikuji-data.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0a0608; color: white;
-      font-family: 'Sarabun', sans-serif;
-      padding-bottom: 60px; min-height: 100vh; overflow-x: hidden;
-    }
+    body { background: #0a0608; color: white; font-family: 'Sarabun', sans-serif; padding-bottom: 80px; min-height: 100vh; overflow-x: hidden; }
     body::before {
       content: ''; position: fixed; inset: 0; z-index: 0;
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(139,0,0,0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(212,175,55,0.08) 0%, transparent 50%),
-        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(139,0,0,0.03) 20px, rgba(139,0,0,0.03) 21px);
+      background-image: radial-gradient(circle at 20% 20%, rgba(139,0,0,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(212,175,55,0.08) 0%, transparent 50%), repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(139,0,0,0.03) 20px, rgba(139,0,0,0.03) 21px);
       pointer-events: none;
     }
     .page-header {
@@ -29,14 +23,8 @@
       background: rgba(10,6,8,0.95); backdrop-filter: blur(12px);
       position: sticky; top: 0; z-index: 100;
     }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(139,0,0,0.2); border: 1px solid rgba(212,175,55,0.3);
-      display: flex; align-items: center; justify-content: center;
-      color: #d4af37; font-size: 16px; text-decoration: none; flex-shrink: 0;
-    }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(139,0,0,0.2); border: 1px solid rgba(212,175,55,0.3); display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 16px; text-decoration: none; flex-shrink: 0; }
     .page-title { font-size: 16px; font-weight: 700; color: #d4af37; letter-spacing: 2px; }
-    .coin-badge { margin-left: auto; font-size: 13px; color: #d4af37; }
     .page-content { padding: 0 20px 40px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
 
     .torii { width: 100%; max-width: 360px; text-align: center; padding: 20px 0 10px; }
@@ -47,193 +35,53 @@
     .torii-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent); }
     .torii-symbol { font-size: 16px; color: #d4af37; }
 
-    /* DONATION BOX */
     .donation-section { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; }
     .saisen-wrap { position: relative; width: 160px; height: 210px; margin-bottom: 16px; }
-    .saisen-rope {
-      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 6px; height: 26px;
-      background: linear-gradient(180deg, #8B6914, #d4af37, #8B6914);
-      border-radius: 3px; z-index: 2;
-    }
-    .saisen-rope::after {
-      content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-      width: 22px; height: 8px;
-      background: radial-gradient(ellipse, #d4af37 0%, #8B6914 100%);
-      border-radius: 50%;
-    }
-    .saisen-box {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
-  background: linear-gradient(180deg, #5c1a1a 0%, #8B2500 40%, #6b1a00 100%);
-  border: 2px solid #d4af37;
-  border-radius: 6px 6px 10px 10px;
-  overflow: hidden;
-}
-.saisen-box::after {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle at 50% 100%, transparent 40%, rgba(212,175,55,0.08) 41%, rgba(212,175,55,0.08) 50%, transparent 51%);
-  background-size: 20px 20px;
-}
-.saisen-inner {
-  position: absolute; left: 8px; right: 8px; top: 48px; bottom: 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(212,175,55,0.3);
-  background:
-    repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(212,175,55,0.05) 8px, rgba(212,175,55,0.05) 9px),
-    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(212,175,55,0.05) 8px, rgba(212,175,55,0.05) 9px),
-    linear-gradient(180deg, #3d0a00, #1a0400);
-}
-.saisen-top {
-  position: absolute; top: 0; left: 0; right: 0; height: 44px;
-  background: linear-gradient(180deg, #8B0000, #6b0000);
-  border-radius: 4px 4px 0 0;
-  border-bottom: 2px solid #d4af37;
-  display: flex; align-items: center; justify-content: center;
-}
-.saisen-title { font-size: 11px; color: #d4af37; letter-spacing: 3px; }
-.saisen-slot {
-  position: absolute; top: 42px; left: 50%; transform: translateX(-50%);
-  width: 48px; height: 6px;
-  background: #050101; border-radius: 3px;
-  border: 1px solid #d4af37; z-index: 3;
-}
-.saisen-band {
-  position: absolute; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, #6B5010, #d4af37, #f0d060, #d4af37, #6B5010);
-}
-.sb1 { top: 46px; } .sb2 { top: 52px; } .sb3 { bottom: 14px; }
-
-    /* COIN DROP - ตกลงช่องพอดี */
-    .coin-drop {
-  position: absolute; 
-  top: -10px; 
-  left: 50%; 
-  transform: translateX(-50%);
-  width: 20px; height: 20px;
-  background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914);
-  border-radius: 50%; border: 2px solid #8B6914;
-  display: none; z-index: 10;
-}
-@keyframes coinFall {
-  0%   { top: -10px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
-  60%  { top: 52px; opacity: 1; transform: translateX(-50%) rotate(280deg); }
-  75%  { top: 47px; opacity: 1; transform: translateX(-50%) rotate(310deg); }
-  90%  { top: 53px; opacity: 1; transform: translateX(-50%) rotate(350deg); }
-  100% { top: 53px; opacity: 0; transform: translateX(-50%) rotate(360deg); }
-}
-.coin-falling { display: block !important; animation: coinFall 1.2s ease-in forwards; }
-    .donation-steps {
-      font-size: 12px; color: rgba(255,255,255,0.4); text-align: center;
-      letter-spacing: 1px; line-height: 2; margin-bottom: 14px;
-    }
+    .saisen-rope { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 6px; height: 26px; background: linear-gradient(180deg, #8B6914, #d4af37, #8B6914); border-radius: 3px; z-index: 2; }
+    .saisen-rope::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 22px; height: 8px; background: radial-gradient(ellipse, #d4af37 0%, #8B6914 100%); border-radius: 50%; }
+    .saisen-box { position: absolute; bottom: 0; left: 0; right: 0; height: 180px; background: linear-gradient(180deg, #5c1a1a 0%, #8B2500 40%, #6b1a00 100%); border: 2px solid #d4af37; border-radius: 6px 6px 10px 10px; overflow: hidden; }
+    .saisen-inner { position: absolute; left: 8px; right: 8px; top: 48px; bottom: 8px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3); background: linear-gradient(180deg, #3d0a00, #1a0400); }
+    .saisen-top { position: absolute; top: 0; left: 0; right: 0; height: 44px; background: linear-gradient(180deg, #8B0000, #6b0000); border-radius: 4px 4px 0 0; border-bottom: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; }
+    .saisen-title { font-size: 11px; color: #d4af37; letter-spacing: 3px; }
+    .saisen-slot { position: absolute; top: 42px; left: 50%; transform: translateX(-50%); width: 48px; height: 6px; background: #050101; border-radius: 3px; border: 1px solid #d4af37; z-index: 3; }
+    .saisen-band { position: absolute; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #6B5010, #d4af37, #f0d060, #d4af37, #6B5010); }
+    .sb1 { top: 46px; } .sb2 { top: 52px; } .sb3 { bottom: 14px; }
+    .coin-drop { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: radial-gradient(circle at 35% 35%, #f0d060, #d4af37, #8B6914); border-radius: 50%; border: 2px solid #8B6914; display: none; z-index: 10; }
+    @keyframes coinFall { 0%{top:-10px;opacity:1;transform:translateX(-50%) rotate(0deg)} 60%{top:52px;opacity:1;transform:translateX(-50%) rotate(280deg)} 75%{top:47px;opacity:1;transform:translateX(-50%) rotate(310deg)} 90%{top:53px;opacity:1;transform:translateX(-50%) rotate(350deg)} 100%{top:53px;opacity:0;transform:translateX(-50%) rotate(360deg)} }
+    .coin-falling { display: block !important; animation: coinFall 1.2s ease-in forwards; }
+    .donation-steps { font-size: 12px; color: rgba(255,255,255,0.4); text-align: center; letter-spacing: 1px; line-height: 2; margin-bottom: 14px; }
     .donation-steps span { color: #d4af37; }
-    .btn-donate {
-      padding: 13px 40px; font-size: 15px; font-weight: 700;
-      border: 1px solid rgba(212,175,55,0.5); border-radius: 30px;
-      background: rgba(139,0,0,0.3); color: #d4af37;
-      cursor: pointer; transition: all 0.2s;
-      font-family: 'Sarabun', sans-serif; letter-spacing: 2px;
-    }
-    .btn-donate:hover { background: rgba(139,0,0,0.5); }
+    .btn-donate { padding: 13px 40px; font-size: 15px; font-weight: 700; border: 1px solid rgba(212,175,55,0.5); border-radius: 30px; background: rgba(139,0,0,0.3); color: #d4af37; cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif; letter-spacing: 2px; }
 
-    /* TUBE */
     .tube-section { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; display: none; }
     .tube-section.show { display: flex; }
     .tube-wrap { position: relative; width: 120px; height: 270px; margin-bottom: 16px; }
     #tube { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 250px; }
-    .tube-body {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 225px;
-      background: linear-gradient(90deg, #4a2508 0%, #7a3a10 20%, #c06030 45%, #d4703a 50%, #c06030 55%, #7a3a10 80%, #4a2508 100%);
-      border-radius: 6px 6px 14px 14px; border: 1px solid #2d1005; overflow: hidden;
-    }
+    .tube-body { position: absolute; bottom: 0; left: 0; right: 0; height: 225px; background: linear-gradient(90deg, #4a2508 0%, #7a3a10 20%, #c06030 45%, #d4703a 50%, #c06030 55%, #7a3a10 80%, #4a2508 100%); border-radius: 6px 6px 14px 14px; border: 1px solid #2d1005; overflow: hidden; }
     .tube-grain { position: absolute; inset: 0; background: repeating-linear-gradient(180deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 11px); }
     .tube-shine { position: absolute; top: 0; left: 20px; width: 12px; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); }
-    .tube-top {
-      position: absolute; top: 0; left: 0; right: 0; height: 32px;
-      background: linear-gradient(90deg, #3a1a04, #6a3008, #8a4010, #6a3008, #3a1a04);
-      border-radius: 40% 40% 0 0 / 14px 14px 0 0;
-      border: 1px solid #2d1005; border-bottom: none;
-    }
-    .tube-hole {
-      position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
-      width: 20px; height: 12px; background: #050203;
-      border-radius: 50%; border: 1px solid #1a0a04; z-index: 2;
-    }
+    .tube-top { position: absolute; top: 0; left: 0; right: 0; height: 32px; background: linear-gradient(90deg, #3a1a04, #6a3008, #8a4010, #6a3008, #3a1a04); border-radius: 40% 40% 0 0 / 14px 14px 0 0; border: 1px solid #2d1005; border-bottom: none; }
+    .tube-hole { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 20px; height: 12px; background: #050203; border-radius: 50%; border: 1px solid #1a0a04; z-index: 2; }
     .gold-band { position: absolute; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #6B5010, #c8a030, #f0d060, #c8a030, #6B5010); }
     .gb1 { top: 28px; } .gb2 { top: 36px; } .gb3 { bottom: 20px; } .gb4 { bottom: 26px; }
-    .tube-engraving {
-      position: absolute; top: 55px; left: 50%; transform: translateX(-50%);
-      font-size: 30px; color: #d4af37;
-      letter-spacing: 2px; text-align: center; line-height: 1.6;
-      text-shadow: 0 0 10px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.9);
-      font-weight: 900;
-    }
-    #stick-out {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  width: 7px;
-  bottom: 230px; /* ตรงรูพอดี */
-  height: 0;
-  background: linear-gradient(180deg, #f5e070, #d4a030, #8B5a10);
-  border-radius: 4px 4px 1px 1px; z-index: 5; display: none;
-}
-@keyframes stickRise { 
-  0% { height: 0; bottom: 230px; } 
-  100% { height: 90px; bottom: 230px; } 
-}
-    #stick-number {
-      position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-      font-size: 9px; color: #d4af37; white-space: nowrap; font-weight: 700;
-      opacity: 0; transition: opacity 0.5s;
-    }
-    @keyframes tubeShake {
-      0%,100% { transform: translateX(-50%) rotate(0deg); }
-      5%  { transform: translateX(-50%) rotate(-10deg); }
-      15% { transform: translateX(-50%) rotate(13deg); }
-      25% { transform: translateX(-50%) rotate(-15deg); }
-      35% { transform: translateX(-50%) rotate(14deg); }
-      45% { transform: translateX(-50%) rotate(-13deg); }
-      55% { transform: translateX(-50%) rotate(12deg); }
-      65% { transform: translateX(-50%) rotate(-10deg); }
-      75% { transform: translateX(-50%) rotate(8deg); }
-      85% { transform: translateX(-50%) rotate(-6deg); }
-      92% { transform: translateX(-50%) rotate(4deg); }
-    }
+    .tube-engraving { position: absolute; top: 55px; left: 50%; transform: translateX(-50%); font-size: 30px; color: #d4af37; letter-spacing: 2px; text-align: center; line-height: 1.6; text-shadow: 0 0 10px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.9); font-weight: 900; }
+    #stick-out { position: absolute; left: 50%; transform: translateX(-50%); width: 7px; bottom: 230px; height: 0; background: linear-gradient(180deg, #f5e070, #d4a030, #8B5a10); border-radius: 4px 4px 1px 1px; z-index: 5; display: none; }
+    #stick-number { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #d4af37; white-space: nowrap; font-weight: 700; opacity: 0; transition: opacity 0.5s; }
+    @keyframes tubeShake { 0%,100%{transform:translateX(-50%) rotate(0deg)} 5%{transform:translateX(-50%) rotate(-10deg)} 15%{transform:translateX(-50%) rotate(13deg)} 25%{transform:translateX(-50%) rotate(-15deg)} 35%{transform:translateX(-50%) rotate(14deg)} 45%{transform:translateX(-50%) rotate(-13deg)} 55%{transform:translateX(-50%) rotate(12deg)} 65%{transform:translateX(-50%) rotate(-10deg)} 75%{transform:translateX(-50%) rotate(8deg)} 85%{transform:translateX(-50%) rotate(-6deg)} 92%{transform:translateX(-50%) rotate(4deg)} }
     .shaking { animation: tubeShake 3.5s ease-in-out; }
-    @keyframes stickRise { 0% { height: 0; } 100% { height: 110px; } }
+    @keyframes stickRise { 0%{height:0;bottom:230px} 100%{height:90px;bottom:230px} }
     .stick-rising { display: block !important; animation: stickRise 0.6s ease-out 3.3s forwards; }
     .stick-show { opacity: 1 !important; }
-
     .tube-hint { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
-    .btn-shake {
-      padding: 12px 36px; font-size: 14px; letter-spacing: 2px;
-      border: 1px solid rgba(212,175,55,0.5); border-radius: 30px;
-      background: rgba(139,0,0,0.3); color: #d4af37;
-      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-    }
-    .btn-shake:hover { background: rgba(139,0,0,0.5); }
+    .btn-shake { padding: 12px 36px; font-size: 14px; letter-spacing: 2px; border: 1px solid rgba(212,175,55,0.5); border-radius: 30px; background: rgba(139,0,0,0.3); color: #d4af37; cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif; }
     .btn-shake:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* SLIP */
     .slip-section { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; display: none; }
     .slip-section.show { display: flex; }
-    @keyframes unfold { 0% { transform: scaleY(0); opacity: 0; } 100% { transform: scaleY(1); opacity: 1; } }
-    #slip-card {
-      width: 220px; background: #fdf6e3; border-radius: 3px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,175,55,0.3);
-      animation: unfold 0.6s ease-out forwards;
-      margin-bottom: 16px; position: relative; transform-origin: top;
-    }
-    .slip-watermark {
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(139,0,0,0.03) 15px, rgba(139,0,0,0.03) 16px);
-      border-radius: 3px; pointer-events: none;
-    }
-    .slip-header {
-      background: linear-gradient(180deg, #8B0000, #6b0000);
-      padding: 14px 10px 10px; text-align: center;
-      border-bottom: 3px double #d4af37;
-    }
+    @keyframes unfold { 0%{transform:scaleY(0);opacity:0} 100%{transform:scaleY(1);opacity:1} }
+    #slip-card { width: 220px; background: #fdf6e3; border-radius: 3px; box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,175,55,0.3); animation: unfold 0.6s ease-out forwards; margin-bottom: 16px; position: relative; transform-origin: top; }
+    .slip-watermark { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(139,0,0,0.03) 15px, rgba(139,0,0,0.03) 16px); border-radius: 3px; pointer-events: none; }
+    .slip-header { background: linear-gradient(180deg, #8B0000, #6b0000); padding: 14px 10px 10px; text-align: center; border-bottom: 3px double #d4af37; }
     .slip-shrine-name { font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 3px; margin-bottom: 4px; }
     .slip-num { font-size: 10px; color: #d4af37; letter-spacing: 2px; margin-bottom: 6px; }
     .slip-level-jp { font-size: 40px; color: white; font-weight: 700; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
@@ -248,26 +96,13 @@
     .slip-footer { background: linear-gradient(180deg, #6b0000, #8B0000); padding: 8px; text-align: center; border-top: 3px double #d4af37; }
     .slip-footer-jp { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
     .slip-footer-th { font-size: 8px; color: rgba(212,175,55,0.5); margin-top: 2px; }
-
     .action-row { display: flex; gap: 12px; margin-top: 4px; width: 220px; }
-    .btn-share-main {
-      flex: 1; padding: 12px; font-size: 13px;
-      border: 1px solid rgba(212,175,55,0.4); border-radius: 14px;
-      background: rgba(212,175,55,0.1); color: #d4af37;
-      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-    }
-    .btn-burn {
-      flex: 1; padding: 12px; font-size: 13px;
-      border: 1px solid rgba(239,68,68,0.4); border-radius: 14px;
-      background: rgba(239,68,68,0.1); color: #ef4444;
-      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-    }
+    .btn-share-main { flex: 1; padding: 12px; font-size: 13px; border: 1px solid rgba(212,175,55,0.4); border-radius: 14px; background: rgba(212,175,55,0.1); color: #d4af37; cursor: pointer; font-family: 'Sarabun', sans-serif; }
+    .btn-burn { flex: 1; padding: 12px; font-size: 13px; border: 1px solid rgba(239,68,68,0.4); border-radius: 14px; background: rgba(239,68,68,0.1); color: #ef4444; cursor: pointer; font-family: 'Sarabun', sans-serif; }
 
-    /* SHARE SHEET */
     .share-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; }
     .share-overlay.show { display: flex; }
-    .share-sheet { width: 100%; background: #1a0e0a; border-top: 1px solid rgba(212,175,55,0.3); border-radius: 20px 20px 0 0; padding: 16px 20px 32px; animation: slideUp 0.3s ease-out; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .share-sheet { width: 100%; background: #1a0e0a; border-top: 1px solid rgba(212,175,55,0.3); border-radius: 20px 20px 0 0; padding: 16px 20px 32px; }
     .sheet-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0 auto 16px; }
     .sheet-title { font-size: 14px; color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 16px; }
     .sheet-row { display: flex; gap: 8px; justify-content: center; }
@@ -276,77 +111,50 @@
     .sheet-btn-label { font-size: 10px; color: rgba(255,255,255,0.6); }
     .sheet-cancel { width: 100%; padding: 12px; margin-top: 12px; border: none; border-radius: 12px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); font-size: 14px; font-family: 'Sarabun', sans-serif; cursor: pointer; }
 
-    /* BURN OVERLAY */
     .burn-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; }
     .burn-overlay.show { display: flex; }
     .burn-wrap { position: relative; width: 220px; overflow: hidden; }
-    #burn-slip-img { width: 220px; display: block; border-radius: 3px; transition: opacity 0.1s; }
-
-    /* ไฟขนาดใหญ่ */
-    .fire-wrap {
-      position: absolute; left: -10px; right: -10px; bottom: 0;
-      height: 80px; pointer-events: none;
-    }
-    @keyframes f1 { 0%,100%{transform:scaleX(1) scaleY(1) rotate(-2deg);} 50%{transform:scaleX(1.1) scaleY(1.4) rotate(2deg);} }
-    @keyframes f2 { 0%,100%{transform:scaleX(1) scaleY(1.2) rotate(1deg);} 50%{transform:scaleX(0.9) scaleY(1) rotate(-2deg);} }
-    @keyframes f3 { 0%,100%{transform:scaleX(1) scaleY(0.9) rotate(0deg);} 50%{transform:scaleX(1.15) scaleY(1.3) rotate(-1deg);} }
+    #burn-slip-img { width: 220px; display: block; border-radius: 3px; }
+    .fire-wrap { position: absolute; left: -10px; right: -10px; bottom: 0; height: 80px; pointer-events: none; }
+    @keyframes f1 { 0%,100%{transform:scaleX(1) scaleY(1) rotate(-2deg)} 50%{transform:scaleX(1.1) scaleY(1.4) rotate(2deg)} }
+    @keyframes f2 { 0%,100%{transform:scaleX(1) scaleY(1.2) rotate(1deg)} 50%{transform:scaleX(0.9) scaleY(1) rotate(-2deg)} }
+    @keyframes f3 { 0%,100%{transform:scaleX(1) scaleY(0.9) rotate(0deg)} 50%{transform:scaleX(1.15) scaleY(1.3) rotate(-1deg)} }
     .fl { position: absolute; bottom: 0; border-radius: 50% 50% 20% 20%; transform-origin: bottom center; }
-    .fl1 { width: 100%; height: 80px; background: linear-gradient(180deg, transparent 0%, #ff2200 40%, #ff6600 100%); animation: f1 0.2s ease-in-out infinite; opacity: 0.95; }
-    .fl2 { width: 85%; height: 65px; left: 7%; background: linear-gradient(180deg, transparent 0%, #ff8800 30%, #ffcc00 100%); animation: f2 0.18s ease-in-out infinite; opacity: 0.85; }
-    .fl3 { width: 65%; height: 50px; left: 17%; background: linear-gradient(180deg, transparent 0%, #ffdd00 20%, #ffffff 100%); animation: f3 0.25s ease-in-out infinite; opacity: 0.75; }
-    .fl4 { width: 40%; height: 35px; left: 30%; background: linear-gradient(180deg, transparent, #fff); animation: f1 0.15s ease-in-out infinite 0.05s; opacity: 0.6; }
+    .fl1 { width:100%;height:80px;background:linear-gradient(180deg,transparent 0%,#ff2200 40%,#ff6600 100%);animation:f1 0.2s ease-in-out infinite;opacity:0.95; }
+    .fl2 { width:85%;height:65px;left:7%;background:linear-gradient(180deg,transparent 0%,#ff8800 30%,#ffcc00 100%);animation:f2 0.18s ease-in-out infinite;opacity:0.85; }
+    .fl3 { width:65%;height:50px;left:17%;background:linear-gradient(180deg,transparent 0%,#ffdd00 20%,#ffffff 100%);animation:f3 0.25s ease-in-out infinite;opacity:0.75; }
+    .fl4 { width:40%;height:35px;left:30%;background:linear-gradient(180deg,transparent,#fff);animation:f1 0.15s ease-in-out infinite 0.05s;opacity:0.6; }
+    .burn-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, 120px); text-align: center; opacity: 0; transition: opacity 1s; z-index: 401; width: 280px; }
+    .burn-msg.show { opacity: 1; }
+    .burn-msg-main { font-size: 18px; color: #d4af37; font-weight: 700; margin-bottom: 8px; }
+    .burn-msg-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
 
-    .burn-msg {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, 120px);
-  text-align: center;
-  opacity: 0; transition: opacity 1s;
-  z-index: 401;
-  width: 280px;
-}
-.burn-msg.show { opacity: 1; }
-.burn-msg-main { font-size: 18px; color: #d4af37; font-weight: 700; margin-bottom: 8px; }
-.burn-msg-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
-@keyframes stickRise { 
-  0% { height: 0; bottom: 230px; } 
-  100% { height: 90px; bottom: 230px; } 
-}
+    /* USER MENU override สีแดง */
+    .user-menu { border-color: rgba(212,175,55,0.2) !important; }
   </style>
 </head>
 <body>
 
-<div class="page-header">
-  <a href="divination.html" class="back-btn">←</a>
-  <div class="page-title">おみくじ • เซียมซีญี่ปุ่น</div>
-  <div class="coin-badge">🪙 <span id="coinCount">0</span></div>
-</div>
-
-<!-- Share Sheet -->
+<!-- SHARE SHEET -->
 <div class="share-overlay" id="shareOverlay" onclick="closeShare(event)">
   <div class="share-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">แชร์ใบเซียมซี</div>
     <div class="sheet-row">
-  <div class="sheet-btn" onclick="doSave()"><div class="sheet-btn-icon">💾</div><div class="sheet-btn-label">บันทึก</div></div>
-  <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">🔗</div><div class="sheet-btn-label">แชร์</div></div>
-</div>
+      <div class="sheet-btn" onclick="doSave()"><div class="sheet-btn-icon">💾</div><div class="sheet-btn-label">บันทึก</div></div>
+      <div class="sheet-btn" onclick="doShare()"><div class="sheet-btn-icon">🔗</div><div class="sheet-btn-label">แชร์</div></div>
+    </div>
     <button class="sheet-cancel" onclick="closeShare()">ยกเลิก</button>
-<div style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:8px;">
-  iOS: รูปจะถูกบันทึกใน Files หรือแชร์ผ่าน Sheet
-</div>
   </div>
 </div>
 
-<!-- Burn overlay -->
+<!-- BURN OVERLAY -->
 <div class="burn-overlay" id="burnOverlay">
   <div class="burn-wrap">
     <img id="burn-slip-img" src="" alt="">
     <div class="fire-wrap" id="fireWrap" style="display:none">
-      <div class="fl fl1"></div>
-      <div class="fl fl2"></div>
-      <div class="fl fl3"></div>
-      <div class="fl fl4"></div>
+      <div class="fl fl1"></div><div class="fl fl2"></div>
+      <div class="fl fl3"></div><div class="fl fl4"></div>
     </div>
   </div>
   <div class="burn-msg" id="burnMsg">
@@ -354,6 +162,54 @@
     <div class="burn-msg-sub">ขอให้มีแต่สิ่งดีๆ เข้ามา 🙏</div>
   </div>
 </div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="divination.html" class="back-btn">←</a>
+  <div class="page-title">おみくじ • เซียมซีญี่ปุ่น</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge" style="color:#d4af37;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:50px;padding:4px 12px;font-size:13px;">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติ</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0608,#0a0406);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">⛩️</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="torii">
@@ -367,7 +223,7 @@
     </div>
   </div>
 
-  <!-- Step 1 -->
+  <!-- Step 1: หยอดเหรียญ -->
   <div class="donation-section" id="donationSection">
     <div class="saisen-wrap">
       <div class="saisen-rope"></div>
@@ -375,29 +231,22 @@
         <div class="saisen-inner"></div>
         <div class="saisen-top"><div class="saisen-title">賽錢箱</div></div>
         <div class="saisen-slot"></div>
-        <div class="saisen-band sb1"></div>
-        <div class="saisen-band sb2"></div>
-        <div class="saisen-band sb3"></div>
+        <div class="saisen-band sb1"></div><div class="saisen-band sb2"></div><div class="saisen-band sb3"></div>
       </div>
       <div class="coin-drop" id="coinDrop"></div>
     </div>
-    <div class="donation-steps">
-      <span>หยอดเหรียญ</span> → เขย่า → <span>รับคำทำนาย</span>
-    </div>
+    <div class="donation-steps"><span>หยอดเหรียญ</span> → เขย่า → <span>รับคำทำนาย</span></div>
     <button class="btn-donate" onclick="doDonate()">🪙 10 เหรียญ</button>
   </div>
 
-  <!-- Step 2 -->
+  <!-- Step 2: เขย่า -->
   <div class="tube-section" id="tubeSection">
     <div class="tube-wrap">
       <div id="tube">
         <div class="tube-body">
-          <div class="tube-grain"></div>
-          <div class="tube-shine"></div>
-          <div class="gold-band gb1"></div>
-          <div class="gold-band gb2"></div>
-          <div class="gold-band gb3"></div>
-          <div class="gold-band gb4"></div>
+          <div class="tube-grain"></div><div class="tube-shine"></div>
+          <div class="gold-band gb1"></div><div class="gold-band gb2"></div>
+          <div class="gold-band gb3"></div><div class="gold-band gb4"></div>
           <div class="tube-engraving">御<br>籤</div>
         </div>
         <div class="tube-top"><div class="tube-hole"></div></div>
@@ -408,7 +257,7 @@
     <button class="btn-shake" id="btnShake" onclick="doShake()">🎋 เขย่ากระบอก</button>
   </div>
 
-  <!-- Step 3 -->
+  <!-- Step 3: ใบเซียมซี -->
   <div class="slip-section" id="slipSection">
     <div id="slip-card">
       <div class="slip-watermark"></div>
@@ -432,8 +281,75 @@
   </div>
 </div>
 
-<script>
-  // === SOUNDS ===
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+let currentEntry = null;
+let busy = false;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+  }
+});
+
+// SOUNDS
 const sounds = {
   coin:  new Audio('../sounds/coin.mp3'),
   shake: new Audio('../sounds/shake.mp3'),
@@ -441,87 +357,69 @@ const sounds = {
   fire:  new Audio('../sounds/fire.mp3'),
   bgm:   new Audio('../sounds/bgm.mp3'),
 };
-sounds.bgm.loop = true;
-sounds.bgm.volume = 0.2;
-sounds.shake.loop = true;
-sounds.coin.volume = 0.7;
-sounds.stick.volume = 0.8;
-sounds.fire.volume = 0.6;
-
-// เปิด BGM ตอน user กดครั้งแรก
+sounds.bgm.loop = true; sounds.bgm.volume = 0.2;
+sounds.coin.volume = 0.7; sounds.stick.volume = 0.8; sounds.fire.volume = 0.6;
 document.addEventListener('click', () => {
   if (sounds.bgm.paused) sounds.bgm.play().catch(()=>{});
 }, { once: true });
-let currentEntry = null;
-let busy = false;
 
-async function getSlipCanvas() {
-  const slip = document.getElementById('slip-card');
-  return await html2canvas(slip, {
-    backgroundColor: '#fdf6e3',
-    scale: 3,
-    useCORS: true,
-    allowTaint: true,
-    logging: false,
-    imageTimeout: 0,
-    onclone: (doc) => {
-      const card = doc.getElementById('slip-card');
-      card.style.transform = 'none';
-      card.style.animation = 'none';
+// DONATE — หักเหรียญผ่าน server
+window.doDonate = async function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  const btn = document.querySelector('.btn-donate');
+  btn.disabled = true; btn.textContent = '⏳...';
+
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      body: JSON.stringify({ service: 'han-oracle-1' }) // 10 เหรียญ
+    });
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+    if (!res.ok) {
+      const err = await res.json();
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = '🪙 10 เหรียญ'; return;
     }
-  });
-}
+  } catch(e) {
+    console.error(e); btn.disabled = false; btn.textContent = '🪙 10 เหรียญ'; return;
+  }
 
-function doDonate() {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 10) { alert('เหรียญไม่พอค่ะ ต้องใช้ 10 เหรียญ'); return; }
-
+  // animation
   const coin = document.getElementById('coinDrop');
-  coin.classList.remove('coin-falling');
-  void coin.offsetWidth;
+  coin.classList.remove('coin-falling'); void coin.offsetWidth;
   coin.classList.add('coin-falling');
-  sounds.coin.currentTime = 0;
-sounds.coin.play();
-
-  setTimeout(() => {
-    localStorage.setItem('coins', String(coins - 10));
-    document.getElementById('coinCount').textContent = coins - 10;
-  }, 1100);
+  sounds.coin.currentTime = 0; sounds.coin.play();
 
   setTimeout(() => {
     document.getElementById('donationSection').style.display = 'none';
     document.getElementById('tubeSection').classList.add('show');
+    btn.disabled = false; btn.textContent = '🪙 10 เหรียญ';
   }, 1400);
-}
+};
 
-function doShake() {
+window.doShake = function() {
   if (busy) return;
   if (typeof OMIKUJI_DATA === 'undefined') { alert('กรุณารีเฟรชหน้า'); return; }
-
   busy = true;
   document.getElementById('btnShake').disabled = true;
   document.getElementById('tubeHint').textContent = 'กำลังเขย่า... ตั้งจิตอธิษฐาน 🙏';
-
   const tube = document.getElementById('tube');
   tube.classList.add('shaking');
-sounds.shake.currentTime = 0;
-sounds.shake.play();
-setTimeout(() => {
-  sounds.shake.pause();
-  sounds.stick.currentTime = 0;
-  sounds.stick.play();
-}, 3300);
-  currentEntry = OMIKUJI_DATA[Math.floor(Math.random() * OMIKUJI_DATA.length)];
+  sounds.shake.currentTime = 0; sounds.shake.play();
+  setTimeout(() => { sounds.shake.pause(); sounds.stick.currentTime = 0; sounds.stick.play(); }, 3300);
 
+  currentEntry = OMIKUJI_DATA[Math.floor(Math.random() * OMIKUJI_DATA.length)];
   const stick = document.getElementById('stick-out');
   const stickNum = document.getElementById('stick-number');
   stickNum.textContent = currentEntry.num_jp;
-  stick.classList.remove('stick-rising');
-  void stick.offsetWidth;
+  stick.classList.remove('stick-rising'); void stick.offsetWidth;
   stick.classList.add('stick-rising');
-
   setTimeout(() => { stickNum.classList.add('stick-show'); }, 3900);
-
   setTimeout(() => {
     tube.classList.remove('shaking');
     document.getElementById('tubeHint').textContent = '✨ ไม้ออกมาแล้ว!';
@@ -531,12 +429,11 @@ setTimeout(() => {
     btn.onclick = showSlip;
     busy = false;
   }, 3600);
-}
+};
 
-function showSlip() {
+window.showSlip = async function() {
   document.getElementById('tubeSection').classList.remove('show');
   document.getElementById('slipSection').classList.add('show');
-
   document.getElementById('slipNum').textContent = currentEntry.num_jp;
   document.getElementById('slipLevelJp').textContent = currentEntry.level_jp;
   document.getElementById('slipLevelTh').textContent = currentEntry.level_th;
@@ -544,35 +441,53 @@ function showSlip() {
     '<div style="font-size:11px;color:#8B4513;margin-bottom:4px;">❧</div>' +
     currentEntry.poem.map(l => `<div class="poem-line">${l}</div>`).join('');
   document.getElementById('slipBody').innerHTML =
-    Object.entries(currentEntry.readings).map(([k, v]) =>
+    Object.entries(currentEntry.readings).map(([k,v]) =>
       `<div class="slip-row"><span class="slip-label">${k}</span><span class="slip-val">${v}</span></div>`
     ).join('');
+  document.getElementById('slipSection').scrollIntoView({ behavior:'smooth' });
 
-  document.getElementById('slipSection').scrollIntoView({ behavior: 'smooth' });
-}
+  // บันทึก Firestore
+  if (currentUser) {
+    try {
+      await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+        type: 'เซียมซีญี่ปุ่น',
+        result: currentEntry.level_th + ' — ' + currentEntry.level_jp,
+        createdAt: serverTimestamp()
+      });
+    } catch(e) { console.error(e); }
+  }
+};
 
-function openShare() { document.getElementById('shareOverlay').classList.add('show'); }
-function closeShare(e) {
+window.openShare = function() { document.getElementById('shareOverlay').classList.add('show'); };
+window.closeShare = function(e) {
   if (!e || e.target === document.getElementById('shareOverlay'))
     document.getElementById('shareOverlay').classList.remove('show');
+};
+
+async function getSlipCanvas() {
+  return await html2canvas(document.getElementById('slip-card'), {
+    backgroundColor: '#fdf6e3', scale: 3, useCORS: true,
+    allowTaint: true, logging: false, imageTimeout: 0,
+    onclone: (doc) => {
+      const card = doc.getElementById('slip-card');
+      card.style.transform = 'none'; card.style.animation = 'none';
+    }
+  });
 }
 
-async function doSave() {
+window.doSave = async function() {
   const canvas = await getSlipCanvas();
   canvas.toBlob((blob) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `omikuji-${currentEntry.level_jp}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    a.href = url; a.download = `omikuji-${currentEntry.level_jp}.png`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
     closeShare();
   }, 'image/png');
-}
+};
 
-async function doShare() {
+window.doShare = async function() {
   closeShare();
   const canvas = await getSlipCanvas();
   canvas.toBlob(async (blob) => {
@@ -581,11 +496,10 @@ async function doShare() {
       await navigator.share({ files: [file], title: `おみくじ ${currentEntry.level_jp}`, text: 'mytarot.vip' });
     } else { doSave(); }
   });
-}
+};
 
-async function burnSlip() {
+window.burnSlip = async function() {
   const canvas = await getSlipCanvas();
-
   const overlay = document.getElementById('burnOverlay');
   const img = document.getElementById('burn-slip-img');
   const fire = document.getElementById('fireWrap');
@@ -593,52 +507,38 @@ async function burnSlip() {
 
   img.src = canvas.toDataURL('image/png', 1.0);
   img.style.opacity = '1';
-  msg.classList.remove('show');
-  fire.style.display = 'none';
+  msg.classList.remove('show'); fire.style.display = 'none';
   overlay.classList.add('show');
 
   setTimeout(() => {
     fire.style.display = 'block';
-    sounds.fire.currentTime = 0;
-sounds.fire.play();
+    sounds.fire.currentTime = 0; sounds.fire.play();
     let p = 0;
     const iv = setInterval(() => {
       p += 1.2;
       img.style.opacity = String(Math.max(0, 1 - p / 100));
       if (p >= 100) {
         clearInterval(iv);
-        fire.style.display = 'none';
-        img.style.opacity = '0';
+        fire.style.display = 'none'; img.style.opacity = '0';
         msg.classList.add('show');
         setTimeout(() => {
-          overlay.classList.remove('show');
-          msg.classList.remove('show');
-          img.style.opacity = '1';
-          sounds.fire.pause();
-sounds.fire.currentTime = 0;
-
-const coin = document.getElementById('coinDrop');
-coin.classList.remove('coin-falling');
-void coin.offsetWidth;
+          overlay.classList.remove('show'); msg.classList.remove('show');
+          img.style.opacity = '1'; sounds.fire.pause(); sounds.fire.currentTime = 0;
+          const coin = document.getElementById('coinDrop');
+          coin.classList.remove('coin-falling'); void coin.offsetWidth;
           document.getElementById('slipSection').classList.remove('show');
           document.getElementById('donationSection').style.display = 'flex';
           const stick = document.getElementById('stick-out');
-          stick.classList.remove('stick-rising');
-          stick.style.cssText = '';
+          stick.classList.remove('stick-rising'); stick.style.cssText = '';
           document.getElementById('stick-number').classList.remove('stick-show');
           const btn = document.getElementById('btnShake');
-          btn.textContent = '🎋 เขย่ากระบอก';
-          btn.onclick = doShake;
-          btn.disabled = false;
+          btn.textContent = '🎋 เขย่ากระบอก'; btn.onclick = doShake; btn.disabled = false;
           currentEntry = null;
         }, 2500);
       }
     }, 25);
   }, 500);
-}
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
-});
+};
 </script>
 </body>
 </html>
