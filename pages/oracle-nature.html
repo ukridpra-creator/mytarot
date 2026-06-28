@@ -6,21 +6,11 @@
   <title>Nature Spirit Oracle — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 60px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--purple-light);
-      font-size: 16px; text-decoration: none; flex-shrink: 0;
-    }
+    body { padding-bottom: 80px; }
+    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(124,58,237,0.2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--purple-light); font-size: 16px; text-decoration: none; flex-shrink: 0; }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
     .hero { text-align: center; padding: 12px 0 20px; }
@@ -29,27 +19,10 @@
     .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
     .slots-section { margin-bottom: 20px; }
     .slots-title { font-size: 13px; color: var(--dim); text-align: center; margin-bottom: 12px; }
-    .slots-row {
-      display: flex; align-items: center;
-      justify-content: center; gap: 8px; margin-bottom: 8px;
-    }
-    .slots-divider {
-      width: 1px; height: 60px;
-      background: rgba(212,175,55,0.4);
-      margin: 0 4px; flex-shrink: 0;
-    }
-    .slot {
-      width: 72px; aspect-ratio: 2/3;
-      background: rgba(16,185,129,0.06);
-      border: 2px dashed rgba(16,185,129,0.3);
-      border-radius: 10px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      transition: all 0.3s; position: relative; overflow: hidden;
-    }
-    .slot.secret-slot {
-      background: rgba(212,175,55,0.06);
-      border: 2px dashed rgba(212,175,55,0.4);
-    }
+    .slots-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+    .slots-divider { width: 1px; height: 60px; background: rgba(212,175,55,0.4); margin: 0 4px; flex-shrink: 0; }
+    .slot { width: 72px; aspect-ratio: 2/3; background: rgba(16,185,129,0.06); border: 2px dashed rgba(16,185,129,0.3); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s; position: relative; overflow: hidden; }
+    .slot.secret-slot { background: rgba(212,175,55,0.06); border: 2px dashed rgba(212,175,55,0.4); }
     .slot.filled { border-style: solid; cursor: pointer; }
     .slot.filled.secret-slot { border-color: rgba(212,175,55,0.6); }
     .slot.filled:not(.secret-slot) { border-color: rgba(16,185,129,0.6); }
@@ -57,141 +30,95 @@
     .slot-label { font-size: 9px; color: #10b981; margin-top: 2px; text-align: center; padding: 0 2px; line-height: 1.2; }
     .slot-label.gold { color: #d4af37; }
     .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .slot-overlay {
-      position: absolute; inset: 0; border-radius: 8px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      display: flex; flex-direction: column; justify-content: flex-end; padding: 3px;
-    }
+    .slot-overlay { position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; }
     .slot-pos { font-size: 8px; color: #10b981; text-align: center; }
     .slot-pos.gold { color: #d4af37; }
-    .slot-remove {
-      position: absolute; top: 2px; right: 2px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: rgba(239,68,68,0.9); color: white;
-      font-size: 8px; display: flex; align-items: center; justify-content: center;
-      font-weight: 700; z-index: 10;
-    }
+    .slot-remove { position: absolute; top: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; background: rgba(239,68,68,0.9); color: white; font-size: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; z-index: 10; }
     .slots-hint { text-align: center; font-size: 11px; color: var(--dim); }
     .cards-section { margin-bottom: 24px; }
     .cards-title { font-size: 13px; color: #10b981; font-weight: 700; margin-bottom: 12px; text-align: center; }
     .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
     .cards-scroll::-webkit-scrollbar { height: 3px; }
     .cards-scroll::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.4); border-radius: 2px; }
-    .card-item {
-      width: 52px; aspect-ratio: 2/3; flex-shrink: 0;
-      border-radius: 8px; overflow: hidden; cursor: pointer;
-      transition: all 0.2s; border: 2px solid transparent;
-    }
+    .card-item { width: 52px; aspect-ratio: 2/3; flex-shrink: 0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
     .card-item:hover { transform: translateY(-4px); border-color: #10b981; }
     .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
     .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .coin-box {
-      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
-    }
+    .coin-box { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
     .coin-text { font-size: 13px; color: #10b981; margin-bottom: 4px; }
     .coin-hint { font-size: 11px; color: var(--dim); }
-    .btn-read {
-      width: 100%; background: linear-gradient(135deg, #065f46, #10b981);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(16,185,129,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .reveal-overlay {
-      position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.92); display: none;
-      flex-direction: column; align-items: center; justify-content: center; padding: 16px;
-    }
+    .btn-read { width: 100%; background: linear-gradient(135deg, #065f46, #10b981); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.92); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
     .reveal-overlay.show { display: flex; }
     .reveal-title { font-size: 16px; color: #10b981; font-weight: 700; margin-bottom: 8px; text-align: center; }
     .reveal-subtitle { font-size: 12px; color: var(--dim); margin-bottom: 20px; text-align: center; }
     .reveal-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; align-items: center; }
     .reveal-divider { width: 1px; height: 80px; background: rgba(212,175,55,0.4); margin: 0 4px; }
     .reveal-card { text-align: center; }
-    .reveal-card-wrap {
-      width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
-      margin-bottom: 6px; border: 2px solid rgba(16,185,129,0.5); perspective: 600px;
-    }
+    .reveal-card-wrap { width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; margin-bottom: 6px; border: 2px solid rgba(16,185,129,0.5); perspective: 600px; }
     .reveal-card-wrap.secret-wrap { border-color: rgba(212,175,55,0.5); }
-    .reveal-card-inner {
-      width: 100%; height: 100%; position: relative;
-      transform-style: preserve-3d; transition: transform 0.6s ease;
-    }
+    .reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; }
     .reveal-card-inner.flipped { transform: rotateY(180deg); }
-    .reveal-card-front, .reveal-card-back {
-      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
-    }
+    .reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
     .reveal-card-back { transform: rotateY(0deg); }
     .reveal-card-front { transform: rotateY(180deg); }
     .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
     .reveal-card-name { font-size: 9px; color: #10b981; font-weight: 700; }
     .reveal-card-name.gold { color: #d4af37; }
     .reveal-card-pos { font-size: 8px; color: var(--dim); margin-top: 1px; }
-    .btn-accept {
-      background: linear-gradient(135deg, #065f46, #10b981);
-      border: none; border-radius: 16px; padding: 14px 32px;
-      color: white; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    }
+    .btn-accept { background: linear-gradient(135deg, #065f46, #10b981); border: none; border-radius: 16px; padding: 14px 32px; color: white; font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .btn-accept.show { opacity: 1; pointer-events: all; }
+
     .result-box { display: none; }
     .result-box.show { display: block; }
     .result-cards-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; align-items: center; }
     .result-divider { width: 1px; height: 60px; background: rgba(212,175,55,0.4); margin: 0 2px; }
     .result-card { text-align: center; }
-    .result-card-img {
-      width: 60px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden;
-      margin-bottom: 4px; border: 1px solid rgba(16,185,129,0.4);
-    }
+    .result-card-img { width: 60px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; margin-bottom: 4px; border: 1px solid rgba(16,185,129,0.4); }
     .result-card-img.secret-img { border-color: rgba(212,175,55,0.4); }
     .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
     .result-card-name { font-size: 9px; color: #10b981; font-weight: 700; line-height: 1.2; }
     .result-card-name.gold { color: #d4af37; }
     .result-card-pos { font-size: 8px; color: var(--dim); }
-    .result-reading {
-      background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-    }
-    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .result-title { font-size: 16px; font-weight: 700; color: #10b981; }
-    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
-    .secret-box {
-      background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.3);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-      text-align: center; display: none;
-    }
+
+    /* GREETING */
+    .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(16,185,129,0.06); border-radius: 16px; border-left: 3px solid #10b981; display: none; }
+    .greeting-box.show { display: block; }
+
+    /* RESULT SECTIONS */
+    .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+    .sec-meaning { background: rgba(16,185,129,0.08); border-color: #10b981; }
+    .sec-meaning h3 { color: #10b981; }
+    .sec-reading { background: rgba(124,58,237,0.08); border-color: #a855f7; }
+    .sec-reading h3 { color: #a855f7; }
+    .sec-advice  { background: rgba(6,182,212,0.08); border-color: #06b6d4; }
+    .sec-advice h3 { color: #06b6d4; }
+
+    .loading-wrap { text-align: center; padding: 16px; color: var(--dim); font-size: 13px; }
+    .loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100%{opacity:0.2}40%{opacity:1} }
+
+    /* SECRET */
+    .secret-box { background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.3); border-radius: 20px; padding: 20px; margin-bottom: 16px; text-align: center; display: none; }
     .secret-box.show { display: block; }
     .secret-title { font-size: 15px; color: #d4af37; font-weight: 700; margin-bottom: 6px; }
     .secret-desc { font-size: 12px; color: var(--dim); margin-bottom: 14px; line-height: 1.6; }
-    .btn-secret {
-      background: linear-gradient(135deg, #92400e, #d4af37);
-      border: none; border-radius: 14px; padding: 12px 24px;
-      color: white; font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s;
-    }
-    .btn-secret:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.4); }
-    .btn-secret:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .secret-result-box {
-      background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px; display: none;
-    }
+    .btn-secret { background: linear-gradient(135deg, #92400e, #d4af37); border: none; border-radius: 14px; padding: 12px 24px; color: white; font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; }
+    .btn-secret:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .secret-result-box { background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; padding: 20px; margin-bottom: 16px; display: none; }
     .secret-result-box.show { display: block; }
     .secret-card-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .secret-card-img {
-      width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden;
-      border: 2px solid rgba(212,175,55,0.5); flex-shrink: 0; perspective: 600px;
-    }
-    .secret-card-inner {
-      width: 100%; height: 100%; position: relative;
-      transform-style: preserve-3d; transition: transform 0.8s ease;
-    }
+    .secret-card-img { width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; border: 2px solid rgba(212,175,55,0.5); flex-shrink: 0; perspective: 600px; }
+    .secret-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s ease; }
     .secret-card-inner.flipped { transform: rotateY(180deg); }
-    .secret-card-front, .secret-card-back {
-      position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden;
-    }
+    .secret-card-front, .secret-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
     .secret-card-back { transform: rotateY(0deg); }
     .secret-card-front { transform: rotateY(180deg); }
     .secret-card-front img, .secret-card-back img { width: 100%; height: 100%; object-fit: cover; }
@@ -200,35 +127,65 @@
     .secret-card-name { font-size: 14px; color: white; font-weight: 700; }
     .secret-text { font-size: 14px; line-height: 2; color: var(--text); }
     .secret-header { font-size: 15px; color: #d4af37; font-weight: 700; margin-bottom: 10px; }
-    .cursor {
-      display: inline-block; width: 2px; height: 16px;
-      background: #10b981; margin-left: 2px;
-      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
-    }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
-    .loading-dots { display: flex; gap: 8px; }
-    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #10b981; animation: bounce 1.2s ease-in-out infinite; }
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
-    .loading-text { font-size: 14px; color: var(--dim); }
   </style>
 </head>
 <body>
 
-<div class="page-header">
-  <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title">🌿 Nature Spirit Oracle</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
-</div>
-
+<!-- REVEAL OVERLAY -->
 <div class="reveal-overlay" id="revealOverlay">
   <div class="reveal-title">🌿 ไพ่แห่งธรรมชาติของท่าน...</div>
   <div class="reveal-subtitle">ใบที่ 4 ยังซ่อนไว้ เปิดได้ภายหลัง</div>
   <div class="reveal-row" id="revealRow"></div>
   <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🍃 รับคำทำนาย</button>
 </div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🌿 Nature Spirit Oracle</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(16,185,129,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌿</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="hero">
@@ -256,23 +213,28 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้ง + Secret Card 10 เหรียญ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้ง + Secret Card 10 เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🌿 ให้ธรรมชาติทำนาย</button>
 
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
+
+  <!-- RESULT -->
   <div class="result-box" id="resultBox">
     <div class="result-cards-row" id="resultRow"></div>
-    <div class="result-reading">
-      <div class="result-header"><span>🌿</span><div class="result-title">วิญญาณแห่งธรรมชาติกล่าวว่า...</div></div>
-      <div class="result-text" id="resultText"></div>
-    </div>
+    <div class="result-section sec-meaning"><h3>✦ ความหมายของไพ่</h3><p id="secMeaning"><div class="loading-wrap">วิญญาณแห่งธรรมชาติกำลังกระซิบ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-reading"><h3>✦ คำทำนาย</h3><p id="secReading"></p></div>
+    <div class="result-section sec-advice"><h3>✦ คำแนะนำ</h3><p id="secAdvice"></p></div>
+
     <div class="secret-box" id="secretBox">
       <div class="secret-title">🔮 ไพ่ความลับรอท่านอยู่</div>
       <div class="secret-desc">ข้าได้เก็บไพ่ใบที่ 4 ไว้ให้ท่านแล้ว...<br>ท่านต้องการรู้สิ่งที่ซ่อนอยู่เบื้องหลังหรือไม่?</div>
       <button class="btn-secret" id="btnSecret" onclick="openSecret()">🔮 เปิดไพ่ความลับ 🪙 10 เหรียญ</button>
     </div>
+
     <div class="secret-result-box" id="secretResultBox">
       <div class="secret-header">🔮 สิ่งที่ซ่อนเร้น...</div>
       <div class="secret-card-wrap">
@@ -293,53 +255,119 @@
   </div>
 </div>
 
-<script>
-const NATURE_CARDS = [
-  {id:'c1', name:'The Seed', meaning:'จุดเริ่มต้น ไอเดียใหม่', img:'../images/nature/c1.png'},
-  {id:'c2', name:'The Root', meaning:'พื้นฐาน ความมั่นคง', img:'../images/nature/c2.png'},
-  {id:'c3', name:'The Tree', meaning:'เติบโต แข็งแกร่ง', img:'../images/nature/c3.png'},
-  {id:'c4', name:'The River', meaning:'ไหลลื่น ปล่อยวาง', img:'../images/nature/c4.png'},
-  {id:'c5', name:'The Stone', meaning:'นิ่ง อดทน มั่นคง', img:'../images/nature/c5.png'},
-  {id:'c6', name:'The Rain', meaning:'เยียวยา ชำระล้าง', img:'../images/nature/c6.png'},
-  {id:'c7', name:'The Mist', meaning:'ไม่ชัดเจน ลังเล', img:'../images/nature/c7.png'},
-  {id:'c8', name:'The Bloom', meaning:'เปิดใจ บาน ความงาม', img:'../images/nature/c8.png'},
-  {id:'c9', name:'The Wind', meaning:'เปลี่ยนแปลง อิสระ', img:'../images/nature/c9.png'},
-  {id:'c10', name:'The Firefly', meaning:'ความหวังเล็กๆ แสงในมืด', img:'../images/nature/c10.png'},
-  {id:'s1', name:'The Storm', meaning:'วุ่นวาย ปัญหา', img:'../images/nature/s1.png'},
-  {id:'s2', name:'The Drought', meaning:'หมดแรง ขาดแคลน', img:'../images/nature/s2.png'},
-  {id:'s3', name:'The Crossroad', meaning:'ทางแยก ตัดสินใจ', img:'../images/nature/s3.png'},
-  {id:'s4', name:'The Fall', meaning:'จบบางอย่าง ปล่อย', img:'../images/nature/s4.png'},
-  {id:'s5', name:'The Tide', meaning:'ขึ้นลง ไม่เสถียร', img:'../images/nature/s5.png'},
-  {id:'s6', name:'The Shadow', meaning:'กลัว ความมืด', img:'../images/nature/s6.png'},
-  {id:'s7', name:'The Echo', meaning:'เรื่องเดิมวนซ้ำ', img:'../images/nature/s7.png'},
-  {id:'s8', name:'The Web', meaning:'ติดกับดัก พันธนาการ', img:'../images/nature/s8.png'},
-  {id:'s9', name:'The Cliff', meaning:'เสี่ยง กดดัน วิกฤต', img:'../images/nature/s9.png'},
-  {id:'s10', name:'The Cocoon', meaning:'ช่วงเปลี่ยนผ่าน', img:'../images/nature/s10.png'},
-  {id:'a1', name:'Nurture', meaning:'ดูแล ใส่ใจ', img:'../images/nature/a1.png'},
-  {id:'a2', name:'Wait', meaning:'รอจังหวะ อย่าเร่ง', img:'../images/nature/a2.png'},
-  {id:'a3', name:'Release', meaning:'ปล่อยวาง ตัด', img:'../images/nature/a3.png'},
-  {id:'a4', name:'Move', meaning:'ลงมือทำ เริ่มเลย', img:'../images/nature/a4.png'},
-  {id:'a5', name:'Listen', meaning:'ฟังข้างใน เสียงจิตใจ', img:'../images/nature/a5.png'},
-  {id:'a6', name:'Protect', meaning:'ปกป้องตัวเอง', img:'../images/nature/a6.png'},
-  {id:'a7', name:'Adapt', meaning:'ปรับตัว ยืดหยุ่น', img:'../images/nature/a7.png'},
-  {id:'a8', name:'Focus', meaning:'โฟกัส ตั้งใจ', img:'../images/nature/a8.png'},
-  {id:'a9', name:'Cleanse', meaning:'เคลียร์พลังลบ', img:'../images/nature/a9.png'},
-  {id:'a10', name:'Trust', meaning:'เชื่อในตัวเอง', img:'../images/nature/a10.png'},
-];
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+let analysisResult = '';
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
 
 const BACK = '../images/nature/backf.png';
-const positions = ['Core — พลังหลัก', 'Situation — สถานการณ์', 'Action — คำแนะนำ', 'Secret — ความลับ'];
-const posLabels = ['Core', 'Situation', 'Action', '🔮 Secret'];
-let shuffled = [], selectedCards = [], analysisResult = '';
+const NATURE_CARDS = [
+  {id:'c1',name:'The Seed',meaning:'จุดเริ่มต้น ไอเดียใหม่',img:'../images/nature/c1.png'},
+  {id:'c2',name:'The Root',meaning:'พื้นฐาน ความมั่นคง',img:'../images/nature/c2.png'},
+  {id:'c3',name:'The Tree',meaning:'เติบโต แข็งแกร่ง',img:'../images/nature/c3.png'},
+  {id:'c4',name:'The River',meaning:'ไหลลื่น ปล่อยวาง',img:'../images/nature/c4.png'},
+  {id:'c5',name:'The Stone',meaning:'นิ่ง อดทน มั่นคง',img:'../images/nature/c5.png'},
+  {id:'c6',name:'The Rain',meaning:'เยียวยา ชำระล้าง',img:'../images/nature/c6.png'},
+  {id:'c7',name:'The Mist',meaning:'ไม่ชัดเจน ลังเล',img:'../images/nature/c7.png'},
+  {id:'c8',name:'The Bloom',meaning:'เปิดใจ บาน ความงาม',img:'../images/nature/c8.png'},
+  {id:'c9',name:'The Wind',meaning:'เปลี่ยนแปลง อิสระ',img:'../images/nature/c9.png'},
+  {id:'c10',name:'The Firefly',meaning:'ความหวังเล็กๆ แสงในมืด',img:'../images/nature/c10.png'},
+  {id:'s1',name:'The Storm',meaning:'วุ่นวาย ปัญหา',img:'../images/nature/s1.png'},
+  {id:'s2',name:'The Drought',meaning:'หมดแรง ขาดแคลน',img:'../images/nature/s2.png'},
+  {id:'s3',name:'The Crossroad',meaning:'ทางแยก ตัดสินใจ',img:'../images/nature/s3.png'},
+  {id:'s4',name:'The Fall',meaning:'จบบางอย่าง ปล่อย',img:'../images/nature/s4.png'},
+  {id:'s5',name:'The Tide',meaning:'ขึ้นลง ไม่เสถียร',img:'../images/nature/s5.png'},
+  {id:'s6',name:'The Shadow',meaning:'กลัว ความมืด',img:'../images/nature/s6.png'},
+  {id:'s7',name:'The Echo',meaning:'เรื่องเดิมวนซ้ำ',img:'../images/nature/s7.png'},
+  {id:'s8',name:'The Web',meaning:'ติดกับดัก พันธนาการ',img:'../images/nature/s8.png'},
+  {id:'s9',name:'The Cliff',meaning:'เสี่ยง กดดัน วิกฤต',img:'../images/nature/s9.png'},
+  {id:'s10',name:'The Cocoon',meaning:'ช่วงเปลี่ยนผ่าน',img:'../images/nature/s10.png'},
+  {id:'a1',name:'Nurture',meaning:'ดูแล ใส่ใจ',img:'../images/nature/a1.png'},
+  {id:'a2',name:'Wait',meaning:'รอจังหวะ อย่าเร่ง',img:'../images/nature/a2.png'},
+  {id:'a3',name:'Release',meaning:'ปล่อยวาง ตัด',img:'../images/nature/a3.png'},
+  {id:'a4',name:'Move',meaning:'ลงมือทำ เริ่มเลย',img:'../images/nature/a4.png'},
+  {id:'a5',name:'Listen',meaning:'ฟังข้างใน เสียงจิตใจ',img:'../images/nature/a5.png'},
+  {id:'a6',name:'Protect',meaning:'ปกป้องตัวเอง',img:'../images/nature/a6.png'},
+  {id:'a7',name:'Adapt',meaning:'ปรับตัว ยืดหยุ่น',img:'../images/nature/a7.png'},
+  {id:'a8',name:'Focus',meaning:'โฟกัส ตั้งใจ',img:'../images/nature/a8.png'},
+  {id:'a9',name:'Cleanse',meaning:'เคลียร์พลังลบ',img:'../images/nature/a9.png'},
+  {id:'a10',name:'Trust',meaning:'เชื่อในตัวเอง',img:'../images/nature/a10.png'},
+];
+
+let shuffled = [], selectedCards = [];
 const MAX_CARDS = 4;
 
 function shuffle() {
   shuffled = [...NATURE_CARDS].sort(() => Math.random() - 0.5);
   renderCards();
   setTimeout(() => {
-    const scroll = document.getElementById('cardsScroll');
-    scroll.scrollTo({ left: 120, behavior: 'smooth' });
-    setTimeout(() => scroll.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+    const s = document.getElementById('cardsScroll');
+    s.scrollTo({ left:120, behavior:'smooth' });
+    setTimeout(() => s.scrollTo({ left:0, behavior:'smooth' }), 600);
   }, 500);
 }
 
@@ -351,45 +379,43 @@ function renderCards() {
   }).join('');
 }
 
-function selectCard(idx) {
+window.selectCard = function(idx) {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if (selectedCards.length >= MAX_CARDS) return;
   const card = shuffled[idx];
   if (selectedCards.find(s => s.id === card.id)) return;
   selectedCards.push(card);
   updateSlots(); renderCards();
   if (selectedCards.length === MAX_CARDS) document.getElementById('readBtn').disabled = false;
-}
+};
 
-function removeCard(i) {
+window.removeCard = function(i) {
   selectedCards.splice(i, 1);
   updateSlots(); renderCards();
   document.getElementById('readBtn').disabled = true;
-}
+};
 
 function updateSlots() {
-  const labels = ['Core', 'Situation', 'Action', '🔮'];
-  const labelsFull = ['Core', 'Situation', 'Action', 'Secret'];
   for (let i = 0; i < MAX_CARDS; i++) {
     const slot = document.getElementById(`slot${i}`);
     const isSecret = i === 3;
+    const labels = ['Core','Situation','Action','Secret'];
     if (selectedCards[i]) {
-      slot.className = `slot filled${isSecret ? ' secret-slot' : ''}`;
-      slot.onclick = () => removeCard(i);
-      slot.innerHTML = `<div class="slot-remove">✕</div>
-        <img class="slot-img" src="${BACK}">
-        <div class="slot-overlay"><div class="slot-pos${isSecret?' gold':''}">${labelsFull[i]}</div></div>`;
+      slot.className = `slot filled${isSecret?' secret-slot':''}`;
+      slot.setAttribute('onclick', `removeCard(${i})`);
+      slot.innerHTML = `<div class="slot-remove">✕</div><img class="slot-img" src="${BACK}"><div class="slot-overlay"><div class="slot-pos${isSecret?' gold':''}">${labels[i]}</div></div>`;
     } else {
-      slot.className = `slot${isSecret ? ' secret-slot' : ''}`;
-      slot.onclick = null;
-      slot.innerHTML = `<div class="slot-num">${isSecret?'🔮':i+1}</div><div class="slot-label${isSecret?' gold':''}">${labelsFull[i]}</div>`;
+      slot.className = `slot${isSecret?' secret-slot':''}`;
+      slot.removeAttribute('onclick');
+      slot.innerHTML = `<div class="slot-num">${isSecret?'🔮':i+1}</div><div class="slot-label${isSecret?' gold':''}">${labels[i]}</div>`;
     }
   }
 }
 
-function startReading() {
+window.startReading = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if (selectedCards.length < MAX_CARDS) return;
-
-  // สร้าง reveal cards (3 ใบแรกพลิกได้ ใบที่ 4 คว่ำ)
+  const posLabels = ['Core','Situation','Action','🔮 Secret'];
   const makeCard = (card, i) => {
     const isSecret = i === 3;
     return `<div class="reveal-card">
@@ -403,22 +429,13 @@ function startReading() {
       <div class="reveal-card-pos">${posLabels[i]}</div>
     </div>`;
   };
-
-  // เพิ่ม divider ระหว่างใบ 3 และ 4
   const cards = selectedCards.map((c,i) => makeCard(c,i));
-  document.getElementById('revealRow').innerHTML =
-    cards[0] + cards[1] + cards[2] +
-    '<div class="reveal-divider"></div>' +
-    cards[3];
-
+  document.getElementById('revealRow').innerHTML = cards[0]+cards[1]+cards[2]+'<div class="reveal-divider"></div>'+cards[3];
   document.getElementById('btnAccept').className = 'btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-
-  // พลิกแค่ 3 ใบแรก
   let flipped = 0;
   const flipNext = () => {
     if (flipped >= 3) {
-      // ใบที่ 4 แค่แสดงชื่อ "???" แต่ไม่พลิก
       document.getElementById('revealName3').style.opacity = '1';
       setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
       return;
@@ -430,24 +447,51 @@ function startReading() {
     }, 600);
   };
   setTimeout(flipNext, 300);
+};
+
+// PARSE DELIMITER
+const NATURE_KEYS = ['GREETING','MEANING','READING','ADVICE'];
+const NATURE_IDS = { MEANING:'secMeaning', READING:'secReading', ADVICE:'secAdvice' };
+
+function parseDelimiter(text, keys) {
+  const result = {};
+  keys.forEach((key, i) => {
+    const tag = '[' + key + ']';
+    const start = text.indexOf(tag);
+    if (start === -1) return;
+    const cs = start + tag.length;
+    const nk = keys[i+1];
+    const nt = nk ? '[' + nk + ']' : null;
+    const end = nt ? text.indexOf(nt) : text.length;
+    result[key] = text.slice(cs, end === -1 ? text.length : end).trim();
+  });
+  return result;
 }
 
-async function acceptReading() {
+function updateSections(text) {
+  const parsed = parseDelimiter(text, NATURE_KEYS);
+  if (parsed['GREETING']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show'); gb.textContent = parsed['GREETING'];
+  }
+  Object.entries(NATURE_IDS).forEach(([key, id]) => {
+    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+  });
+}
+
+window.acceptReading = async function() {
   document.getElementById('revealOverlay').classList.remove('show');
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
 
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 20) { alert('เหรียญไม่พอ ต้องใช้ 20 เหรียญ'); return; }
-  localStorage.setItem('coins', String(coins - 20));
-  document.getElementById('coinCount').textContent = coins - 20;
-  document.getElementById('coinDisplay').textContent = coins - 20;
+  // reset
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  Object.values(NATURE_IDS).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading-wrap">วิญญาณแห่งธรรมชาติกำลังกระซิบ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  });
 
-  const resultBox = document.getElementById('resultBox');
-  const resultText = document.getElementById('resultText');
-  resultBox.classList.add('show');
-
-  // แสดง 3 ใบ + Secret คว่ำ
   const mainCards = selectedCards.slice(0, 3);
-  const secretCard = selectedCards[3];
   document.getElementById('resultRow').innerHTML =
     mainCards.map((c,i) => `
       <div class="result-card">
@@ -462,113 +506,121 @@ async function acceptReading() {
       <div class="result-card-pos">Secret</div>
     </div>`;
 
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">วิญญาณแห่งธรรมชาติกำลังกระซิบ...</div></div>`;
-  resultBox.scrollIntoView({ behavior: 'smooth' });
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
 
   const cardInfo = mainCards.map((c,i) =>
     `${['Core','Situation','Action'][i]}: ${c.name} (${c.meaning})`
   ).join('\n');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'foot-reading',
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        system: `ท่านคือวิญญาณแห่งป่าผู้เฒ่า ผู้ทำนายชะตาผ่านไพ่ธรรมชาติ พูดด้วยน้ำเสียงลึกซึ้ง ลึกลับ อบอุ่น เรียกผู้มาถามว่า "ท่าน" เรียกตัวเองว่า "ข้า" ใช้ภาษาไทยที่มีกลิ่นอายโบราณแต่เข้าใจง่าย ทำนายชัดเจน ตรงไปตรงมา บอกสิ่งที่จะเกิด บอกสิ่งที่ควรทำ ไม่กำกวม ห้ามใช้ markdown ห้ามใช้ * หรือ #`,
-        messages: [{ role: 'user', content: `ไพ่ที่จั่วได้:\n${cardInfo}\n\nกรุณาทำนายโดยเชื่อมโยงทั้ง 3 ใบ อธิบายความหมายของแต่ละใบ บอกสิ่งที่กำลังเกิดขึ้น บอกทางออกที่ชัดเจน และบอกสิ่งที่ท่านควรทำต่อจากนี้` }]
+        max_tokens: 4000,
+        system: `ท่านคือวิญญาณแห่งป่าผู้เฒ่า ผู้ทำนายชะตาผ่านไพ่ธรรมชาติ เรียกผู้ถามว่า "ท่าน" เรียกตัวเองว่า "ข้า" ต้องใช้ tag [GREETING][MEANING][READING][ADVICE] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown เขียนให้จบสมบูรณ์`,
+        messages: [{ role:'user', content:`ไพ่ที่จั่วได้:\n${cardInfo}
+
+[GREETING]
+ทักทายท่านผู้ถาม 1-2 ประโยค
+[MEANING]
+ความหมายของไพ่ทั้ง 3 ใบ อธิบายแต่ละใบ 3-4 ประโยค
+[READING]
+คำทำนาย เชื่อมโยงทั้ง 3 ใบ บอกสิ่งที่กำลังเกิด 4-5 ประโยค
+[ADVICE]
+คำแนะนำ สิ่งที่ควรทำและไม่ควรทำ 3-4 ประโยค
+ห้ามมีข้อความนอก tag ห้ามใช้ markdown` }]
       })
     });
 
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      return;
+    }
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let text = '';
-    resultText.innerHTML = '';
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    resultText.appendChild(cursor);
+    let fullText = '';
+    Object.values(NATURE_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      text += decoder.decode(value);
-      resultText.innerHTML = text.replace(/\n/g,'<br>');
-      resultText.appendChild(cursor);
+      fullText += decoder.decode(value, { stream:true });
+      updateSections(fullText);
     }
-    cursor.remove();
-    resultText.innerHTML = text.replace(/\n/g,'<br>');
-    analysisResult = text;
+    updateSections(fullText);
+    analysisResult = fullText;
+
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'Nature Spirit Oracle',
+      cards: mainCards.map(c=>c.name).join(' + '),
+      result: fullText, createdAt: serverTimestamp()
+    });
 
     document.getElementById('secretBox').classList.add('show');
 
-  } catch(e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-  }
-}
+  } catch(e) { console.error(e); }
+};
 
-async function openSecret() {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 10) { alert('เหรียญไม่พอ ต้องใช้ 10 เหรียญ'); return; }
-  localStorage.setItem('coins', String(coins - 10));
-  document.getElementById('coinCount').textContent = coins - 10;
-
+window.openSecret = async function() {
+  if (!currentUser) return;
   document.getElementById('btnSecret').disabled = true;
-  document.getElementById('secretBox').classList.remove('show');
 
   const secretCard = selectedCards[3];
   document.getElementById('secretCardImg').src = secretCard.img;
   document.getElementById('secretCardName').textContent = secretCard.name;
   document.getElementById('secretCardMeaning').textContent = secretCard.meaning;
+  document.getElementById('secretBox').classList.remove('show');
   document.getElementById('secretResultBox').classList.add('show');
-  document.getElementById('secretResultBox').scrollIntoView({ behavior: 'smooth' });
-
-  setTimeout(() => {
-    document.getElementById('secretCardInner').classList.add('flipped');
-  }, 300);
+  document.getElementById('secretResultBox').scrollIntoView({ behavior:'smooth' });
+  setTimeout(() => document.getElementById('secretCardInner').classList.add('flipped'), 300);
 
   const secretText = document.getElementById('secretText');
-  secretText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ข้าจะเปิดเผยสิ่งที่ซ่อนอยู่...</div></div>`;
+  secretText.innerHTML = '<div class="loading-wrap">ข้าจะเปิดเผยสิ่งที่ซ่อนอยู่ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'han-oracle-1',
         model: 'claude-sonnet-4-6',
-        max_tokens: 800,
-        system: `ท่านคือวิญญาณแห่งป่าผู้เฒ่า เรียกผู้มาถามว่า "ท่าน" เรียกตัวเองว่า "ข้า" พูดลึกลับ ลึกซึ้ง ชัดเจน ตรงไปตรงมา ห้ามใช้ markdown`,
-        messages: [{ role: 'user', content: `คำทำนายเดิม:\n${analysisResult}\n\nไพ่ความลับที่เพิ่งเปิด: ${secretCard.name} (${secretCard.meaning})\n\nเปิดเผยสิ่งที่ซ่อนเร้นเบื้องหลัง เชื่อมกับคำทำนายเดิม บอกสิ่งที่ท่านยังไม่รู้หรือยังมองไม่เห็น` }]
+        max_tokens: 1000,
+        messages: [{ role:'user', content:`คำทำนายเดิม:\n${analysisResult}\n\nไพ่ความลับที่เพิ่งเปิด: ${secretCard.name} (${secretCard.meaning})\n\nเปิดเผยสิ่งที่ซ่อนเร้นเบื้องหลัง เชื่อมกับคำทำนายเดิม บอกสิ่งที่ท่านยังไม่รู้หรือยังมองไม่เห็น เรียกผู้ถามว่า "ท่าน" ห้ามใช้ markdown` }]
       })
     });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) { secretText.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; return; }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
-    secretText.innerHTML = '';
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    secretText.appendChild(cursor);
-
+    secretText.textContent = '';
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value);
-      secretText.innerHTML = text.replace(/\n/g,'<br>');
-      secretText.appendChild(cursor);
+      secretText.textContent = text;
     }
-    cursor.remove();
-    secretText.innerHTML = text.replace(/\n/g,'<br>');
+  } catch(e) { secretText.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
+};
 
-  } catch(e) {
-    secretText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-  shuffle();
-});
+document.addEventListener('DOMContentLoaded', () => { shuffle(); });
 </script>
 </body>
 </html>
