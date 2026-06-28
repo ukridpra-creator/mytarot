@@ -6,6 +6,7 @@
   <title>ประวัติดูดวง — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
     .page-header {
@@ -23,7 +24,6 @@
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
 
-    /* Guest */
     .guest-section { text-align: center; padding: 60px 20px; }
     .guest-icon { font-size: 64px; margin-bottom: 16px; }
     .guest-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 8px; }
@@ -36,7 +36,6 @@
       font-family: 'Sarabun', sans-serif;
     }
 
-    /* Loading */
     .loading-section { text-align: center; padding: 60px 20px; }
     .loading-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
     .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
@@ -44,13 +43,11 @@
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
 
-    /* Empty */
     .empty-section { text-align: center; padding: 60px 20px; }
     .empty-icon { font-size: 64px; margin-bottom: 16px; }
     .empty-title { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
     .empty-desc { font-size: 14px; color: var(--dim); }
 
-    /* History list */
     .history-count { font-size: 12px; color: var(--dim); margin-bottom: 16px; }
     .history-item {
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
@@ -66,7 +63,8 @@
     }
     .history-date { font-size: 11px; color: var(--dim); margin-left: auto; }
     .history-question { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
-    .history-result { font-size: 13px; color: var(--dim); line-height: 1.6;
+    .history-result {
+      font-size: 13px; color: var(--dim); line-height: 1.6;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
@@ -88,32 +86,26 @@
     .detail-date { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
     .detail-question { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
     .detail-result { font-size: 14px; color: var(--text); line-height: 2; white-space: pre-wrap; }
+
+    .detail-btn-row { display: flex; gap: 10px; margin-top: 20px; }
     .detail-close {
-      width: 100%; padding: 14px; border-radius: 16px; margin-top: 20px;
+      flex: 1; padding: 14px; border-radius: 16px;
       background: rgba(255,255,255,0.05); border: 1px solid var(--border);
       color: white; font-size: 15px; font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
-
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(13,8,32,0.95); backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      display: flex; padding: 8px 0 12px;
+    .detail-delete {
+      padding: 14px 20px; border-radius: 16px;
+      background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444; font-size: 15px; font-family: 'Sarabun', sans-serif; cursor: pointer;
     }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; gap: 3px; cursor: pointer;
-      color: var(--dim); font-size: 10px; transition: color 0.2s;
-    }
-    .nav-item span:first-child { font-size: 20px; }
-    .nav-item.active { color: var(--purple-light); }
+    .detail-delete:active { opacity: 0.7; }
   </style>
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-    import { getFirestore, collection, getDocs,  query, limit }
+    import { getFirestore, collection, getDocs, doc, deleteDoc, query, orderBy, limit }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -128,23 +120,52 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+    let currentUser = null;
+    let currentDocId = null;
 
-    function formatDate(iso) {
-      const d = new Date(iso);
-      return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    // ─── แก้ Invalid Date ───
+    function formatDate(ts) {
+      try {
+        const d = ts?.toDate ? ts.toDate() : new Date(ts);
+        if (isNaN(d)) return '—';
+        return d.toLocaleDateString('th-TH', {
+          day: 'numeric', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch(e) { return '—'; }
     }
 
     function showDetail(item) {
-      document.getElementById('detailType').textContent = item.type;
+      currentDocId = item.id;
+      document.getElementById('detailType').textContent = item.type || 'ดูดวง';
       document.getElementById('detailDate').textContent = formatDate(item.createdAt);
       document.getElementById('detailQuestion').textContent = item.question ? `คำถาม: ${item.question}` : '';
-      document.getElementById('detailResult').textContent = item.result;
+      document.getElementById('detailResult').textContent = item.result || '';
       document.getElementById('detailOverlay').classList.add('show');
     }
 
+    window.showDetailFromData = function(itemJson) {
+      showDetail(JSON.parse(itemJson));
+    };
+
     window.closeDetail = function() {
       document.getElementById('detailOverlay').classList.remove('show');
+      currentDocId = null;
+    };
+
+    // ─── ลบรายการ ───
+    window.deleteItem = async function() {
+      if (!currentDocId || !currentUser) return;
+      if (!confirm('ลบรายการนี้ออกจากประวัติ?')) return;
+
+      try {
+        await deleteDoc(doc(db, 'users', currentUser.uid, 'readings', currentDocId));
+        closeDetail();
+        loadHistory(currentUser.uid);
+      } catch(e) {
+        console.error(e);
+        alert('ลบไม่สำเร็จ ลองใหม่นะคะ');
+      }
     };
 
     async function loadHistory(uid) {
@@ -153,14 +174,17 @@
       document.getElementById('emptySection').style.display = 'none';
 
       try {
-        const q = query(
-  collection(db, 'users', uid, 'readings'),
-  limit(50)
-);
+        const q = query(collection(db, 'users', uid, 'readings'), limit(50));
         const snap = await getDocs(q);
         const items = [];
-        snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-        items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        snap.forEach(d => items.push({ id: d.id, ...d.data() }));
+
+        // sort by createdAt desc
+        items.sort((a, b) => {
+          const da = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+          const db2 = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+          return db2 - da;
+        });
 
         document.getElementById('loadingSection').style.display = 'none';
 
@@ -170,16 +194,22 @@
         }
 
         document.getElementById('historyCount').textContent = `ประวัติทั้งหมด ${items.length} รายการ`;
-        document.getElementById('historyList').innerHTML = items.map(item => `
-          <div class="history-item" onclick='showDetailFromData(${JSON.stringify(item)})'>
+        document.getElementById('historyList').innerHTML = items.map(item => {
+          // serialize timestamp ก่อน JSON.stringify
+          const itemForJson = {
+            ...item,
+            createdAt: item.createdAt?.toDate ? item.createdAt.toDate().toISOString() : item.createdAt
+          };
+          return `
+          <div class="history-item" onclick='showDetailFromData(${JSON.stringify(JSON.stringify(itemForJson))})'>
             <div class="history-header">
               <div class="history-type">${item.type || 'ดูดวง'}</div>
               <div class="history-date">${formatDate(item.createdAt)}</div>
             </div>
             ${item.question ? `<div class="history-question">📝 ${item.question}</div>` : ''}
             <div class="history-result">${item.result || ''}</div>
-          </div>
-        `).join('');
+          </div>`;
+        }).join('');
         document.getElementById('historyList').style.display = 'block';
 
       } catch(e) {
@@ -189,15 +219,13 @@
       }
     }
 
-    window.showDetailFromData = function(item) {
-      showDetail(item);
-    };
-
     onAuthStateChanged(auth, user => {
+      currentUser = user;
       if (user) {
         document.getElementById('guestSection').style.display = 'none';
         document.getElementById('historyCount').style.display = 'block';
         loadHistory(user.uid);
+        if (typeof setupCheckin === 'function') setupCheckin(user, '../');
       } else {
         document.getElementById('guestSection').style.display = 'block';
         document.getElementById('loadingSection').style.display = 'none';
@@ -205,7 +233,7 @@
     });
 
     window.loginNow = async function() {
-      try { await signInWithPopup(auth, provider); }
+      try { await signInWithPopup(auth, new GoogleAuthProvider()); }
       catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ'); }
     };
   </script>
@@ -220,10 +248,14 @@
     <div class="detail-date" id="detailDate"></div>
     <div class="detail-question" id="detailQuestion"></div>
     <div class="detail-result" id="detailResult"></div>
-    <button class="detail-close" onclick="closeDetail()">ปิด</button>
+    <div class="detail-btn-row">
+      <button class="detail-close" onclick="closeDetail()">ปิด</button>
+      <button class="detail-delete" onclick="deleteItem()">🗑️ ลบ</button>
+    </div>
   </div>
 </div>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">📜 ประวัติดูดวง</div>
@@ -231,7 +263,6 @@
 
 <div class="page-content">
 
-  <!-- Guest -->
   <div id="guestSection" style="display:none">
     <div class="guest-section">
       <div class="guest-icon">📜</div>
@@ -244,15 +275,13 @@
     </div>
   </div>
 
-  <!-- Loading -->
   <div id="loadingSection" style="display:none">
     <div class="loading-section">
       <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div style="font-size:14px;color:var(--dim);">กำลังโหลดประวัติ...</div>
+      <div style="font-size:14px;color:var(--dim)">กำลังโหลดประวัติ...</div>
     </div>
   </div>
 
-  <!-- Empty -->
   <div id="emptySection" style="display:none">
     <div class="empty-section">
       <div class="empty-icon">🔮</div>
@@ -261,16 +290,16 @@
     </div>
   </div>
 
-  <!-- History -->
   <div class="history-count" id="historyCount" style="display:none"></div>
   <div id="historyList" style="display:none"></div>
 
 </div>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🔮</span><span>ดูดวง</span></div>
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item active"><span>📜</span><span>ประวัติ</span></div>
-  <div class="nav-item" onclick="window.location.href='../index.html#checkin'"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
