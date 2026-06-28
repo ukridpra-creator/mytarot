@@ -85,7 +85,7 @@ body::before {
   transition:border-color 0.2s;
 }
 .inp:focus { border-color:#a855f7; }
-.inp-sub { text-align:center; font-size:10px; color:#6b7280; margin-top:4px; }
+select.inp { appearance: none; -webkit-appearance: none; }
 
 .btn-calc {
   width:100%; padding:15px;
@@ -227,15 +227,15 @@ body::before {
   <label class="form-label">วันเกิดของคุณ</label>
   <div class="input-row">
     <div class="inp-group">
-      <input class="inp" id="inDay" type="number" placeholder="วัน" min="1" max="31">
+      <select class="inp" id="inDay" style="font-size:14px"></select>
       <div class="inp-sub">วัน</div>
     </div>
     <div class="inp-group">
-      <input class="inp" id="inMonth" type="number" placeholder="เดือน" min="1" max="12">
+      <select class="inp" id="inMonth" style="font-size:13px"></select>
       <div class="inp-sub">เดือน</div>
     </div>
     <div class="inp-group">
-      <input class="inp" id="inYear" type="number" placeholder="ปี ค.ศ." min="1900" max="2010">
+      <select class="inp" id="inYear" style="font-size:14px"></select>
       <div class="inp-sub">ปี ค.ศ.</div>
     </div>
   </div>
@@ -339,7 +339,38 @@ body::before {
   </div>
 </div>
 
-<script type="module">
+<script>
+// สร้าง dropdown วัน
+var dayEl = document.getElementById('inDay');
+if (dayEl && dayEl.tagName === 'SELECT') {
+  for (var d = 1; d <= 31; d++) {
+    var o = document.createElement('option');
+    o.value = d; o.textContent = d;
+    dayEl.appendChild(o);
+  }
+}
+
+// สร้าง dropdown เดือน
+var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+var monthEl = document.getElementById('inMonth');
+if (monthEl && monthEl.tagName === 'SELECT') {
+  months.forEach(function(m, i) {
+    var o = document.createElement('option');
+    o.value = i + 1; o.textContent = m;
+    monthEl.appendChild(o);
+  });
+}
+
+// สร้าง dropdown ปี เริ่มที่ 2000
+var yearEl = document.getElementById('inYear');
+if (yearEl && yearEl.tagName === 'SELECT') {
+  for (var y = 2000; y >= 1940; y--) {
+    var o = document.createElement('option');
+    o.value = y; o.textContent = 'ค.ศ. ' + y + ' (พ.ศ. ' + (y+543) + ')';
+    yearEl.appendChild(o);
+  }
+}
+</script>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -470,6 +501,11 @@ function getCenter(id) {
 }
 
 window.calculate = async function() {
+  if (!currentUser) {
+    document.getElementById('loginModal').classList.add('show');
+    return;
+  }
+
   var day   = parseInt(document.getElementById('inDay').value);
   var month = parseInt(document.getElementById('inMonth').value);
   var year  = parseInt(document.getElementById('inYear').value);
