@@ -40,6 +40,8 @@ const SERVICE_COSTS = {
 "foot-reading": 30,
 "deity": 20,
 "love-code": 10,
+"saju": 30,
+"saju-read": 0,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
