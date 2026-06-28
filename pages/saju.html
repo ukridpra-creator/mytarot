@@ -357,31 +357,6 @@ window.startReading = async function() {
   btn.disabled = true;
   btn.textContent = '⏳ กำลังวิเคราะห์...';
 
-  // หักเหรียญก่อน
-  try {
-    var idToken = await currentUser.getIdToken();
-    var coinRes = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
-      body: JSON.stringify({ service: 'bazi' }) // ใช้ bazi = 40 ลด saju เป็น 30 ต้องเพิ่ม service
-    });
-    var newBalance = coinRes.headers.get('X-New-Coin-Balance');
-    if (newBalance != null) updateCoinUI(parseInt(newBalance));
-    if (!coinRes.ok) {
-      var err = await coinRes.json();
-      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
-      else alert('เกิดข้อผิดพลาดค่ะ');
-      btn.disabled = false;
-      btn.textContent = '🌸 ดูซาจูเกาหลี';
-      return;
-    }
-  } catch(e) {
-    console.error(e);
-    btn.disabled = false;
-    btn.textContent = '🌸 ดูซาจูเกาหลี';
-    return;
-  }
-
   var resultBox = document.getElementById('resultBox');
   var resultText = document.getElementById('resultText');
   resultBox.classList.add('show');
@@ -408,12 +383,12 @@ window.startReading = async function() {
 เรียก${selectedGender === 'ชาย' ? 'ว่าโอปป้า' : 'ว่าออนนี่'}ตลอด เรียกตัวเองว่า "น้อง" ห้ามพูดว่าหัวข้อที่ 1 2 3 ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`;
 
   try {
-    var idToken2 = await currentUser.getIdToken();
+    var idToken = await currentUser.getIdToken();
     var res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken2 },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
       body: JSON.stringify({
-        service: 'saju-read',
+        service: 'foot-reading',
         model: 'claude-sonnet-4-6',
         max_tokens: 8000,
         system: `คุณคือผู้เชี่ยวชาญซาจูเกาหลี (사주팔자) พูดแบบ Gen Z อบอุ่น เป็นกันเอง สไตล์เกาหลี ทักทายด้วย "อันยองฮาเซโย" เรียกผู้ชายว่า "โอปป้า" เรียกผู้หญิงว่า "ออนนี่" เรียกตัวเองว่า "น้อง" แบ่งเป็นหัวข้อชัดเจน ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
