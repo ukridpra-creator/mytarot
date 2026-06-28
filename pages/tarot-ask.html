@@ -6,8 +6,9 @@
   <title>ถามอะไรก็ได้ — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 60px; }
+    body { padding-bottom: 80px; }
     .page-header {
       display: flex; align-items: center; gap: 12px;
       padding: 16px 20px; border-bottom: 1px solid var(--border);
@@ -24,8 +25,7 @@
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
     .hero { text-align: center; padding: 12px 0 20px; }
-    .hero-icon { margin-bottom: 8px; }
-    .hero-icon img { width: 80px; height: 80px; object-fit: contain; }
+    .hero-icon img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 8px; }
     .hero-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
     .hero-desc { font-size: 13px; color: var(--dim); }
     .question-box {
@@ -54,7 +54,6 @@
       transition: all 0.3s; position: relative; overflow: hidden;
     }
     .slot.filled { border: 2px solid rgba(124,58,237,0.6); cursor: pointer; }
-    .slot.filled:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.5); }
     .slot-num { font-size: 10px; color: var(--dim); }
     .slot-label { font-size: 9px; color: var(--purple-light); margin-top: 2px; text-align: center; padding: 0 2px; line-height: 1.2; }
     .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
@@ -97,8 +96,7 @@
       font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
       cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
     }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
     .reveal-overlay {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(0,0,0,0.92); display: none;
@@ -190,10 +188,8 @@
       border: 1px solid rgba(124,58,237,0.4);
       border-radius: 12px; padding: 12px; color: var(--purple-light);
       font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      transition: all 0.2s; margin-bottom: 12px;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px;
     }
-    .followup-btn:hover { background: rgba(124,58,237,0.3); }
     .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
     .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
@@ -202,22 +198,53 @@
 </head>
 <body>
 
-<div class="page-header">
-  <a href="tarot.html" class="back-btn">←</a>
-  <div class="page-title">ถามอะไรก็ได้</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
-</div>
-
+<!-- REVEAL OVERLAY -->
 <div class="reveal-overlay" id="revealOverlay">
   <div class="reveal-title">🔮 ไพ่ของคุณพี่...</div>
   <div id="revealRow1" class="reveal-row"></div>
   <button class="btn-accept" id="btnAccept" onclick="acceptReading()">✨ รับคำทำนาย</button>
 </div>
 
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">ถามอะไรก็ได้</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
 <div class="page-content">
   <div class="hero">
     <div class="hero-icon">
-      <img src="../images/mascotask.png" alt="mascot" onerror="this.style.fontSize='40px';this.outerHTML='<div style=\'font-size:40px\'>🔮</div>'">
+      <img src="../images/mascotask.png" alt="mascot" onerror="this.outerHTML='<div style=\'font-size:40px;margin-bottom:8px\'>🔮</div>'">
     </div>
     <div class="hero-title">ถามอะไรก็ได้</div>
     <div class="hero-desc">ไพ่ 3 ใบ อดีต ปัจจุบัน อนาคต ตอบทุกคำถามในใจค่ะ</div>
@@ -242,14 +269,12 @@
   <div class="cards-section">
     <div class="cards-title">🃏 ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบค่ะ</div>
     <div class="cards-scroll" id="cardsScroll"></div>
-    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">
-      ← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →
-    </div>
+    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
   </div>
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 20 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🔮 ให้ไพ่ทำนาย</button>
@@ -267,7 +292,102 @@
   </div>
 </div>
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'">
+    <span>🏠</span><span>หน้าหลัก</span>
+  </div>
+  <div class="nav-item" onclick="window.location.href='history.html'">
+    <span>📜</span><span>ประวัติ</span>
+  </div>
+  <div class="nav-item" onclick="openCheckin()">
+    <span>🎁</span><span>เช็คอิน</span>
+  </div>
+  <div class="nav-item" onclick="window.location.href='coins.html'">
+    <span>🪙</span><span>เหรียญ</span>
+  </div>
+  <div class="nav-item" onclick="window.location.href='profile.html'">
+    <span>👤</span><span>โปรไฟล์</span>
+  </div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+// ─── UPDATE COIN ───
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+// ─── AVATAR ───
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else {
+    el.textContent = avatar || '👤';
+  }
+}
+
+// ─── LOGIN POPUP ───
+window.loginNow = async function() {
+  try {
+    var provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) { console.error(e); }
+};
+
+window.logoutNow = async function() {
+  const { signOut } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+  await signOut(auth);
+  window.location.href = '../index.html';
+};
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    var coins = data.coins !== undefined ? data.coins : 0;
+    updateCoinUI(coins);
+    setAvatarDisplay(data.avatar || '');
+    var guestView = document.getElementById('guestView');
+    var loggedView = document.getElementById('loggedView');
+    if (guestView) guestView.style.display = 'none';
+    if (loggedView) loggedView.style.display = 'block';
+    var menuName = document.getElementById('menuName');
+    var menuEmail = document.getElementById('menuEmail');
+    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
+    if (menuEmail) menuEmail.textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+  }
+});
+
+// ─── TAROT DATA ───
 const TAROT = [
   {id:0,name:'The Fool',img:'../images/tarot/0.png'},
   {id:1,name:'The Magician',img:'../images/tarot/1.png'},
@@ -351,11 +471,11 @@ const TAROT = [
 
 const BACK = '../images/tarot/back.png';
 const positions = ['อดีต','ปัจจุบัน','อนาคต'];
-let shuffled = [], selectedCards = [], followupHistory = [];
+let shuffled = [], selectedCards = [];
 const MAX_CARDS = 3;
-let currentUser = null;
 
-function colorizeReading(text) {
+// ─── COLORIZE ───
+function colorize(text) {
   const cards = [
     ['The High Priestess','#a855f7'],['The Hanged Man','#a855f7'],
     ['Wheel of Fortune','#f59e0b'],['The Hierophant','#a855f7'],
@@ -376,8 +496,8 @@ function colorizeReading(text) {
   });
   result = result.replace(
     /(Ace|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Page|Knight|Queen|King) of (Wands|Cups|Swords|Pentacles)/g,
-    (match) => {
-      const colors = {Wands:'#f59e0b', Cups:'#3b82f6', Swords:'#9ca3af', Pentacles:'#10b981'};
+    match => {
+      const colors = {Wands:'#f59e0b',Cups:'#3b82f6',Swords:'#9ca3af',Pentacles:'#10b981'};
       const suit = match.split(' of ')[1];
       return `<span style="color:${colors[suit]};font-weight:700">${match}</span>`;
     }
@@ -385,27 +505,10 @@ function colorizeReading(text) {
   return result.replace(/\n/g, '<br>');
 }
 
-async function saveReading(type, question, result) {
-  if (!currentUser) return;
-  if (!result || result.length === 0) return;
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), { type, question: question || '', result: result, createdAt: new Date().toISOString() });
-  } catch(e) { console.error('saveReading error:', e); }
-}
-
+// ─── SHUFFLE ───
 function shuffle() {
   shuffled = [...TAROT].sort(() => Math.random() - 0.5);
   renderCards();
-  setTimeout(() => {
-    const scroll = document.getElementById('cardsScroll');
-    scroll.scrollTo({ left: 120, behavior: 'smooth' });
-    setTimeout(() => scroll.scrollTo({ left: 0, behavior: 'smooth' }), 600);
-  }, 500);
 }
 
 function renderCards() {
@@ -416,27 +519,28 @@ function renderCards() {
   }).join('');
 }
 
-function selectCard(idx) {
+window.selectCard = function(idx) {
+  if (!currentUser) { loginNow(); return; }
   if (selectedCards.length >= MAX_CARDS) return;
   const card = shuffled[idx];
   if (selectedCards.find(s => s.id === card.id)) return;
   selectedCards.push(card);
   updateSlots(); renderCards();
   if (selectedCards.length === MAX_CARDS) document.getElementById('readBtn').disabled = false;
-}
+};
 
-function removeCard(i) {
+window.removeCard = function(i) {
   selectedCards.splice(i, 1);
   updateSlots(); renderCards();
   document.getElementById('readBtn').disabled = true;
-}
+};
 
 function updateSlots() {
   for (let i = 0; i < MAX_CARDS; i++) {
     const slot = document.getElementById(`slot${i}`);
     if (selectedCards[i]) {
       slot.className = 'slot filled';
-      slot.onclick = () => removeCard(i);
+      slot.onclick = () => window.removeCard(i);
       slot.innerHTML = `<div class="slot-remove">✕</div>
         <img class="slot-img" src="${BACK}">
         <div class="slot-overlay"><div class="slot-pos">${positions[i]}</div></div>`;
@@ -447,7 +551,9 @@ function updateSlots() {
   }
 }
 
-function startReading() {
+// ─── START READING ───
+window.startReading = function() {
+  if (!currentUser) { loginNow(); return; }
   if (selectedCards.length < MAX_CARDS) return;
 
   const makeCard = (card, i) => `
@@ -468,7 +574,10 @@ function startReading() {
 
   let flipped = 0;
   const flipNext = () => {
-    if (flipped >= MAX_CARDS) { setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300); return; }
+    if (flipped >= MAX_CARDS) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
     setTimeout(() => {
       document.getElementById(`revealInner${flipped}`).classList.add('flipped');
       document.getElementById(`revealName${flipped}`).style.opacity = '1';
@@ -476,10 +585,11 @@ function startReading() {
     }, 600);
   };
   setTimeout(flipNext, 300);
-}
+};
 
-async function acceptReading() {
-  if (!currentUser) { alert('กรุณาเข้าสู่ระบบก่อนค่ะ'); return; }
+// ─── ACCEPT READING ───
+window.acceptReading = async function() {
+  if (!currentUser) { loginNow(); return; }
   document.getElementById('revealOverlay').classList.remove('show');
 
   const btn = document.getElementById('readBtn');
@@ -488,42 +598,55 @@ async function acceptReading() {
   btn.disabled = true;
   resultBox.classList.add('show');
 
-  document.getElementById('resultRow1').innerHTML = selectedCards.map((c,i)=>`
+  document.getElementById('resultRow1').innerHTML = selectedCards.map((c,i) => `
     <div class="result-card">
       <div class="result-card-img"><img src="${c.img}"></div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-pos">${positions[i]}</div>
     </div>`).join('');
 
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">ไพ่กำลังกระซิบบอกความลับ...</div></div>`;
+  resultText.innerHTML = `<div class="loading">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <div class="loading-text">ไพ่กำลังกระซิบบอกความลับ...</div>
+  </div>`;
   resultBox.scrollIntoView({ behavior: 'smooth' });
 
   const question = document.getElementById('question').value.trim();
-  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.name}`).join(', ');
 
   try {
     const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      },
       body: JSON.stringify({
         service: 'tarot',
-        model: 'claude-sonnet-4-6', max_tokens: 4000,
-        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดตรงๆ มีพลังงาน ให้กำลังใจ ชื่อไพ่ให้ใช้ภาษาอังกฤษเท่านั้น ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
-        messages: [{ role: 'user', content: `ทำนายไพ่ทาโรต์\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้บอกสิ่งที่ไพ่อยากสื่อ'}\nไพ่ที่จั่วได้: ${cardInfo}\nทำนายจากไพ่ทั้ง 3 ใบเชื่อมโยงกัน บอกอดีต ปัจจุบัน อนาคต และคำแนะนำให้ครบค่ะ` }]
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดตรงๆ มีพลังงาน ให้กำลังใจ ชื่อไพ่ใช้ภาษาอังกฤษ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{
+          role: 'user',
+          content: `ทำนายไพ่ทาโรต์\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้บอกสิ่งที่ไพ่อยากสื่อ'}\nไพ่ที่จั่วได้: ${cardInfo}\nทำนายจากไพ่ทั้ง 3 ใบเชื่อมโยงกัน บอกอดีต ปัจจุบัน อนาคต และคำแนะนำให้ครบค่ะ`
+        }]
       })
     });
 
-    if (res.status === 402) { alert('เหรียญไม่พอค่ะ กรุณาซื้อเหรียญเพิ่มค่ะ 🪙'); btn.disabled = false; return; }
-    if (res.status === 401) { alert('กรุณาเข้าสู่ระบบใหม่ค่ะ'); btn.disabled = false; return; }
-    if (!res.ok) { alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'); btn.disabled = false; return; }
-
+    // update coins
     const newBalance = res.headers.get('X-New-Coin-Balance');
-    if (newBalance != null) {
-      const b = parseInt(newBalance);
-      localStorage.setItem('coins', String(b));
-      document.getElementById('coinCount').textContent = b;
-      document.getElementById('coinDisplay').textContent = b;
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json();
+      if (err.error === 'insufficient_coins') {
+        alert('เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนค่ะ');
+      } else {
+        alert('เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏');
+      }
+      btn.disabled = false;
+      return;
     }
 
     const reader = res.body.getReader();
@@ -538,127 +661,106 @@ async function acceptReading() {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value);
-      resultText.innerHTML = colorizeReading(text);
+      resultText.innerHTML = colorize(text);
       resultText.appendChild(cursor);
     }
     cursor.remove();
-    resultText.innerHTML = colorizeReading(text);
+    resultText.innerHTML = colorize(text);
 
-    saveReading('ไพ่ทาโรต์ ถามอะไรก็ได้', question, text);
-    followupHistory = [];
+    // บันทึก Firestore ไม่ตัด
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'ไพ่ทาโรต์ ถามอะไรก็ได้',
+      question: question || '',
+      cards: selectedCards.map((c,i) => ({ name: c.name, position: positions[i] })),
+      result: text,
+      createdAt: serverTimestamp()
+    });
+
     document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
     console.error(e);
     resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
   }
-  btn.disabled = false;
-}
 
-async function askFollowup() {
-  if (!currentUser) return;
+  btn.disabled = false;
+  btn.textContent = '🔮 ดูไพ่อีกครั้ง';
+};
+
+// ─── FOLLOWUP ───
+window.askFollowup = async function() {
+  if (!currentUser) { loginNow(); return; }
   const input = document.getElementById('followupInput');
   const question = input.value.trim();
   if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
 
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
-
   followupBtn.disabled = true;
-  document.getElementById('followupInput').style.display = 'none';
-  document.getElementById('followupBtn').style.display = 'none';
-  document.getElementById('followupTitle').style.display = 'none';
 
   const time = Date.now();
   resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
   const answerDiv = document.getElementById(`ans_${time}`);
-  const cardInfo = selectedCards.map((c,i)=>`${positions[i]}: ${c.name}`).join(', ');
+  const cardInfo = selectedCards.map((c,i) => `${positions[i]}: ${c.name}`).join(', ');
 
   try {
     const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      },
       body: JSON.stringify({
         service: 'tarot_followup',
-        model: 'claude-sonnet-4-6', max_tokens: 600,
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
         system: `คุณคือหมอดูไพ่ทาโรต์ Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากไพ่เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
-        messages: [{ role: 'user', content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำถาม: ${question}` }]
+        messages: [{
+          role: 'user',
+          content: `ไพ่ที่จั่วได้: ${cardInfo}\nคำถาม: ${question}`
+        }]
       })
     });
 
-    if (res.status === 402) { answerDiv.textContent = 'เหรียญไม่พอค่ะ'; }
-    else if (!res.ok) { answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ'; }
-    else {
-      const newBalance = res.headers.get('X-New-Coin-Balance');
-      if (newBalance != null) {
-        const b = parseInt(newBalance);
-        localStorage.setItem('coins', String(b));
-        document.getElementById('coinCount').textContent = b;
-        document.getElementById('coinDisplay').textContent = b;
-      }
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = '';
-      const cursor = document.createElement('span');
-      cursor.className = 'cursor';
-      answerDiv.appendChild(cursor);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        text += decoder.decode(value);
-        answerDiv.textContent = text;
-        answerDiv.appendChild(cursor);
-      }
-      cursor.remove();
-      answerDiv.textContent = text;
-      followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
+    if (!res.ok) {
+      const err = await res.json();
+      answerDiv.textContent = err.error === 'insufficient_coins' ? 'เหรียญไม่พอค่ะ 🪙' : 'เกิดข้อผิดพลาดค่ะ';
+      followupBtn.disabled = false;
+      return;
     }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    answerDiv.appendChild(cursor);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+      answerDiv.appendChild(cursor);
+    }
+    cursor.remove();
+    answerDiv.textContent = text;
+    answerDiv.scrollIntoView({ behavior: 'smooth' });
+
   } catch(e) {
-    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
   input.value = '';
-  document.getElementById('followupInput').style.display = 'block';
-  document.getElementById('followupBtn').style.display = 'block';
-  document.getElementById('followupTitle').style.display = 'block';
   followupBtn.disabled = false;
-  answerDiv.scrollIntoView({ behavior: 'smooth' });
-}
+};
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-  shuffle();
-
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    const firebaseConfig = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, async user => {
-      currentUser = user;
-      if (user) {
-        localStorage.setItem('userId', user.uid);
-        try {
-          const { getFirestore, doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-          const db = getFirestore(app);
-          const snap = await getDoc(doc(db, 'users', user.uid));
-          const realCoins = snap.exists() ? (snap.data().coins ?? 0) : 0;
-          localStorage.setItem('coins', String(realCoins));
-          document.getElementById('coinCount').textContent = realCoins;
-          document.getElementById('coinDisplay').textContent = realCoins;
-        } catch(e) { console.error(e); }
-      } else {
-        window.location.href = '../index.html';
-      }
-    });
-  } catch(e) { console.error(e); }
-});
+// ─── INIT ───
+shuffle();
 </script>
 </body>
 </html>
