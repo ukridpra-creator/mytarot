@@ -331,13 +331,13 @@ function parseByTag(text) {
   if (content['greeting']) {
     const gb = document.getElementById('greetingBox');
     gb.classList.add('show');
-    gb.innerHTML = content['greeting'] + '<span class="cursor"></span>';
+    gb.textContent = content['greeting'];
   }
   // sections
   for (const [id, txt] of Object.entries(content)) {
     if (id === 'greeting') continue;
     const el = document.getElementById(id);
-    if (el) el.innerHTML = txt + '<span class="cursor"></span>';
+    if (el) el.textContent = txt;
   }
 }
 
