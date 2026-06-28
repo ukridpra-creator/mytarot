@@ -409,7 +409,6 @@ window.startReading = async function() {
   btn.textContent = '⏳ กำลังวิเคราะห์...';
 
   const resultSection = document.getElementById('resultSection');
-  const resultText = document.getElementById('resultText');
   resultSection.classList.add('show');
 
   if (faceImage) {
@@ -417,7 +416,13 @@ window.startReading = async function() {
     el.src = faceImage; el.style.display = 'block';
   }
 
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">AI กำลังวิเคราะห์ใบหน้า กรุณารอสักครู่...</div></div>`;
+  // reset
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  ['secFace','secForehead','secEyes','secNose','secMouth','secEar','secCheek','secChin','secSummary'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">AI กำลังวิเคราะห์...</div></div>';
+  });
   setTimeout(() => resultSection.scrollIntoView({ behavior:'smooth' }), 100);
 
   const content = [
@@ -450,25 +455,24 @@ window.startReading = async function() {
       })
     });
 
-    if (!res.ok) { resultText.textContent = 'เกิดข้อผิดพลาดค่ะ'; btn.disabled = false; btn.textContent = '🔍 วิเคราะห์โหงวเฮ้ง'; return; }
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = '🔍 วิเคราะห์โหงวเฮ้ง'; return;
+    }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
-    resultText.innerHTML = '';
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    resultText.appendChild(cursor);
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value);
-      resultText.innerHTML = colorizeFaceReading(text);
-      resultText.appendChild(cursor);
+      parseByTag(text);
     }
-    cursor.remove();
-    resultText.innerHTML = colorizeFaceReading(text);
+    finalizeByTag(text);
     analysisResult = text;
 
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
@@ -481,7 +485,7 @@ window.startReading = async function() {
 
   } catch(e) {
     console.error(e);
-    resultText.textContent = 'เกิดข้อผิดพลาดค่ะ';
+    document.getElementById('secSummary').textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
   btn.disabled = false;
