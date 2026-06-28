@@ -407,7 +407,7 @@ window.startReading = async function() {
       body: JSON.stringify({
         service: 'foot-reading',
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: `คุณคือหมอดูเลขศาสตร์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น ต้องใช้ tag [GREETING][LIFE][EXPRESS][SOUL][PERSONA][CAREER][MONEY][LOVE][YEAR][LUCKY][AVOID][DAY][COLOR][WARNING] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role:'user', content: prompt }]
       })
