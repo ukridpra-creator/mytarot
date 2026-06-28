@@ -132,9 +132,15 @@ function renderDays(streak, alreadyDone) {
 window.openCheckin = async function() {
   // เช็ค login
   if (!window.__ciCurrentUser) {
-    // ถ้าหน้านั้นมี loginNow() ก็เรียกได้เลย
-    if (typeof loginNow === 'function') { loginNow(); }
-    else { alert('กรุณาเข้าสู่ระบบก่อนนะคะ 🙏'); }
+    // ใช้ login modal ของหน้านั้นๆ ถ้ามี
+    var existingModal = document.getElementById('loginRequiredOverlay');
+    if (existingModal) {
+      existingModal.classList.add('show');
+    } else if (typeof loginNow === 'function') {
+      loginNow();
+    } else {
+      alert('กรุณาเข้าสู่ระบบก่อนนะคะ 🙏');
+    }
     return;
   }
 

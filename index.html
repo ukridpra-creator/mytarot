@@ -6,6 +6,15 @@
   <title>My Tarot — ดูดวงด้วย AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-required-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; }
+    .login-required-overlay.show { display:flex; }
+    .login-required-sheet { background:linear-gradient(180deg,#1a0e2e,#0d0820); border:1px solid rgba(212,175,55,0.3); border-radius:24px; padding:32px 24px; width:90%; max-width:320px; text-align:center; }
+    .login-required-title { font-size:18px; font-weight:800; color:white; margin-bottom:8px; }
+    .login-required-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:20px; }
+    .btn-login-now { width:100%; padding:14px; border-radius:16px; background:white; border:none; color:#333; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .btn-cancel-login { width:100%; padding:10px; margin-top:10px; border-radius:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+  </style>
   <script src="js/checkin.js"></script>
 
   <script type="module">
