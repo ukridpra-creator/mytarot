@@ -6,8 +6,9 @@
   <title>การทำนาย — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 40px; }
+    body { padding-bottom: 80px; }
     .page-header {
       display: flex; align-items: center; gap: 12px;
       padding: 16px 20px; border-bottom: 1px solid var(--border);
@@ -24,10 +25,7 @@
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 24px 20px 40px; }
     .reading-hero { text-align: center; padding: 16px 0 28px; }
-    .reading-icon {
-      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
-      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
-    }
+    .reading-icon { width: 72px; height: 72px; border-radius: 20px; overflow: hidden; margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4); }
     .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
     .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
@@ -36,36 +34,58 @@
       display: flex; align-items: center; gap: 16px;
       background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: 20px; padding: 20px; cursor: pointer;
-      text-decoration: none; transition: all 0.3s; position: relative;
-      overflow: hidden;
+      text-decoration: none; transition: all 0.3s; position: relative; overflow: hidden;
     }
     .menu-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.15); }
-    .menu-icon {
-      width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0;
-    }
+    .menu-icon { width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0; overflow: hidden; }
+    .menu-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+    .menu-icon-emoji { width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
     .menu-info { flex: 1; }
     .menu-name { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
     .menu-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
-    .menu-badge {
-      font-size: 11px; font-weight: 700; padding: 3px 10px;
-      border-radius: 20px; flex-shrink: 0;
-      background: rgba(245,158,11,0.15); color: #f59e0b;
-      border: 1px solid rgba(245,158,11,0.3);
-    }
+    .menu-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
     .menu-arrow { font-size: 18px; color: var(--dim); flex-shrink: 0; }
-    .section-title {
-      font-size: 12px; color: var(--dim); font-weight: 700;
-      letter-spacing: 1px; margin-bottom: 12px; margin-top: 8px; padding-left: 4px;
-    }
+    .section-title { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; margin-top: 20px; padding-left: 4px; }
+    .section-title:first-of-type { margin-top: 0; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">🔮 การทำนาย</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
 <div class="page-content">
   <div class="reading-hero">
@@ -74,22 +94,23 @@
     <div class="reading-desc">เลือกวิธีทำนายที่ต้องการค่ะ 🔮</div>
   </div>
 
+  <!-- เซียมซี -->
   <div class="section-title">🎋 เซียมซี</div>
   <div class="menu-list">
-    <a href="omikuji.html" class="menu-card" style="border-left: 3px solid #8B0000; background: linear-gradient(135deg, rgba(139,0,0,0.08), rgba(212,175,55,0.05)); border-color: rgba(139,0,0,0.25);">
-      <div class="menu-icon" style="padding:0;overflow:hidden;background:rgba(139,0,0,0.2);">
-        <img src="../images/icon-omikuji.png" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+    <a href="omikuji.html" class="menu-card" style="border-left:3px solid #8B0000;background:linear-gradient(135deg,rgba(139,0,0,0.08),rgba(212,175,55,0.05));border-color:rgba(139,0,0,0.25);">
+      <div class="menu-icon" style="background:rgba(139,0,0,0.2);">
+        <img src="../images/icon-omikuji.png">
       </div>
       <div class="menu-info">
-        <div class="menu-name">おみくじ เซียมซีญี่ปุ่น</div>   
+        <div class="menu-name">おみくじ เซียมซีญี่ปุ่น</div>
         <div class="menu-desc">เขย่ากระบอกไม้ไผ่ รับคำทำนายจากศาลเจ้าแห่งโชคชะตา</div>
       </div>
       <div class="menu-badge">🪙 10</div>
       <div class="menu-arrow">›</div>
     </a>
-    <a href="guanyin.html" class="menu-card" style="border-left: 3px solid #d4af37; background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(139,0,0,0.05)); border-color: rgba(212,175,55,0.25);">
-      <div class="menu-icon" style="padding:0;overflow:hidden;background:rgba(212,175,55,0.2);">
-        <img src="../images/icon-guanyin.png" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+    <a href="guanyin.html" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(139,0,0,0.05));border-color:rgba(212,175,55,0.25);">
+      <div class="menu-icon" style="background:rgba(212,175,55,0.2);">
+        <img src="../images/icon-guanyin.png">
       </div>
       <div class="menu-info">
         <div class="menu-name">觀音靈簽 เซียมซีกวนอิม</div>
@@ -99,11 +120,92 @@
       <div class="menu-arrow">›</div>
     </a>
   </div>
+
+  <!-- ความรัก -->
+  <div class="section-title">💕 ความรัก</div>
+  <div class="menu-list">
+    <a href="love-code.html" class="menu-card" style="border-left:3px solid #ec4899;background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(124,58,237,0.05));border-color:rgba(236,72,153,0.25);">
+      <div class="menu-icon-emoji" style="background:rgba(236,72,153,0.2);">💕</div>
+      <div class="menu-info">
+        <div class="menu-name">Love Code — รหัสลับรหัสรัก</div>
+        <div class="menu-desc">คำนวณรหัสความรักจากวันเกิดของคุณทั้งคู่ ค้นพบสายสัมพันธ์ที่ซ่อนอยู่</div>
+      </div>
+      <div class="menu-badge">🪙 10</div>
+      <div class="menu-arrow">›</div>
+    </a>
+  </div>
+
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('coinCount').textContent = parseInt(localStorage.getItem('coins') || '0');
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+
+window.logoutNow = async function() {
+  await signOut(auth);
+  window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    var guestView = document.getElementById('guestView');
+    var loggedView = document.getElementById('loggedView');
+    if (guestView) guestView.style.display = 'none';
+    if (loggedView) loggedView.style.display = 'block';
+    var menuName = document.getElementById('menuName');
+    var menuEmail = document.getElementById('menuEmail');
+    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
+    if (menuEmail) menuEmail.textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+  }
 });
 </script>
 </body>
