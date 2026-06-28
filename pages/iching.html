@@ -74,6 +74,17 @@
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
     .loading-text { font-size: 14px; color: var(--dim); }
+
+    .followup-box { margin-top: 16px; padding: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
+    .followup-input:focus { border-color: var(--purple-light); }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn { width: 100%; background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); border-radius: 12px; padding: 12px; color: var(--purple-light); font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px; }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -182,6 +193,13 @@
     <div class="result-section sec-meaning"><h3>✦ ความหมายของกวา</h3><p id="secMeaning"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">อี้จิงกำลังเปิดเผยสัจธรรม...</div></div></p></div>
     <div class="result-section sec-reading"><h3>✦ คำทำนาย</h3><p id="secReading"></p></div>
     <div class="result-section sec-advice"><h3>✦ คำแนะนำจากอี้จิง</h3><p id="secAdvice"></p></div>
+
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามคำถามเพิ่มเติมได้เลยนะคะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
   </div>
 </div>
 
@@ -214,6 +232,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 let currentUser = null;
+let lastFullText = '';
 
 window.updateCoinUI = function(coins) {
   document.getElementById('coinCount').textContent = coins;
@@ -521,12 +540,61 @@ window.getReading = async function() {
       createdAt: serverTimestamp()
     });
 
+    lastFullText = fullText;
+    document.getElementById('followupBox').style.display = 'block';
+
   } catch(e) {
     console.error(e);
     document.getElementById('secAdvice').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
 
   btn.disabled = false; btn.textContent = '☯ ขอคำทำนายจากอี้จิง';
+};
+
+window.askFollowup = async function() {
+  if (!currentUser) return;
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+  followupBtn.disabled = true;
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById('ans_' + time);
+
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({
+        service: 'tarot_followup',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{ role:'user', content:`ผลทำนายอี้จิง: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "ท่าน" ห้ามใช้ markdown` }]
+      })
+    });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+    if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+    }
+    answerDiv.scrollIntoView({ behavior:'smooth' });
+  } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
+
+  input.value = ''; followupBtn.disabled = false;
 };
 </script>
 </body>
