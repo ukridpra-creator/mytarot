@@ -74,8 +74,37 @@
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">✨ ดูดวงฟรี</div>
-  <div class="free-badge">FREE</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
 <div class="page-content">
   <div class="hero">
@@ -158,7 +187,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged }
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -176,11 +205,45 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+
+window.logoutNow = async function() {
+  await signOut(auth);
+  window.location.href = '../index.html';
+};
+
 onAuthStateChanged(auth, async user => {
   if (user) {
     var snap = await getDoc(doc(db, 'users', user.uid));
-    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    var guestView = document.getElementById('guestView');
+    var loggedView = document.getElementById('loggedView');
+    if (guestView) guestView.style.display = 'none';
+    if (loggedView) loggedView.style.display = 'block';
+    var menuName = document.getElementById('menuName');
+    var menuEmail = document.getElementById('menuEmail');
+    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
+    if (menuEmail) menuEmail.textContent = user.email;
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
   }
 });
 </script>
