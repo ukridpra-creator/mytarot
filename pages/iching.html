@@ -161,7 +161,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อการทำนาย</div>
+    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อการทำนาย</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
@@ -470,7 +470,7 @@ window.getReading = async function() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        service: 'foot-reading',
+        service: 'han-oracle-3',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         system: `คุณคือผู้เชี่ยวชาญอี้จิง ปัญญาจีนโบราณ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "ท่าน" ต้องใช้ tag [GREETING][MEANING][READING][ADVICE] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
