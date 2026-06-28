@@ -6,48 +6,22 @@
   <title>อี้จิง — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 60px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; color: var(--purple-light);
-      font-size: 16px; text-decoration: none; flex-shrink: 0;
-    }
+    body { padding-bottom: 80px; }
+    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(124,58,237,0.2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--purple-light); font-size: 16px; text-decoration: none; flex-shrink: 0; }
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 20px 20px 40px; }
-
     .hero { text-align: center; padding: 12px 0 24px; }
     .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
     .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-    .question-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 24px;
-    }
+    .question-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 16px; margin-bottom: 24px; }
     .question-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; display: block; }
-    .question-input {
-      width: 100%; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px 16px; color: white; font-size: 14px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      transition: border-color 0.2s; resize: none; box-sizing: border-box;
-    }
+    .question-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; transition: border-color 0.2s; resize: none; box-sizing: border-box; }
     .question-input:focus { border-color: var(--purple-light); }
     .question-input::placeholder { color: rgba(255,255,255,0.25); }
-
-    /* Hexagram display */
-    .hexagram-section {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; margin-bottom: 24px; text-align: center;
-    }
+    .hexagram-section { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 24px; text-align: center; }
     .hexagram-title { font-size: 12px; color: var(--dim); letter-spacing: 1px; margin-bottom: 20px; }
     .hexagram-lines { display: flex; flex-direction: column-reverse; gap: 8px; align-items: center; margin-bottom: 20px; }
     .hex-line { display: flex; gap: 6px; align-items: center; height: 16px; }
@@ -55,65 +29,44 @@
     .hex-line-broken { display: flex; gap: 12px; }
     .hex-line-broken span { width: 54px; height: 10px; background: var(--gold); border-radius: 2px; }
     .hex-line-empty { width: 120px; height: 10px; background: rgba(255,255,255,0.08); border-radius: 2px; border: 1px dashed rgba(255,255,255,0.15); }
-
-    /* Coins animation */
     .coins-section { margin-bottom: 24px; }
     .coins-round { font-size: 12px; color: var(--gold); text-align: center; margin-bottom: 12px; font-weight: 700; }
-    .coins-area {
-      display: flex; gap: 20px; justify-content: center;
-      margin-bottom: 20px; min-height: 100px; align-items: center;
-    }
+    .coins-area { display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; min-height: 100px; align-items: center; }
     .coin-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .coin {
-      width: 80px; height: 80px; border-radius: 50%;
-      position: relative; transform-style: preserve-3d;
-      transition: transform 0.1s;
-    }
+    .coin { width: 80px; height: 80px; border-radius: 50%; position: relative; }
     .coin.spinning { animation: coinSpin 1.2s ease-in-out; }
-    @keyframes coinSpin {
-      0% { transform: rotateY(0deg) scale(1); }
-      25% { transform: rotateY(90deg) scale(0.8) translateY(-20px); }
-      50% { transform: rotateY(180deg) scale(1) translateY(-30px); }
-      75% { transform: rotateY(270deg) scale(0.8) translateY(-10px); }
-      100% { transform: rotateY(360deg) scale(1) translateY(0px); }
-    }
+    @keyframes coinSpin { 0%{transform:rotateY(0deg) scale(1)} 25%{transform:rotateY(90deg) scale(0.8) translateY(-20px)} 50%{transform:rotateY(180deg) scale(1) translateY(-30px)} 75%{transform:rotateY(270deg) scale(0.8) translateY(-10px)} 100%{transform:rotateY(360deg) scale(1) translateY(0)} }
     .coin img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
     .coin-result { font-size: 11px; color: var(--dim); }
-
-    .btn-throw {
-      width: 100%; background: linear-gradient(135deg, #d4a017, #b8860b);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-throw:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,160,23,0.4); }
+    .btn-throw { width: 100%; background: linear-gradient(135deg, #d4a017, #b8860b); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-throw:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .btn-read {
-      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .coin-box {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
-    }
+    .btn-read { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
+    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
     .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
     .coin-hint { font-size: 11px; color: var(--dim); }
 
-    /* Result */
-    .result-box { background: rgba(124,58,237,0.06); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: none; }
-    .result-box.show { display: block; }
-    .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
-    .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
-    .cursor { display: inline-block; width: 2px; height: 16px; background: var(--purple-light); margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    /* GREETING */
+    .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(124,58,237,0.06); border-radius: 16px; border-left: 3px solid var(--purple-light); display: none; }
+    .greeting-box.show { display: block; }
+
+    /* RESULT SECTIONS */
+    #resultBox { display: none; }
+    #resultBox.show { display: block; }
+    .hexagram-result { display: flex; gap: 20px; align-items: center; justify-content: center; background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.2); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .hex-num { font-size: 32px; font-weight: 800; color: var(--gold); }
+    .hex-name-th { font-size: 18px; font-weight: 700; color: white; }
+    .hex-name-en { font-size: 13px; color: var(--dim); }
+    .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+    .sec-meaning  { background: rgba(245,158,11,0.08); border-color: #f59e0b; }
+    .sec-meaning h3 { color: #f59e0b; }
+    .sec-reading  { background: rgba(124,58,237,0.08); border-color: #a855f7; }
+    .sec-reading h3 { color: #a855f7; }
+    .sec-advice   { background: rgba(6,182,212,0.08); border-color: #06b6d4; }
+    .sec-advice h3 { color: #06b6d4; }
+
     .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
@@ -121,24 +74,57 @@
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
     .loading-text { font-size: 14px; color: var(--dim); }
-
-    .hexagram-result {
-      display: flex; gap: 20px; align-items: center; justify-content: center;
-      background: rgba(212,160,23,0.08); border: 1px solid rgba(212,160,23,0.2);
-      border-radius: 16px; padding: 16px; margin-bottom: 16px;
-    }
-    .hex-num { font-size: 32px; font-weight: 800; color: var(--gold); }
-    .hex-name-th { font-size: 18px; font-weight: 700; color: white; }
-    .hex-name-en { font-size: 13px; color: var(--dim); }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">☯ อี้จิง</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">0</span></div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">☯</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="hero">
@@ -148,11 +134,9 @@
 
   <div class="question-box">
     <label class="question-label">💭 คำถามในใจ</label>
-    <textarea class="question-input" id="question" rows="3"
-      placeholder="ตั้งจิตถามสิ่งที่ต้องการรู้..."></textarea>
+    <textarea class="question-input" id="question" rows="3" placeholder="ตั้งจิตถามสิ่งที่ต้องการรู้..."></textarea>
   </div>
 
-  <!-- Hexagram display -->
   <div class="hexagram-section">
     <div class="hexagram-title">☯ กวา (卦)</div>
     <div class="hexagram-lines" id="hexagramLines">
@@ -166,193 +150,272 @@
     <div id="throwCount" style="font-size:12px;color:var(--dim);">โยนครั้งที่ 0 / 6</div>
   </div>
 
-  <!-- Coins -->
   <div class="coins-section">
     <div class="coins-round" id="coinsRound">🪙 เตรียมโยนเหรียญ</div>
-    <div class="coins-area" id="coinsArea">
-      <div class="coin-wrap">
-        <div class="coin" id="coin0"><img src="../images/coin-head.png" id="coinImg0"></div>
-        <div class="coin-result" id="coinRes0"></div>
-      </div>
-      <div class="coin-wrap">
-        <div class="coin" id="coin1"><img src="../images/coin-head.png" id="coinImg1"></div>
-        <div class="coin-result" id="coinRes1"></div>
-      </div>
-      <div class="coin-wrap">
-        <div class="coin" id="coin2"><img src="../images/coin-head.png" id="coinImg2"></div>
-        <div class="coin-result" id="coinRes2"></div>
-      </div>
+    <div class="coins-area">
+      <div class="coin-wrap"><div class="coin" id="coin0"><img src="../images/coin-head.png" id="coinImg0"></div><div class="coin-result" id="coinRes0"></div></div>
+      <div class="coin-wrap"><div class="coin" id="coin1"><img src="../images/coin-head.png" id="coinImg1"></div><div class="coin-result" id="coinRes1"></div></div>
+      <div class="coin-wrap"><div class="coin" id="coin2"><img src="../images/coin-head.png" id="coinImg2"></div><div class="coin-result" id="coinRes2"></div></div>
     </div>
     <button class="btn-throw" id="throwBtn" onclick="throwCoins()">🪙 โยนเหรียญ</button>
   </div>
 
   <div class="coin-box">
-  <div class="coin-text">🪙 ใช้ 30 เหรียญต่อการทำนาย</div>
-  <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">0</span> เหรียญ</div>
-</div>
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อการทำนาย</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
 
   <button class="btn-read" id="readBtn" onclick="getReading()" disabled>☯ ขอคำทำนายจากอี้จิง</button>
 
-  <div class="result-box" id="resultBox">
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
+
+  <!-- RESULT -->
+  <div id="resultBox">
     <div class="hexagram-result">
-      <div>
-        <div class="hex-num" id="resultHexNum"></div>
-      </div>
+      <div class="hex-num" id="resultHexNum"></div>
       <div>
         <div class="hex-name-th" id="resultHexNameTh"></div>
         <div class="hex-name-en" id="resultHexNameEn"></div>
       </div>
     </div>
-    <div class="result-header"><span>☯</span><div class="result-title">คำทำนายจากอี้จิง</div></div>
-    <div class="result-text" id="resultText"></div>
+    <div class="result-section sec-meaning"><h3>✦ ความหมายของกวา</h3><p id="secMeaning"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">อี้จิงกำลังเปิดเผยสัจธรรม...</div></div></p></div>
+    <div class="result-section sec-reading"><h3>✦ คำทำนาย</h3><p id="secReading"></p></div>
+    <div class="result-section sec-advice"><h3>✦ คำแนะนำจากอี้จิง</h3><p id="secAdvice"></p></div>
   </div>
 </div>
 
-<script>
-const COIN_SOUND = new Audio('../images/soundscoin.mp3');
-COIN_SOUND.preload = 'auto';
-COIN_SOUND.load();
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
 
-// 64 hexagrams
-const HEXAGRAMS = {
-  1:  { th: 'เฉียน — ท้องฟ้า',     en: 'The Creative',      symbol: '111111' },
-  2:  { th: 'คุน — แผ่นดิน',        en: 'The Receptive',     symbol: '000000' },
-  3:  { th: 'จุน — งอกงาม',         en: 'Difficulty at Start',symbol: '100010' },
-  4:  { th: 'เหมิง — เด็กหนุ่ม',   en: 'Youthful Folly',    symbol: '010001' },
-  5:  { th: 'ซู่ — การรอคอย',       en: 'Waiting',           symbol: '111010' },
-  6:  { th: 'ซ่ง — ความขัดแย้ง',   en: 'Conflict',          symbol: '010111' },
-  7:  { th: 'ซือ — กองทัพ',         en: 'The Army',          symbol: '010000' },
-  8:  { th: 'ปี้ — การร่วมมือ',     en: 'Holding Together',  symbol: '000010' },
-  9:  { th: 'เสี่ยวชู่ — สะสมเล็กน้อย', en: 'Small Taming', symbol: '111011' },
-  10: { th: 'ลี่ — การดำเนิน',      en: 'Treading',          symbol: '110111' },
-  11: { th: 'ไท่ — สันติ',          en: 'Peace',             symbol: '111000' },
-  12: { th: 'ปี้ — ชะงัก',          en: 'Standstill',        symbol: '000111' },
-  13: { th: 'ถงเหริน — สหาย',       en: 'Fellowship',        symbol: '101111' },
-  14: { th: 'ต้าโหยว — มั่งคั่ง',  en: 'Great Possession',  symbol: '111101' },
-  15: { th: 'เชียน — สุภาพ',        en: 'Modesty',           symbol: '001000' },
-  16: { th: 'ยู่ — กระตือรือร้น',  en: 'Enthusiasm',        symbol: '000100' },
-  17: { th: 'สุย — ติดตาม',         en: 'Following',         symbol: '100110' },
-  18: { th: 'กู่ — ซ่อมแซม',        en: 'Work on Decay',     symbol: '011001' },
-  19: { th: 'หลิน — เข้าใกล้',      en: 'Approach',          symbol: '110000' },
-  20: { th: 'กวาน — ชม',            en: 'Contemplation',     symbol: '000011' },
-  21: { th: 'ซื่อเหอ — กัดทะลุ',   en: 'Biting Through',    symbol: '100101' },
-  22: { th: 'ปี้ — ประดับ',         en: 'Grace',             symbol: '101001' },
-  23: { th: 'ป๋อ — แตกสลาย',        en: 'Splitting Apart',   symbol: '000001' },
-  24: { th: 'ฝู่ — กลับคืน',        en: 'Return',            symbol: '100000' },
-  25: { th: 'อู๋หวัง — บริสุทธิ์',  en: 'Innocence',         symbol: '100111' },
-  26: { th: 'ต้าชู่ — สะสมใหญ่',   en: 'Great Taming',      symbol: '111001' },
-  27: { th: 'อี — เลี้ยงดู',        en: 'Nourishment',       symbol: '100001' },
-  28: { th: 'ต้ากั้ว — เกินพอดี',   en: 'Great Excess',      symbol: '011110' },
-  29: { th: 'คาน — เหว',            en: 'The Abysmal',       symbol: '010010' },
-  30: { th: 'หลี — ไฟ',             en: 'The Clinging',      symbol: '101101' },
-  31: { th: 'เสียน — ดึงดูด',       en: 'Influence',         symbol: '001110' },
-  32: { th: 'เหิง — ยั่งยืน',       en: 'Duration',          symbol: '011100' },
-  33: { th: 'ตุน — ล่าถอย',         en: 'Retreat',           symbol: '001111' },
-  34: { th: 'ต้าจ้วง — ยิ่งใหญ่',  en: 'Great Power',       symbol: '111100' },
-  35: { th: 'จิ้น — ก้าวหน้า',      en: 'Progress',          symbol: '000101' },
-  36: { th: 'หมิงอี๋ — มืดมน',      en: 'Darkening Light',   symbol: '101000' },
-  37: { th: 'เจียเหริน — ครอบครัว', en: 'The Family',        symbol: '101011' },
-  38: { th: 'คุย — ขัดแย้ง',        en: 'Opposition',        symbol: '110101' },
-  39: { th: 'เจียน — อุปสรรค',      en: 'Obstruction',       symbol: '001010' },
-  40: { th: 'เจี่ย — ปลดปล่อย',    en: 'Deliverance',       symbol: '010100' },
-  41: { th: 'ซุน — ลดลง',           en: 'Decrease',          symbol: '110001' },
-  42: { th: 'อี — เพิ่มขึ้น',       en: 'Increase',          symbol: '100011' },
-  43: { th: 'กวาย — ตัดสิน',        en: 'Breakthrough',      symbol: '111110' },
-  44: { th: 'โกว — พบกัน',          en: 'Coming to Meet',    symbol: '011111' },
-  45: { th: 'ชุย — รวมกลุ่ม',       en: 'Gathering',         symbol: '000110' },
-  46: { th: 'เซิง — ขึ้นสูง',       en: 'Pushing Upward',    symbol: '011000' },
-  47: { th: 'คุน — ถูกขัง',         en: 'Oppression',        symbol: '010110' },
-  48: { th: 'จิ่ง — บ่อน้ำ',        en: 'The Well',          symbol: '011010' },
-  49: { th: 'เก๋อ — การปฏิวัติ',    en: 'Revolution',        symbol: '101110' },
-  50: { th: 'ติ่ง — หม้อ',          en: 'The Cauldron',      symbol: '011101' },
-  51: { th: 'เจิน — สายฟ้า',        en: 'The Arousing',      symbol: '100100' },
-  52: { th: 'เกิ้น — ภูเขา',        en: 'Keeping Still',     symbol: '001001' },
-  53: { th: 'เจียน — ค่อยเป็นค่อยไป', en: 'Development',    symbol: '001011' },
-  54: { th: 'กุยเมย์ — แต่งงาน',    en: 'Marrying Maiden',   symbol: '110100' },
-  55: { th: 'เฟิง — ความอุดมสมบูรณ์', en: 'Abundance',       symbol: '101100' },
-  56: { th: 'ลี่ — เดินทาง',         en: 'The Wanderer',     symbol: '001101' },
-  57: { th: 'ซวิ่น — ลม',           en: 'The Gentle',        symbol: '011011' },
-  58: { th: 'ตุย — ทะเลสาบ',        en: 'The Joyous',        symbol: '110110' },
-  59: { th: 'หวาน — กระจาย',        en: 'Dispersion',        symbol: '010011' },
-  60: { th: 'เจี๋ย — ประมาณ',       en: 'Limitation',        symbol: '110010' },
-  61: { th: 'จงฝู่ — ความจริงใจ',   en: 'Inner Truth',       symbol: '110011' },
-  62: { th: 'เสี่ยวกั้ว — เกินเล็กน้อย', en: 'Small Excess', symbol: '001100' },
-  63: { th: 'จี้จี้ — สำเร็จ',      en: 'After Completion',  symbol: '101010' },
-  64: { th: 'เว่ยจี้ — ยังไม่สำเร็จ', en: 'Before Completion', symbol: '010101' },
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
 };
 
-let lines = []; // 0=หยิน, 1=หยาง
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
+
+// HEXAGRAMS DATA
+const HEXAGRAMS = {
+  1:{th:'เฉียน — ท้องฟ้า',en:'The Creative',symbol:'111111'},
+  2:{th:'คุน — แผ่นดิน',en:'The Receptive',symbol:'000000'},
+  3:{th:'จุน — งอกงาม',en:'Difficulty at Start',symbol:'100010'},
+  4:{th:'เหมิง — เด็กหนุ่ม',en:'Youthful Folly',symbol:'010001'},
+  5:{th:'ซู่ — การรอคอย',en:'Waiting',symbol:'111010'},
+  6:{th:'ซ่ง — ความขัดแย้ง',en:'Conflict',symbol:'010111'},
+  7:{th:'ซือ — กองทัพ',en:'The Army',symbol:'010000'},
+  8:{th:'ปี้ — การร่วมมือ',en:'Holding Together',symbol:'000010'},
+  9:{th:'เสี่ยวชู่ — สะสมเล็กน้อย',en:'Small Taming',symbol:'111011'},
+  10:{th:'ลี่ — การดำเนิน',en:'Treading',symbol:'110111'},
+  11:{th:'ไท่ — สันติ',en:'Peace',symbol:'111000'},
+  12:{th:'ปี้ — ชะงัก',en:'Standstill',symbol:'000111'},
+  13:{th:'ถงเหริน — สหาย',en:'Fellowship',symbol:'101111'},
+  14:{th:'ต้าโหยว — มั่งคั่ง',en:'Great Possession',symbol:'111101'},
+  15:{th:'เชียน — สุภาพ',en:'Modesty',symbol:'001000'},
+  16:{th:'ยู่ — กระตือรือร้น',en:'Enthusiasm',symbol:'000100'},
+  17:{th:'สุย — ติดตาม',en:'Following',symbol:'100110'},
+  18:{th:'กู่ — ซ่อมแซม',en:'Work on Decay',symbol:'011001'},
+  19:{th:'หลิน — เข้าใกล้',en:'Approach',symbol:'110000'},
+  20:{th:'กวาน — ชม',en:'Contemplation',symbol:'000011'},
+  21:{th:'ซื่อเหอ — กัดทะลุ',en:'Biting Through',symbol:'100101'},
+  22:{th:'ปี้ — ประดับ',en:'Grace',symbol:'101001'},
+  23:{th:'ป๋อ — แตกสลาย',en:'Splitting Apart',symbol:'000001'},
+  24:{th:'ฝู่ — กลับคืน',en:'Return',symbol:'100000'},
+  25:{th:'อู๋หวัง — บริสุทธิ์',en:'Innocence',symbol:'100111'},
+  26:{th:'ต้าชู่ — สะสมใหญ่',en:'Great Taming',symbol:'111001'},
+  27:{th:'อี — เลี้ยงดู',en:'Nourishment',symbol:'100001'},
+  28:{th:'ต้ากั้ว — เกินพอดี',en:'Great Excess',symbol:'011110'},
+  29:{th:'คาน — เหว',en:'The Abysmal',symbol:'010010'},
+  30:{th:'หลี — ไฟ',en:'The Clinging',symbol:'101101'},
+  31:{th:'เสียน — ดึงดูด',en:'Influence',symbol:'001110'},
+  32:{th:'เหิง — ยั่งยืน',en:'Duration',symbol:'011100'},
+  33:{th:'ตุน — ล่าถอย',en:'Retreat',symbol:'001111'},
+  34:{th:'ต้าจ้วง — ยิ่งใหญ่',en:'Great Power',symbol:'111100'},
+  35:{th:'จิ้น — ก้าวหน้า',en:'Progress',symbol:'000101'},
+  36:{th:'หมิงอี๋ — มืดมน',en:'Darkening Light',symbol:'101000'},
+  37:{th:'เจียเหริน — ครอบครัว',en:'The Family',symbol:'101011'},
+  38:{th:'คุย — ขัดแย้ง',en:'Opposition',symbol:'110101'},
+  39:{th:'เจียน — อุปสรรค',en:'Obstruction',symbol:'001010'},
+  40:{th:'เจี่ย — ปลดปล่อย',en:'Deliverance',symbol:'010100'},
+  41:{th:'ซุน — ลดลง',en:'Decrease',symbol:'110001'},
+  42:{th:'อี — เพิ่มขึ้น',en:'Increase',symbol:'100011'},
+  43:{th:'กวาย — ตัดสิน',en:'Breakthrough',symbol:'111110'},
+  44:{th:'โกว — พบกัน',en:'Coming to Meet',symbol:'011111'},
+  45:{th:'ชุย — รวมกลุ่ม',en:'Gathering',symbol:'000110'},
+  46:{th:'เซิง — ขึ้นสูง',en:'Pushing Upward',symbol:'011000'},
+  47:{th:'คุน — ถูกขัง',en:'Oppression',symbol:'010110'},
+  48:{th:'จิ่ง — บ่อน้ำ',en:'The Well',symbol:'011010'},
+  49:{th:'เก๋อ — การปฏิวัติ',en:'Revolution',symbol:'101110'},
+  50:{th:'ติ่ง — หม้อ',en:'The Cauldron',symbol:'011101'},
+  51:{th:'เจิน — สายฟ้า',en:'The Arousing',symbol:'100100'},
+  52:{th:'เกิ้น — ภูเขา',en:'Keeping Still',symbol:'001001'},
+  53:{th:'เจียน — ค่อยเป็นค่อยไป',en:'Development',symbol:'001011'},
+  54:{th:'กุยเมย์ — แต่งงาน',en:'Marrying Maiden',symbol:'110100'},
+  55:{th:'เฟิง — ความอุดมสมบูรณ์',en:'Abundance',symbol:'101100'},
+  56:{th:'ลี่ — เดินทาง',en:'The Wanderer',symbol:'001101'},
+  57:{th:'ซวิ่น — ลม',en:'The Gentle',symbol:'011011'},
+  58:{th:'ตุย — ทะเลสาบ',en:'The Joyous',symbol:'110110'},
+  59:{th:'หวาน — กระจาย',en:'Dispersion',symbol:'010011'},
+  60:{th:'เจี๋ย — ประมาณ',en:'Limitation',symbol:'110010'},
+  61:{th:'จงฝู่ — ความจริงใจ',en:'Inner Truth',symbol:'110011'},
+  62:{th:'เสี่ยวกั้ว — เกินเล็กน้อย',en:'Small Excess',symbol:'001100'},
+  63:{th:'จี้จี้ — สำเร็จ',en:'After Completion',symbol:'101010'},
+  64:{th:'เว่ยจี้ — ยังไม่สำเร็จ',en:'Before Completion',symbol:'010101'},
+};
+
+// TAG MAP
+const TAG_MAP = {
+  '[GREETING]': 'greeting',
+  '[MEANING]':  'secMeaning',
+  '[READING]':  'secReading',
+  '[ADVICE]':   'secAdvice',
+};
+
+function parseDelimiter(text, keys) {
+  const result = {};
+  keys.forEach((key, i) => {
+    const tag = '[' + key + ']';
+    const start = text.indexOf(tag);
+    if (start === -1) return;
+    const contentStart = start + tag.length;
+    const nextKey = keys[i + 1];
+    const nextTag = nextKey ? '[' + nextKey + ']' : null;
+    const end = nextTag ? text.indexOf(nextTag) : text.length;
+    result[key] = text.slice(contentStart, end === -1 ? text.length : end).trim();
+  });
+  return result;
+}
+
+const PARSE_KEYS = ['GREETING', 'MEANING', 'READING', 'ADVICE'];
+
+function updateSections(text) {
+  const parsed = parseDelimiter(text, PARSE_KEYS);
+  if (parsed['GREETING']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show');
+    gb.textContent = parsed['GREETING'];
+  }
+  ['MEANING','READING','ADVICE'].forEach(key => {
+    if (parsed[key]) {
+      const id = key === 'MEANING' ? 'secMeaning' : key === 'READING' ? 'secReading' : 'secAdvice';
+      const el = document.getElementById(id);
+      if (el) el.textContent = parsed[key];
+    }
+  });
+}
+
+let lines = [];
 let currentThrow = 0;
-let isThowing = false;
+let isThrowing = false;
 
-function throwCoins() {
-  if (isThowing || currentThrow >= 6) return;
-  isThowing = true;
+const COIN_SOUND = new Audio('../sounds/coin.mp3');
 
+window.throwCoins = function() {
+  if (isThrowing || currentThrow >= 6) return;
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  isThrowing = true;
   const throwBtn = document.getElementById('throwBtn');
   throwBtn.disabled = true;
+  try { COIN_SOUND.currentTime = 0; COIN_SOUND.play(); } catch(e) {}
 
-  // เล่นเสียง
-  COIN_SOUND.currentTime = 0;
-  COIN_SOUND.play().catch(() => {});
-
-  // animation เหรียญหมุน
-  [0, 1, 2].forEach(i => {
-    const coin = document.getElementById(`coin${i}`);
-    coin.classList.remove('spinning');
-    void coin.offsetWidth;
+  [0,1,2].forEach(i => {
+    const coin = document.getElementById('coin' + i);
+    coin.classList.remove('spinning'); void coin.offsetWidth;
     coin.classList.add('spinning');
   });
 
-  // หลัง animation เสร็จ → แสดงผล
   setTimeout(() => {
-    const results = [0, 1, 2].map(() => Math.random() < 0.5 ? 3 : 2); // 3=หัว(หยาง), 2=ก้อย(หยิน)
-    const total = results.reduce((a, b) => a + b, 0);
-    const isYang = total % 2 === 1; // 7,9 = หยาง, 6,8 = หยิน
+    const results = [0,1,2].map(() => Math.random() < 0.5 ? 3 : 2);
+    const total = results.reduce((a,b) => a+b, 0);
+    const isYang = total % 2 === 1;
 
-    // แสดงรูปเหรียญ
     results.forEach((r, i) => {
-      const img = document.getElementById(`coinImg${i}`);
-      const res = document.getElementById(`coinRes${i}`);
-      if (r === 3) {
-        img.src = '../images/coin-head.png';
-        res.textContent = 'หัว';
-      } else {
-        img.src = '../images/coin-tail.png';
-        res.textContent = 'ก้อย';
-      }
+      document.getElementById('coinImg' + i).src = r === 3 ? '../images/coin-head.png' : '../images/coin-tail.png';
+      document.getElementById('coinRes' + i).textContent = r === 3 ? 'หัว' : 'ก้อย';
     });
 
-    // บันทึกเส้น
     lines.push(isYang ? 1 : 0);
     currentThrow++;
-
-    // อัปเดต hexagram display
     updateHexagram();
-
-    document.getElementById('throwCount').textContent = `โยนครั้งที่ ${currentThrow} / 6`;
+    document.getElementById('throwCount').textContent = 'โยนครั้งที่ ' + currentThrow + ' / 6';
     document.getElementById('coinsRound').textContent = isYang
-      ? `🟡 ครั้งที่ ${currentThrow}: ได้เส้นหยาง —`
-      : `⚪ ครั้งที่ ${currentThrow}: ได้เส้นหยิน - -`;
+      ? '🟡 ครั้งที่ ' + currentThrow + ': ได้เส้นหยาง —'
+      : '⚪ ครั้งที่ ' + currentThrow + ': ได้เส้นหยิน - -';
 
     if (currentThrow >= 6) {
       throwBtn.textContent = '✅ โยนครบ 6 ครั้งแล้ว';
       document.getElementById('readBtn').disabled = false;
     } else {
       throwBtn.disabled = false;
-      throwBtn.textContent = `🪙 โยนครั้งที่ ${currentThrow + 1}`;
+      throwBtn.textContent = '🪙 โยนครั้งที่ ' + (currentThrow + 1);
     }
-
-    isThowing = false;
+    isThrowing = false;
   }, 1400);
-}
+};
 
 function updateHexagram() {
   const container = document.getElementById('hexagramLines');
   const lineEls = container.querySelectorAll('.hex-line');
-
   lineEls.forEach((el, i) => {
-    const lineIdx = 5 - i; // เริ่มจากล่างขึ้นบน
+    const lineIdx = 5 - i;
     if (lineIdx < lines.length) {
       if (lines[lineIdx] === 1) {
         el.innerHTML = '<div class="hex-line-solid"></div>';
@@ -373,79 +436,98 @@ function getHexagramNumber(lines) {
   return 1;
 }
 
-async function getReading() {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (coins < 30) { alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ'); return; }
-  localStorage.setItem('coins', String(coins - 30));
-  document.getElementById('coinCount').textContent = coins - 30;
-  document.getElementById('coinDisplay').textContent = coins - 30;
+window.getReading = async function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
   const hexNum = getHexagramNumber(lines);
   const hex = HEXAGRAMS[hexNum];
   const question = document.getElementById('question').value.trim();
 
-  document.getElementById('resultHexNum').textContent = `第${hexNum}卦`;
+  document.getElementById('resultHexNum').textContent = '第' + hexNum + '卦';
   document.getElementById('resultHexNameTh').textContent = hex.th;
   document.getElementById('resultHexNameEn').textContent = hex.en;
 
-  const resultBox = document.getElementById('resultBox');
-  const resultText = document.getElementById('resultText');
-  resultBox.classList.add('show');
-  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">อี้จิงกำลังเปิดเผยสัจธรรม...</div></div>`;
-  resultBox.scrollIntoView({ behavior: 'smooth' });
+  const btn = document.getElementById('readBtn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
 
-  const lineDesc = lines.map((l, i) => `เส้นที่ ${i + 1}: ${l === 1 ? 'หยาง (—)' : 'หยิน (- -)'}`).join(', ');
+  // reset
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  ['secMeaning','secReading','secAdvice'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">อี้จิงกำลังเปิดเผยสัจธรรม...</div></div>';
+  });
+
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
+
+  const lineDesc = lines.map((l, i) => 'เส้นที่ ' + (i+1) + ': ' + (l === 1 ? 'หยาง (—)' : 'หยิน (- -)')).join(', ');
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 6000,
-        system: `คุณคือผู้เชี่ยวชาญอี้จิง ปัญญาจีนโบราณ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "ท่าน"
-        
-รูปแบบการตอบ (ห้ามใช้ markdown ห้ามใช้ * หรือ # เขียนเป็นย่อหน้าธรรมดา):
+        service: 'foot-reading',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        system: `คุณคือผู้เชี่ยวชาญอี้จิง ปัญญาจีนโบราณ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "ท่าน" ต้องใช้ tag [GREETING][MEANING][READING][ADVICE] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role: 'user', content: `กวา (卦) ที่ได้: บทที่ ${hexNum} ${hex.th} (${hex.en})\n${lineDesc}\n${question ? 'คำถาม: ' + question : 'ไม่มีคำถาม ให้ทำนายสิ่งที่อี้จิงต้องการบอก'}
 
-✦ ความหมายของกวา
-อธิบายความหมายของบทที่ได้ สั้นๆ 2-3 ประโยค
-
-✦ คำทำนาย  
-วิเคราะห์สถานการณ์และทำนายอย่างละเอียด เชื่อมโยงกับคำถาม บอกสิ่งที่กำลังจะเกิดขึ้น
-
-✦ คำแนะนำจากอี้จิง
-แนะนำแนวทางการปฏิบัติตามหลักอี้จิง สิ่งที่ควรทำและไม่ควรทำ
-
-เขียนให้ยาว ลึกซึ้ง และมีปัญญา`,
-        messages: [{ role: 'user', content: `กวา (卦) ที่ได้: บทที่ ${hexNum} ${hex.th} (${hex.en})\n${lineDesc}\n${question ? `คำถาม: ${question}` : 'ไม่มีคำถาม ให้ทำนายสิ่งที่อี้จิงต้องการบอก'}` }]
+ตอบโดยใช้ tag นำหน้าแต่ละส่วน:
+[GREETING]
+ทักทายท่านผู้ถาม 1-2 ประโยค
+[MEANING]
+ความหมายของกวา 3-4 ประโยค
+[READING]
+คำทำนาย วิเคราะห์สถานการณ์ เชื่อมโยงกับคำถาม 4-5 ประโยค
+[ADVICE]
+คำแนะนำจากอี้จิง สิ่งที่ควรทำและไม่ควรทำ 3-4 ประโยค` }]
       })
     });
 
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = '☯ ขอคำทำนายจากอี้จิง'; return;
+    }
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
-    let text = '';
-    resultText.innerHTML = '';
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    resultText.appendChild(cursor);
+    let fullText = '';
+
+    ['secMeaning','secReading','secAdvice'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = '';
+    });
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      text += decoder.decode(value);
-      resultText.innerHTML = text.replace(/\n/g, '<br>');
-      resultText.appendChild(cursor);
+      fullText += decoder.decode(value, { stream: true });
+      updateSections(fullText);
     }
-    cursor.remove();
-    resultText.innerHTML = text.replace(/\n/g, '<br>');
+    updateSections(fullText);
+
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'อี้จิง',
+      hexagram: hexNum + ' — ' + hex.th,
+      result: fullText,
+      createdAt: serverTimestamp()
+    });
 
   } catch(e) {
-    resultText.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    console.error(e);
+    document.getElementById('secAdvice').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-});
+  btn.disabled = false; btn.textContent = '☯ ขอคำทำนายจากอี้จิง';
+};
 </script>
 </body>
 </html>
