@@ -6,9 +6,10 @@
   <title>โหงวเฮ้ง — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <style>
-    body { padding-bottom: 40px; }
+    body { padding-bottom: 80px; }
     .page-header {
       display: flex; align-items: center; gap: 12px;
       padding: 16px 20px; border-bottom: 1px solid var(--border);
@@ -25,10 +26,7 @@
     .page-title { font-size: 18px; font-weight: 700; color: white; }
     .page-content { padding: 24px 20px 40px; }
     .reading-hero { text-align: center; padding: 16px 0 24px; }
-    .reading-icon {
-      width: 72px; height: 72px; border-radius: 20px; overflow: hidden;
-      margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4);
-    }
+    .reading-icon { width: 72px; height: 72px; border-radius: 20px; overflow: hidden; margin: 0 auto 14px; border: 2px solid rgba(124,58,237,0.4); }
     .reading-icon img { width: 100%; height: 100%; object-fit: cover; }
     .reading-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
     .reading-ref { font-size: 12px; color: var(--gold); margin-bottom: 8px; }
@@ -45,97 +43,41 @@
     .upload-box-icon { font-size: 40px; margin-bottom: 8px; }
     .upload-box-label { font-size: 13px; font-weight: 700; color: white; margin-bottom: 10px; }
     .upload-btns { display: flex; gap: 8px; }
-    .upload-btn {
-      background: rgba(124,58,237,0.3); border: none; border-radius: 8px;
-      padding: 8px 14px; color: white; font-size: 12px;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
+    .upload-btn { background: rgba(124,58,237,0.3); border: none; border-radius: 8px; padding: 8px 14px; color: white; font-size: 12px; font-family: 'Sarabun', sans-serif; cursor: pointer; }
     .upload-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .upload-box-overlay {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      padding: 12px 8px 8px; text-align: center; font-size: 11px; color: white;
-    }
-    .tips-box {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 20px;
-    }
+    .upload-box-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 12px 8px 8px; text-align: center; font-size: 11px; color: white; }
+    .tips-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 20px; }
     .tips-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
     .tip-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--dim); margin-bottom: 5px; }
     .tip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-    .coin-box {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center;
-    }
+    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
     .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
     .coin-hint { font-size: 11px; color: var(--dim); }
-    .btn-read {
-      width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink));
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 20px;
-    }
-    .btn-read:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+    .btn-read { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .result-section { display: none; }
     .result-section.show { display: block; }
-    .preview-box {
-      border-radius: 16px; overflow: hidden;
-      position: relative; aspect-ratio: 3/4; background: #0a0618;
-      max-width: 280px; margin: 0 auto 20px;
-    }
+    .preview-box { border-radius: 16px; overflow: hidden; position: relative; aspect-ratio: 3/4; background: #0a0618; max-width: 280px; margin: 0 auto 20px; }
     .preview-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .result-box {
-      background: rgba(124,58,237,0.08); border: 1px solid var(--border);
-      border-radius: 20px; padding: 20px; margin-bottom: 16px;
-    }
+    .result-box { background: rgba(124,58,237,0.08); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
     .result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
     .result-title { font-size: 16px; font-weight: 700; color: var(--gold); }
     .result-text { font-size: 14px; line-height: 2; color: var(--text); word-break: break-word; }
     .loading { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 30px 0; }
     .loading-dots { display: flex; gap: 8px; }
-    .loading-dots span {
-      width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light);
-      animation: bounce 1.2s ease-in-out infinite;
-    }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); opacity: 0.4; }
-      50% { transform: translateY(-10px); opacity: 1; }
-    }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
     .loading-text { font-size: 14px; color: var(--dim); }
-    .cursor {
-      display: inline-block; width: 2px; height: 16px;
-      background: var(--purple-light); margin-left: 2px;
-      animation: blink 0.8s ease-in-out infinite; vertical-align: middle;
-    }
-    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
-    .followup-box {
-      margin-top: 16px; padding: 16px;
-      background: rgba(124,58,237,0.06);
-      border: 1px solid rgba(124,58,237,0.2);
-      border-radius: 16px;
-    }
+    .cursor { display: inline-block; width: 2px; height: 16px; background: var(--purple-light); margin-left: 2px; animation: blink 0.8s ease-in-out infinite; vertical-align: middle; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    .followup-box { margin-top: 16px; padding: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; }
     .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
-    .followup-input {
-      width: 100%; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px; color: white; font-size: 14px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      resize: none; margin-bottom: 10px; box-sizing: border-box;
-    }
+    .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
     .followup-input:focus { border-color: var(--purple-light); }
     .followup-input::placeholder { color: rgba(255,255,255,0.25); }
-    .followup-btn {
-      width: 100%; background: rgba(124,58,237,0.2);
-      border: 1px solid rgba(124,58,237,0.4);
-      border-radius: 12px; padding: 12px; color: var(--purple-light);
-      font-size: 14px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-      transition: all 0.2s; margin-bottom: 12px;
-    }
-    .followup-btn:hover { background: rgba(124,58,237,0.3); }
+    .followup-btn { width: 100%; background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4); border-radius: 12px; padding: 12px; color: var(--purple-light); font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px; }
     .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
     .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
@@ -144,11 +86,41 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
   <div class="page-title">โหงวเฮ้ง</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">500</span></div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()">
+      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
 <div class="page-content">
   <div class="reading-hero">
@@ -181,7 +153,7 @@
 
   <div class="coin-box">
     <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">500</span> เหรียญ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
   <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🔍 วิเคราะห์โหงวเฮ้ง</button>
@@ -203,10 +175,96 @@
   </div>
 </div>
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🧑</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และใช้งานได้ครบทุกฟีเจอร์</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
 let faceImage = null;
 let analysisResult = '';
-let followupHistory = [];
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+
+window.logoutNow = async function() {
+  await signOut(auth);
+  window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    var guestView = document.getElementById('guestView');
+    var loggedView = document.getElementById('loggedView');
+    if (guestView) guestView.style.display = 'none';
+    if (loggedView) loggedView.style.display = 'block';
+    var menuName = document.getElementById('menuName');
+    var menuEmail = document.getElementById('menuEmail');
+    if (menuName) menuName.textContent = data.displayName || user.displayName || '';
+    if (menuEmail) menuEmail.textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
 
 function getBase64(dataUrl) {
   if (!dataUrl) return null;
@@ -276,7 +334,11 @@ function colorizeFaceReading(text) {
     .replace(/\n/g, '<br>');
 }
 
-async function previewFace(e) {
+window.previewFace = async function(e) {
+  if (!currentUser) {
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+    return;
+  }
   const file = e.target.files[0];
   if (!file) return;
   const box = document.getElementById('faceBox');
@@ -293,24 +355,25 @@ async function previewFace(e) {
     box.classList.add('has-image');
     document.getElementById('readBtn').disabled = false;
   } catch(err) {
-    console.error('previewFace error:', err);
     box.innerHTML = `<div class="upload-box-icon">❌</div><div class="upload-box-label">เกิดข้อผิดพลาดค่ะ</div>`;
   }
-}
+};
 
-async function startReading() {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (isNaN(coins) || coins < 30) {
-    alert('เหรียญไม่พอค่ะ ต้องใช้ 30 เหรียญค่ะ');
+window.startReading = async function() {
+  if (!currentUser) {
+    document.getElementById('loginRequiredOverlay').classList.add('show');
     return;
   }
 
-  const btn = document.getElementById('readBtn');
-  const resultSection = document.getElementById('resultSection');
-  const resultText = document.getElementById('resultText');
+  const b64 = getBase64(faceImage);
+  if (!b64) { alert('กรุณาอัปโหลดรูปใบหน้าก่อนค่ะ'); return; }
 
+  const btn = document.getElementById('readBtn');
   btn.disabled = true;
   btn.textContent = '⏳ กำลังวิเคราะห์...';
+
+  const resultSection = document.getElementById('resultSection');
+  const resultText = document.getElementById('resultText');
   resultSection.classList.add('show');
 
   if (faceImage) {
@@ -318,24 +381,12 @@ async function startReading() {
     el.src = faceImage; el.style.display = 'block';
   }
 
-  resultText.innerHTML = `
-    <div class="loading">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div class="loading-text">AI กำลังวิเคราะห์ใบหน้า กรุณารอสักครู่...</div>
-    </div>`;
-  setTimeout(() => resultSection.scrollIntoView({ behavior: 'smooth' }), 100);
-
-  const b64 = getBase64(faceImage);
-  if (!b64) {
-    resultText.textContent = 'ไม่พบรูปใบหน้าค่ะ กรุณาอัปโหลดใหม่ค่ะ';
-    btn.disabled = false;
-    btn.textContent = '🔍 วิเคราะห์โหงวเฮ้ง';
-    return;
-  }
+  resultText.innerHTML = `<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">AI กำลังวิเคราะห์ใบหน้า กรุณารอสักครู่...</div></div>`;
+  setTimeout(() => resultSection.scrollIntoView({ behavior:'smooth' }), 100);
 
   const content = [
-    { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
-    { type: 'text', text: `วิเคราะห์โหงวเฮ้งจากใบหน้าในรูป แบ่งเป็นหัวข้อดังนี้ โดยแต่ละหัวข้อบอกลักษณะที่เห็น ชื่อเรียกตามโหงวเฮ้ง และความหมาย กระชับ ไม่ยาวเกินไป:
+    { type:'image', source:{ type:'base64', media_type:'image/jpeg', data: b64 } },
+    { type:'text', text:`วิเคราะห์โหงวเฮ้งจากใบหน้าในรูป แบ่งเป็นหัวข้อดังนี้ โดยแต่ละหัวข้อบอกลักษณะที่เห็น ชื่อเรียกตามโหงวเฮ้ง และความหมาย กระชับ ไม่ยาวเกินไป:
 รูปหน้า (รูปทรงใบหน้าเรียกว่าอะไร ความหมาย)
 หน้าผาก (ลักษณะ ความหมายด้านชีวิตและโชค)
 คิ้ว (ลักษณะ ความหมายด้านบุคลิกและอารมณ์)
@@ -350,18 +401,20 @@ async function startReading() {
   ];
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
+        service: 'foot-reading',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
-        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้งจีนโบราณ เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แบ่งเป็นหัวข้อชัดเจน แต่ละหัวข้อกระชับ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
-        messages: [{ role: 'user', content }]
+        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้งจีนโบราณ เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น เป็นกันเอง แบ่งเป็นหัวข้อชัดเจน ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
+        messages: [{ role:'user', content }]
       })
     });
 
-    if (!res.ok) throw new Error(`API error ${res.status}`);
+    if (!res.ok) { resultText.textContent = 'เกิดข้อผิดพลาดค่ะ'; btn.disabled = false; btn.textContent = '🔍 วิเคราะห์โหงวเฮ้ง'; return; }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -382,54 +435,55 @@ async function startReading() {
     resultText.innerHTML = colorizeFaceReading(text);
     analysisResult = text;
 
-    const newCoins = coins - 30;
-    localStorage.setItem('coins', String(newCoins));
-    document.getElementById('coinCount').textContent = newCoins;
-    document.getElementById('coinDisplay').textContent = newCoins;
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'โหงวเฮ้ง',
+      result: text,
+      createdAt: serverTimestamp()
+    });
 
-    followupHistory = [];
     document.getElementById('followupBox').style.display = 'block';
 
   } catch(e) {
-    console.error('startReading error:', e);
-    resultText.textContent = `เกิดข้อผิดพลาดค่ะ: ${e.message}`;
+    console.error(e);
+    resultText.textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
   btn.disabled = false;
   btn.textContent = '🔍 วิเคราะห์อีกครั้ง';
-}
+};
 
-async function askFollowup() {
+window.askFollowup = async function() {
+  if (!currentUser) return;
   const input = document.getElementById('followupInput');
   const question = input.value.trim();
   if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
 
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  if (isNaN(coins) || coins < 5) { alert('เหรียญไม่พอค่ะ ต้องใช้ 5 เหรียญค่ะ'); return; }
-
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
-
   followupBtn.disabled = true;
-  document.getElementById('followupInput').style.display = 'none';
-  document.getElementById('followupBtn').style.display = 'none';
-  document.getElementById('followupTitle').style.display = 'none';
 
   const time = Date.now();
   resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
   const answerDiv = document.getElementById(`ans_${time}`);
 
   try {
+    const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6', max_tokens: 600,
-        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้ง Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ตรงประเด็น ห้ามใช้ markdown ห้ามใช้เลขไทย`,
-        messages: [{ role: 'user', content: `ผลวิเคราะห์โหงวเฮ้ง: ${analysisResult}\nคำถาม: ${question}` }]
+        service: 'tarot_followup',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        system: `คุณคือผู้เชี่ยวชาญโหงวเฮ้ง Gen Z เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ห้ามใช้ markdown ห้ามใช้เลขไทย`,
+        messages: [{ role:'user', content:`ผลวิเคราะห์โหงวเฮ้ง: ${analysisResult}\nคำถาม: ${question}` }]
       })
     });
 
-    if (!res.ok) throw new Error('API error');
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -447,31 +501,15 @@ async function askFollowup() {
     }
     cursor.remove();
     answerDiv.textContent = text;
-    followupHistory.push({ role: 'user', content: question }, { role: 'assistant', content: text });
-
-    const newCoins = coins - 5;
-    localStorage.setItem('coins', String(newCoins));
-    document.getElementById('coinCount').textContent = newCoins;
+    answerDiv.scrollIntoView({ behavior:'smooth' });
 
   } catch(e) {
-    answerDiv.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
-    console.error('followup error:', e);
+    answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ';
   }
 
   input.value = '';
-  document.getElementById('followupInput').style.display = 'block';
-  document.getElementById('followupBtn').style.display = 'block';
-  document.getElementById('followupTitle').style.display = 'block';
   followupBtn.disabled = false;
-  answerDiv.scrollIntoView({ behavior: 'smooth' });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const coins = parseInt(localStorage.getItem('coins') || '0');
-  const c = isNaN(coins) ? 500 : coins;
-  document.getElementById('coinCount').textContent = c;
-  document.getElementById('coinDisplay').textContent = c;
-});
+};
 </script>
 </body>
 </html>
