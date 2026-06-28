@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Code | MyTarot</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: linear-gradient(160deg, #0d0820, #1a0e2e);
+  min-height: 100vh;
+  font-family: 'Noto Sans Thai', sans-serif;
+  color: #e9d5ff;
+  padding-bottom: 60px;
+}
+body::before {
+  content:''; position:fixed; inset:0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+.page-wrap { position:relative; z-index:1; }
+
+/* HEADER */
+.page-header {
+  display:flex; align-items:center;
+  padding:16px 20px;
+  border-bottom:1px solid rgba(124,58,237,0.2);
+  background:rgba(13,8,32,0.9);
+  backdrop-filter:blur(12px);
+  position:sticky; top:0; z-index:100;
+}
+.back-btn {
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.3);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:#a855f7; font-size:16px;
+  text-decoration:none; flex-shrink:0;
+}
+.page-title {
+  font-size:18px; font-weight:700; color:white;
+  margin-left:12px; flex:1;
+}
+.coin-badge {
+  font-size:13px; color:#fbbf24;
+  background:rgba(245,158,11,0.1);
+  border:1px solid rgba(245,158,11,0.3);
+  border-radius:50px; padding:4px 12px;
+}
+
+/* HERO */
+.hero { text-align:center; padding:24px 20px 16px; }
+.mascot-wrap {
+  width:90px; height:90px; border-radius:20px;
+  margin:0 auto 12px; overflow:hidden;
+  border:2px solid rgba(124,58,237,0.4);
+  background:rgba(124,58,237,0.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:44px;
+}
+.mascot-wrap img { width:100%; height:100%; object-fit:cover; }
+.hero-title {
+  font-family:'Noto Serif Thai',serif;
+  font-size:22px; font-weight:700; color:#fbbf24;
+  text-shadow:0 0 20px rgba(251,191,36,0.4);
+  margin-bottom:4px;
+}
+.hero-sub { font-size:12px; color:#9ca3af; margin-bottom:8px; }
+.hero-desc {
+  font-size:13px; color:#6b7280; line-height:1.8;
+  padding:0 10px;
+}
+
+/* FORM */
+.form-wrap { padding:0 20px; margin-bottom:16px; }
+.form-label { font-size:12px; color:#9ca3af; margin-bottom:6px; display:block; }
+.input-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:16px; }
+.inp-group { display:flex; flex-direction:column; }
+.inp {
+  width:100%; padding:12px 8px; text-align:center;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(124,58,237,0.4);
+  border-radius:12px; color:white; font-size:20px;
+  font-family:'Noto Serif Thai',serif; outline:none;
+  transition:border-color 0.2s;
+}
+.inp:focus { border-color:#a855f7; }
+.inp-sub { text-align:center; font-size:10px; color:#6b7280; margin-top:4px; }
+
+.btn-calc {
+  width:100%; padding:15px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  border:none; border-radius:50px; color:white;
+  font-family:'Noto Serif Thai',serif;
+  font-size:16px; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 20px rgba(124,58,237,0.4);
+  transition:all 0.2s;
+}
+.btn-calc:active { transform:scale(0.97); }
+
+/* TRIANGLE */
+.triangle-wrap { padding:0 16px; display:none; margin-top:8px; }
+.triangle-wrap.show { display:block; }
+
+.tri-row { display:flex; justify-content:center; align-items:center; gap:4px; margin-bottom:4px; }
+
+.tri-cell {
+  width:66px; height:66px; border-radius:12px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  font-family:'Noto Serif Thai',serif;
+  opacity:0; transform:translateY(-16px);
+  transition:all 0.5s cubic-bezier(.34,1.56,.64,1);
+}
+.tri-cell.show { opacity:1; transform:translateY(0); }
+
+.cell-date {
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.4);
+}
+.cell-date .ct { font-size:9px; color:#9ca3af; margin-bottom:1px; }
+.cell-date .cn { font-size:22px; font-weight:700; color:#c084fc; line-height:1; }
+.cell-date .cr { font-size:9px; color:#7c3aed; margin-top:2px; }
+
+.cell-sum {
+  background:rgba(168,85,247,0.15);
+  border:1px solid rgba(168,85,247,0.4);
+  width:110px; height:66px;
+}
+.cell-sum .ct { font-size:9px; color:#9ca3af; margin-bottom:1px; }
+.cell-sum .cn { font-size:22px; font-weight:700; color:#a855f7; line-height:1; }
+
+.cell-result {
+  background:linear-gradient(135deg,rgba(251,191,36,0.2),rgba(245,158,11,0.15));
+  border:2px solid rgba(251,191,36,0.6);
+  width:100px; height:100px; border-radius:16px;
+  box-shadow:0 0 30px rgba(251,191,36,0.3);
+}
+.cell-result .ct { font-size:9px; color:#fbbf24; letter-spacing:1px; margin-bottom:2px; }
+.cell-result .cn { font-size:46px; font-weight:700; color:#fbbf24; line-height:1; text-shadow:0 0 20px rgba(251,191,36,0.6); }
+
+.plus { color:#7c3aed; font-size:18px; width:18px; text-align:center; opacity:0; transition:opacity 0.4s; flex-shrink:0; }
+.plus.show { opacity:1; }
+
+.arr-row { display:flex; justify-content:center; align-items:center; gap:4px; margin-bottom:4px; opacity:0; transition:opacity 0.4s; }
+.arr-row.show { opacity:1; }
+.arr { width:66px; text-align:center; font-size:14px; color:#7c3aed; }
+
+/* RESULT */
+.result-card {
+  margin:20px 20px 0;
+  background:linear-gradient(160deg,#1a0e2e,#0d0820);
+  border:1px solid rgba(251,191,36,0.3);
+  border-radius:20px; padding:24px 20px;
+  text-align:center; display:none;
+  animation:cardPop 0.6s cubic-bezier(.34,1.56,.64,1) both;
+}
+.result-card.show { display:block; }
+@keyframes cardPop {
+  0%   { transform:scale(0.8); opacity:0; }
+  100% { transform:scale(1); opacity:1; }
+}
+.res-kw { font-size:11px; color:#a855f7; letter-spacing:3px; margin-bottom:6px; }
+.res-num { font-family:'Noto Serif Thai',serif; font-size:52px; font-weight:700; color:#fbbf24; text-shadow:0 0 20px rgba(251,191,36,0.5); line-height:1; margin-bottom:4px; }
+.res-div { width:60px; height:1px; background:linear-gradient(90deg,transparent,#fbbf24,transparent); margin:10px auto; }
+.res-name { font-family:'Noto Serif Thai',serif; font-size:22px; font-weight:700; color:white; margin-bottom:8px; }
+.res-desc { font-size:14px; color:#e9d5ff; line-height:2.1; margin-bottom:16px; }
+.res-fortune {
+  background:rgba(124,58,237,0.15);
+  border:1px solid rgba(124,58,237,0.3);
+  border-radius:12px; padding:14px;
+  font-size:13px; color:#c084fc; line-height:2;
+  font-style:italic;
+}
+
+.btn-reset {
+  width:calc(100% - 40px); margin:12px 20px 0;
+  padding:12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(124,58,237,0.3);
+  border-radius:50px; color:#9ca3af; font-size:13px;
+  font-family:'Noto Sans Thai',sans-serif; cursor:pointer;
+  display:none;
+}
+
+/* SPARKLE */
+.sparkle { position:fixed; pointer-events:none; z-index:200; font-size:18px; animation:sparkPop 0.8s ease-out forwards; }
+@keyframes sparkPop {
+  0%   { transform:scale(0) rotate(0deg); opacity:1; }
+  60%  { transform:scale(1.5) rotate(180deg); opacity:1; }
+  100% { transform:scale(0) rotate(360deg); opacity:0; }
+}
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:#1a1330; border:1px solid #fbbf24; border-radius:24px; padding:32px 24px; text-align:center; width:85%; max-width:320px; }
+.modal-box h3 { font-family:'Noto Serif Thai',serif; font-size:17px; margin-bottom:8px; color:white; }
+.modal-box p { font-size:13px; color:#9ca3af; margin-bottom:20px; line-height:1.8; }
+.btn-google { width:100%; padding:12px; background:white; border:none; border-radius:50px; font-family:'Noto Sans Thai',sans-serif; font-size:14px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; color:#333; }
+.btn-close-modal { margin-top:12px; background:none; border:none; color:#6b7280; font-size:13px; cursor:pointer; font-family:'Noto Sans Thai',sans-serif; }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🔢 Energy Code</div>
+  <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="mascot-wrap">
+    <img src="../images/icon-energy.png" alt="energy code"
+         onerror="this.style.display='none';this.parentElement.textContent='🔢'">
+  </div>
+  <div class="hero-title">Energy Code</div>
+  <div class="hero-sub">ศาสตร์ตัวเลขแห่งพลังงาน</div>
+  <div class="hero-desc">ค้นพบพลังงานภายในตัวคุณจากวันเกิด<br>รู้จักตัวตน จุดแข็ง และทิศทางชีวิต</div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap">
+  <label class="form-label">วันเกิดของคุณ</label>
+  <div class="input-row">
+    <div class="inp-group">
+      <input class="inp" id="inDay" type="number" placeholder="วัน" min="1" max="31">
+      <div class="inp-sub">วัน</div>
+    </div>
+    <div class="inp-group">
+      <input class="inp" id="inMonth" type="number" placeholder="เดือน" min="1" max="12">
+      <div class="inp-sub">เดือน</div>
+    </div>
+    <div class="inp-group">
+      <input class="inp" id="inYear" type="number" placeholder="ปี ค.ศ." min="1900" max="2010">
+      <div class="inp-sub">ปี ค.ศ.</div>
+    </div>
+  </div>
+  <button class="btn-calc" id="btnCalc" onclick="calculate()">✨ คำนวณ Energy Code</button>
+</div>
+
+<!-- TRIANGLE -->
+<div class="triangle-wrap" id="triWrap">
+
+  <!-- Row 1 -->
+  <div class="tri-row">
+    <div class="tri-cell cell-date" id="cA">
+      <div class="ct">A — วัน</div>
+      <div class="cn" id="nA">—</div>
+      <div class="cr" id="rA"></div>
+    </div>
+    <div class="plus" id="p1">+</div>
+    <div class="tri-cell cell-date" id="cB">
+      <div class="ct">B — เดือน</div>
+      <div class="cn" id="nB">—</div>
+      <div class="cr" id="rB"></div>
+    </div>
+    <div class="plus" id="p2">+</div>
+    <div class="tri-cell cell-date" id="cC">
+      <div class="ct">C — ปี(ต้น)</div>
+      <div class="cn" id="nC">—</div>
+      <div class="cr" id="rC"></div>
+    </div>
+    <div class="plus" id="p3">+</div>
+    <div class="tri-cell cell-date" id="cD">
+      <div class="ct">D — ปี(ท้าย)</div>
+      <div class="cn" id="nD">—</div>
+      <div class="cr" id="rD"></div>
+    </div>
+  </div>
+
+  <!-- Arrows 1 -->
+  <div class="arr-row" id="arr1">
+    <div class="arr">↓</div>
+    <div style="width:18px"></div>
+    <div class="arr">↓</div>
+    <div style="width:18px"></div>
+    <div class="arr">↓</div>
+    <div style="width:18px"></div>
+    <div class="arr">↓</div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="tri-row" id="row2" style="display:none">
+    <div class="tri-cell cell-sum" id="cE">
+      <div class="ct">E = A+B</div>
+      <div class="cn" id="nE">—</div>
+    </div>
+    <div class="plus" id="p4" style="width:30px">+</div>
+    <div class="tri-cell cell-sum" id="cF">
+      <div class="ct">F = C+D</div>
+      <div class="cn" id="nF">—</div>
+    </div>
+  </div>
+
+  <!-- Arrows 2 -->
+  <div class="arr-row" id="arr2" style="display:none">
+    <div style="width:110px; text-align:center; font-size:14px; color:#7c3aed;">↓</div>
+    <div style="width:30px"></div>
+    <div style="width:110px; text-align:center; font-size:14px; color:#7c3aed;">↓</div>
+  </div>
+
+  <!-- Row 3 -->
+  <div class="tri-row" id="row3" style="display:none; margin-top:4px;">
+    <div class="tri-cell cell-result" id="cG">
+      <div class="ct">ENERGY CODE</div>
+      <div class="cn" id="nG">—</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- RESULT -->
+<div class="result-card" id="resultCard">
+  <div class="res-kw" id="resKw"></div>
+  <div class="res-num" id="resNum"></div>
+  <div class="res-div"></div>
+  <div class="res-name" id="resName"></div>
+  <div class="res-desc" id="resDesc"></div>
+  <div class="res-fortune" id="resFortune"></div>
+</div>
+
+<button class="btn-reset" id="btnReset" onclick="reset()">🔄 คำนวณใหม่</button>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <h3>🔢 เข้าสู่ระบบก่อนนะคะ</h3>
+    <p>ล็อกอินเพื่อบันทึกผล Energy Code<br>และดูประวัติย้อนหลังได้ค่ะ</p>
+    <button class="btn-google" onclick="loginGoogle()">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button class="btn-close-modal" onclick="closeModal()">ข้ามไปก่อน</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var currentUser = null;
+
+onAuthStateChanged(auth, async function(user) {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, "users", user.uid));
+    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
+    document.getElementById("coinCount").textContent = coins;
+  } else {
+    document.getElementById("coinCount").textContent = "ล็อกอิน";
+  }
+});
+
+window.loginGoogle = async function() {
+  var provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
+};
+window.closeModal = function() {
+  document.getElementById("loginModal").classList.remove("show");
+};
+
+// ─── DATA ───
+var ENERGY_DATA = {
+  1: {
+    keyword: "Number 1 · Leadership",
+    name: "ผู้นำ",
+    desc: "คุณมีพลังงานแห่งความเป็นผู้นำอยู่ในตัว มีความมั่นใจสูง กล้าเริ่มต้นสิ่งใหม่ และมีบารมีที่คนรอบข้างรู้สึกได้โดยธรรมชาติ คุณถูกออกแบบมาเพื่อนำหน้า ไม่ใช่ตามหลังใคร",
+    fortune: "พลังงานของคุณแข็งแกร่งมากในช่วงนี้ เหมาะกับการตัดสินใจครั้งสำคัญ และก้าวแรกที่คุณรอมานาน"
+  },
+  2: {
+    keyword: "Number 2 · Communication",
+    name: "นักสื่อสาร",
+    desc: "คุณมีพรสวรรค์ด้านการสื่อสารและความเข้าอกเข้าใจผู้อื่น อ่อนโยน ละเอียดอ่อน รับรู้พลังงานรอบข้างได้ดี และมักเป็นสะพานเชื่อมระหว่างคนในกลุ่ม",
+    fortune: "ช่วงนี้เหมาะกับการสร้างความสัมพันธ์และเชื่อมต่อกับคนรอบข้าง ความอ่อนโยนของคุณคือพลังที่แท้จริง"
+  },
+  3: {
+    keyword: "Number 3 · Action",
+    name: "นักลงมือทำ",
+    desc: "พลังงานแห่งการลงมือทำและความกระตือรือร้นอยู่ในสายเลือดคุณ คุณมีแรงบันดาลใจที่แพร่กระจายสู่คนรอบข้าง และพลังงานที่ไม่ยอมหยุดนิ่ง",
+    fortune: "นี่คือช่วงเวลาของการลงมือทำ อย่ารอ ให้เริ่มเลยวันนี้ พลังงานในตัวคุณพร้อมแล้ว"
+  },
+  4: {
+    keyword: "Number 4 · Stability",
+    name: "นักสร้างรากฐาน",
+    desc: "คุณมีพลังงานแห่งความมั่นคงและวินัย เป็นคนที่สร้างรากฐานที่แข็งแกร่งทั้งในชีวิตและการงาน คนรอบข้างไว้ใจและพึ่งพาคุณได้เสมอ",
+    fortune: "ความอดทนและความมั่นคงของคุณกำลังจะให้ผลลัพธ์ที่ยั่งยืน สิ่งที่สร้างมาจะไม่พังไปง่ายๆ"
+  },
+  5: {
+    keyword: "Number 5 · Freedom",
+    name: "นักเปลี่ยนแปลง",
+    desc: "พลังงานแห่งการเปลี่ยนแปลงและอิสรภาพอยู่กับคุณ คุณกล้าคิดนอกกรอบ พร้อมรับความเปลี่ยนแปลงเสมอ และมองเห็นโอกาสในสิ่งที่คนอื่นมองว่าเป็นความเสี่ยง",
+    fortune: "การเปลี่ยนแปลงที่กำลังจะเกิดขึ้นคือโอกาส ไม่ใช่อุปสรรค กล้าก้าวออกจาก comfort zone ได้เลย"
+  },
+  6: {
+    keyword: "Number 6 · Responsibility",
+    name: "ผู้เมตตา",
+    desc: "คุณมีพลังงานแห่งความรับผิดชอบและความเมตตา ดูแลคนรอบข้างได้ดีตลอดเวลา มีหัวใจที่อบอุ่นและพร้อมเป็นที่พึ่งให้คนที่รักเสมอ",
+    fortune: "การดูแลผู้อื่นจะนำความสุขและโชคดีกลับมาสู่คุณในไม่ช้า พลังงานที่คุณให้ออกไปกำลังจะไหลกลับมา"
+  },
+  7: {
+    keyword: "Number 7 · Spirituality",
+    name: "นักค้นพบตนเอง",
+    desc: "คุณมีพลังงานจิตวิญญาณที่ลึกซึ้ง ชอบตั้งคำถามเชิงลึกและค้นหาความจริงของชีวิต สัญชาตญาณของคุณแม่นมาก และคุณมักเข้าใจสิ่งต่างๆ ในระดับที่ลึกกว่าคนอื่น",
+    fortune: "เชื่อใจสัญชาตญาณของตัวเองในช่วงนี้ มันกำลังนำทางไปในทิศทางที่ถูกต้องอยู่แล้วค่ะ"
+  },
+  8: {
+    keyword: "Number 8 · Success",
+    name: "นักสร้างความสำเร็จ",
+    desc: "พลังงานแห่งความสำเร็จและความมั่งคั่งอยู่กับคุณ คุณมีทักษะการบริหารจัดการที่ดีเยี่ยม วิสัยทัศน์ชัดเจน และความสามารถในการสร้างสิ่งใหญ่ๆ จากศูนย์",
+    fortune: "ความสำเร็จทางวัตถุที่คุณทำงานหนักมาตลอดกำลังจะปรากฏผล อีกนิดเดียวเท่านั้นค่ะ"
+  },
+  9: {
+    keyword: "Number 9 · Giving",
+    name: "ผู้ให้และปล่อยวาง",
+    desc: "คุณมีพลังงานแห่งความเมตตาสูงสุด เป็นคนที่ให้โดยไม่หวังผลตอบแทน และรู้จักปล่อยวางสิ่งที่หมดเวลาแล้ว คุณคือพลังงานแห่งการปิดบทและเปิดบทใหม่",
+    fortune: "การปล่อยวางสิ่งเก่าจะเปิดทางให้สิ่งใหม่ที่ดีกว่าเข้ามาในชีวิต ถึงเวลาแล้วค่ะ"
+  }
+};
+
+function reduceNum(n) {
+  while (n > 9) {
+    n = String(n).split('').reduce(function(a,b){ return a + parseInt(b); }, 0);
+  }
+  return n;
+}
+
+function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+
+function sparkle(x, y) {
+  var emojis = ['✨','⭐','💫','🌟','⚡'];
+  for (var i = 0; i < 5; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var s = document.createElement('div');
+        s.className = 'sparkle';
+        s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = (x + (Math.random()-0.5)*80) + 'px';
+        s.style.top  = (y + (Math.random()-0.5)*40) + 'px';
+        document.body.appendChild(s);
+        setTimeout(function(){ s.remove(); }, 900);
+      }, i * 80);
+    })(i);
+  }
+}
+
+function getCenter(id) {
+  var el = document.getElementById(id);
+  var r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
+}
+
+window.calculate = async function() {
+  var day   = parseInt(document.getElementById('inDay').value);
+  var month = parseInt(document.getElementById('inMonth').value);
+  var year  = parseInt(document.getElementById('inYear').value);
+
+  if (!day || !month || !year) { alert('กรอกวันเกิดให้ครบนะคะ 🙏'); return; }
+  if (year < 1900 || year > 2010) { alert('กรอกปี ค.ศ. ให้ถูกต้องนะคะ'); return; }
+
+  document.getElementById('btnCalc').disabled = true;
+  document.getElementById('btnCalc').textContent = '⏳ กำลังคำนวณ...';
+
+  var yearStr = String(year);
+  var A = day;
+  var B = month;
+  var C = parseInt(yearStr.slice(0,2));
+  var D = parseInt(yearStr.slice(2));
+
+  var rA = reduceNum(A), rB = reduceNum(B), rC = reduceNum(C), rD = reduceNum(D);
+  var E = reduceNum(rA + rB), F = reduceNum(rC + rD);
+  var G = reduceNum(E + F);
+
+  // reset
+  var ids = ['cA','cB','cC','cD','cE','cF','cG'];
+  ids.forEach(function(id){ document.getElementById(id).classList.remove('show'); });
+  ['p1','p2','p3','p4','arr1','arr2'].forEach(function(id){
+    document.getElementById(id).classList.remove('show');
+  });
+  document.getElementById('row2').style.display = 'none';
+  document.getElementById('row3').style.display = 'none';
+  document.getElementById('arr2').style.display = 'none';
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('btnReset').style.display = 'none';
+
+  // show triangle
+  document.getElementById('triWrap').classList.add('show');
+
+  // A
+  await sleep(300);
+  document.getElementById('nA').textContent = A;
+  document.getElementById('rA').textContent = A !== rA ? A+'→'+rA : '';
+  document.getElementById('cA').classList.add('show');
+  var cA = getCenter('cA'); sparkle(cA.x, cA.y);
+
+  await sleep(350); document.getElementById('p1').classList.add('show');
+
+  // B
+  await sleep(300);
+  document.getElementById('nB').textContent = B;
+  document.getElementById('rB').textContent = B !== rB ? B+'→'+rB : '';
+  document.getElementById('cB').classList.add('show');
+  var cB = getCenter('cB'); sparkle(cB.x, cB.y);
+
+  await sleep(350); document.getElementById('p2').classList.add('show');
+
+  // C
+  await sleep(300);
+  document.getElementById('nC').textContent = C;
+  document.getElementById('rC').textContent = C !== rC ? C+'→'+rC : '';
+  document.getElementById('cC').classList.add('show');
+  var cC = getCenter('cC'); sparkle(cC.x, cC.y);
+
+  await sleep(350); document.getElementById('p3').classList.add('show');
+
+  // D
+  await sleep(300);
+  document.getElementById('nD').textContent = D;
+  document.getElementById('rD').textContent = D !== rD ? D+'→'+rD : '';
+  document.getElementById('cD').classList.add('show');
+  var cD = getCenter('cD'); sparkle(cD.x, cD.y);
+
+  // arrows
+  await sleep(500); document.getElementById('arr1').classList.add('show');
+
+  // Row 2
+  await sleep(400);
+  document.getElementById('row2').style.display = 'flex';
+  document.getElementById('arr2').style.display = 'flex';
+  await sleep(100);
+  document.getElementById('nE').textContent = E;
+  document.getElementById('cE').classList.add('show');
+  var cE = getCenter('cE'); sparkle(cE.x, cE.y);
+
+  await sleep(300); document.getElementById('p4').classList.add('show');
+
+  await sleep(200);
+  document.getElementById('nF').textContent = F;
+  document.getElementById('cF').classList.add('show');
+  var cF = getCenter('cF'); sparkle(cF.x, cF.y);
+
+  await sleep(400); document.getElementById('arr2').classList.add('show');
+
+  // Row 3 — Result
+  await sleep(500);
+  document.getElementById('row3').style.display = 'flex';
+  await sleep(100);
+  document.getElementById('nG').textContent = G;
+  document.getElementById('cG').classList.add('show');
+  var cG = getCenter('cG');
+  sparkle(cG.x, cG.y);
+  await sleep(150); sparkle(cG.x-20, cG.y-20);
+  await sleep(100); sparkle(cG.x+20, cG.y+20);
+
+  // Result card
+  await sleep(700);
+  var data = ENERGY_DATA[G];
+  document.getElementById('resKw').textContent = data.keyword;
+  document.getElementById('resNum').textContent = G;
+  document.getElementById('resName').textContent = data.name;
+  document.getElementById('resDesc').textContent = data.desc;
+  document.getElementById('resFortune').textContent = '"' + data.fortune + '"';
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('btnReset').style.display = 'block';
+
+  setTimeout(function(){
+    document.getElementById('resultCard').scrollIntoView({ behavior:'smooth' });
+  }, 300);
+
+  // บันทึก Firestore (ถ้า login)
+  if (currentUser) {
+    try {
+      await addDoc(collection(db, "users", currentUser.uid, "readings"), {
+        type: "energy-code",
+        birthday: day + "/" + month + "/" + year,
+        code: G,
+        name: data.name,
+        createdAt: serverTimestamp()
+      });
+    } catch(e) { console.error(e); }
+  }
+
+  document.getElementById('btnCalc').disabled = false;
+  document.getElementById('btnCalc').textContent = '✨ คำนวณ Energy Code';
+};
+
+window.reset = function() {
+  document.getElementById('triWrap').classList.remove('show');
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('btnReset').style.display = 'none';
+  document.getElementById('inDay').value = '';
+  document.getElementById('inMonth').value = '';
+  document.getElementById('inYear').value = '';
+};
+
+</script>
+</body>
+</html>
