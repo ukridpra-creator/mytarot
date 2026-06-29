@@ -6,140 +6,106 @@
   <title>ดวงรายสัปดาห์/รายเดือน — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--purple-light); font-size: 16px; text-decoration: none;
-    }
-    .page-title { font-size: 18px; font-weight: 700; color: white; }
-    .free-badge {
-      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
-      color: white; font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 20px;
-    }
-    .page-content { padding: 20px 20px 40px; }
-    .hero { text-align: center; padding: 8px 0 20px; }
-    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 12px; }
-    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-    /* Toggle */
-    .toggle-box {
-      display: flex; gap: 8px; background: rgba(255,255,255,0.05);
-      border-radius: 16px; padding: 4px; margin-bottom: 20px;
-    }
-    .toggle-btn {
-      flex: 1; padding: 10px; border-radius: 12px; border: none;
-      font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.2s; color: var(--dim); background: none;
-    }
-    .toggle-btn.active { background: linear-gradient(135deg, #7c3aed, #ec4899); color: white; }
-
-    /* Zodiac select */
-    .select-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .select-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
-    .zodiac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .zodiac-btn {
-      padding: 10px 6px; border-radius: 14px; text-align: center;
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-    }
-    .zodiac-btn:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
-    .zodiac-btn.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
-    .zodiac-icon { font-size: 24px; margin-bottom: 4px; }
-    .zodiac-name { font-size: 11px; color: white; font-weight: 600; }
-    .zodiac-date { font-size: 9px; color: var(--dim); }
-
-    .btn-check {
-      width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
-    }
-    .btn-check:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Result */
-    .result-box { display: none; }
-    .result-box.show { display: block; }
-    .result-period {
-      text-align: center; font-size: 13px; color: var(--dim);
-      margin-bottom: 4px;
-    }
-    .result-title {
-      text-align: center; font-size: 20px; font-weight: 800; color: white;
-      margin-bottom: 20px;
-    }
-
-    .score-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
-    .score-card {
-      flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 16px; padding: 12px; text-align: center;
-    }
-    .score-icon { font-size: 20px; margin-bottom: 4px; }
-    .score-label { font-size: 10px; color: var(--dim); margin-bottom: 4px; }
-    .score-stars { font-size: 12px; color: #f59e0b; }
-
-    .horoscope-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 12px;
-    }
-    .horoscope-section-title {
-      font-size: 13px; font-weight: 700; color: var(--gold);
-      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
-    }
-    .horoscope-text { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.8; }
-
-    .lucky-row {
-      display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
-    }
-    .lucky-item {
-      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
-      border-radius: 12px; padding: 8px 12px; text-align: center;
-    }
-    .lucky-item-label { font-size: 9px; color: var(--dim); margin-bottom: 2px; }
-    .lucky-item-value { font-size: 13px; font-weight: 700; color: #f59e0b; }
-
-    .btn-again {
-      width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
-      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
-      color: var(--purple-light); font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-box {
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
-      border: 1px solid rgba(124,58,237,0.3); border-radius: 20px;
-      padding: 20px; text-align: center;
-    }
-    .upsell-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .upsell-desc { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.6; }
-    .btn-upsell {
-      width: 100%; padding: 14px; border-radius: 16px;
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; color: white; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-mascot img { width:120px; height:120px; object-fit:contain; margin-bottom:12px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:6px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .toggle-box { display:flex; gap:8px; background:rgba(255,255,255,0.05); border-radius:16px; padding:4px; margin-bottom:20px; }
+    .toggle-btn { flex:1; padding:10px; border-radius:12px; border:none; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s; color:var(--dim); background:none; }
+    .toggle-btn.active { background:linear-gradient(135deg,#7c3aed,#ec4899); color:white; }
+    .select-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .select-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; display:block; }
+    .zodiac-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .zodiac-btn { padding:10px 6px; border-radius:14px; text-align:center; background:rgba(255,255,255,0.03); border:1px solid var(--border); cursor:pointer; transition:all 0.2s; font-family:'Sarabun',sans-serif; }
+    .zodiac-btn:hover { border-color:var(--purple-light); background:rgba(124,58,237,0.1); }
+    .zodiac-btn.active { border-color:var(--purple-light); background:rgba(124,58,237,0.2); }
+    .zodiac-icon { font-size:24px; margin-bottom:4px; }
+    .zodiac-name { font-size:11px; color:white; font-weight:600; }
+    .zodiac-date { font-size:9px; color:var(--dim); }
+    .btn-check { width:100%; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:24px; }
+    .btn-check:disabled { opacity:0.5; cursor:not-allowed; }
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+    .result-period { text-align:center; font-size:13px; color:var(--dim); margin-bottom:4px; }
+    .result-title { text-align:center; font-size:20px; font-weight:800; color:white; margin-bottom:20px; }
+    .score-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .score-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:12px; text-align:center; }
+    .score-icon { font-size:20px; margin-bottom:4px; }
+    .score-label { font-size:10px; color:var(--dim); margin-bottom:4px; }
+    .score-stars { font-size:12px; color:#f59e0b; }
+    .horoscope-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:12px; }
+    .horoscope-section-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+    .horoscope-text { font-size:14px; color:rgba(255,255,255,0.85); line-height:1.8; }
+    .lucky-row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+    .lucky-item { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:8px 12px; text-align:center; }
+    .lucky-item-label { font-size:9px; color:var(--dim); margin-bottom:2px; }
+    .lucky-item-value { font-size:13px; font-weight:700; color:#f59e0b; }
+    .btn-again { width:100%; padding:14px; border-radius:16px; margin-bottom:12px; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); color:var(--purple-light); font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-box { background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15)); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:20px; text-align:center; }
+    .upsell-title { font-size:16px; font-weight:800; color:white; margin-bottom:6px; }
+    .upsell-desc { font-size:13px; color:var(--dim); margin-bottom:16px; line-height:1.6; }
+    .btn-upsell { width:100%; padding:14px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; color:white; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-price { font-size:11px; color:rgba(255,255,255,0.4); margin-top:8px; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
   <div class="page-title">⭐ ดวงราศี</div>
-  <div class="free-badge">FREE</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">⭐</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="hero">
@@ -150,13 +116,11 @@
     <div class="hero-desc">น้องจะบอกดวงรายสัปดาห์และรายเดือน<br>ตามราศีของคุณพี่เลยค่ะ</div>
   </div>
 
-  <!-- Toggle -->
   <div class="toggle-box">
     <button class="toggle-btn active" id="btnWeekly" onclick="setMode('weekly')">📅 รายสัปดาห์</button>
     <button class="toggle-btn" id="btnMonthly" onclick="setMode('monthly')">🌟 รายเดือน</button>
   </div>
 
-  <!-- Zodiac -->
   <div class="select-box">
     <label class="select-label">⭐ เลือกราศีของคุณพี่</label>
     <div class="zodiac-grid" id="zodiacGrid"></div>
@@ -164,62 +128,22 @@
 
   <button class="btn-check" id="btnCheck" onclick="showResult()" disabled>⭐ ดูดวงเลย</button>
 
-  <!-- Result -->
   <div class="result-box" id="resultBox">
     <div class="result-period" id="resultPeriod"></div>
     <div class="result-title" id="resultTitle"></div>
-
     <div class="score-row">
-      <div class="score-card">
-        <div class="score-icon">❤️</div>
-        <div class="score-label">ความรัก</div>
-        <div class="score-stars" id="scoreLove"></div>
-      </div>
-      <div class="score-card">
-        <div class="score-icon">💼</div>
-        <div class="score-label">การงาน</div>
-        <div class="score-stars" id="scoreWork"></div>
-      </div>
-      <div class="score-card">
-        <div class="score-icon">💰</div>
-        <div class="score-label">การเงิน</div>
-        <div class="score-stars" id="scoreMoney"></div>
-      </div>
-      <div class="score-card">
-        <div class="score-icon">🌿</div>
-        <div class="score-label">สุขภาพ</div>
-        <div class="score-stars" id="scoreHealth"></div>
-      </div>
+      <div class="score-card"><div class="score-icon">❤️</div><div class="score-label">ความรัก</div><div class="score-stars" id="scoreLove"></div></div>
+      <div class="score-card"><div class="score-icon">💼</div><div class="score-label">การงาน</div><div class="score-stars" id="scoreWork"></div></div>
+      <div class="score-card"><div class="score-icon">💰</div><div class="score-label">การเงิน</div><div class="score-stars" id="scoreMoney"></div></div>
+      <div class="score-card"><div class="score-icon">🌿</div><div class="score-label">สุขภาพ</div><div class="score-stars" id="scoreHealth"></div></div>
     </div>
-
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">🔮 ภาพรวมดวงชะตา</div>
-      <div class="horoscope-text" id="horoOverall"></div>
-    </div>
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">❤️ ความรัก</div>
-      <div class="horoscope-text" id="horoLove"></div>
-    </div>
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">💼 การงาน</div>
-      <div class="horoscope-text" id="horoWork"></div>
-    </div>
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">💰 การเงิน</div>
-      <div class="horoscope-text" id="horoMoney"></div>
-    </div>
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">🌿 สุขภาพ</div>
-      <div class="horoscope-text" id="horoHealth"></div>
-    </div>
-
-    <div class="horoscope-card">
-      <div class="horoscope-section-title">🎰 สิ่งมงคลประจำช่วงนี้</div>
-      <div class="lucky-row" id="luckyRow"></div>
-    </div>
-
+    <div class="horoscope-card"><div class="horoscope-section-title">🔮 ภาพรวมดวงชะตา</div><div class="horoscope-text" id="horoOverall"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">❤️ ความรัก</div><div class="horoscope-text" id="horoLove"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">💼 การงาน</div><div class="horoscope-text" id="horoWork"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">💰 การเงิน</div><div class="horoscope-text" id="horoMoney"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">🌿 สุขภาพ</div><div class="horoscope-text" id="horoHealth"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">🎰 สิ่งมงคลประจำช่วงนี้</div><div class="lucky-row" id="luckyRow"></div></div>
     <button class="btn-again" onclick="resetResult()">🔄 เลือกราศีใหม่</button>
-
     <div class="upsell-box">
       <div class="upsell-title">🔮 อยากรู้ดวงชะตาลึกกว่านี้?</div>
       <div class="upsell-desc">ให้ AI วิเคราะห์บาจื้อสี่เสาแห่งชะตา<br>รู้ดวงตลอดชีวิต ทุกช่วงอายุ ทุกด้าน</div>
@@ -228,164 +152,190 @@
     </div>
   </div>
 </div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
 <script src="../js/horoscope-data.js"></script>
 <script>
-// ข้อมูลดวง — เพิ่มทีหลัง
-// โครงสร้าง: HOROSCOPE_DATA[mode][zodiac][period] = { overall, love, work, money, health, scoreLove, scoreWork, scoreMoney, scoreHealth, luckyColor, luckyNumber, luckyDay }
-// mode: 'weekly' | 'monthly'
-// zodiac: 'เมษ' | 'พฤษภ' | ...
-// period: สัปดาห์ที่ (1-52) หรือ เดือน (1-12)
-
-const HOROSCOPE_DATA = {
-  weekly: {},
-  monthly: {}
-};
-
-// ตัวอย่าง placeholder (จะเพิ่มข้อมูลจริงทีหลัง)
 const PLACEHOLDER = {
-  overall: 'กำลังเตรียมข้อมูลดวงรายสัปดาห์ค่ะ เร็วๆ นี้จะมีให้อ่านแน่นอนนะคะ คุณพี่รอหน่อยนะคะ 🙏',
-  love: 'เร็วๆ นี้ค่ะ',
-  work: 'เร็วๆ นี้ค่ะ',
-  money: 'เร็วๆ นี้ค่ะ',
-  health: 'เร็วๆ นี้ค่ะ',
-  scoreLove: 4, scoreWork: 3, scoreMoney: 4, scoreHealth: 5,
-  luckyColor: 'ทอง', luckyNumber: '9', luckyDay: 'ศุกร์'
+  overall:'กำลังเตรียมข้อมูลดวงรายสัปดาห์ค่ะ เร็วๆ นี้จะมีให้อ่านแน่นอนนะคะ คุณพี่รอหน่อยนะคะ 🙏',
+  love:'เร็วๆ นี้ค่ะ', work:'เร็วๆ นี้ค่ะ', money:'เร็วๆ นี้ค่ะ', health:'เร็วๆ นี้ค่ะ',
+  scoreLove:4, scoreWork:3, scoreMoney:4, scoreHealth:5,
+  luckyColor:'ทอง', luckyNumber:'9', luckyDay:'ศุกร์'
 };
 
 const ZODIACS = [
-  { name: 'เมษ', icon: '♈', date: '21 มี.ค. - 19 เม.ย.' },
-  { name: 'พฤษภ', icon: '♉', date: '20 เม.ย. - 20 พ.ค.' },
-  { name: 'เมถุน', icon: '♊', date: '21 พ.ค. - 20 มิ.ย.' },
-  { name: 'กรกฎ', icon: '♋', date: '21 มิ.ย. - 22 ก.ค.' },
-  { name: 'สิงห์', icon: '♌', date: '23 ก.ค. - 22 ส.ค.' },
-  { name: 'กันย์', icon: '♍', date: '23 ส.ค. - 22 ก.ย.' },
-  { name: 'ตุลย์', icon: '♎', date: '23 ก.ย. - 22 ต.ค.' },
-  { name: 'พิจิก', icon: '♏', date: '23 ต.ค. - 21 พ.ย.' },
-  { name: 'ธนู', icon: '♐', date: '22 พ.ย. - 21 ธ.ค.' },
-  { name: 'มกร', icon: '♑', date: '22 ธ.ค. - 19 ม.ค.' },
-  { name: 'กุมภ์', icon: '♒', date: '20 ม.ค. - 18 ก.พ.' },
-  { name: 'มีน', icon: '♓', date: '19 ก.พ. - 20 มี.ค.' },
+  {name:'เมษ',icon:'♈',date:'21 มี.ค. - 19 เม.ย.'},
+  {name:'พฤษภ',icon:'♉',date:'20 เม.ย. - 20 พ.ค.'},
+  {name:'เมถุน',icon:'♊',date:'21 พ.ค. - 20 มิ.ย.'},
+  {name:'กรกฎ',icon:'♋',date:'21 มิ.ย. - 22 ก.ค.'},
+  {name:'สิงห์',icon:'♌',date:'23 ก.ค. - 22 ส.ค.'},
+  {name:'กันย์',icon:'♍',date:'23 ส.ค. - 22 ก.ย.'},
+  {name:'ตุลย์',icon:'♎',date:'23 ก.ย. - 22 ต.ค.'},
+  {name:'พิจิก',icon:'♏',date:'23 ต.ค. - 21 พ.ย.'},
+  {name:'ธนู',icon:'♐',date:'22 พ.ย. - 21 ธ.ค.'},
+  {name:'มกร',icon:'♑',date:'22 ธ.ค. - 19 ม.ค.'},
+  {name:'กุมภ์',icon:'♒',date:'20 ม.ค. - 18 ก.พ.'},
+  {name:'มีน',icon:'♓',date:'19 ก.พ. - 20 มี.ค.'},
 ];
 
 let selectedZodiac = null;
 let currentMode = 'weekly';
-let currentUser = null;
 
-document.getElementById('zodiacGrid').innerHTML = ZODIACS.map((z, i) =>
-  `<div class="zodiac-btn" id="z${i}" onclick="selectZodiac('${z.name}', ${i})">
+document.getElementById('zodiacGrid').innerHTML = ZODIACS.map((z,i) =>
+  `<div class="zodiac-btn" id="z${i}" onclick="selectZodiac('${z.name}',${i})">
     <div class="zodiac-icon">${z.icon}</div>
     <div class="zodiac-name">ราศี${z.name}</div>
     <div class="zodiac-date">${z.date}</div>
-  </div>`
-).join('');
+  </div>`).join('');
 
-function setMode(mode) {
+window.setMode = function(mode) {
   currentMode = mode;
-  document.getElementById('btnWeekly').classList.toggle('active', mode === 'weekly');
-  document.getElementById('btnMonthly').classList.toggle('active', mode === 'monthly');
+  document.getElementById('btnWeekly').classList.toggle('active', mode==='weekly');
+  document.getElementById('btnMonthly').classList.toggle('active', mode==='monthly');
   document.getElementById('resultBox').classList.remove('show');
-}
+};
 
-function selectZodiac(name, idx) {
+window.selectZodiac = function(name, idx) {
   selectedZodiac = name;
   document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('z' + idx).classList.add('active');
   document.getElementById('btnCheck').disabled = false;
   document.getElementById('resultBox').classList.remove('show');
-}
+};
 
-function stars(n) {
-  return '⭐'.repeat(n) + '☆'.repeat(5 - n);
-}
+function stars(n) { return '⭐'.repeat(n) + '☆'.repeat(5-n); }
 
 function getCurrentPeriod() {
   const now = new Date();
   if (currentMode === 'weekly') {
     const start = new Date(now);
     start.setDate(now.getDate() - now.getDay() + 1);
-    const end = new Date(start);
-    end.setDate(start.getDate() + 6);
+    const end = new Date(start); end.setDate(start.getDate() + 6);
     const fmt = d => `${d.getDate()} ${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][d.getMonth()]}`;
-    return `สัปดาห์ ${fmt(start)} — ${fmt(end)} ${now.getFullYear() + 543}`;
+    return `สัปดาห์ ${fmt(start)} — ${fmt(end)} ${now.getFullYear()+543}`;
   } else {
     const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-    return `${months[now.getMonth()]} ${now.getFullYear() + 543}`;
+    return `${months[now.getMonth()]} ${now.getFullYear()+543}`;
   }
 }
 
-function showResult() {
+window.showResult = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   const zodiac = ZODIACS.find(z => z.name === selectedZodiac);
   const now = new Date();
-  const period = currentMode === 'weekly'
-    ? `w${Math.ceil((now - new Date(now.getFullYear(), 0, 1)) / 604800000)}`
-    : `m${now.getMonth() + 1}`;
-
   const data = currentMode === 'monthly'
-    ? (MONTHLY_DATA[selectedZodiac] || {})[now.getMonth() + 1] || PLACEHOLDER
+    ? (typeof MONTHLY_DATA !== 'undefined' ? (MONTHLY_DATA[selectedZodiac]||{})[now.getMonth()+1] : null) || PLACEHOLDER
     : PLACEHOLDER;
-  
 
   document.getElementById('resultPeriod').textContent = getCurrentPeriod();
   document.getElementById('resultTitle').textContent = `${zodiac.icon} ราศี${selectedZodiac}`;
-
   document.getElementById('scoreLove').textContent = stars(data.scoreLove);
   document.getElementById('scoreWork').textContent = stars(data.scoreWork);
   document.getElementById('scoreMoney').textContent = stars(data.scoreMoney);
   document.getElementById('scoreHealth').textContent = stars(data.scoreHealth);
-
   document.getElementById('horoOverall').textContent = data.overall;
   document.getElementById('horoLove').textContent = data.love;
   document.getElementById('horoWork').textContent = data.work;
   document.getElementById('horoMoney').textContent = data.money;
   document.getElementById('horoHealth').textContent = data.health;
-
   document.getElementById('luckyRow').innerHTML = `
     <div class="lucky-item"><div class="lucky-item-label">🎨 สีมงคล</div><div class="lucky-item-value">${data.luckyColor}</div></div>
     <div class="lucky-item"><div class="lucky-item-label">🔢 เลขมงคล</div><div class="lucky-item-value">${data.luckyNumber}</div></div>
-    <div class="lucky-item"><div class="lucky-item-label">📅 วันมงคล</div><div class="lucky-item-value">วัน${data.luckyDay}</div></div>
-  `;
-
+    <div class="lucky-item"><div class="lucky-item-label">📅 วันมงคล</div><div class="lucky-item-value">วัน${data.luckyDay}</div></div>`;
   document.getElementById('resultBox').classList.add('show');
-  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-
+  document.getElementById('resultBox').scrollIntoView({ behavior:'smooth' });
   saveReading();
-}
+};
 
-function resetResult() {
+window.resetResult = function() {
   selectedZodiac = null;
   document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('btnCheck').disabled = true;
   document.getElementById('resultBox').classList.remove('show');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
 
 async function saveReading() {
   if (!currentUser) return;
   try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const db = getFirestore(app);
-    const modeText = currentMode === 'weekly' ? 'รายสัปดาห์' : 'รายเดือน';
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: `ดวง${modeText}`, question: `ราศี${selectedZodiac}`, result: getCurrentPeriod(), createdAt: new Date().toISOString()
-    });
+    await addDocFS(selectedZodiac);
   } catch(e) { console.error(e); }
 }
+</script>
 
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (!user) window.location.href = '../index.html';
-    });
-  } catch(e) { console.error(e); }
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.currentUser = null;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+window.addDocFS = async function(zodiac) {
+  if (!window.currentUser) return;
+  const modeText = currentMode === 'weekly' ? 'รายสัปดาห์' : 'รายเดือน';
+  await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
+    type: `ดวง${modeText}`, question: `ราศี${zodiac}`,
+    result: getCurrentPeriod(), createdAt: serverTimestamp()
+  });
+};
+
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
 });
 </script>
 </body>
