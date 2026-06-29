@@ -272,7 +272,11 @@ onAuthStateChanged(auth, async user => {
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else {
     updateCoinUI('—'); setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
+    setTimeout(() => {
+      if (!currentUser) {
+        document.getElementById('loginRequiredOverlay').classList.add('show');
+      }
+    }, 1500);
   }
 });
 
