@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ขอพรต้นไม้ศักดิ์สิทธิ์ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/tree-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; background: linear-gradient(180deg, #0d1f0a 0%, #0a1a08 100%); }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(34,197,94,0.2); background:rgba(5,15,5,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); display:flex; align-items:center; justify-content:center; color:#4ade80; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .page-content { padding:0 0 40px; }
+
+    /* HERO */
+    .hero { text-align:center; padding:16px 20px 8px; }
+    .hero-title { font-size:20px; font-weight:800; color:#4ade80; margin-bottom:4px; text-shadow:0 0 20px rgba(74,222,128,0.4); }
+    .hero-desc { font-size:13px; color:rgba(255,255,255,0.5); line-height:1.7; }
+
+    /* TREE AREA */
+    .tree-area {
+      position:relative; width:100%; max-width:400px;
+      margin:0 auto; user-select:none;
+    }
+    .tree-img {
+      width:100%; display:block;
+      transition:transform 0.1s;
+    }
+    .tree-img.shake {
+      animation: treeShake 0.6s ease-in-out;
+    }
+    @keyframes treeShake {
+      0%,100%{transform:rotate(0deg) translateX(0)}
+      15%{transform:rotate(-2deg) translateX(-4px)}
+      30%{transform:rotate(2deg) translateX(4px)}
+      45%{transform:rotate(-1.5deg) translateX(-3px)}
+      60%{transform:rotate(1.5deg) translateX(3px)}
+      75%{transform:rotate(-0.5deg) translateX(-2px)}
+      90%{transform:rotate(0.5deg) translateX(2px)}
+    }
+
+    /* CARDS ON TREE */
+    .cards-layer {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      pointer-events:none;
+    }
+    .tree-card {
+      position:absolute; width:9%; aspect-ratio:1/1.6;
+      transform-origin:top center;
+      animation: cardSway 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .tree-card img { width:100%; height:100%; object-fit:contain; border-radius:4px; }
+    .tree-card.sway-fast { animation-duration:0.4s !important; animation-name:cardSwayFast !important; }
+
+    @keyframes cardSway {
+      0%,100%{transform:rotate(-3deg)}
+      50%{transform:rotate(3deg)}
+    }
+    @keyframes cardSwayFast {
+      0%,100%{transform:rotate(-12deg)}
+      25%{transform:rotate(12deg)}
+      50%{transform:rotate(-8deg)}
+      75%{transform:rotate(8deg)}
+    }
+
+    /* ตำแหน่งการ์ดบนต้นไม้ */
+    .card-p1{top:12%;left:18%;animation-delay:0s}
+    .card-p2{top:8%;left:38%;animation-delay:0.3s}
+    .card-p3{top:10%;left:58%;animation-delay:0.6s}
+    .card-p4{top:10%;left:74%;animation-delay:0.9s}
+    .card-p5{top:25%;left:10%;animation-delay:1.2s}
+    .card-p6{top:22%;left:30%;animation-delay:0.4s}
+    .card-p7{top:20%;left:52%;animation-delay:0.7s}
+    .card-p8{top:22%;left:70%;animation-delay:1.1s}
+    .card-p9{top:38%;left:14%;animation-delay:0.2s}
+    .card-p10{top:35%;left:34%;animation-delay:0.8s}
+    .card-p11{top:33%;left:56%;animation-delay:0.5s}
+    .card-p12{top:36%;left:76%;animation-delay:1.0s}
+
+    /* SHAKE BTN */
+    .shake-section { text-align:center; padding:12px 20px 20px; }
+    .btn-shake {
+      background:linear-gradient(135deg,#065f46,#10b981);
+      border:none; border-radius:50px; padding:16px 40px;
+      color:white; font-size:17px; font-weight:800;
+      font-family:'Sarabun',sans-serif; cursor:pointer;
+      box-shadow:0 6px 24px rgba(16,185,129,0.4);
+      transition:all 0.2s; display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn-shake:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(16,185,129,0.5); }
+    .btn-shake:active { transform:scale(0.97); }
+    .btn-shake:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .shake-hint { font-size:12px; color:rgba(255,255,255,0.3); margin-top:8px; }
+
+    /* FALLING CARD */
+    .falling-card-wrap {
+      position:fixed; z-index:300;
+      top:-20%; left:50%; transform:translateX(-50%);
+      width:80px; display:none; pointer-events:none;
+    }
+    .falling-card-wrap.falling {
+      display:block;
+      animation:fallDown 1.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+    }
+    @keyframes fallDown {
+      0%{top:-20%;opacity:1;transform:translateX(-50%) rotate(-10deg)}
+      60%{opacity:1;transform:translateX(-50%) rotate(5deg)}
+      85%{top:35%;opacity:1;transform:translateX(-50%) rotate(-3deg)}
+      100%{top:38%;opacity:0.95;transform:translateX(-50%) rotate(0deg)}
+    }
+    .falling-card-img { width:100%; object-fit:contain; border-radius:8px; filter:drop-shadow(0 8px 16px rgba(0,0,0,0.5)); }
+
+    /* RESULT OVERLAY */
+    .result-overlay {
+      position:fixed; inset:0; z-index:400;
+      background:rgba(0,0,0,0.85); display:none;
+      flex-direction:column; align-items:center; justify-content:center;
+      padding:24px;
+    }
+    .result-overlay.show { display:flex; }
+    .result-card-big {
+      width:130px; aspect-ratio:1/1.6; margin-bottom:20px;
+      border-radius:16px; overflow:hidden;
+      box-shadow:0 8px 40px rgba(0,0,0,0.6);
+      animation:cardPopIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+      perspective:600px;
+    }
+    .result-card-big img { width:100%; height:100%; object-fit:contain; }
+    @keyframes cardPopIn {
+      0%{transform:scale(0.5) rotate(-10deg);opacity:0}
+      100%{transform:scale(1) rotate(0deg);opacity:1}
+    }
+    .result-category {
+      font-size:12px; letter-spacing:2px; font-weight:700;
+      margin-bottom:8px; padding:4px 16px; border-radius:20px;
+      animation:fadeUp 0.4s 0.3s both;
+    }
+    .result-blessing {
+      font-size:16px; line-height:2; color:white; text-align:center;
+      max-width:320px; margin-bottom:24px;
+      animation:fadeUp 0.4s 0.5s both;
+    }
+    @keyframes fadeUp {
+      0%{opacity:0;transform:translateY(16px)}
+      100%{opacity:1;transform:translateY(0)}
+    }
+    .btn-close-result {
+      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+      border-radius:50px; padding:12px 32px; color:white;
+      font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif;
+      cursor:pointer; margin-bottom:12px;
+      animation:fadeUp 0.4s 0.7s both;
+    }
+    .btn-shake-again {
+      background:linear-gradient(135deg,#065f46,#10b981);
+      border:none; border-radius:50px; padding:12px 32px; color:white;
+      font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif;
+      cursor:pointer;
+      animation:fadeUp 0.4s 0.8s both;
+    }
+
+    /* SPARKLES */
+    .sparkle-container { position:fixed; inset:0; pointer-events:none; z-index:350; overflow:hidden; }
+    .sparkle { position:absolute; animation:sparklePop 1s ease-out forwards; font-size:20px; }
+    @keyframes sparklePop {
+      0%{opacity:1;transform:scale(0) translateY(0)}
+      50%{opacity:1;transform:scale(1.5) translateY(-20px)}
+      100%{opacity:0;transform:scale(0) translateY(-60px)}
+    }
+
+    /* COLOR THEMES */
+    .theme-blue .result-category { background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); }
+    .theme-blue .result-card-big { box-shadow:0 8px 40px rgba(59,130,246,0.4); }
+    .theme-green .result-category { background:rgba(34,197,94,0.2); color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
+    .theme-green .result-card-big { box-shadow:0 8px 40px rgba(34,197,94,0.4); }
+    .theme-red .result-category { background:rgba(239,68,68,0.2); color:#f87171; border:1px solid rgba(239,68,68,0.4); }
+    .theme-red .result-card-big { box-shadow:0 8px 40px rgba(239,68,68,0.4); }
+    .theme-yellow .result-category { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid rgba(251,191,36,0.4); }
+    .theme-yellow .result-card-big { box-shadow:0 8px 40px rgba(251,191,36,0.4); }
+
+    /* UPSELL */
+    .upsell-section { padding:0 20px; }
+    .upsell-box { background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(5,150,105,0.1)); border:1px solid rgba(16,185,129,0.25); border-radius:20px; padding:20px; text-align:center; }
+    .upsell-title { font-size:15px; font-weight:800; color:white; margin-bottom:6px; }
+    .upsell-desc { font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:14px; line-height:1.6; }
+    .btn-upsell { width:100%; padding:13px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<!-- FALLING CARD (overlay layer) -->
+<div class="falling-card-wrap" id="fallingCard">
+  <img class="falling-card-img" id="fallingCardImg" src="">
+</div>
+
+<!-- SPARKLES -->
+<div class="sparkle-container" id="sparkleContainer"></div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card-big" id="resultCardBig">
+    <img id="resultCardImg" src="">
+  </div>
+  <div class="result-category" id="resultCategory"></div>
+  <div class="result-blessing" id="resultBlessing"></div>
+  <button class="btn-shake-again" onclick="shakeAgain()">🌳 ขอพรอีกครั้ง</button>
+  <button class="btn-close-result" onclick="closeResult()">ปิด</button>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="free.html" class="back-btn">←</a>
+  <div class="page-title">🌳 ขอพรต้นไม้ศักดิ์สิทธิ์</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="coin-badge" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#4ade80;">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#0d1f0a,#051005);border:1px solid rgba(34,197,94,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌳</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🌳 ต้นไม้ศักดิ์สิทธิ์</div>
+    <div class="hero-desc">ตั้งจิตอธิษฐาน แล้วกดเขย่าต้นไม้เพื่อรับพรค่ะ</div>
+  </div>
+
+  <!-- TREE -->
+  <div class="tree-area" id="treeArea">
+    <img class="tree-img" id="treeImg" src="../images/tree/tree.png" alt="ต้นไม้ศักดิ์สิทธิ์">
+    <div class="cards-layer" id="cardsLayer"></div>
+  </div>
+
+  <!-- SHAKE BUTTON -->
+  <div class="shake-section">
+    <button class="btn-shake" id="btnShake" onclick="shakeTree()">
+      🙏 เขย่าขอพร
+    </button>
+    <div class="shake-hint">กดเพื่อเขย่าต้นไม้และรับคำพรค่ะ</div>
+  </div>
+
+  <!-- UPSELL -->
+  <div class="upsell-section">
+    <div class="upsell-box">
+      <div class="upsell-title">🔮 อยากดูดวงละเอียดกว่านี้?</div>
+      <div class="upsell-desc">ดูดวงเชิงลึกจากไพ่ทาโรต์ ไอชิง รูน และอีกมากมาย<br>ให้ AI วิเคราะห์ให้คุณแบบเฉพาะเจาะจงค่ะ</div>
+      <button class="btn-upsell" onclick="window.location.href='divination.html'">✨ ไปหน้าดูดวงทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+// ตำแหน่งและสีการ์ดบนต้นไม้
+const CARD_POSITIONS = [
+  {cls:'card-p1', color:'red'},
+  {cls:'card-p2', color:'blue'},
+  {cls:'card-p3', color:'yellow'},
+  {cls:'card-p4', color:'green'},
+  {cls:'card-p5', color:'green'},
+  {cls:'card-p6', color:'yellow'},
+  {cls:'card-p7', color:'red'},
+  {cls:'card-p8', color:'blue'},
+  {cls:'card-p9', color:'blue'},
+  {cls:'card-p10', color:'red'},
+  {cls:'card-p11', color:'green'},
+  {cls:'card-p12', color:'yellow'},
+];
+
+const COLOR_KEYS = ['blue', 'green', 'red', 'yellow'];
+let isShaking = false;
+let lastResult = null;
+
+function getCardImg(color) {
+  return `../images/tree/${color}.png`;
+}
+
+function renderCards() {
+  const layer = document.getElementById('cardsLayer');
+  layer.innerHTML = CARD_POSITIONS.map(p =>
+    `<div class="tree-card ${p.cls}">
+      <img src="${getCardImg(p.color)}" alt="">
+    </div>`).join('');
+}
+
+window.shakeTree = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  if (isShaking) return;
+  isShaking = true;
+
+  const btn = document.getElementById('btnShake');
+  btn.disabled = true;
+  btn.textContent = '🌳 กำลังเขย่า...';
+
+  // สั่นต้นไม้
+  const treeImg = document.getElementById('treeImg');
+  treeImg.classList.add('shake');
+
+  // สั่นการ์ดเร็ว
+  document.querySelectorAll('.tree-card').forEach(c => c.classList.add('sway-fast'));
+
+  // สุ่มสีและคำพร
+  const colorKey = COLOR_KEYS[Math.floor(Math.random() * COLOR_KEYS.length)];
+  const data = TREE_BLESSINGS[colorKey];
+  const blessing = data.blessings[Math.floor(Math.random() * data.blessings.length)];
+  lastResult = { colorKey, data, blessing };
+
+  // หลัง shake → การ์ดร่วง
+  setTimeout(() => {
+    treeImg.classList.remove('shake');
+    document.querySelectorAll('.tree-card').forEach(c => c.classList.remove('sway-fast'));
+
+    // การ์ดร่วง
+    const fallingCard = document.getElementById('fallingCard');
+    document.getElementById('fallingCardImg').src = getCardImg(colorKey);
+    fallingCard.classList.add('falling');
+
+    // หลัง falling → แสดงผล
+    setTimeout(() => {
+      fallingCard.classList.remove('falling');
+      showResult(colorKey, data, blessing);
+    }, 1300);
+
+  }, 700);
+};
+
+function showResult(colorKey, data, blessing) {
+  // Sparkles
+  spawnSparkles(colorKey);
+
+  // set result
+  const overlay = document.getElementById('resultOverlay');
+  document.getElementById('resultCardImg').src = getCardImg(colorKey);
+  document.getElementById('resultCategory').textContent = `✦ ${data.label} ✦`;
+  document.getElementById('resultBlessing').textContent = blessing;
+
+  // theme color
+  overlay.className = `result-overlay show theme-${colorKey}`;
+
+  // save
+  saveReading(colorKey, data.label, blessing);
+}
+
+function spawnSparkles(colorKey) {
+  const colors = { blue:'💙', green:'💚', red:'❤️', yellow:'💛' };
+  const emojis = [colors[colorKey], '✨', '⭐', '🌟'];
+  const container = document.getElementById('sparkleContainer');
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      s.style.left = (10 + Math.random() * 80) + '%';
+      s.style.top = (20 + Math.random() * 60) + '%';
+      s.style.animationDelay = (Math.random() * 0.3) + 's';
+      container.appendChild(s);
+      setTimeout(() => s.remove(), 1200);
+    }, i * 80);
+  }
+}
+
+window.closeResult = function() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  isShaking = false;
+  const btn = document.getElementById('btnShake');
+  btn.disabled = false;
+  btn.textContent = '🙏 เขย่าขอพรอีกครั้ง';
+};
+
+window.shakeAgain = function() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  isShaking = false;
+  const btn = document.getElementById('btnShake');
+  btn.disabled = false;
+  btn.textContent = '🙏 เขย่าขอพร';
+  setTimeout(() => shakeTree(), 300);
+};
+
+document.addEventListener('DOMContentLoaded', () => { renderCards(); });
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.currentUser = null;
+
+window.updateCoinUI = function(coins) { document.getElementById('coinCount').textContent = coins; };
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+window.saveReading = async function(colorKey, label, blessing) {
+  if (!window.currentUser) return;
+  try {
+    await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
+      type: 'ขอพรต้นไม้ศักดิ์สิทธิ์',
+      question: label,
+      result: blessing,
+      createdAt: serverTimestamp()
+    });
+  } catch(e) { console.error(e); }
+};
+
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
+</script>
+</body>
+</html>
