@@ -6,145 +6,113 @@
   <title>สีมงคลประจำวัน — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--purple-light); font-size: 16px; text-decoration: none;
-    }
-    .page-title { font-size: 18px; font-weight: 700; color: white; }
-    .free-badge {
-      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
-      color: white; font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 20px;
-    }
-    .page-content { padding: 20px 20px 40px; }
-    .hero { text-align: center; padding: 8px 0 20px; }
-    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 12px; }
-    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-    /* Today card */
-    .today-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px; text-align: center;
-    }
-    .today-label { font-size: 12px; color: var(--dim); margin-bottom: 4px; }
-    .today-day { font-size: 24px; font-weight: 800; color: white; }
-    .today-date { font-size: 12px; color: var(--dim); margin-top: 2px; }
-
-    /* Birthday select */
-    .input-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
-    .day-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .day-btn {
-      padding: 10px 4px; border-radius: 14px; text-align: center;
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      cursor: pointer; transition: all 0.2s; font-family: 'Sarabun', sans-serif;
-      font-size: 12px; color: white; font-weight: 600;
-    }
-    .day-btn:hover { border-color: var(--purple-light); background: rgba(124,58,237,0.1); }
-    .day-btn.active { border-color: var(--purple-light); background: rgba(124,58,237,0.2); }
-    .day-btn-color { width: 24px; height: 24px; border-radius: 50%; margin: 0 auto 4px; }
-
-    .btn-check {
-      width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
-    }
-    .btn-check:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Result */
-    .result-box { display: none; }
-    .result-box.show { display: block; }
-
-    .color-hero {
-      border-radius: 24px; padding: 28px 20px; text-align: center;
-      margin-bottom: 16px; position: relative; overflow: hidden;
-    }
-    .color-swatch-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
-    .color-swatch {
-      width: 64px; height: 64px; border-radius: 50%;
-      border: 3px solid rgba(255,255,255,0.3);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    }
-    .color-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .color-subtitle { font-size: 13px; color: rgba(255,255,255,0.7); }
-
-    .info-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 12px;
-    }
-    .info-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
-    .info-text { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.8; }
-
-    .avoid-card {
-      background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .avoid-title { font-size: 13px; color: #ef4444; font-weight: 700; margin-bottom: 10px; }
-    .avoid-colors { display: flex; gap: 8px; flex-wrap: wrap; }
-    .avoid-chip {
-      display: flex; align-items: center; gap: 6px;
-      padding: 4px 12px; border-radius: 20px;
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-    }
-    .avoid-dot { width: 12px; height: 12px; border-radius: 50%; }
-    .avoid-text { font-size: 12px; color: #ef4444; }
-
-    .weekly-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .weekly-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
-    .weekly-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .weekly-row:last-child { border-bottom: none; }
-    .weekly-day { font-size: 12px; color: white; font-weight: 600; width: 48px; flex-shrink: 0; }
-    .weekly-dots { display: flex; gap: 4px; flex: 1; }
-    .weekly-dot { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
-    .weekly-color-name { font-size: 11px; color: var(--dim); }
-
-    .btn-again {
-      width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
-      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
-      color: var(--purple-light); font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-box {
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
-      border: 1px solid rgba(124,58,237,0.3); border-radius: 20px;
-      padding: 20px; text-align: center;
-    }
-    .upsell-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .upsell-desc { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.6; }
-    .btn-upsell {
-      width: 100%; padding: 14px; border-radius: 16px;
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; color: white; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-mascot img { width:120px; height:120px; object-fit:contain; margin-bottom:12px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:6px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .today-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; text-align:center; }
+    .today-label { font-size:12px; color:var(--dim); margin-bottom:4px; }
+    .today-day { font-size:24px; font-weight:800; color:white; }
+    .today-date { font-size:12px; color:var(--dim); margin-top:2px; }
+    .input-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; display:block; }
+    .day-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .day-btn { padding:10px 4px; border-radius:14px; text-align:center; background:rgba(255,255,255,0.03); border:1px solid var(--border); cursor:pointer; transition:all 0.2s; font-family:'Sarabun',sans-serif; font-size:12px; color:white; font-weight:600; }
+    .day-btn:hover { border-color:var(--purple-light); background:rgba(124,58,237,0.1); }
+    .day-btn.active { border-color:var(--purple-light); background:rgba(124,58,237,0.2); }
+    .day-btn-color { width:24px; height:24px; border-radius:50%; margin:0 auto 4px; }
+    .btn-check { width:100%; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:24px; }
+    .btn-check:disabled { opacity:0.5; cursor:not-allowed; }
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+    .color-hero { border-radius:24px; padding:28px 20px; text-align:center; margin-bottom:16px; }
+    .color-swatch-row { display:flex; gap:12px; justify-content:center; margin-bottom:16px; }
+    .color-swatch { width:64px; height:64px; border-radius:50%; border:3px solid rgba(255,255,255,0.3); box-shadow:0 4px 16px rgba(0,0,0,0.3); }
+    .color-title { font-size:20px; font-weight:800; color:white; margin-bottom:4px; }
+    .color-subtitle { font-size:13px; color:rgba(255,255,255,0.7); }
+    .info-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:12px; }
+    .info-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; }
+    .info-text { font-size:14px; color:rgba(255,255,255,0.85); line-height:1.8; }
+    .avoid-card { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .avoid-title { font-size:13px; color:#ef4444; font-weight:700; margin-bottom:10px; }
+    .avoid-colors { display:flex; gap:8px; flex-wrap:wrap; }
+    .avoid-chip { display:flex; align-items:center; gap:6px; padding:4px 12px; border-radius:20px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); }
+    .avoid-dot { width:12px; height:12px; border-radius:50%; }
+    .avoid-text { font-size:12px; color:#ef4444; }
+    .weekly-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .weekly-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .weekly-row { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .weekly-row:last-child { border-bottom:none; }
+    .weekly-day { font-size:12px; color:white; font-weight:600; width:48px; flex-shrink:0; }
+    .weekly-dots { display:flex; gap:4px; flex:1; }
+    .weekly-dot { width:20px; height:20px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); }
+    .weekly-color-name { font-size:11px; color:var(--dim); }
+    .btn-again { width:100%; padding:14px; border-radius:16px; margin-bottom:12px; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); color:var(--purple-light); font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-box { background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15)); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:20px; text-align:center; }
+    .upsell-title { font-size:16px; font-weight:800; color:white; margin-bottom:6px; }
+    .upsell-desc { font-size:13px; color:var(--dim); margin-bottom:16px; line-height:1.6; }
+    .btn-upsell { width:100%; padding:14px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; color:white; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-price { font-size:11px; color:rgba(255,255,255,0.4); margin-top:8px; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
   <div class="page-title">🎨 สีมงคลประจำวัน</div>
-  <div class="free-badge">FREE</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🎨</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="hero">
@@ -155,14 +123,12 @@
     <div class="hero-desc">น้องจะบอกสีนำโชคประจำวันนี้<br>และสีมงคลตามวันเกิดของคุณพี่ค่ะ</div>
   </div>
 
-  <!-- วันนี้ -->
   <div class="today-card">
     <div class="today-label">วันนี้คือ</div>
     <div class="today-day" id="todayDay"></div>
     <div class="today-date" id="todayDate"></div>
   </div>
 
-  <!-- เลือกวันเกิด -->
   <div class="input-box">
     <label class="input-label">🎂 เกิดวันอะไรคะ?</label>
     <div class="day-grid" id="dayGrid"></div>
@@ -170,238 +136,177 @@
 
   <button class="btn-check" id="btnCheck" onclick="showResult()" disabled>🎨 ดูสีมงคล</button>
 
-  <!-- Result -->
   <div class="result-box" id="resultBox">
-
-    <!-- สีมงคลวันนี้ -->
     <div class="color-hero" id="colorHero">
       <div class="color-swatch-row" id="colorSwatches"></div>
       <div class="color-title" id="colorTitle"></div>
       <div class="color-subtitle" id="colorSubtitle"></div>
     </div>
-
-    <div class="info-card">
-      <div class="info-title">✨ ทำไมสีนี้ถึงนำโชคให้คุณพี่?</div>
-      <div class="info-text" id="colorMeaning"></div>
-    </div>
-
-    <div class="info-card">
-      <div class="info-title">👗 ใส่สีไหนดีวันนี้?</div>
-      <div class="info-text" id="colorAdvice"></div>
-    </div>
-
-    <div class="avoid-card">
-      <div class="avoid-title">⛔ สีที่ควรเลี่ยงวันนี้</div>
-      <div class="avoid-colors" id="avoidColors"></div>
-    </div>
-
-    <!-- สีมงคลตลอดสัปดาห์ -->
-    <div class="weekly-card">
-      <div class="weekly-title">📅 สีมงคลประจำสัปดาห์ของคุณพี่</div>
-      <div id="weeklyList"></div>
-    </div>
-
+    <div class="info-card"><div class="info-title">✨ ทำไมสีนี้ถึงนำโชคให้คุณพี่?</div><div class="info-text" id="colorMeaning"></div></div>
+    <div class="info-card"><div class="info-title">👗 ใส่สีไหนดีวันนี้?</div><div class="info-text" id="colorAdvice"></div></div>
+    <div class="avoid-card"><div class="avoid-title">⛔ สีที่ควรเลี่ยงวันนี้</div><div class="avoid-colors" id="avoidColors"></div></div>
+    <div class="weekly-card"><div class="weekly-title">📅 สีมงคลประจำสัปดาห์ของคุณพี่</div><div id="weeklyList"></div></div>
     <button class="btn-again" onclick="resetResult()">🔄 เลือกใหม่</button>
-
     <div class="upsell-box">
-      <div class="upsell-title">🔮 อยากรู้ดวงลึกกว่านี้?</div>
-      <div class="upsell-desc">ให้ AI วิเคราะห์เลขศาสตร์เชิงลึก<br>สีมงคล เลขมงคล และดวงชะตาตลอดปี</div>
-      <button class="btn-upsell" onclick="window.location.href='numerology.html'">✨ ดูเลขศาสตร์ละเอียด</button>
-      <div class="upsell-price">ใช้เหรียญ • วิเคราะห์ครบทุกด้าน</div>
+      <div class="upsell-title">🔮 อยากดูดวงลึกกว่านี้?</div>
+      <div class="upsell-desc">ดูดวงหลากหลายรูปแบบ ไพ่ทาโรต์ ไอชิง รูน และอีกมากมาย<br>ให้ AI ทำนายเชิงลึกได้เลยค่ะ</div>
+      <button class="btn-upsell" onclick="window.location.href='divination.html'">✨ ไปหน้าดูดวงทั้งหมด</button>
+      <div class="upsell-price">มีหลายระบบให้เลือก • ใช้เหรียญ</div>
     </div>
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
 <script>
-// สีมงคลตามวันในสัปดาห์ (ตามโหราศาสตร์ไทย)
 const DAY_COLORS = {
-  0: { // อาทิตย์
-    name: 'วันอาทิตย์',
-    lucky: ['แดง', 'ส้ม'],
-    luckyHex: ['#ef4444', '#f97316'],
-    avoid: ['น้ำเงิน', 'ดำ'],
-    avoidHex: ['#3b82f6', '#111827'],
-    meaning: 'ดาวอาทิตย์ครองวันนี้ค่ะ สีแดงและสีส้มจะเสริมพลังงาน ความมั่นใจ และความเป็นผู้นำให้คุณพี่ได้เลย',
-    advice: 'ใส่เสื้อสีแดงหรือสีส้มวันนี้ได้เลยค่ะ หรือจะเป็นกระเป๋า รองเท้า หรือเครื่องประดับสีนี้ก็ได้นะคะ ดึงดูดโชคและความสำเร็จได้ดีมากค่ะ'
-  },
-  1: { // จันทร์
-    name: 'วันจันทร์',
-    lucky: ['เหลือง', 'ครีม'],
-    luckyHex: ['#fbbf24', '#fef3c7'],
-    avoid: ['แดง', 'ดำ'],
-    avoidHex: ['#ef4444', '#111827'],
-    meaning: 'ดาวจันทร์ครองวันนี้ค่ะ สีเหลืองและสีครีมจะเสริมความอ่อนโยน ความเมตตา และความโชคดีในเรื่องความรักและครอบครัว',
-    advice: 'ใส่โทนสีเหลืองอ่อนหรือสีครีมวันนี้ค่ะ เหมาะกับการประชุม การพบปะ และการสร้างความสัมพันธ์ที่ดีค่ะ'
-  },
-  2: { // อังคาร
-    name: 'วันอังคาร',
-    lucky: ['ชมพู', 'ม่วง'],
-    luckyHex: ['#ec4899', '#a855f7'],
-    avoid: ['เหลือง', 'เขียว'],
-    avoidHex: ['#fbbf24', '#22c55e'],
-    meaning: 'ดาวอังคารครองวันนี้ค่ะ สีชมพูและสีม่วงจะเสริมพลังงานความรัก ความกล้าหาญ และการกระทำ ทำให้คุณพี่โดดเด่นและน่าดึงดูดมากค่ะ',
-    advice: 'ใส่สีชมพูหรือสีม่วงวันนี้ได้เลยค่ะ เหมาะกับการออกเดต การเจรจา และการแสดงออกถึงตัวตน'
-  },
-  3: { // พุธ
-    name: 'วันพุธ',
-    lucky: ['เขียว', 'เขียวอ่อน'],
-    luckyHex: ['#22c55e', '#86efac'],
-    avoid: ['ส้ม', 'แดง'],
-    avoidHex: ['#f97316', '#ef4444'],
-    meaning: 'ดาวพุธครองวันนี้ค่ะ สีเขียวจะเสริมสติปัญญา การสื่อสาร และความโชคดีในเรื่องธุรกิจและการค้าขาย',
-    advice: 'ใส่สีเขียววันนี้ค่ะ ไม่ว่าจะเป็นสีเขียวเข้มหรือสีเขียวอ่อนก็ได้ เหมาะกับวันที่ต้องประชุม เจรจา หรือเรียนรู้สิ่งใหม่ค่ะ'
-  },
-  4: { // พฤหัส
-    name: 'วันพฤหัสบดี',
-    lucky: ['ส้ม', 'น้ำตาล'],
-    luckyHex: ['#f97316', '#92400e'],
-    avoid: ['ม่วง', 'ชมพู'],
-    avoidHex: ['#a855f7', '#ec4899'],
-    meaning: 'ดาวพฤหัสครองวันนี้ค่ะ สีส้มและสีน้ำตาลจะเสริมความมั่นคง ความเจริญรุ่งเรือง และโชคลาภ เหมาะกับการขยายกิจการและสร้างความมั่งคั่ง',
-    advice: 'ใส่สีส้มหรือสีน้ำตาลอุ่นๆ วันนี้ค่ะ เหมาะกับการทำธุรกิจ ลงทุน หรือขอความช่วยเหลือจากผู้ใหญ่ค่ะ'
-  },
-  5: { // ศุกร์
-    name: 'วันศุกร์',
-    lucky: ['ฟ้า', 'ฟ้าอ่อน'],
-    luckyHex: ['#60a5fa', '#bfdbfe'],
-    avoid: ['น้ำตาล', 'ดำ'],
-    avoidHex: ['#92400e', '#111827'],
-    meaning: 'ดาวศุกร์ครองวันนี้ค่ะ สีฟ้าจะเสริมความสวยงาม ความรัก และความสุขสบาย ทำให้คุณพี่ดูดีและดึงดูดความรักได้ดีมากค่ะ',
-    advice: 'ใส่สีฟ้าหรือสีฟ้าอ่อนวันนี้ค่ะ เหมาะกับการออกเดต งานสังสรรค์ และทุกโอกาสที่อยากดูดี ดูมีเสน่ห์ค่ะ'
-  },
-  6: { // เสาร์
-    name: 'วันเสาร์',
-    lucky: ['ม่วงเข้ม', 'ดำ'],
-    luckyHex: ['#7c3aed', '#1f2937'],
-    avoid: ['เหลือง', 'ครีม'],
-    avoidHex: ['#fbbf24', '#fef3c7'],
-    meaning: 'ดาวเสาร์ครองวันนี้ค่ะ สีม่วงเข้มและสีดำจะเสริมความลึกลับ ความเข้มแข็ง และพลังแห่งการปกป้อง เหมาะกับการทำงานหนักและสร้างความมั่นคง',
-    advice: 'ใส่สีม่วงเข้มหรือสีดำวันนี้ค่ะ ดูดีและน่าเกรงขาม เหมาะกับวันที่ต้องการความจริงจังและความน่าเชื่อถือค่ะ'
-  }
+  0:{name:'วันอาทิตย์',lucky:['แดง','ส้ม'],luckyHex:['#ef4444','#f97316'],avoid:['น้ำเงิน','ดำ'],avoidHex:['#3b82f6','#111827'],meaning:'ดาวอาทิตย์ครองวันนี้ค่ะ สีแดงและสีส้มจะเสริมพลังงาน ความมั่นใจ และความเป็นผู้นำให้คุณพี่ได้เลย',advice:'ใส่เสื้อสีแดงหรือสีส้มวันนี้ได้เลยค่ะ หรือจะเป็นกระเป๋า รองเท้า หรือเครื่องประดับสีนี้ก็ได้นะคะ ดึงดูดโชคและความสำเร็จได้ดีมากค่ะ'},
+  1:{name:'วันจันทร์',lucky:['เหลือง','ครีม'],luckyHex:['#fbbf24','#fef3c7'],avoid:['แดง','ดำ'],avoidHex:['#ef4444','#111827'],meaning:'ดาวจันทร์ครองวันนี้ค่ะ สีเหลืองและสีครีมจะเสริมความอ่อนโยน ความเมตตา และความโชคดีในเรื่องความรักและครอบครัว',advice:'ใส่โทนสีเหลืองอ่อนหรือสีครีมวันนี้ค่ะ เหมาะกับการประชุม การพบปะ และการสร้างความสัมพันธ์ที่ดีค่ะ'},
+  2:{name:'วันอังคาร',lucky:['ชมพู','ม่วง'],luckyHex:['#ec4899','#a855f7'],avoid:['เหลือง','เขียว'],avoidHex:['#fbbf24','#22c55e'],meaning:'ดาวอังคารครองวันนี้ค่ะ สีชมพูและสีม่วงจะเสริมพลังงานความรัก ความกล้าหาญ และการกระทำ ทำให้คุณพี่โดดเด่นและน่าดึงดูดมากค่ะ',advice:'ใส่สีชมพูหรือสีม่วงวันนี้ได้เลยค่ะ เหมาะกับการออกเดต การเจรจา และการแสดงออกถึงตัวตน'},
+  3:{name:'วันพุธ',lucky:['เขียว','เขียวอ่อน'],luckyHex:['#22c55e','#86efac'],avoid:['ส้ม','แดง'],avoidHex:['#f97316','#ef4444'],meaning:'ดาวพุธครองวันนี้ค่ะ สีเขียวจะเสริมสติปัญญา การสื่อสาร และความโชคดีในเรื่องธุรกิจและการค้าขาย',advice:'ใส่สีเขียววันนี้ค่ะ ไม่ว่าจะเป็นสีเขียวเข้มหรือสีเขียวอ่อนก็ได้ เหมาะกับวันที่ต้องประชุม เจรจา หรือเรียนรู้สิ่งใหม่ค่ะ'},
+  4:{name:'วันพฤหัสบดี',lucky:['ส้ม','น้ำตาล'],luckyHex:['#f97316','#92400e'],avoid:['ม่วง','ชมพู'],avoidHex:['#a855f7','#ec4899'],meaning:'ดาวพฤหัสครองวันนี้ค่ะ สีส้มและสีน้ำตาลจะเสริมความมั่นคง ความเจริญรุ่งเรือง และโชคลาภ เหมาะกับการขยายกิจการและสร้างความมั่งคั่ง',advice:'ใส่สีส้มหรือสีน้ำตาลอุ่นๆ วันนี้ค่ะ เหมาะกับการทำธุรกิจ ลงทุน หรือขอความช่วยเหลือจากผู้ใหญ่ค่ะ'},
+  5:{name:'วันศุกร์',lucky:['ฟ้า','ฟ้าอ่อน'],luckyHex:['#60a5fa','#bfdbfe'],avoid:['น้ำตาล','ดำ'],avoidHex:['#92400e','#111827'],meaning:'ดาวศุกร์ครองวันนี้ค่ะ สีฟ้าจะเสริมความสวยงาม ความรัก และความสุขสบาย ทำให้คุณพี่ดูดีและดึงดูดความรักได้ดีมากค่ะ',advice:'ใส่สีฟ้าหรือสีฟ้าอ่อนวันนี้ค่ะ เหมาะกับการออกเดต งานสังสรรค์ และทุกโอกาสที่อยากดูดี ดูมีเสน่ห์ค่ะ'},
+  6:{name:'วันเสาร์',lucky:['ม่วงเข้ม','ดำ'],luckyHex:['#7c3aed','#1f2937'],avoid:['เหลือง','ครีม'],avoidHex:['#fbbf24','#fef3c7'],meaning:'ดาวเสาร์ครองวันนี้ค่ะ สีม่วงเข้มและสีดำจะเสริมความลึกลับ ความเข้มแข็ง และพลังแห่งการปกป้อง เหมาะกับการทำงานหนักและสร้างความมั่นคง',advice:'ใส่สีม่วงเข้มหรือสีดำวันนี้ค่ะ ดูดีและน่าเกรงขาม เหมาะกับวันที่ต้องการความจริงจังและความน่าเชื่อถือค่ะ'},
 };
-
-// สีมงคลตามวันเกิด × วันในสัปดาห์
 const BIRTH_DAY_BOOST = {
-  0: { boost: ['แดง', 'ทอง'], boostHex: ['#ef4444', '#d97706'] },
-  1: { boost: ['ขาว', 'เงิน'], boostHex: ['#f8fafc', '#94a3b8'] },
-  2: { boost: ['ชมพู', 'แดงเข้ม'], boostHex: ['#ec4899', '#be123c'] },
-  3: { boost: ['เขียว', 'เหลือง'], boostHex: ['#22c55e', '#fbbf24'] },
-  4: { boost: ['ส้ม', 'เขียว'], boostHex: ['#f97316', '#22c55e'] },
-  5: { boost: ['ฟ้า', 'ขาว'], boostHex: ['#60a5fa', '#f8fafc'] },
-  6: { boost: ['ม่วง', 'ดำ'], boostHex: ['#a855f7', '#1f2937'] },
+  0:{boost:['แดง','ทอง'],boostHex:['#ef4444','#d97706']},
+  1:{boost:['ขาว','เงิน'],boostHex:['#f8fafc','#94a3b8']},
+  2:{boost:['ชมพู','แดงเข้ม'],boostHex:['#ec4899','#be123c']},
+  3:{boost:['เขียว','เหลือง'],boostHex:['#22c55e','#fbbf24']},
+  4:{boost:['ส้ม','เขียว'],boostHex:['#f97316','#22c55e']},
+  5:{boost:['ฟ้า','ขาว'],boostHex:['#60a5fa','#f8fafc']},
+  6:{boost:['ม่วง','ดำ'],boostHex:['#a855f7','#1f2937']},
 };
-
-const DAYS_TH = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัส', 'ศุกร์', 'เสาร์'];
+const DAYS_TH = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์'];
 let selectedBirthDay = null;
-let currentUser = null;
 
-// วันนี้
 const now = new Date();
 const todayIdx = now.getDay();
 document.getElementById('todayDay').textContent = `วัน${DAYS_TH[todayIdx]}`;
 const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-document.getElementById('todayDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear() + 543}`;
+document.getElementById('todayDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()+543}`;
 
-// Day grid
-document.getElementById('dayGrid').innerHTML = DAYS_TH.map((d, i) =>
+document.getElementById('dayGrid').innerHTML = DAYS_TH.map((d,i) =>
   `<div class="day-btn" id="db${i}" onclick="selectBirthDay(${i})">
     <div class="day-btn-color" style="background:${DAY_COLORS[i].luckyHex[0]}"></div>
     วัน${d}
-  </div>`
-).join('');
+  </div>`).join('');
 
-function selectBirthDay(idx) {
+window.selectBirthDay = function(idx) {
   selectedBirthDay = idx;
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('db' + idx).classList.add('active');
+  document.getElementById('db'+idx).classList.add('active');
   document.getElementById('btnCheck').disabled = false;
   document.getElementById('resultBox').classList.remove('show');
-}
+};
 
-function showResult() {
+window.showResult = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   const todayData = DAY_COLORS[todayIdx];
   const birthData = BIRTH_DAY_BOOST[selectedBirthDay];
-
-  // สีมงคลวันนี้ + boost จากวันเกิด
   const allLucky = [...new Set([...todayData.lucky, ...birthData.boost])];
   const allHex = [...new Set([...todayData.luckyHex, ...birthData.boostHex])];
-
-  // Color hero bg
   const heroEl = document.getElementById('colorHero');
-  heroEl.style.background = `linear-gradient(135deg, ${allHex[0]}33, ${allHex[1] || allHex[0]}22)`;
+  heroEl.style.background = `linear-gradient(135deg, ${allHex[0]}33, ${allHex[1]||allHex[0]}22)`;
   heroEl.style.border = `1px solid ${allHex[0]}44`;
-
-  document.getElementById('colorSwatches').innerHTML = allHex.slice(0, 4).map(h =>
-    `<div class="color-swatch" style="background:${h}"></div>`).join('');
-
-  document.getElementById('colorTitle').textContent = `สีมงคลของคุณพี่วันนี้`;
+  document.getElementById('colorSwatches').innerHTML = allHex.slice(0,4).map(h=>`<div class="color-swatch" style="background:${h}"></div>`).join('');
+  document.getElementById('colorTitle').textContent = 'สีมงคลของคุณพี่วันนี้';
   document.getElementById('colorSubtitle').textContent = allLucky.join(' • ');
   document.getElementById('colorMeaning').textContent = todayData.meaning;
   document.getElementById('colorAdvice').textContent = todayData.advice +
-    (selectedBirthDay === todayIdx ? ' และวันนี้ตรงกับวันเกิดของคุณพี่พอดี พลังงานจะแรงเป็นพิเศษเลยค่ะ! ✨' :
+    (selectedBirthDay===todayIdx ? ' และวันนี้ตรงกับวันเกิดของคุณพี่พอดี พลังงานจะแรงเป็นพิเศษเลยค่ะ! ✨' :
       ` เพิ่มเติมด้วยสี${birthData.boost.join('/')}ซึ่งเป็นสีเสริมดวงจากวันเกิดของคุณพี่ด้วยนะคะ`);
-
-  document.getElementById('avoidColors').innerHTML = todayData.avoid.map((c, i) =>
-    `<div class="avoid-chip">
-      <div class="avoid-dot" style="background:${todayData.avoidHex[i]}"></div>
-      <div class="avoid-text">${c}</div>
-    </div>`).join('');
-
-  // สีตลอดสัปดาห์
-  document.getElementById('weeklyList').innerHTML = DAYS_TH.map((d, i) => {
-    const dc = DAY_COLORS[i];
-    const isToday = i === todayIdx;
-    return `<div class="weekly-row" style="${isToday ? 'opacity:1' : 'opacity:0.6'}">
-      <div class="weekly-day">${isToday ? '👉 ' : ''}วัน${d}</div>
-      <div class="weekly-dots">${dc.luckyHex.map(h => `<div class="weekly-dot" style="background:${h}"></div>`).join('')}</div>
+  document.getElementById('avoidColors').innerHTML = todayData.avoid.map((c,i)=>
+    `<div class="avoid-chip"><div class="avoid-dot" style="background:${todayData.avoidHex[i]}"></div><div class="avoid-text">${c}</div></div>`).join('');
+  document.getElementById('weeklyList').innerHTML = DAYS_TH.map((d,i)=>{
+    const dc=DAY_COLORS[i]; const isToday=i===todayIdx;
+    return `<div class="weekly-row" style="${isToday?'opacity:1':'opacity:0.6'}">
+      <div class="weekly-day">${isToday?'👉 ':''}วัน${d}</div>
+      <div class="weekly-dots">${dc.luckyHex.map(h=>`<div class="weekly-dot" style="background:${h}"></div>`).join('')}</div>
       <div class="weekly-color-name">${dc.lucky.join(' / ')}</div>
-    </div>`;
-  }).join('');
-
+    </div>`;}).join('');
   document.getElementById('resultBox').classList.add('show');
-  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+  saveReading(todayData);
+};
 
-  saveReading();
-}
-
-function resetResult() {
+window.resetResult = function() {
   selectedBirthDay = null;
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('btnCheck').disabled = true;
   document.getElementById('resultBox').classList.remove('show');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.currentUser = null;
+
+window.updateCoinUI = function(coins) { document.getElementById('coinCount').textContent = coins; };
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
 }
 
-async function saveReading() {
-  if (!currentUser) return;
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+window.saveReading = async function(todayData) {
+  if (!window.currentUser) return;
   try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const db = getFirestore(app);
-    const todayData = DAY_COLORS[todayIdx];
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+    await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
       type: 'สีมงคลประจำวัน',
       question: `เกิดวัน${DAYS_TH[selectedBirthDay]}`,
       result: `สีมงคลวันนี้: ${todayData.lucky.join(', ')}`,
-      createdAt: new Date().toISOString()
+      createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
-}
+};
 
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (!user) window.location.href = '../index.html';
-    });
-  } catch(e) { console.error(e); }
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
 });
 </script>
 </body>
