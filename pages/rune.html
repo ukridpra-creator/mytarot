@@ -99,9 +99,35 @@
     .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
     .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
     .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
+
+    /* REVEAL OVERLAY */
+    .reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.92); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+    .reveal-overlay.show { display: flex; }
+    .reveal-title { font-size: 16px; color: var(--gold); font-weight: 700; margin-bottom: 20px; text-align: center; }
+    .reveal-row { display: flex; gap: 16px; justify-content: center; margin-bottom: 16px; }
+    .reveal-card { text-align: center; }
+    .reveal-card-wrap { width: 90px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 2px solid rgba(124,58,237,0.5); perspective: 600px; }
+    .reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s ease; }
+    .reveal-card-inner.flipped { transform: rotateY(180deg); }
+    .reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
+    .reveal-card-back { transform: rotateY(0deg); }
+    .reveal-card-front { transform: rotateY(180deg); }
+    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .reveal-card-name { font-size: 11px; color: var(--gold); font-weight: 700; opacity: 0; transition: opacity 0.4s; }
+    .reveal-card-name.show { opacity: 1; }
+    .reveal-card-pos { font-size: 10px; color: var(--dim); margin-top: 2px; }
+    .btn-accept { background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 14px 32px; color: white; font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 8px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .btn-accept.show { opacity: 1; pointer-events: all; }
   </style>
 </head>
 <body>
+
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-title">ᚠ รูนของคุณ...</div>
+  <div class="reveal-row" id="revealRow"></div>
+  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">ᚱ รับคำทำนาย</button>
+</div>
 
 <!-- HEADER -->
 <div class="page-header">
@@ -210,7 +236,7 @@
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>ᚱ วิเคราะห์ไพ่รูน</button>
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>ᚱ เปิดไพ่รูน</button>
 
   <!-- GREETING -->
   <div class="greeting-box" id="greetingBox"></div>
@@ -426,22 +452,54 @@ function updateSections(text) {
   });
 }
 
-window.startReading = async function() {
+window.startReading = function() {
   if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if (selected.length < 3) return;
 
-  const btn = document.getElementById('readBtn');
-  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
+  const posNames = ['อดีต','ปัจจุบัน','อนาคต'];
+  document.getElementById('revealRow').innerHTML = selected.map((rune, i) => `
+    <div class="reveal-card">
+      <div class="reveal-card-wrap">
+        <div class="reveal-card-inner" id="revealInner${i}">
+          <div class="reveal-card-back"><img src="../images/rune/back.png"></div>
+          <div class="reveal-card-front"><img src="../images/rune/r${rune.id}.png"></div>
+        </div>
+      </div>
+      <div class="reveal-card-name" id="revealName${i}">${rune.nameTh}</div>
+      <div class="reveal-card-pos">${posNames[i]}</div>
+    </div>`).join('');
 
-  // พลิกไพ่ทีละใบ
+  document.getElementById('btnAccept').className = 'btn-accept';
+  document.getElementById('revealOverlay').classList.add('show');
+
+  let flipped = 0;
+  const flipNext = () => {
+    if (flipped >= 3) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
+    setTimeout(() => {
+      document.getElementById('revealInner' + flipped).classList.add('flipped');
+      setTimeout(() => document.getElementById('revealName' + flipped).classList.add('show'), 400);
+      flipped++; flipNext();
+    }, 700);
+  };
+  setTimeout(flipNext, 400);
+};
+
+window.acceptReading = async function() {
+  document.getElementById('revealOverlay').classList.remove('show');
+
+  // อัปเดต slot ให้เห็นหน้าไพ่
   for (let i = 0; i < 3; i++) {
     const rune = selected[i];
     document.getElementById('slotImg' + i).src = '../images/rune/r' + rune.id + '.png';
     document.getElementById('slotName' + i).textContent = rune.nameTh;
-    await new Promise(r => setTimeout(r, 300));
     document.getElementById('slotInner' + i).classList.add('flipped');
-    await new Promise(r => setTimeout(r, 400));
   }
+
+  const btn = document.getElementById('readBtn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
 
   // แสดงผล cards row
   document.getElementById('resultCardsRow').innerHTML = selected.map((rune, i) => `
@@ -535,7 +593,7 @@ ${runeInfo}
     document.getElementById('secSummary').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
 
-  btn.disabled = false; btn.textContent = 'ᚱ วิเคราะห์อีกครั้ง';
+  btn.disabled = false; btn.textContent = 'ᚱ เปิดไพ่รูนอีกครั้ง';
 };
 
 window.askFollowup = async function() {
