@@ -228,14 +228,20 @@ window.interpretDream = function() {
   let found = null;
   const inputLower = input.toLowerCase();
   
-  // เปลี่ยนตรรกะตรงนี้เป็น: ถ้าคำที่พิมพ์ไปอยู่ในคีย์เวิร์ด หรือ คีย์เวิร์ดอยู่ในคำที่พิมพ์
   for (const entry of DREAM_DATA) {
     for (const kw of entry.keywords) {
       const kwLower = kw.toLowerCase();
-      // เช็กแบบ 2 ทาง: พิมพ์คำสั้น เจอคำยาว / พิมพ์คำยาว เจอคำสั้น
-      if (inputLower.includes(kwLower) || kwLower.includes(inputLower)) {
-        found = entry;
-        break;
+      
+      // 1. ถ้าพิมพ์คำสั้นมาก (1-2 ตัวอักษร) ต้องตรงเป๊ะเท่านั้น
+      if (inputLower.length <= 2) {
+        if (inputLower === kwLower) { found = entry; break; }
+      } 
+      // 2. ถ้าพิมพ์คำยาวขึ้น (3 ตัวอักษรขึ้นไป) ค่อยใช้ includes
+      else {
+        if (inputLower.includes(kwLower) || kwLower.includes(inputLower)) {
+          found = entry;
+          break;
+        }
       }
     }
     if (found) break;
