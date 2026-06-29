@@ -112,7 +112,7 @@
       <img src="../images/mascot-free.png" alt="mascot" onerror="this.style.display='none'">
     </div>
     <div class="hero-title">✨ ดูดวงฟรี ไม่มีค่าใช้จ่าย</div>
-    <div class="hero-desc">เลือกดูดวงฟรีได้เลย ไม่ต้องใช้เหรียญ<br>รบกวนเข้าสู่ระบบก่อนนะคะ</div>
+    <div class="hero-desc">เลือกดูดวงฟรีได้เลย ไม่ต้องใช้เหรียญ<br>ไม่ต้องสมัครสมาชิกก็ใช้ได้</div>
     <div class="free-label">🎁 ฟรีทุกอัน ไม่มีค่าใช้จ่าย</div>
   </div>
 
@@ -161,8 +161,13 @@
       <div class="card-title">Energy Code</div>
       <div class="card-desc">ค้นพบพลังงานภายในตัวคุณจากวันเกิด</div>
     </div>
+  </div>
+
+  <!-- หมวดกิจกรรม -->
+  <div class="section-label" style="margin-top:24px">🎮 กิจกรรม</div>
+  <div class="grid">
     <div class="card" onclick="window.location.href='tree.html'">
-      <div class="card-tag tag-free">FREE</div>
+      <div class="card-tag tag-activity">กิจกรรม</div>
       <div class="card-icon"><img src="../images/icon-tree.png" alt="ขอพรต้นไม้ศักดิ์สิทธิ์"></div>
       <div class="card-title">ขอพรต้นไม้ศักดิ์สิทธิ์</div>
       <div class="card-desc">เขย่าต้นไม้รับพรมงคล ได้ 3 ครั้งต่อวัน</div>
@@ -182,7 +187,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -198,6 +203,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => {
+  setPersistence(auth, browserLocalPersistence);
+});
 const db = getFirestore(app);
 
 window.updateCoinUI = function(coins) {
