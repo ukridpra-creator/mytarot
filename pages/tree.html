@@ -20,24 +20,16 @@
     .hero-title { font-size:20px; font-weight:800; color:#4ade80; margin-bottom:4px; text-shadow:0 0 20px rgba(74,222,128,0.4); }
     .hero-desc { font-size:13px; color:rgba(255,255,255,0.5); line-height:1.6; }
 
-    /* TREE WRAP */
-    .tree-section { display:flex; flex-direction:column; align-items:center; padding:8px 20px 4px; }
+    /* TREE */
+    .tree-section { display:flex; flex-direction:column; align-items:center; padding:8px 20px 0; }
     .tree-area {
-      position:relative;
-      width:65%; max-width:260px;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
+      position:relative; width:62%; max-width:240px;
+      cursor:pointer; -webkit-tap-highlight-color:transparent;
     }
-    .tree-img {
-      width:100%; display:block;
-      transition:transform 0.1s;
-      pointer-events:none;
-    }
-    .tree-area.shake .tree-img {
-      animation: treeShake 0.7s ease-in-out;
-    }
+    .tree-img { width:100%; display:block; pointer-events:none; }
+    .tree-area.shake .tree-img { animation:treeShake 0.7s ease-in-out; }
     @keyframes treeShake {
-      0%,100%{transform:rotate(0deg) translateX(0)}
+      0%,100%{transform:rotate(0) translateX(0)}
       10%{transform:rotate(-3deg) translateX(-5px)}
       25%{transform:rotate(3deg) translateX(5px)}
       40%{transform:rotate(-2deg) translateX(-4px)}
@@ -46,127 +38,122 @@
       85%{transform:rotate(1deg) translateX(2px)}
     }
 
-    /* CARDS LAYER */
+    /* CARDS */
     .cards-layer { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
     .tree-card {
-      position:absolute;
-      width:15%; aspect-ratio:1/1.6;
+      position:absolute; width:13%; aspect-ratio:1/1.6;
       transform-origin:top center;
-      transition:opacity 0.3s;
+      transition:opacity 0.2s;
     }
-    .tree-card img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
-    .tree-card.normal { animation: cardSway 3s ease-in-out infinite; }
-    .tree-card.fast   { animation: cardSwayFast 0.35s ease-in-out infinite; }
-    .tree-card.falling-out { opacity:0 !important; transition:opacity 0.2s; }
+    .tree-card img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5)); border-radius:3px; }
+    .tree-card.sway { animation:cardSway 3s ease-in-out infinite; }
+    .tree-card.fast  { animation:cardFast 0.35s ease-in-out infinite; }
+    .tree-card.gone  { opacity:0 !important; }
 
-    @keyframes cardSway {
-      0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)}
-    }
-    @keyframes cardSwayFast {
-      0%,100%{transform:rotate(-14deg)} 25%{transform:rotate(14deg)} 50%{transform:rotate(-10deg)} 75%{transform:rotate(10deg)}
-    }
+    @keyframes cardSway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+    @keyframes cardFast { 0%,100%{transform:rotate(-14deg)} 25%{transform:rotate(14deg)} 50%{transform:rotate(-10deg)} 75%{transform:rotate(10deg)} }
 
-    /* ตำแหน่งการ์ด อยู่ในทรงพุ่มต้นไม้ */
-    .cp0 {top:10%;left:20%;animation-delay:0.0s}
-    .cp1 {top:8%;left:38%;animation-delay:0.3s}
-    .cp2 {top:9%;left:56%;animation-delay:0.6s}
-    .cp3 {top:9%;left:70%;animation-delay:0.9s}
-    .cp4 {top:24%;left:13%;animation-delay:0.2s}
-    .cp5 {top:22%;left:32%;animation-delay:0.5s}
-    .cp6 {top:20%;left:52%;animation-delay:0.8s}
-    .cp7 {top:23%;left:70%;animation-delay:1.1s}
-    .cp8 {top:37%;left:17%;animation-delay:0.4s}
-    .cp9 {top:35%;left:36%;animation-delay:0.7s}
-    .cp10{top:34%;left:56%;animation-delay:1.0s}
-    .cp11{top:37%;left:73%;animation-delay:0.1s}
+    /* ตำแหน่งการ์ด — อยู่ในพุ่มต้นไม้เท่านั้น */
+    .cp0 {top:12%;left:22%;animation-delay:0.0s}
+    .cp1 {top:10%;left:40%;animation-delay:0.3s}
+    .cp2 {top:11%;left:57%;animation-delay:0.6s}
+    .cp3 {top:12%;left:71%;animation-delay:0.9s}
+    .cp4 {top:26%;left:15%;animation-delay:0.2s}
+    .cp5 {top:24%;left:34%;animation-delay:0.5s}
+    .cp6 {top:23%;left:53%;animation-delay:0.8s}
+    .cp7 {top:25%;left:71%;animation-delay:1.1s}
+    .cp8 {top:39%;left:18%;animation-delay:0.4s}
+    .cp9 {top:37%;left:37%;animation-delay:0.7s}
+    .cp10{top:36%;left:56%;animation-delay:1.0s}
+    .cp11{top:38%;left:73%;animation-delay:0.1s}
 
     /* HINT */
-    .tap-hint {
-      margin-top:10px; font-size:13px; color:rgba(255,255,255,0.45);
-      text-align:center; letter-spacing:0.5px;
-    }
+    .tap-hint { margin-top:10px; font-size:13px; color:rgba(255,255,255,0.4); text-align:center; }
     .tap-hint span { animation:pulse 2s ease-in-out infinite; display:inline-block; }
-    @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+    @keyframes pulse { 0%,100%{opacity:0.35} 50%{opacity:1} }
 
-    /* FALLING CARD */
-    .falling-wrap {
-      position:fixed; z-index:300; display:none;
-      pointer-events:none;
+    /* FALLING CARD — JS controlled, fixed position */
+    #fallingCard {
+      position:fixed; z-index:300; pointer-events:none;
+      width:56px; display:none;
     }
-    .falling-wrap.go {
-      display:block;
-      animation:fallDown 1.3s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+    #fallingCard img { width:100%; border-radius:6px; filter:drop-shadow(0 6px 16px rgba(0,0,0,0.6)); }
+
+    /* FLIP REVEAL — กลางจอ */
+    .reveal-wrap {
+      position:fixed; z-index:400; inset:0;
+      display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,0.82);
+      flex-direction:column; padding:28px;
     }
-    .falling-img { width:70px; object-fit:contain; border-radius:8px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6)); }
-    @keyframes fallDown {
-      0%  {opacity:1;transform:rotate(-8deg)}
-      50% {opacity:1;transform:rotate(6deg)}
-      85% {opacity:1;transform:rotate(-2deg)}
-      100%{opacity:0.9;transform:rotate(0deg)}
+    .reveal-wrap.show { display:flex; }
+
+    .flip-card-scene {
+      width:130px; aspect-ratio:1/1.6;
+      perspective:700px; margin-bottom:20px;
     }
+    .flip-card-inner {
+      width:100%; height:100%; position:relative;
+      transform-style:preserve-3d;
+      transition:transform 0.8s ease;
+    }
+    .flip-card-inner.flipped { transform:rotateY(180deg); }
+    .flip-face, .flip-back {
+      position:absolute; inset:0;
+      backface-visibility:hidden; border-radius:12px; overflow:hidden;
+    }
+    .flip-back { transform:rotateY(0deg); }
+    .flip-face { transform:rotateY(180deg); }
+    .flip-back img, .flip-face img { width:100%; height:100%; object-fit:contain; }
+
+    .reveal-cat { font-size:12px; letter-spacing:2px; font-weight:700; padding:4px 16px; border-radius:20px; margin-bottom:14px; opacity:0; transition:opacity 0.4s 0.6s; }
+    .reveal-cat.show { opacity:1; }
+    .reveal-text { font-size:15px; line-height:2; color:white; text-align:center; max-width:300px; margin-bottom:28px; opacity:0; transition:opacity 0.4s 0.9s; }
+    .reveal-text.show { opacity:1; }
+    .reveal-btns { display:flex; gap:10px; opacity:0; transition:opacity 0.4s 1.1s; }
+    .reveal-btns.show { opacity:1; }
+    .btn-again2 { background:linear-gradient(135deg,#065f46,#10b981); border:none; border-radius:50px; padding:12px 28px; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .btn-close2  { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:50px; padding:12px 28px; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+    .theme-blue  .reveal-cat { background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); }
+    .theme-green .reveal-cat { background:rgba(34,197,94,0.2);  color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
+    .theme-red   .reveal-cat { background:rgba(239,68,68,0.2);  color:#f87171; border:1px solid rgba(239,68,68,0.4); }
+    .theme-yellow.reveal-cat { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid rgba(251,191,36,0.4); }
 
     /* SPARKLES */
-    .sparkle-layer { position:fixed; inset:0; pointer-events:none; z-index:350; overflow:hidden; }
+    .sparkle-layer { position:fixed; inset:0; pointer-events:none; z-index:410; overflow:hidden; }
     .sp { position:absolute; font-size:22px; animation:spPop 1.1s ease-out forwards; }
-    @keyframes spPop {
-      0%{opacity:1;transform:scale(0) translateY(0)}
-      60%{opacity:1;transform:scale(1.4) translateY(-30px)}
-      100%{opacity:0;transform:scale(0.3) translateY(-80px)}
-    }
-
-    /* RESULT OVERLAY */
-    .result-overlay { position:fixed; inset:0; z-index:400; background:rgba(0,0,0,0.88); display:none; flex-direction:column; align-items:center; justify-content:center; padding:28px; }
-    .result-overlay.show { display:flex; }
-    .result-card-img-wrap {
-      width:120px; aspect-ratio:1/1.6; margin-bottom:20px;
-      border-radius:14px; overflow:hidden;
-      animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    .result-card-img-wrap img { width:100%; height:100%; object-fit:contain; }
-    @keyframes popIn { 0%{transform:scale(0.4) rotate(-15deg);opacity:0} 100%{transform:scale(1) rotate(0);opacity:1} }
-
-    .result-cat { font-size:12px; letter-spacing:2px; font-weight:700; padding:4px 16px; border-radius:20px; margin-bottom:14px; animation:fadeUp 0.4s 0.3s both; }
-    .result-text { font-size:15px; line-height:2; color:white; text-align:center; max-width:300px; margin-bottom:28px; animation:fadeUp 0.4s 0.5s both; }
-    .result-btns { display:flex; gap:10px; animation:fadeUp 0.4s 0.7s both; }
-    .btn-again2 { background:linear-gradient(135deg,#065f46,#10b981); border:none; border-radius:50px; padding:12px 28px; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
-    .btn-close2 { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:50px; padding:12px 28px; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
-    @keyframes fadeUp { 0%{opacity:0;transform:translateY(16px)} 100%{opacity:1;transform:translateY(0)} }
-
-    .theme-blue  .result-cat { background:rgba(59,130,246,0.2);  color:#60a5fa; border:1px solid rgba(59,130,246,0.4); }
-    .theme-blue  .result-card-img-wrap { box-shadow:0 8px 40px rgba(59,130,246,0.4); }
-    .theme-green .result-cat { background:rgba(34,197,94,0.2);   color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
-    .theme-green .result-card-img-wrap { box-shadow:0 8px 40px rgba(34,197,94,0.4); }
-    .theme-red   .result-cat { background:rgba(239,68,68,0.2);   color:#f87171; border:1px solid rgba(239,68,68,0.4); }
-    .theme-red   .result-card-img-wrap { box-shadow:0 8px 40px rgba(239,68,68,0.4); }
-    .theme-yellow.result-cat { background:rgba(251,191,36,0.2);  color:#fbbf24; border:1px solid rgba(251,191,36,0.4); }
-    .theme-yellow.result-card-img-wrap { box-shadow:0 8px 40px rgba(251,191,36,0.4); }
+    @keyframes spPop { 0%{opacity:1;transform:scale(0) translateY(0)} 60%{opacity:1;transform:scale(1.4) translateY(-30px)} 100%{opacity:0;transform:scale(0.3) translateY(-80px)} }
 
     /* UPSELL */
     .upsell-section { padding:16px 20px 0; }
     .upsell-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:20px; text-align:center; }
     .upsell-title { font-size:15px; font-weight:800; color:white; margin-bottom:6px; }
     .upsell-desc { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:14px; line-height:1.6; }
-    .btn-upsell { width:100%; padding:13px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .btn-upsell { width:100%; padding:13px; border-radius:16px; background:linear-gradient(135deg,#065f46,#10b981); border:none; color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
   </style>
 </head>
 <body>
 
-<!-- FALLING CARD -->
-<div class="falling-wrap" id="fallingWrap">
-  <img class="falling-img" id="fallingImg" src="">
-</div>
+<!-- FALLING CARD (JS-animated) -->
+<div id="fallingCard"><img id="fallingCardImg" src=""></div>
 
 <!-- SPARKLES -->
 <div class="sparkle-layer" id="sparkleLayer"></div>
 
-<!-- RESULT OVERLAY -->
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-card-img-wrap" id="resultImgWrap"><img id="resultImg" src=""></div>
-  <div class="result-cat" id="resultCat"></div>
-  <div class="result-text" id="resultText"></div>
-  <div class="result-btns">
+<!-- FLIP REVEAL -->
+<div class="reveal-wrap" id="revealWrap">
+  <div class="flip-card-scene">
+    <div class="flip-card-inner" id="flipInner">
+      <div class="flip-back"><img id="flipBack" src=""></div>
+      <div class="flip-face"><img id="flipFace" src=""></div>
+    </div>
+  </div>
+  <div class="reveal-cat" id="revealCat"></div>
+  <div class="reveal-text" id="revealText"></div>
+  <div class="reveal-btns" id="revealBtns">
     <button class="btn-again2" onclick="shakeAgain()">🌳 ขอพรอีกครั้ง</button>
-    <button class="btn-close2" onclick="closeResult()">ปิด</button>
+    <button class="btn-close2" onclick="closeReveal()">ปิด</button>
   </div>
 </div>
 
@@ -227,9 +214,9 @@
 
   <div class="upsell-section">
     <div class="upsell-box">
-      <div class="upsell-title">🔮 อยากดูดวงละเอียดกว่านี้?</div>
-      <div class="upsell-desc">ดูดวงเชิงลึกจากไพ่ทาโรต์ ไอชิง รูน และอีกมากมาย<br>ให้ AI วิเคราะห์ให้คุณแบบเฉพาะเจาะจงค่ะ</div>
-      <button class="btn-upsell" onclick="window.location.href='divination.html'">✨ ไปหน้าดูดวงทั้งหมด</button>
+      <div class="upsell-title">🌿 อยากดูดวงจากไพ่ธรรมชาติ?</div>
+      <div class="upsell-desc">Nature Spirit Oracle ไพ่วิญญาณแห่งธรรมชาติ<br>ให้ AI ทำนายเชิงลึกจากพลังธรรมชาติค่ะ</div>
+      <button class="btn-upsell" onclick="window.location.href='oracle-nature.html'">🌿 ลอง Nature Oracle เลยค่ะ</button>
     </div>
   </div>
 </div>
@@ -244,132 +231,153 @@
 </nav>
 
 <script>
-const COLOR_KEYS = ['blue','green','red','yellow'];
 const CARD_DEFS = [
-  {id:0, color:'red',    cls:'cp0'},
-  {id:1, color:'blue',   cls:'cp1'},
-  {id:2, color:'yellow', cls:'cp2'},
-  {id:3, color:'green',  cls:'cp3'},
-  {id:4, color:'green',  cls:'cp4'},
-  {id:5, color:'yellow', cls:'cp5'},
-  {id:6, color:'red',    cls:'cp6'},
-  {id:7, color:'blue',   cls:'cp7'},
-  {id:8, color:'blue',   cls:'cp8'},
-  {id:9, color:'red',    cls:'cp9'},
-  {id:10,color:'green',  cls:'cp10'},
-  {id:11,color:'yellow', cls:'cp11'},
+  {id:0,color:'red',   cls:'cp0'}, {id:1,color:'blue',  cls:'cp1'},
+  {id:2,color:'yellow',cls:'cp2'}, {id:3,color:'green', cls:'cp3'},
+  {id:4,color:'green', cls:'cp4'}, {id:5,color:'yellow',cls:'cp5'},
+  {id:6,color:'red',   cls:'cp6'}, {id:7,color:'blue',  cls:'cp7'},
+  {id:8,color:'blue',  cls:'cp8'}, {id:9,color:'red',   cls:'cp9'},
+  {id:10,color:'green',cls:'cp10'},{id:11,color:'yellow',cls:'cp11'},
 ];
 
 let isShaking = false;
-let availableCards = [];
+let pool = [];
 
-function getCardImg(color) { return `../images/tree/${color}.png`; }
+function cardImg(color){ return `../images/tree/${color}.png`; }
 
-function renderCards() {
-  availableCards = [...CARD_DEFS];
-  document.getElementById('cardsLayer').innerHTML = CARD_DEFS.map(c =>
-    `<div class="tree-card normal ${c.cls}" id="card_${c.id}">
-      <img src="${getCardImg(c.color)}" alt="">
+// หลังใบรูน ใช้เป็น back
+function backImg(color){ return cardImg(color); }
+
+function renderCards(){
+  pool = [...CARD_DEFS];
+  document.getElementById('cardsLayer').innerHTML = CARD_DEFS.map(c=>
+    `<div class="tree-card sway ${c.cls}" id="tc_${c.id}">
+      <img src="${cardImg(c.color)}" alt="">
     </div>`).join('');
 }
 
-window.shakeTree = function() {
-  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
-  if (isShaking) return;
-  if (availableCards.length === 0) { availableCards = [...CARD_DEFS]; renderCards(); return; }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+window.shakeTree = async function(){
+  if(!currentUser){ document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  if(isShaking) return;
+  if(pool.length===0){ renderCards(); return; }
   isShaking = true;
 
-  // สั่นต้นไม้
+  // เขย่าต้นไม้ + การ์ดไหวเร็ว
   const area = document.getElementById('treeArea');
   area.classList.add('shake');
-  document.querySelectorAll('.tree-card').forEach(c => c.classList.add('fast'));
+  document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('sway'); c.classList.add('fast'); });
 
-  // สุ่มการ์ดจากที่แขวนอยู่
-  const randIdx = Math.floor(Math.random() * availableCards.length);
-  const chosenCard = availableCards[randIdx];
-  availableCards.splice(randIdx, 1);
+  await sleep(750);
+  area.classList.remove('shake');
+  document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('fast'); c.classList.add('sway'); });
 
-  const colorKey = chosenCard.color;
+  // สุ่มการ์ดจาก pool
+  const idx = Math.floor(Math.random()*pool.length);
+  const chosen = pool.splice(idx,1)[0];
+  const colorKey = chosen.color;
   const data = TREE_BLESSINGS[colorKey];
-  const blessing = data.blessings[Math.floor(Math.random() * data.blessings.length)];
+  const blessing = data.blessings[Math.floor(Math.random()*data.blessings.length)];
 
-  setTimeout(() => {
-    area.classList.remove('shake');
-    document.querySelectorAll('.tree-card').forEach(c => c.classList.remove('fast'));
+  // หาตำแหน่งของการ์ดนั้นบนหน้าจอ
+  const cardEl = document.getElementById('tc_'+chosen.id);
+  const cardRect = cardEl.getBoundingClientRect();
+  const startX = cardRect.left + cardRect.width/2 - 28; // center - half of 56px
+  const startY = cardRect.top;
 
-    // ซ่อนการ์ดที่ถูกเลือก
-    const cardEl = document.getElementById('card_' + chosenCard.id);
-    if (cardEl) cardEl.classList.add('falling-out');
+  // หาตำแหน่งรากต้นไม้ (ล่างสุดของ tree area)
+  const treeRect = document.getElementById('treeArea').getBoundingClientRect();
+  const endY = treeRect.bottom - 20;
 
-    // หาตำแหน่งการ์ดบนหน้าจอ
-    const treeArea = document.getElementById('treeArea');
-    const treeRect = treeArea.getBoundingClientRect();
-    const cardEl2 = document.getElementById('card_' + chosenCard.id);
-    let startX = window.innerWidth / 2 - 35;
-    let startY = 80;
-    if (cardEl2) {
-      const cr = cardEl2.getBoundingClientRect();
-      startX = cr.left + cr.width/2 - 35;
-      startY = cr.top;
-    }
+  // ซ่อนการ์ดบนต้น
+  cardEl.classList.add('gone');
 
-    // แสดงการ์ดร่วง
-    const fw = document.getElementById('fallingWrap');
-    const fi = document.getElementById('fallingImg');
-    fi.src = getCardImg(colorKey);
-    fw.style.left = startX + 'px';
-    fw.style.top = startY + 'px';
-    fw.style.setProperty('--endY', (window.innerHeight * 0.45) + 'px');
-    fw.classList.add('go');
+  // แสดง falling card
+  const fc = document.getElementById('fallingCard');
+  const fci = document.getElementById('fallingCardImg');
+  fci.src = cardImg(colorKey);
+  fc.style.left = startX+'px';
+  fc.style.top  = startY+'px';
+  fc.style.display = 'block';
+  fc.style.transition = 'none';
+  fc.style.opacity = '1';
+  fc.style.transform = 'rotate(-5deg)';
 
-    setTimeout(() => {
-      fw.classList.remove('go');
-      spawnSparkles(colorKey);
-      showResult(colorKey, data, blessing);
-    }, 1350);
+  // animate ร่วงลงราก
+  await sleep(30);
+  fc.style.transition = `top 1.1s cubic-bezier(0.25,0.46,0.45,0.94), transform 1.1s ease, opacity 0.3s 0.9s`;
+  fc.style.top = endY+'px';
+  fc.style.transform = 'rotate(3deg)';
+  fc.style.opacity = '0';
 
-  }, 750);
+  await sleep(1200);
+  fc.style.display = 'none';
+
+  // โผล่ flip reveal กลางจอ
+  showReveal(colorKey, data, blessing);
 };
 
-function showResult(colorKey, data, blessing) {
-  document.getElementById('resultImg').src = getCardImg(colorKey);
-  document.getElementById('resultCat').textContent = `✦ ${data.label} ✦`;
-  document.getElementById('resultText').textContent = blessing;
-  const overlay = document.getElementById('resultOverlay');
-  overlay.className = `result-overlay show theme-${colorKey}`;
+function showReveal(colorKey, data, blessing){
+  const wrap = document.getElementById('revealWrap');
+  const inner = document.getElementById('flipInner');
+
+  // reset flip
+  inner.classList.remove('flipped');
+  document.getElementById('flipBack').src = cardImg(colorKey);
+  document.getElementById('flipFace').src = cardImg(colorKey);
+  document.getElementById('revealCat').className = 'reveal-cat';
+  document.getElementById('revealText').className = 'reveal-text';
+  document.getElementById('revealBtns').className = 'reveal-btns';
+
+  document.getElementById('revealCat').textContent  = `✦ ${data.label} ✦`;
+  document.getElementById('revealText').textContent = blessing;
+  wrap.className = `reveal-wrap show theme-${colorKey}`;
+
+  // พลิกการ์ด
+  setTimeout(()=>{
+    inner.classList.add('flipped');
+    spawnSparkles(colorKey);
+    setTimeout(()=>{
+      document.getElementById('revealCat').classList.add('show');
+      document.getElementById('revealText').classList.add('show');
+      document.getElementById('revealBtns').classList.add('show');
+    }, 600);
+  }, 400);
+
   saveReading(colorKey, data.label, blessing);
 }
 
-function spawnSparkles(colorKey) {
-  const e = {blue:'💙',green:'💚',red:'❤️',yellow:'💛'};
-  const emojis = [e[colorKey],'✨','⭐','🌟'];
-  const layer = document.getElementById('sparkleLayer');
-  for (let i = 0; i < 14; i++) {
-    setTimeout(() => {
-      const s = document.createElement('div');
-      s.className = 'sp';
-      s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-      s.style.left = (8 + Math.random()*84) + '%';
-      s.style.top  = (15 + Math.random()*65) + '%';
-      s.style.animationDelay = (Math.random()*0.3) + 's';
+function spawnSparkles(colorKey){
+  const e={blue:'💙',green:'💚',red:'❤️',yellow:'💛'};
+  const emojis=[e[colorKey],'✨','⭐','🌟'];
+  const layer=document.getElementById('sparkleLayer');
+  for(let i=0;i<14;i++){
+    setTimeout(()=>{
+      const s=document.createElement('div');
+      s.className='sp';
+      s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      s.style.left=(8+Math.random()*84)+'%';
+      s.style.top=(15+Math.random()*65)+'%';
+      s.style.animationDelay=(Math.random()*0.3)+'s';
       layer.appendChild(s);
-      setTimeout(() => s.remove(), 1300);
-    }, i*70);
+      setTimeout(()=>s.remove(),1300);
+    },i*70);
   }
 }
 
-window.closeResult = function() {
-  document.getElementById('resultOverlay').classList.remove('show');
+window.closeReveal = function(){
+  document.getElementById('revealWrap').classList.remove('show');
   isShaking = false;
 };
 
-window.shakeAgain = function() {
-  document.getElementById('resultOverlay').classList.remove('show');
+window.shakeAgain = function(){
+  document.getElementById('revealWrap').classList.remove('show');
   isShaking = false;
-  setTimeout(() => shakeTree(), 300);
+  setTimeout(()=>shakeTree(), 300);
 };
 
-document.addEventListener('DOMContentLoaded', () => { renderCards(); });
+document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); });
 </script>
 
 <script type="module">
@@ -381,18 +389,17 @@ import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
 
 const firebaseConfig = {
   apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain:"my-tarot67.firebaseapp.com",
-  projectId:"my-tarot67",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
   storageBucket:"my-tarot67.firebasestorage.app",
   messagingSenderId:"33661162829",
   appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-window.currentUser = null;
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+window.currentUser=null;
 
-window.updateCoinUI = function(c){ document.getElementById('coinCount').textContent=c; };
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
 function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png')){el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';}else{el.textContent=a||'👤';}}
 window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
