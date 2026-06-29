@@ -108,7 +108,6 @@
   .slot-front { transform:rotateY(180deg); }
   .slot-front img { width:100%; height:100%; object-fit:cover; display:block; }
   .slot-label { font-size:10px; color:#9b7dc0; text-align:center; margin-top:6px; font-weight:600; }
-  .slot-name { font-size:9px; color:#c9a84c; text-align:center; margin-top:2px; }
 
   /* RESULT */
   .result-wrap { margin:0 20px 20px; display:none; }
@@ -456,12 +455,16 @@ window.startDraw=function(){
   renderScrollCards();
   document.getElementById('cardsScrollWrap').classList.add('show');
   document.getElementById('scrollHint').classList.add('show');
-  // scroll hint animation
+  // scroll down to cards
+  setTimeout(()=>{
+    document.getElementById('cardsScrollWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  },200);
+  // hint animation
   setTimeout(()=>{
     const s=document.getElementById('cardsScroll');
     s.scrollTo({left:200,behavior:'smooth'});
     setTimeout(()=>s.scrollTo({left:0,behavior:'smooth'}),700);
-  },500);
+  },600);
   renderSlots();
   document.getElementById('slotsSection').classList.add('show');
 };
@@ -492,7 +495,8 @@ function renderSlots(){
 
 function slotHTML(i,label){
   const card=selected[i];
-  return `<div>
+  return `<div style="position:relative;">
+    ${card?`<div onclick="removeCard(${i})" style="position:absolute;top:-4px;right:calc(50% - 36px);width:14px;height:14px;border-radius:50%;background:rgba(239,68,68,0.9);color:white;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700;z-index:10;cursor:pointer;">✕</div>`:''}
     <div class="slot-card">
       <div class="slot-inner" id="slotInner${i}">
         <div class="slot-face slot-back"><img src="../images/han/back.png"></div>
@@ -500,9 +504,16 @@ function slotHTML(i,label){
       </div>
     </div>
     <div class="slot-label">${label}</div>
-    <div class="slot-name" id="slotName${i}">${card?card.name:'—'}</div>
   </div>`;
 }
+
+window.removeCard=function(i){
+  selected.splice(i,1);
+  renderSlots();
+  renderScrollCards();
+  document.getElementById('drawBtn').disabled=false;
+  document.getElementById('drawBtn').textContent='🎴 หยิบไพ่';
+};
 
 window.pickCard=function(idx){
   if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
