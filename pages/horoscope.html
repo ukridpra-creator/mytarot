@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ดวงรายสัปดาห์/รายเดือน — My Tarot</title>
+  <title>ดวงรายเดือน — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
@@ -15,12 +15,10 @@
     .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
     .page-content { padding:20px 20px 40px; }
     .hero { text-align:center; padding:8px 0 20px; }
-    .hero-mascot img { width:120px; height:120px; object-fit:contain; margin-bottom:12px; }
+    .hero-mascot { width:120px; height:120px; margin:0 auto 12px; overflow:hidden; border-radius:20px; }
+    .hero-mascot img { width:100%; height:100%; object-fit:cover; }
     .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:6px; }
     .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
-    .toggle-box { display:flex; gap:8px; background:rgba(255,255,255,0.05); border-radius:16px; padding:4px; margin-bottom:20px; }
-    .toggle-btn { flex:1; padding:10px; border-radius:12px; border:none; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s; color:var(--dim); background:none; }
-    .toggle-btn.active { background:linear-gradient(135deg,#7c3aed,#ec4899); color:white; }
     .select-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
     .select-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; display:block; }
     .zodiac-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
@@ -30,7 +28,7 @@
     .zodiac-icon { font-size:24px; margin-bottom:4px; }
     .zodiac-name { font-size:11px; color:white; font-weight:600; }
     .zodiac-date { font-size:9px; color:var(--dim); }
-    .btn-check { width:100%; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:24px; }
+    .btn-check { width:100%; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:24px; }
     .btn-check:disabled { opacity:0.5; cursor:not-allowed; }
     .result-box { display:none; }
     .result-box.show { display:block; }
@@ -61,7 +59,7 @@
 <!-- HEADER -->
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
-  <div class="page-title">⭐ ดวงราศี</div>
+  <div class="page-title">⭐ ดวงรายเดือน</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="free-badge">FREE</div>
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
@@ -110,15 +108,10 @@
 <div class="page-content">
   <div class="hero">
     <div class="hero-mascot">
-      <img src="../images/mascot-horoscope.png" alt="mascot" onerror="this.style.display='none'">
+      <img src="../images/mascot-horoscope.png" alt="mascot" onerror="this.style.display='none';this.parentElement.style.display='none'">
     </div>
     <div class="hero-title">⭐ ดวงราศีของคุณพี่</div>
-    <div class="hero-desc">น้องจะบอกดวงรายสัปดาห์และรายเดือน<br>ตามราศีของคุณพี่เลยค่ะ</div>
-  </div>
-
-  <div class="toggle-box">
-    <button class="toggle-btn active" id="btnWeekly" onclick="setMode('weekly')">📅 รายสัปดาห์</button>
-    <button class="toggle-btn" id="btnMonthly" onclick="setMode('monthly')">🌟 รายเดือน</button>
+    <div class="hero-desc">น้องจะบอกดวงรายเดือนตามราศีของคุณพี่เลยค่ะ</div>
   </div>
 
   <div class="select-box">
@@ -142,7 +135,7 @@
     <div class="horoscope-card"><div class="horoscope-section-title">💼 การงาน</div><div class="horoscope-text" id="horoWork"></div></div>
     <div class="horoscope-card"><div class="horoscope-section-title">💰 การเงิน</div><div class="horoscope-text" id="horoMoney"></div></div>
     <div class="horoscope-card"><div class="horoscope-section-title">🌿 สุขภาพ</div><div class="horoscope-text" id="horoHealth"></div></div>
-    <div class="horoscope-card"><div class="horoscope-section-title">🎰 สิ่งมงคลประจำช่วงนี้</div><div class="lucky-row" id="luckyRow"></div></div>
+    <div class="horoscope-card"><div class="horoscope-section-title">🎰 สิ่งมงคลประจำเดือน</div><div class="lucky-row" id="luckyRow"></div></div>
     <button class="btn-again" onclick="resetResult()">🔄 เลือกราศีใหม่</button>
     <div class="upsell-box">
       <div class="upsell-title">🔮 อยากรู้ดวงชะตาลึกกว่านี้?</div>
@@ -165,7 +158,7 @@
 <script src="../js/horoscope-data.js"></script>
 <script>
 const PLACEHOLDER = {
-  overall:'กำลังเตรียมข้อมูลดวงรายสัปดาห์ค่ะ เร็วๆ นี้จะมีให้อ่านแน่นอนนะคะ คุณพี่รอหน่อยนะคะ 🙏',
+  overall:'กำลังเตรียมข้อมูลดวงรายเดือนค่ะ เร็วๆ นี้จะมีให้อ่านแน่นอนนะคะ 🙏',
   love:'เร็วๆ นี้ค่ะ', work:'เร็วๆ นี้ค่ะ', money:'เร็วๆ นี้ค่ะ', health:'เร็วๆ นี้ค่ะ',
   scoreLove:4, scoreWork:3, scoreMoney:4, scoreHealth:5,
   luckyColor:'ทอง', luckyNumber:'9', luckyDay:'ศุกร์'
@@ -187,7 +180,6 @@ const ZODIACS = [
 ];
 
 let selectedZodiac = null;
-let currentMode = 'weekly';
 
 document.getElementById('zodiacGrid').innerHTML = ZODIACS.map((z,i) =>
   `<div class="zodiac-btn" id="z${i}" onclick="selectZodiac('${z.name}',${i})">
@@ -196,44 +188,27 @@ document.getElementById('zodiacGrid').innerHTML = ZODIACS.map((z,i) =>
     <div class="zodiac-date">${z.date}</div>
   </div>`).join('');
 
-window.setMode = function(mode) {
-  currentMode = mode;
-  document.getElementById('btnWeekly').classList.toggle('active', mode==='weekly');
-  document.getElementById('btnMonthly').classList.toggle('active', mode==='monthly');
-  document.getElementById('resultBox').classList.remove('show');
-};
-
 window.selectZodiac = function(name, idx) {
   selectedZodiac = name;
   document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('z' + idx).classList.add('active');
+  document.getElementById('z'+idx).classList.add('active');
   document.getElementById('btnCheck').disabled = false;
   document.getElementById('resultBox').classList.remove('show');
 };
 
-function stars(n) { return '⭐'.repeat(n) + '☆'.repeat(5-n); }
+function stars(n) { return '⭐'.repeat(n)+'☆'.repeat(5-n); }
 
 function getCurrentPeriod() {
   const now = new Date();
-  if (currentMode === 'weekly') {
-    const start = new Date(now);
-    start.setDate(now.getDate() - now.getDay() + 1);
-    const end = new Date(start); end.setDate(start.getDate() + 6);
-    const fmt = d => `${d.getDate()} ${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][d.getMonth()]}`;
-    return `สัปดาห์ ${fmt(start)} — ${fmt(end)} ${now.getFullYear()+543}`;
-  } else {
-    const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-    return `${months[now.getMonth()]} ${now.getFullYear()+543}`;
-  }
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  return `${months[now.getMonth()]} ${now.getFullYear()+543}`;
 }
 
 window.showResult = function() {
   if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   const zodiac = ZODIACS.find(z => z.name === selectedZodiac);
   const now = new Date();
-  const data = currentMode === 'monthly'
-    ? (typeof MONTHLY_DATA !== 'undefined' ? (MONTHLY_DATA[selectedZodiac]||{})[now.getMonth()+1] : null) || PLACEHOLDER
-    : PLACEHOLDER;
+  const data = (typeof MONTHLY_DATA !== 'undefined' ? (MONTHLY_DATA[selectedZodiac]||{})[now.getMonth()+1] : null) || PLACEHOLDER;
 
   document.getElementById('resultPeriod').textContent = getCurrentPeriod();
   document.getElementById('resultTitle').textContent = `${zodiac.icon} ราศี${selectedZodiac}`;
@@ -251,7 +226,7 @@ window.showResult = function() {
     <div class="lucky-item"><div class="lucky-item-label">🔢 เลขมงคล</div><div class="lucky-item-value">${data.luckyNumber}</div></div>
     <div class="lucky-item"><div class="lucky-item-label">📅 วันมงคล</div><div class="lucky-item-value">วัน${data.luckyDay}</div></div>`;
   document.getElementById('resultBox').classList.add('show');
-  document.getElementById('resultBox').scrollIntoView({ behavior:'smooth' });
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
   saveReading();
 };
 
@@ -260,14 +235,12 @@ window.resetResult = function() {
   document.querySelectorAll('.zodiac-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('btnCheck').disabled = true;
   document.getElementById('resultBox').classList.remove('show');
-  window.scrollTo({ top:0, behavior:'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 
 async function saveReading() {
   if (!currentUser) return;
-  try {
-    await addDocFS(selectedZodiac);
-  } catch(e) { console.error(e); }
+  try { await addDocFS(selectedZodiac); } catch(e) { console.error(e); }
 }
 </script>
 
@@ -279,63 +252,40 @@ import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain: "my-tarot67.firebaseapp.com",
-  projectId: "my-tarot67",
-  storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162829",
-  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829",
+  appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+window.currentUser=null;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-window.currentUser = null;
-
-window.updateCoinUI = function(coins) {
-  document.getElementById('coinCount').textContent = coins;
-};
-
-function setAvatarDisplay(avatar) {
-  var el = document.getElementById('avatarEl');
-  if (!el) return;
-  if (avatar && avatar.includes('.png')) {
-    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-  } else { el.textContent = avatar || '👤'; }
-}
-
-window.loginNow = async function() {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
-};
-window.logoutNow = async function() {
-  await signOut(auth); window.location.href = '../index.html';
-};
-
-window.addDocFS = async function(zodiac) {
-  if (!window.currentUser) return;
-  const modeText = currentMode === 'weekly' ? 'รายสัปดาห์' : 'รายเดือน';
-  await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
-    type: `ดวง${modeText}`, question: `ราศี${zodiac}`,
-    result: getCurrentPeriod(), createdAt: serverTimestamp()
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png')){el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';}else{el.textContent=a||'👤';}}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+window.addDocFS=async function(zodiac){
+  if(!window.currentUser)return;
+  await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+    type:'ดวงรายเดือน',question:`ราศี${zodiac}`,
+    result:getCurrentPeriod(),createdAt:serverTimestamp()
   });
 };
-
-onAuthStateChanged(auth, async user => {
-  window.currentUser = user;
-  if (user) {
-    var snap = await getDoc(doc(db, 'users', user.uid));
-    var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0);
-    setAvatarDisplay(data.avatar || '');
-    document.getElementById('guestView').style.display = 'none';
-    document.getElementById('loggedView').style.display = 'block';
-    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
-    document.getElementById('menuEmail').textContent = user.email;
-    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
-  } else {
-    updateCoinUI('—'); setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
-  }
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  }else{updateCoinUI('—');setAvatarDisplay('');document.getElementById('loginRequiredOverlay').classList.add('show');}
 });
 </script>
 </body>
