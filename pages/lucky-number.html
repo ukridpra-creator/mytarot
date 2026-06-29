@@ -6,137 +6,105 @@
   <title>เลขนำโชค — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
   <style>
     body { padding-bottom: 80px; }
-    .page-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(13,8,32,0.9); backdrop-filter: blur(12px);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .back-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(124,58,237,0.2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--purple-light); font-size: 16px; text-decoration: none;
-    }
-    .page-title { font-size: 18px; font-weight: 700; color: white; }
-    .free-badge {
-      margin-left: auto; background: linear-gradient(135deg, #10b981, #059669);
-      color: white; font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 20px;
-    }
-    .page-content { padding: 20px 20px 40px; }
-    .hero { text-align: center; padding: 8px 0 20px; }
-    .hero-mascot img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 12px; }
-    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-    .input-box {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; display: block; }
-    .date-row { display: flex; gap: 8px; }
-    .date-select {
-      flex: 1; background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border); border-radius: 14px;
-      padding: 12px 8px; color: white; font-size: 14px;
-      font-family: 'Sarabun', sans-serif; outline: none;
-      appearance: none; text-align: center;
-    }
-    .date-select:focus { border-color: var(--purple-light); }
-    .date-select option { background: #1a0e2e; color: white; }
-
-    .btn-calc {
-      width: 100%; background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; border-radius: 16px; padding: 16px; color: white;
-      font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif;
-      cursor: pointer; transition: all 0.3s; margin-bottom: 24px;
-    }
-    .btn-calc:hover { transform: translateY(-2px); }
-    .btn-calc:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    /* Result */
-    .result-box { display: none; }
-    .result-box.show { display: block; }
-
-    .life-number-card {
-      background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(236,72,153,0.2));
-      border: 1px solid rgba(124,58,237,0.4); border-radius: 24px;
-      padding: 24px; text-align: center; margin-bottom: 16px;
-    }
-    .life-num-label { font-size: 13px; color: var(--dim); margin-bottom: 8px; }
-    .life-num-display {
-      font-size: 80px; font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #ec4899);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      line-height: 1; margin-bottom: 8px;
-    }
-    .life-num-name { font-size: 18px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .life-num-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-
-    .lucky-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .lucky-card {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);
-      border-radius: 16px; padding: 14px; text-align: center;
-    }
-    .lucky-card-icon { font-size: 28px; margin-bottom: 6px; }
-    .lucky-card-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
-    .lucky-card-value { font-size: 20px; font-weight: 800; color: #f59e0b; }
-
-    .numbers-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .numbers-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
-    .numbers-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .num-ball {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 800; color: white;
-      box-shadow: 0 4px 12px rgba(245,158,11,0.4);
-    }
-
-    .traits-card {
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: 20px; padding: 16px; margin-bottom: 16px;
-    }
-    .traits-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
-    .trait-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .trait-icon { font-size: 18px; flex-shrink: 0; }
-    .trait-text { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
-
-    .btn-again {
-      width: 100%; padding: 14px; border-radius: 16px; margin-bottom: 12px;
-      background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
-      color: var(--purple-light); font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-box {
-      background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
-      border: 1px solid rgba(124,58,237,0.3); border-radius: 20px;
-      padding: 20px; text-align: center;
-    }
-    .upsell-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 6px; }
-    .upsell-desc { font-size: 13px; color: var(--dim); margin-bottom: 16px; line-height: 1.6; }
-    .btn-upsell {
-      width: 100%; padding: 14px; border-radius: 16px;
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      border: none; color: white; font-size: 15px; font-weight: 700;
-      font-family: 'Sarabun', sans-serif; cursor: pointer;
-    }
-    .upsell-price { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-mascot img { width:120px; height:120px; object-fit:contain; margin-bottom:12px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:6px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .input-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .date-select { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:14px; padding:12px 8px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; appearance:none; text-align:center; }
+    .date-select:focus { border-color:var(--purple-light); }
+    .date-select option { background:#1a0e2e; color:white; }
+    .btn-calc { width:100%; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:24px; }
+    .btn-calc:disabled { opacity:0.5; cursor:not-allowed; }
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+    .life-number-card { background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(236,72,153,0.2)); border:1px solid rgba(124,58,237,0.4); border-radius:24px; padding:24px; text-align:center; margin-bottom:16px; }
+    .life-num-label { font-size:13px; color:var(--dim); margin-bottom:8px; }
+    .life-num-display { font-size:80px; font-weight:800; background:linear-gradient(135deg,#a78bfa,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; margin-bottom:8px; }
+    .life-num-name { font-size:18px; font-weight:800; color:white; margin-bottom:4px; }
+    .life-num-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .lucky-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+    .lucky-card { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; text-align:center; }
+    .lucky-card-icon { font-size:28px; margin-bottom:6px; }
+    .lucky-card-label { font-size:11px; color:var(--dim); margin-bottom:4px; }
+    .lucky-card-value { font-size:20px; font-weight:800; color:#f59e0b; }
+    .numbers-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .numbers-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .numbers-row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+    .num-ball { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#f59e0b,#d97706); display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; color:white; box-shadow:0 4px 12px rgba(245,158,11,0.4); }
+    .traits-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .traits-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .trait-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .trait-icon { font-size:18px; flex-shrink:0; }
+    .trait-text { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.6; }
+    .btn-again { width:100%; padding:14px; border-radius:16px; margin-bottom:12px; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); color:var(--purple-light); font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-box { background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15)); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:20px; text-align:center; }
+    .upsell-title { font-size:16px; font-weight:800; color:white; margin-bottom:6px; }
+    .upsell-desc { font-size:13px; color:var(--dim); margin-bottom:16px; line-height:1.6; }
+    .btn-upsell { width:100%; padding:14px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#ec4899); border:none; color:white; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .upsell-price { font-size:11px; color:rgba(255,255,255,0.4); margin-top:8px; }
   </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
   <div class="page-title">🔢 เลขนำโชค</div>
-  <div class="free-badge">FREE</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
 </div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔢</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
 
 <div class="page-content">
   <div class="hero">
@@ -165,42 +133,21 @@
       <div class="life-num-name" id="lifeNumName"></div>
       <div class="life-num-desc" id="lifeNumDesc"></div>
     </div>
-
     <div class="lucky-grid">
-      <div class="lucky-card">
-        <div class="lucky-card-icon">🎰</div>
-        <div class="lucky-card-label">เลขนำโชคหลัก</div>
-        <div class="lucky-card-value" id="luckyMain"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">⭐</div>
-        <div class="lucky-card-label">เลขเสริมดวง</div>
-        <div class="lucky-card-value" id="luckySecond"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">🎨</div>
-        <div class="lucky-card-label">สีนำโชค</div>
-        <div class="lucky-card-value" id="luckyColor"></div>
-      </div>
-      <div class="lucky-card">
-        <div class="lucky-card-icon">📅</div>
-        <div class="lucky-card-label">วันมงคล</div>
-        <div class="lucky-card-value" id="luckyDay"></div>
-      </div>
+      <div class="lucky-card"><div class="lucky-card-icon">🎰</div><div class="lucky-card-label">เลขนำโชคหลัก</div><div class="lucky-card-value" id="luckyMain"></div></div>
+      <div class="lucky-card"><div class="lucky-card-icon">⭐</div><div class="lucky-card-label">เลขเสริมดวง</div><div class="lucky-card-value" id="luckySecond"></div></div>
+      <div class="lucky-card"><div class="lucky-card-icon">🎨</div><div class="lucky-card-label">สีนำโชค</div><div class="lucky-card-value" id="luckyColor"></div></div>
+      <div class="lucky-card"><div class="lucky-card-icon">📅</div><div class="lucky-card-label">วันมงคล</div><div class="lucky-card-value" id="luckyDay"></div></div>
     </div>
-
     <div class="numbers-card">
       <div class="numbers-title">🎰 เลขนำโชคของคุณพี่</div>
       <div class="numbers-row" id="luckyNumbers"></div>
     </div>
-
     <div class="traits-card">
       <div class="traits-title">✨ บุคลิกและพลังงานของคุณพี่</div>
       <div id="traitsList"></div>
     </div>
-
     <button class="btn-again" onclick="resetCalc()">🔄 คำนวณใหม่</button>
-
     <div class="upsell-box">
       <div class="upsell-title">🔮 อยากรู้ดวงชะตาลึกกว่านี้?</div>
       <div class="upsell-desc">ให้ AI วิเคราะห์เลขศาสตร์เชิงลึก<br>รู้ดวงความรัก การงาน การเงิน จากชื่อและวันเกิด</div>
@@ -210,225 +157,140 @@
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
 <script>
 const LIFE_NUMBERS = {
-  1: {
-    name: 'ผู้นำ — เลขแห่งความเป็นหนึ่ง',
-    desc: 'คุณพี่มีพลังงานของผู้นำตัวจริงเลยค่ะ มีความคิดริเริ่ม กล้าตัดสินใจ และมุ่งมั่นสู่เป้าหมาย เกิดมาเพื่อนำทางคนอื่นค่ะ',
-    luckyNums: [1, 10, 19, 28, 37], luckyColor: 'แดง', luckyDay: 'อาทิตย์',
-    traits: [
-      { icon: '👑', text: 'มีความเป็นผู้นำสูง กล้าตัดสินใจ ไม่กลัวความท้าทาย' },
-      { icon: '🔥', text: 'มีพลังงานและแรงบันดาลใจที่แรงกล้า ทำให้คนรอบข้างได้รับแรงบันดาลใจด้วย' },
-      { icon: '💡', text: 'ความคิดสร้างสรรค์และนวัตกรรม มักเป็นคนแรกที่คิดสิ่งใหม่ๆ' },
-      { icon: '⚡', text: 'ต้องระวังความดื้อรั้นและอยากได้ทุกอย่างคนเดียวนะคะ' },
-    ]
-  },
-  2: {
-    name: 'นักประสาน — เลขแห่งความร่วมมือ',
-    desc: 'คุณพี่มีพลังงานของนักประสานสัมพันธ์ค่ะ ใจดี อ่อนโยน รับฟังคนอื่น และเก่งเรื่องการทำงานเป็นทีม',
-    luckyNums: [2, 11, 20, 29, 38], luckyColor: 'ส้ม', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '🤝', text: 'เก่งเรื่องความสัมพันธ์และการประสานงาน ทุกคนรักคุณพี่ค่ะ' },
-      { icon: '💕', text: 'มีความเห็นอกเห็นใจสูง รับรู้ความรู้สึกคนอื่นได้ดีมาก' },
-      { icon: '🌸', text: 'อ่อนโยนและมีเสน่ห์ ทำให้คนรอบข้างรู้สึกสบายใจ' },
-      { icon: '⚡', text: 'ต้องระวังการตัดสินใจที่ลังเลเกินไป และการยึดติดกับความคิดเห็นคนอื่น' },
-    ]
-  },
-  3: {
-    name: 'นักสร้างสรรค์ — เลขแห่งการแสดงออก',
-    desc: 'คุณพี่มีพลังงานของนักสร้างสรรค์ตัวจริงค่ะ ชอบแสดงออก มีศิลปะ และมีความสนุกสนานในตัว',
-    luckyNums: [3, 12, 21, 30, 39], luckyColor: 'เหลือง', luckyDay: 'พุธ',
-    traits: [
-      { icon: '🎨', text: 'มีความคิดสร้างสรรค์และพรสวรรค์ด้านศิลปะ ดนตรี หรือการแสดง' },
-      { icon: '😄', text: 'มีอารมณ์ขันและพลังงานที่สดใส ทำให้ทุกคนรอบข้างมีความสุข' },
-      { icon: '💬', text: 'เก่งด้านการสื่อสารและการพูด มีเสน่ห์ในการเล่าเรื่อง' },
-      { icon: '⚡', text: 'ต้องระวังการกระจัดกระจายพลังงานไปทุกทิศ ควรโฟกัสให้มากขึ้น' },
-    ]
-  },
-  4: {
-    name: 'นักสร้าง — เลขแห่งความมั่นคง',
-    desc: 'คุณพี่มีพลังงานของผู้สร้างรากฐานค่ะ ขยัน มีระเบียบ และเชื่อถือได้ ทุกอย่างที่คุณพี่สร้างจะยั่งยืนมากค่ะ',
-    luckyNums: [4, 13, 22, 31, 40], luckyColor: 'เขียว', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '🏗️', text: 'มีความสามารถในการวางแผนและสร้างสิ่งต่างๆ ให้มั่นคงและยั่งยืน' },
-      { icon: '📋', text: 'ชอบความเป็นระเบียบ ทำงานอย่างมีแบบแผน และพิถีพิถัน' },
-      { icon: '💪', text: 'ขยันและทนทาน ไม่กลัวความยากลำบาก พร้อมทำงานหนัก' },
-      { icon: '⚡', text: 'ต้องระวังความแข็งกระด้างเกินไป และการยึดติดกับกฎระเบียบ' },
-    ]
-  },
-  5: {
-    name: 'นักผจญภัย — เลขแห่งอิสรภาพ',
-    desc: 'คุณพี่มีพลังงานของนักผจญภัยค่ะ รักอิสระ ชอบการเปลี่ยนแปลง และพร้อมสำรวจโลกใบใหม่เสมอ',
-    luckyNums: [5, 14, 23, 32, 41], luckyColor: 'ฟ้า', luckyDay: 'พุธ',
-    traits: [
-      { icon: '🌍', text: 'รักการเดินทางและการสำรวจ ชีวิตที่หลากหลายทำให้คุณพี่มีความสุข' },
-      { icon: '🦋', text: 'ปรับตัวได้ดีกับทุกสถานการณ์ ไม่กลัวการเปลี่ยนแปลง' },
-      { icon: '⚡', text: 'มีพลังงานสูงและกระตือรือร้น ทำให้คนรอบข้างมีชีวิตชีวา' },
-      { icon: '⚠️', text: 'ต้องระวังการเบื่อง่ายและการทิ้งสิ่งที่เริ่มไว้กลางคัน' },
-    ]
-  },
-  6: {
-    name: 'นักดูแล — เลขแห่งความรัก',
-    desc: 'คุณพี่มีพลังงานของผู้ดูแลและปกป้องค่ะ รักครอบครัว ห่วงใยคนอื่น และมีหัวใจที่อบอุ่น',
-    luckyNums: [6, 15, 24, 33, 42], luckyColor: 'ชมพู', luckyDay: 'ศุกร์',
-    traits: [
-      { icon: '💝', text: 'มีความรักและความห่วงใยที่ลึกซึ้ง ครอบครัวและคนที่รักคือทุกอย่าง' },
-      { icon: '🏠', text: 'ชอบสร้างบรรยากาศที่อบอุ่นและสวยงาม ทั้งบ้านและความสัมพันธ์' },
-      { icon: '🌹', text: 'มีความรับผิดชอบสูง พร้อมเสียสละเพื่อคนที่รักเสมอ' },
-      { icon: '⚡', text: 'ต้องระวังการแบกรับภาระมากเกินไป และการควบคุมคนอื่นมากเกินไป' },
-    ]
-  },
-  7: {
-    name: 'นักค้นหา — เลขแห่งปัญญา',
-    desc: 'คุณพี่มีพลังงานของนักปราชญ์ค่ะ ชอบค้นคว้า ใฝ่รู้ และมีสัญชาตญาณที่แหลมคม',
-    luckyNums: [7, 16, 25, 34, 43], luckyColor: 'ม่วง', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '🔍', text: 'มีความสามารถในการวิเคราะห์และค้นหาความจริงที่ซ่อนอยู่' },
-      { icon: '🧠', text: 'สติปัญญาสูง ชอบเรียนรู้และศึกษาในแบบที่ลึกกว่าคนอื่น' },
-      { icon: '🔮', text: 'มีสัญชาตญาณและความรู้สึกไวต่อพลังงานรอบข้าง' },
-      { icon: '⚡', text: 'ต้องระวังการแยกตัวออกจากสังคมมากเกินไป และความสงสัยในคนอื่น' },
-    ]
-  },
-  8: {
-    name: 'นักสร้างอาณาจักร — เลขแห่งอำนาจ',
-    desc: 'คุณพี่มีพลังงานของนักธุรกิจและผู้มีอำนาจค่ะ เก่งเรื่องการบริหาร มีวิสัยทัศน์ และดึงดูดความสำเร็จ',
-    luckyNums: [8, 17, 26, 35, 44], luckyColor: 'ดำ/ทอง', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '💎', text: 'มีความสามารถด้านธุรกิจและการเงินที่โดดเด่น เกิดมาเพื่อความสำเร็จ' },
-      { icon: '🏆', text: 'มีความทะเยอทะยานสูง มุ่งมั่นสู่เป้าหมายและไม่ยอมแพ้ง่ายๆ' },
-      { icon: '⚡', text: 'มีพลังงานของผู้นำและมีอิทธิพลต่อคนรอบข้าง' },
-      { icon: '⚠️', text: 'ต้องระวังความโลภและการใช้อำนาจในทางที่ผิด' },
-    ]
-  },
-  9: {
-    name: 'นักให้ — เลขแห่งมนุษยธรรม',
-    desc: 'คุณพี่มีพลังงานของผู้ให้ค่ะ มีจิตใจกว้างขวาง รักมนุษยชาติ และพร้อมช่วยเหลือทุกคน',
-    luckyNums: [9, 18, 27, 36, 45], luckyColor: 'ทอง', luckyDay: 'พฤหัส',
-    traits: [
-      { icon: '🌟', text: 'มีจิตใจที่กว้างขวางและเมตตากรุณา พร้อมช่วยเหลือทุกคนเสมอ' },
-      { icon: '🌍', text: 'มีวิสัยทัศน์กว้างไกล มองเห็นภาพรวมและต้องการทำให้โลกดีขึ้น' },
-      { icon: '🎭', text: 'มีพรสวรรค์ด้านศิลปะและความคิดสร้างสรรค์ในระดับสูง' },
-      { icon: '⚡', text: 'ต้องระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลตัวเอง' },
-    ]
-  },
-  11: {
-    name: 'นักส่องแสง — เลขมาสเตอร์แห่งแรงบันดาลใจ',
-    desc: 'คุณพี่มีเลขมาสเตอร์ 11 ค่ะ! มีพลังงานสูงมาก มีสัญชาตญาณและความสามารถพิเศษที่โดดเด่นกว่าใคร',
-    luckyNums: [11, 22, 33, 44, 55], luckyColor: 'เงิน', luckyDay: 'จันทร์',
-    traits: [
-      { icon: '✨', text: 'มีพลังจิตและสัญชาตญาณที่แข็งแกร่งเป็นพิเศษ รับรู้สิ่งที่คนอื่นไม่รับรู้' },
-      { icon: '💫', text: 'เป็นแรงบันดาลใจให้คนรอบข้าง มีพลังงานที่ดึงดูดคนเข้ามาหา' },
-      { icon: '🔮', text: 'มีความสามารถด้านจิตวิญญาณและความเข้าใจในระดับที่ลึกกว่าปกติ' },
-      { icon: '⚡', text: 'ต้องระวังความเครียดสูงและความรู้สึกไวเกินไปต่อพลังงานรอบข้าง' },
-    ]
-  },
-  22: {
-    name: 'นักสร้างใหญ่ — เลขมาสเตอร์แห่งการสร้างสรรค์',
-    desc: 'คุณพี่มีเลขมาสเตอร์ 22 ค่ะ! เลขที่ทรงพลังที่สุด มีความสามารถสร้างสิ่งยิ่งใหญ่ที่ส่งผลต่อโลกได้จริงๆ',
-    luckyNums: [22, 4, 44, 13, 31], luckyColor: 'ทอง', luckyDay: 'เสาร์',
-    traits: [
-      { icon: '🏛️', text: 'มีความสามารถในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืนที่ส่งผลต่อคนหมู่มาก' },
-      { icon: '🌐', text: 'มีวิสัยทัศน์ระดับโลก มองเห็นภาพที่ใหญ่กว่าคนอื่น' },
-      { icon: '💪', text: 'มีพลังและความอดทนในระดับที่เกินกว่าคนทั่วไป' },
-      { icon: '⚡', text: 'ต้องระวังความกดดันที่สูงมากและความคาดหวังจากตัวเองและคนอื่น' },
-    ]
-  },
+  1:{name:'ผู้นำ — เลขแห่งความเป็นหนึ่ง',desc:'คุณพี่มีพลังงานของผู้นำตัวจริงเลยค่ะ มีความคิดริเริ่ม กล้าตัดสินใจ และมุ่งมั่นสู่เป้าหมาย เกิดมาเพื่อนำทางคนอื่นค่ะ',luckyNums:[1,10,19,28,37],luckyColor:'แดง',luckyDay:'อาทิตย์',traits:[{icon:'👑',text:'มีความเป็นผู้นำสูง กล้าตัดสินใจ ไม่กลัวความท้าทาย'},{icon:'🔥',text:'มีพลังงานและแรงบันดาลใจที่แรงกล้า ทำให้คนรอบข้างได้รับแรงบันดาลใจด้วย'},{icon:'💡',text:'ความคิดสร้างสรรค์และนวัตกรรม มักเป็นคนแรกที่คิดสิ่งใหม่ๆ'},{icon:'⚡',text:'ต้องระวังความดื้อรั้นและอยากได้ทุกอย่างคนเดียวนะคะ'}]},
+  2:{name:'นักประสาน — เลขแห่งความร่วมมือ',desc:'คุณพี่มีพลังงานของนักประสานสัมพันธ์ค่ะ ใจดี อ่อนโยน รับฟังคนอื่น และเก่งเรื่องการทำงานเป็นทีม',luckyNums:[2,11,20,29,38],luckyColor:'ส้ม',luckyDay:'จันทร์',traits:[{icon:'🤝',text:'เก่งเรื่องความสัมพันธ์และการประสานงาน ทุกคนรักคุณพี่ค่ะ'},{icon:'💕',text:'มีความเห็นอกเห็นใจสูง รับรู้ความรู้สึกคนอื่นได้ดีมาก'},{icon:'🌸',text:'อ่อนโยนและมีเสน่ห์ ทำให้คนรอบข้างรู้สึกสบายใจ'},{icon:'⚡',text:'ต้องระวังการตัดสินใจที่ลังเลเกินไป และการยึดติดกับความคิดเห็นคนอื่น'}]},
+  3:{name:'นักสร้างสรรค์ — เลขแห่งการแสดงออก',desc:'คุณพี่มีพลังงานของนักสร้างสรรค์ตัวจริงค่ะ ชอบแสดงออก มีศิลปะ และมีความสนุกสนานในตัว',luckyNums:[3,12,21,30,39],luckyColor:'เหลือง',luckyDay:'พุธ',traits:[{icon:'🎨',text:'มีความคิดสร้างสรรค์และพรสวรรค์ด้านศิลปะ ดนตรี หรือการแสดง'},{icon:'😄',text:'มีอารมณ์ขันและพลังงานที่สดใส ทำให้ทุกคนรอบข้างมีความสุข'},{icon:'💬',text:'เก่งด้านการสื่อสารและการพูด มีเสน่ห์ในการเล่าเรื่อง'},{icon:'⚡',text:'ต้องระวังการกระจัดกระจายพลังงานไปทุกทิศ ควรโฟกัสให้มากขึ้น'}]},
+  4:{name:'นักสร้าง — เลขแห่งความมั่นคง',desc:'คุณพี่มีพลังงานของผู้สร้างรากฐานค่ะ ขยัน มีระเบียบ และเชื่อถือได้ ทุกอย่างที่คุณพี่สร้างจะยั่งยืนมากค่ะ',luckyNums:[4,13,22,31,40],luckyColor:'เขียว',luckyDay:'เสาร์',traits:[{icon:'🏗️',text:'มีความสามารถในการวางแผนและสร้างสิ่งต่างๆ ให้มั่นคงและยั่งยืน'},{icon:'📋',text:'ชอบความเป็นระเบียบ ทำงานอย่างมีแบบแผน และพิถีพิถัน'},{icon:'💪',text:'ขยันและทนทาน ไม่กลัวความยากลำบาก พร้อมทำงานหนัก'},{icon:'⚡',text:'ต้องระวังความแข็งกระด้างเกินไป และการยึดติดกับกฎระเบียบ'}]},
+  5:{name:'นักผจญภัย — เลขแห่งอิสรภาพ',desc:'คุณพี่มีพลังงานของนักผจญภัยค่ะ รักอิสระ ชอบการเปลี่ยนแปลง และพร้อมสำรวจโลกใบใหม่เสมอ',luckyNums:[5,14,23,32,41],luckyColor:'ฟ้า',luckyDay:'พุธ',traits:[{icon:'🌍',text:'รักการเดินทางและการสำรวจ ชีวิตที่หลากหลายทำให้คุณพี่มีความสุข'},{icon:'🦋',text:'ปรับตัวได้ดีกับทุกสถานการณ์ ไม่กลัวการเปลี่ยนแปลง'},{icon:'⚡',text:'มีพลังงานสูงและกระตือรือร้น ทำให้คนรอบข้างมีชีวิตชีวา'},{icon:'⚠️',text:'ต้องระวังการเบื่อง่ายและการทิ้งสิ่งที่เริ่มไว้กลางคัน'}]},
+  6:{name:'นักดูแล — เลขแห่งความรัก',desc:'คุณพี่มีพลังงานของผู้ดูแลและปกป้องค่ะ รักครอบครัว ห่วงใยคนอื่น และมีหัวใจที่อบอุ่น',luckyNums:[6,15,24,33,42],luckyColor:'ชมพู',luckyDay:'ศุกร์',traits:[{icon:'💝',text:'มีความรักและความห่วงใยที่ลึกซึ้ง ครอบครัวและคนที่รักคือทุกอย่าง'},{icon:'🏠',text:'ชอบสร้างบรรยากาศที่อบอุ่นและสวยงาม ทั้งบ้านและความสัมพันธ์'},{icon:'🌹',text:'มีความรับผิดชอบสูง พร้อมเสียสละเพื่อคนที่รักเสมอ'},{icon:'⚡',text:'ต้องระวังการแบกรับภาระมากเกินไป และการควบคุมคนอื่นมากเกินไป'}]},
+  7:{name:'นักค้นหา — เลขแห่งปัญญา',desc:'คุณพี่มีพลังงานของนักปราชญ์ค่ะ ชอบค้นคว้า ใฝ่รู้ และมีสัญชาตญาณที่แหลมคม',luckyNums:[7,16,25,34,43],luckyColor:'ม่วง',luckyDay:'จันทร์',traits:[{icon:'🔍',text:'มีความสามารถในการวิเคราะห์และค้นหาความจริงที่ซ่อนอยู่'},{icon:'🧠',text:'สติปัญญาสูง ชอบเรียนรู้และศึกษาในแบบที่ลึกกว่าคนอื่น'},{icon:'🔮',text:'มีสัญชาตญาณและความรู้สึกไวต่อพลังงานรอบข้าง'},{icon:'⚡',text:'ต้องระวังการแยกตัวออกจากสังคมมากเกินไป และความสงสัยในคนอื่น'}]},
+  8:{name:'นักสร้างอาณาจักร — เลขแห่งอำนาจ',desc:'คุณพี่มีพลังงานของนักธุรกิจและผู้มีอำนาจค่ะ เก่งเรื่องการบริหาร มีวิสัยทัศน์ และดึงดูดความสำเร็จ',luckyNums:[8,17,26,35,44],luckyColor:'ดำ/ทอง',luckyDay:'เสาร์',traits:[{icon:'💎',text:'มีความสามารถด้านธุรกิจและการเงินที่โดดเด่น เกิดมาเพื่อความสำเร็จ'},{icon:'🏆',text:'มีความทะเยอทะยานสูง มุ่งมั่นสู่เป้าหมายและไม่ยอมแพ้ง่ายๆ'},{icon:'⚡',text:'มีพลังงานของผู้นำและมีอิทธิพลต่อคนรอบข้าง'},{icon:'⚠️',text:'ต้องระวังความโลภและการใช้อำนาจในทางที่ผิด'}]},
+  9:{name:'นักให้ — เลขแห่งมนุษยธรรม',desc:'คุณพี่มีพลังงานของผู้ให้ค่ะ มีจิตใจกว้างขวาง รักมนุษยชาติ และพร้อมช่วยเหลือทุกคน',luckyNums:[9,18,27,36,45],luckyColor:'ทอง',luckyDay:'พฤหัส',traits:[{icon:'🌟',text:'มีจิตใจที่กว้างขวางและเมตตากรุณา พร้อมช่วยเหลือทุกคนเสมอ'},{icon:'🌍',text:'มีวิสัยทัศน์กว้างไกล มองเห็นภาพรวมและต้องการทำให้โลกดีขึ้น'},{icon:'🎭',text:'มีพรสวรรค์ด้านศิลปะและความคิดสร้างสรรค์ในระดับสูง'},{icon:'⚡',text:'ต้องระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลตัวเอง'}]},
+  11:{name:'นักส่องแสง — เลขมาสเตอร์แห่งแรงบันดาลใจ',desc:'คุณพี่มีเลขมาสเตอร์ 11 ค่ะ! มีพลังงานสูงมาก มีสัญชาตญาณและความสามารถพิเศษที่โดดเด่นกว่าใคร',luckyNums:[11,22,33,44,55],luckyColor:'เงิน',luckyDay:'จันทร์',traits:[{icon:'✨',text:'มีพลังจิตและสัญชาตญาณที่แข็งแกร่งเป็นพิเศษ รับรู้สิ่งที่คนอื่นไม่รับรู้'},{icon:'💫',text:'เป็นแรงบันดาลใจให้คนรอบข้าง มีพลังงานที่ดึงดูดคนเข้ามาหา'},{icon:'🔮',text:'มีความสามารถด้านจิตวิญญาณและความเข้าใจในระดับที่ลึกกว่าปกติ'},{icon:'⚡',text:'ต้องระวังความเครียดสูงและความรู้สึกไวเกินไปต่อพลังงานรอบข้าง'}]},
+  22:{name:'นักสร้างใหญ่ — เลขมาสเตอร์แห่งการสร้างสรรค์',desc:'คุณพี่มีเลขมาสเตอร์ 22 ค่ะ! เลขที่ทรงพลังที่สุด มีความสามารถสร้างสิ่งยิ่งใหญ่ที่ส่งผลต่อโลกได้จริงๆ',luckyNums:[22,4,44,13,31],luckyColor:'ทอง',luckyDay:'เสาร์',traits:[{icon:'🏛️',text:'มีความสามารถในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืนที่ส่งผลต่อคนหมู่มาก'},{icon:'🌐',text:'มีวิสัยทัศน์ระดับโลก มองเห็นภาพที่ใหญ่กว่าคนอื่น'},{icon:'💪',text:'มีพลังและความอดทนในระดับที่เกินกว่าคนทั่วไป'},{icon:'⚡',text:'ต้องระวังความกดดันที่สูงมากและความคาดหวังจากตัวเองและคนอื่น'}]},
 };
 
-let currentUser = null;
-
-// Populate dropdowns
+// dropdowns
 const selDay = document.getElementById('selDay');
 const selMonth = document.getElementById('selMonth');
 const selYear = document.getElementById('selYear');
-
-selDay.innerHTML = '<option value="">วัน</option>' +
-  Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
-
-const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-selMonth.innerHTML = '<option value="">เดือน</option>' +
-  months.map((m,i) => `<option value="${i+1}">${m}</option>`).join('');
-
-const currentYear = new Date().getFullYear();
-selYear.innerHTML = '<option value="">ปี (ค.ศ.)</option>' +
-  Array.from({length:80}, (_,i) => currentYear - i).map(y => `<option value="${y}">${y} (${y+543})</option>`).join('');
+selDay.innerHTML = '<option value="">วัน</option>' + Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+const months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+selMonth.innerHTML = '<option value="">เดือน</option>' + months.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+const cy = new Date().getFullYear();
+selYear.innerHTML = '<option value="">ปี (ค.ศ.)</option>' + Array.from({length:80},(_,i)=>cy-i).map(y=>`<option value="${y}">${y} (${y+543})</option>`).join('');
 
 function calcLifeNumber(day, month, year) {
-  const digits = String(day) + String(month) + String(year);
-  let sum = digits.split('').reduce((a, d) => a + parseInt(d), 0);
-  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    sum = String(sum).split('').reduce((a, d) => a + parseInt(d), 0);
-  }
+  let sum = String(day)+String(month)+String(year);
+  sum = sum.split('').reduce((a,d)=>a+parseInt(d),0);
+  while(sum>9&&sum!==11&&sum!==22&&sum!==33){sum=String(sum).split('').reduce((a,d)=>a+parseInt(d),0);}
   return sum;
 }
 
-function calculate() {
-  const day = parseInt(selDay.value);
-  const month = parseInt(selMonth.value);
-  const year = parseInt(selYear.value);
-  if (!day || !month || !year) { alert('กรุณากรอกวันเกิดให้ครบนะคะ'); return; }
-
-  const lifeNum = calcLifeNumber(day, month, year);
-  const data = LIFE_NUMBERS[lifeNum] || LIFE_NUMBERS[9];
-
-  document.getElementById('lifeNum').textContent = lifeNum;
-  document.getElementById('lifeNumName').textContent = data.name;
-  document.getElementById('lifeNumDesc').textContent = data.desc;
-
-  document.getElementById('luckyMain').textContent = data.luckyNums[0];
-  document.getElementById('luckySecond').textContent = data.luckyNums[1];
-  document.getElementById('luckyColor').textContent = data.luckyColor;
-  document.getElementById('luckyDay').textContent = 'วัน' + data.luckyDay;
-
-  document.getElementById('luckyNumbers').innerHTML = data.luckyNums.map(n =>
-    `<div class="num-ball">${n}</div>`).join('');
-
-  document.getElementById('traitsList').innerHTML = data.traits.map(t =>
-    `<div class="trait-row">
-      <div class="trait-icon">${t.icon}</div>
-      <div class="trait-text">${t.text}</div>
-    </div>`).join('');
-
+window.calculate = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  const day=parseInt(selDay.value), month=parseInt(selMonth.value), year=parseInt(selYear.value);
+  if(!day||!month||!year){alert('กรุณากรอกวันเกิดให้ครบนะคะ');return;}
+  const lifeNum=calcLifeNumber(day,month,year);
+  const data=LIFE_NUMBERS[lifeNum]||LIFE_NUMBERS[9];
+  document.getElementById('lifeNum').textContent=lifeNum;
+  document.getElementById('lifeNumName').textContent=data.name;
+  document.getElementById('lifeNumDesc').textContent=data.desc;
+  document.getElementById('luckyMain').textContent=data.luckyNums[0];
+  document.getElementById('luckySecond').textContent=data.luckyNums[1];
+  document.getElementById('luckyColor').textContent=data.luckyColor;
+  document.getElementById('luckyDay').textContent='วัน'+data.luckyDay;
+  document.getElementById('luckyNumbers').innerHTML=data.luckyNums.map(n=>`<div class="num-ball">${n}</div>`).join('');
+  document.getElementById('traitsList').innerHTML=data.traits.map(t=>`<div class="trait-row"><div class="trait-icon">${t.icon}</div><div class="trait-text">${t.text}</div></div>`).join('');
   document.getElementById('resultBox').classList.add('show');
-  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+  saveReading(day,month,year,lifeNum,data.name);
+};
 
-  saveReading(day, month, year, lifeNum, data.name);
-}
-
-function resetCalc() {
-  selDay.value = '';
-  selMonth.value = '';
-  selYear.value = '';
+window.resetCalc = function() {
+  selDay.value=''; selMonth.value=''; selYear.value='';
   document.getElementById('resultBox').classList.remove('show');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+window.currentUser = null;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
 }
 
-async function saveReading(day, month, year, lifeNum, name) {
-  if (!currentUser) return;
-  try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const db = getFirestore(app);
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'เลขนำโชค', question: `${day}/${month}/${year}`, result: `เลขชีวิต ${lifeNum} — ${name}`, createdAt: new Date().toISOString()
-    });
-  } catch(e) { console.error(e); }
-}
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.saveReading = async function(day, month, year, lifeNum, name) {
+  if (!window.currentUser) return;
   try {
-    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-    const cfg = { apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain: "my-tarot67.firebaseapp.com", projectId: "my-tarot67", storageBucket: "my-tarot67.firebasestorage.app", messagingSenderId: "33661162829", appId: "1:33661162829:web:9e06a7cd5a00d613785304" };
-    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
-    const auth = getAuth(app);
-    onAuthStateChanged(auth, user => {
-      currentUser = user;
-      if (!user) window.location.href = '../index.html';
+    await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
+      type: 'เลขนำโชค', question: `${day}/${month}/${year}`,
+      result: `เลขชีวิต ${lifeNum} — ${name}`, createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
+};
+
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
 });
 </script>
 </body>
