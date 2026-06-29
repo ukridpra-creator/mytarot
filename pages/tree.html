@@ -23,7 +23,7 @@
     /* TREE */
     .tree-section { display:flex; flex-direction:column; align-items:center; padding:8px 20px 0; }
     .tree-area {
-      position:relative; width:62%; max-width:240px;
+      position:relative; width:88%; max-width:360px;
       cursor:pointer; -webkit-tap-highlight-color:transparent;
     }
     .tree-img { width:100%; display:block; pointer-events:none; }
@@ -374,7 +374,8 @@ window.closeReveal = function(){
 window.shakeAgain = function(){
   document.getElementById('revealWrap').classList.remove('show');
   isShaking = false;
-  setTimeout(()=>shakeTree(), 300);
+  renderCards();
+  setTimeout(()=>shakeTree(), 400);
 };
 
 document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); });
