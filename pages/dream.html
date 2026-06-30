@@ -159,7 +159,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -175,9 +175,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(() => {
-  setPersistence(auth, browserLocalPersistence);
-});
 const db = getFirestore(app);
 let currentUser = null;
 
@@ -230,9 +227,22 @@ window.interpretDream = function() {
 
   let found = null;
   const inputLower = input.toLowerCase();
+  
   for (const entry of DREAM_DATA) {
     for (const kw of entry.keywords) {
-      if (inputLower.includes(kw.toLowerCase())) { found = entry; break; }
+      const kwLower = kw.toLowerCase();
+      
+      // 1. ถ้าพิมพ์คำสั้นมาก (1-2 ตัวอักษร) ต้องตรงเป๊ะเท่านั้น
+      if (inputLower.length <= 2) {
+        if (inputLower === kwLower) { found = entry; break; }
+      } 
+      // 2. ถ้าพิมพ์คำยาวขึ้น (3 ตัวอักษรขึ้นไป) ค่อยใช้ includes
+      else {
+        if (inputLower.includes(kwLower) || kwLower.includes(inputLower)) {
+          found = entry;
+          break;
+        }
+      }
     }
     if (found) break;
   }
