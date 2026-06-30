@@ -277,7 +277,6 @@ onAuthStateChanged(auth, async user => {
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else {
     updateCoinUI('—'); setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
   }
 });
 

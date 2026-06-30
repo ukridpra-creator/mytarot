@@ -348,7 +348,6 @@ onAuthStateChanged(auth, async user => {
   } else {
     updateCoinUI('—');
     setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
   }
 });
 
@@ -603,6 +602,11 @@ window.startReading = async function() {
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
+
+    Object.keys(TAG_MAP).forEach(tag => {
+      const el = document.getElementById(TAG_MAP[tag]);
+      if (el) el.textContent = '';
+    });
 
     while (true) {
       const { done, value } = await reader.read();

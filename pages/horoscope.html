@@ -285,7 +285,7 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
     document.getElementById('menuEmail').textContent=user.email;
     if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  }else{updateCoinUI('—');setAvatarDisplay('');document.getElementById('loginRequiredOverlay').classList.add('show');}
+  }else{updateCoinUI('—');setAvatarDisplay('');}
 });
 </script>
 </body>

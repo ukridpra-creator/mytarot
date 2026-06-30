@@ -244,7 +244,7 @@
 <div class="page-content">
   <div class="hero">
     <div class="hero-icon">
-      <img src="../images/mascotask.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.outerHTML='<div style=\'font-size:40px;margin-bottom:8px\'>🔮</div>'">
+      <img src="../images/mascotask.png" alt="mascot" onerror="this.outerHTML='<div style=\'font-size:40px;margin-bottom:8px\'>🔮</div>'">
     </div>
     <div class="hero-title">ถามอะไรก็ได้</div>
     <div class="hero-desc">ไพ่ 3 ใบ อดีต ปัจจุบัน อนาคต ตอบทุกคำถามในใจค่ะ</div>
@@ -313,7 +313,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -329,6 +329,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => {
+  setPersistence(auth, browserLocalPersistence);
+});
 const db = getFirestore(app);
 let currentUser = null;
 
@@ -578,10 +581,14 @@ window.startReading = function() {
       setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
       return;
     }
+    const idx = flipped;
+    flipped++;
     setTimeout(() => {
-      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
-      document.getElementById(`revealName${flipped}`).style.opacity = '1';
-      flipped++; flipNext();
+      document.getElementById(`revealInner${idx}`).classList.add('flipped');
+      setTimeout(() => {
+        document.getElementById(`revealName${idx}`).style.opacity = '1';
+        setTimeout(flipNext, 300);
+      }, 400);
     }, 600);
   };
   setTimeout(flipNext, 300);

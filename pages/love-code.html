@@ -255,6 +255,9 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>{
+  setPersistence(auth,browserLocalPersistence);
+});
 const db=getFirestore(app);
 let currentUser=null;
 
@@ -274,7 +277,7 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
     document.getElementById('menuEmail').textContent=user.email;
     if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  }else{updateCoinUI('—');setAvatarDisplay('');document.getElementById('loginRequiredOverlay').classList.add('show');}
+  }else{updateCoinUI('—');setAvatarDisplay('');}
 });
 
 // DATA

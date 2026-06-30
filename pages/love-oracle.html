@@ -563,22 +563,25 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 var firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
   authDomain: "my-tarot67.firebaseapp.com",
   projectId: "my-tarot67",
-  storageBucket: "my-tarot67.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
 };
 
 var app = initializeApp(firebaseConfig);
 var auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(function() {
+  setPersistence(auth, browserLocalPersistence);
+});
 var db = getFirestore(app);
 var currentUser = null;
 
@@ -854,6 +857,7 @@ async function callReading() {
 
     // stream
     textEl.textContent = "";
+    textEl.innerHTML = "";
     var reader = res.body.getReader();
     var decoder = new TextDecoder();
     var fullText = "";

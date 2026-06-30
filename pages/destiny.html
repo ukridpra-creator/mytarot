@@ -557,7 +557,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -573,6 +573,9 @@ var firebaseConfig = {
 
 var app = initializeApp(firebaseConfig);
 var auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(function() {
+  setPersistence(auth, browserLocalPersistence);
+});
 var db = getFirestore(app);
 var currentUser = null;
 
@@ -747,6 +750,11 @@ window.startReading = async function() {
       "[PERSONALITY]\n[CHILDHOOD]\n[MISSION]\n[LOVE]\n[CAREER]\n\n" +
       "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
 
+    keys1.forEach(function(id) {
+      var el = document.getElementById("sec-" + id.toLowerCase());
+      if (el) el.textContent = '';
+    });
+
     var text1 = await streamAPI(prompt1, "destiny", function(partial) {
       var parsed = parseDelimiter(partial, keys1);
       Object.keys(parsed).forEach(function(id) {
@@ -780,6 +788,11 @@ window.startReading = async function() {
       "เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น:\n" +
       "[MONEY]\n[HEALTH]\n[LUCKY]\n[THISYEAR]\n[FUTURE]\n\n" +
       "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
+
+    keys2.forEach(function(id) {
+      var el = document.getElementById("sec-" + id.toLowerCase());
+      if (el) el.textContent = '';
+    });
 
     var text2 = await streamAPI(prompt2, "destiny-2", function(partial) {
       var parsed = parseDelimiter(partial, keys2);

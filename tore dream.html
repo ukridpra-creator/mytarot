@@ -1,0 +1,54 @@
+[1mdiff --git a/pages/dream.html b/pages/dream.html[m
+[1mindex 54e72e3..4c8e9a3 100644[m
+[1m--- a/pages/dream.html[m
+[1m+++ b/pages/dream.html[m
+[36m@@ -159,7 +159,7 @@[m
+ [m
+ <script type="module">[m
+ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';[m
+[31m-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }[m
+[32m+[m[32mimport { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }[m
+   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';[m
+ import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }[m
+   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';[m
+[36m@@ -175,9 +175,6 @@[m [mconst firebaseConfig = {[m
+ [m
+ const app = initializeApp(firebaseConfig);[m
+ const auth = getAuth(app);[m
+[31m-setPersistence(auth, indexedDBLocalPersistence).catch(() => {[m
+[31m-  setPersistence(auth, browserLocalPersistence);[m
+[31m-});[m
+ const db = getFirestore(app);[m
+ let currentUser = null;[m
+ [m
+[36m@@ -230,9 +227,22 @@[m [mwindow.interpretDream = function() {[m
+ [m
+   let found = null;[m
+   const inputLower = input.toLowerCase();[m
+[32m+[m[41m  [m
+   for (const entry of DREAM_DATA) {[m
+     for (const kw of entry.keywords) {[m
+[31m-      if (inputLower.includes(kw.toLowerCase())) { found = entry; break; }[m
+[32m+[m[32m      const kwLower = kw.toLowerCase();[m
+[32m+[m[41m      [m
+[32m+[m[32m      // 1. ถ้าพิมพ์คำสั้นมาก (1-2 ตัวอักษร) ต้องตรงเป๊ะเท่านั้น[m
+[32m+[m[32m      if (inputLower.length <= 2) {[m
+[32m+[m[32m        if (inputLower === kwLower) { found = entry; break; }[m
+[32m+[m[32m      }[m[41m [m
+[32m+[m[32m      // 2. ถ้าพิมพ์คำยาวขึ้น (3 ตัวอักษรขึ้นไป) ค่อยใช้ includes[m
+[32m+[m[32m      else {[m
+[32m+[m[32m        if (inputLower.includes(kwLower) || kwLower.includes(inputLower)) {[m
+[32m+[m[32m          found = entry;[m
+[32m+[m[32m          break;[m
+[32m+[m[32m        }[m
+[32m+[m[32m      }[m
+     }[m
+     if (found) break;[m
+   }[m
+[36m@@ -259,4 +269,4 @@[m [mwindow.resetDream = function() {[m
+ };[m
+ </script>[m
+ </body>[m
+[31m-</html>[m
+[32m+[m[32m</html>[m
+\ No newline at end of file[m

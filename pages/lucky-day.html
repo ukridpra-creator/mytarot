@@ -257,7 +257,7 @@ const firebaseConfig = {
   authDomain: "my-tarot67.firebaseapp.com",
   projectId: "my-tarot67",
   storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162799",
+  messagingSenderId: "33661162829",
   appId: "1:33661162829:web:9e06a7cd5a00d613785304"
 };
 
@@ -314,7 +314,6 @@ onAuthStateChanged(auth, async user => {
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else {
     updateCoinUI('—'); setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
   }
 });
 </script>

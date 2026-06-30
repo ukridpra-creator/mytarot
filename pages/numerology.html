@@ -281,7 +281,6 @@ onAuthStateChanged(auth, async user => {
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else {
     updateCoinUI('—'); setAvatarDisplay('');
-    document.getElementById('loginRequiredOverlay').classList.add('show');
   }
 });
 
@@ -429,6 +428,10 @@ window.startReading = async function() {
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
+
+    Object.values(TAG_MAP).filter(id => id !== 'greeting').forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = '';
+    });
 
     while (true) {
       const { done, value } = await reader.read();

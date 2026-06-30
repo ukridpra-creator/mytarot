@@ -534,10 +534,14 @@ window.startReading = function() {
       setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
       return;
     }
+    const idx = flipped;
+    flipped++;
     setTimeout(() => {
-      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
-      document.getElementById(`revealName${flipped}`).style.opacity = '1';
-      flipped++; flipNext();
+      document.getElementById(`revealInner${idx}`).classList.add('flipped');
+      setTimeout(() => {
+        document.getElementById(`revealName${idx}`).style.opacity = '1';
+        setTimeout(flipNext, 300);
+      }, 400);
     }, 600);
   };
   setTimeout(flipNext, 300);

@@ -31,10 +31,7 @@
   .gender-btn .g-sub { font-size:11px; color:#9b7dc0; margin-top:2px; }
   .gender-btn.active { border-color:#9b7dc0; background:linear-gradient(135deg,rgba(155,125,192,0.15),rgba(232,160,176,0.1)); box-shadow:0 4px 16px rgba(155,125,192,0.25); }
 
-  /* STATUS */
-  .status-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .status-btn { padding:10px; border:1.5px solid rgba(155,125,192,0.25); border-radius:14px; background:rgba(255,255,255,0.6); cursor:pointer; text-align:center; font-size:13px; color:#2d2438; font-family:'Noto Sans Thai',sans-serif; transition:all 0.2s; }
-  .status-btn.active { border-color:#9b7dc0; background:rgba(155,125,192,0.12); color:#9b7dc0; font-weight:600; }
+
 
   /* MODE */
   .mode-tabs { display:flex; gap:8px; }
@@ -233,16 +230,7 @@
     </div>
   </div>
 
-  <!-- STATUS -->
-  <div class="section-wrap">
-    <div class="section-label">💕 สถานะความสัมพันธ์</div>
-    <div class="status-grid">
-      <div class="status-btn active" id="st0" onclick="selectStatus(0)">💫 โสด</div>
-      <div class="status-btn" id="st1" onclick="selectStatus(1)">💑 มีแฟน</div>
-      <div class="status-btn" id="st2" onclick="selectStatus(2)">💍 แต่งงาน</div>
-      <div class="status-btn" id="st3" onclick="selectStatus(3)">🌀 ซับซ้อน</div>
-    </div>
-  </div>
+
 
   <!-- MODE -->
   <div class="section-wrap">
@@ -334,6 +322,9 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>{
+  setPersistence(auth, browserLocalPersistence);
+});
 const db=getFirestore(app);
 let currentUser=null, lastFullText='';
 
@@ -407,9 +398,9 @@ const ALL_CARDS=[
 ];
 
 // ── STATE ──
-let currentMode=1, gender='girl', statusIdx=0;
+let currentMode=1, gender='girl';
 let shuffled=[], selected=[];
-const STATUS_LABELS=['โสด','มีแฟน','แต่งงาน','ซับซ้อน'];
+
 const COST={1:10,3:20,5:30};
 const MODE_DESC={1:'ข้อความจากจักรวาลสำหรับวันนี้',3:'อดีต • ปัจจุบัน • อนาคต',5:'ฮันบกจิตใจ — 5 มิติแห่งตัวตน'};
 const POS={1:['ข้อความวันนี้'],3:['อดีต','ปัจจุบัน','อนาคต'],5:['จิตใจลึกๆ','อดีต','แก่นแท้','อนาคต','คำแนะนำ']};
@@ -426,10 +417,7 @@ window.selectGender=function(g){
   document.getElementById('genderGirl').classList.toggle('active',g==='girl');
   document.getElementById('genderBoy').classList.toggle('active',g==='boy');
 };
-window.selectStatus=function(i){
-  statusIdx=i;
-  for(let j=0;j<4;j++)document.getElementById('st'+j).classList.toggle('active',j===i);
-};
+
 window.selectMode=function(m){
   currentMode=m;
   [1,3,5].forEach(n=>document.getElementById('tab'+n).classList.toggle('active',n===m));
@@ -527,11 +515,14 @@ window.startReading=function(){
       setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);
       return;
     }
+    const idx=flipped;
+    flipped++;
     setTimeout(()=>{
-      document.getElementById('revealInner'+flipped).classList.add('flipped');
-      setTimeout(()=>document.getElementById('revealName'+flipped).classList.add('show'),400);
-      flipped++;
-      flipNext();
+      document.getElementById('revealInner'+idx).classList.add('flipped');
+      setTimeout(()=>{
+        document.getElementById('revealName'+idx).classList.add('show');
+        setTimeout(flipNext,400);
+      },400);
     },700);
   };
   setTimeout(flipNext,400);
@@ -573,7 +564,7 @@ window.acceptReading=async function(){
   const tagList=keys.map(k=>`[${k}]`).join('');
 
   const systemPrompt=`คุณคือผู้อ่านไพ่ฮันออราเคิลโบราณเกาหลี จิตใจอบอุ่น อ่อนโยน เข้าใจความรู้สึก เรียกผู้ถามว่า "${genderTitle}" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม อบอุ่น ต้องใช้ tag ${tagList} นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามมีข้อความนอก tag`;
-  const userPrompt=`ไพ่ที่จั่วได้:\n${cardList}\n\n${question?'คำถาม: '+question+'\n\n':'ไม่มีคำถามเฉพาะ รับพลังงานโดยรวม\n\n'}สถานะ: ${STATUS_LABELS[statusIdx]}\n\n${keys.map(k=>`[${k}]\nเขียน section นี้ให้อบอุ่นและลึกซึ้ง 3-4 ประโยค`).join('\n')}`;
+  const userPrompt=`ไพ่ที่จั่วได้:\n${cardList}\n\n${question?'คำถาม: '+question+'\n\n':'ไม่มีคำถามเฉพาะ รับพลังงานโดยรวม\n\n'}${keys.map(k=>`[${k}]\nเขียน section นี้ให้อบอุ่นและลึกซึ้ง 3-4 ประโยค`).join('\n')}`;
 
   try{
     const idToken=await currentUser.getIdToken();
