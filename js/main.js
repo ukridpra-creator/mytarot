@@ -1,10 +1,5 @@
 // Navigation
 function go(page) {
-  if (!localStorage.getItem('userId')) {
-    const overlay = document.getElementById('loginRequiredOverlay');
-    if (overlay) overlay.classList.add('show');
-    return;
-  }
   const pages = {
     tarot: 'pages/tarot.html',
     numerology: 'pages/numerology.html',
@@ -105,6 +100,7 @@ window.addEventListener('pageshow', () => {
   const avatarEl = document.getElementById('avatarEl');
   if (avatarEl) avatarEl.textContent = avatar;
 });
+
 // User Menu
 function toggleUserMenu() {
   document.getElementById('userMenu').classList.toggle('open');
@@ -140,7 +136,7 @@ function updateUserUI() {
   const guestView = document.getElementById('guestView');
   const loggedView = document.getElementById('loggedView');
 
-  if (!guestView || !loggedView) return; // ← เพิ่มบรรทัดนี้
+  if (!guestView || !loggedView) return;
 
   if(currentUser) {
     guestView.style.display = 'none';
@@ -191,9 +187,9 @@ function speakText(elementId) {
 
   window.speechSynthesis.speak(utterance);
 }
+
 function colorizeReading(text) {
   return text
-    // ชื่อไพ่ Major Arcana
     .replace(/The Fool/g, '<span style="color:#a855f7;font-weight:700">The Fool</span>')
     .replace(/The Magician/g, '<span style="color:#a855f7;font-weight:700">The Magician</span>')
     .replace(/The High Priestess/g, '<span style="color:#a855f7;font-weight:700">The High Priestess</span>')
@@ -216,7 +212,6 @@ function colorizeReading(text) {
     .replace(/The Sun/g, '<span style="color:#fbbf24;font-weight:700">The Sun</span>')
     .replace(/Judgement/g, '<span style="color:#a855f7;font-weight:700">Judgement</span>')
     .replace(/The World/g, '<span style="color:#10b981;font-weight:700">The World</span>')
-    // หัวข้อสำคัญ
     .replace(/อดีต/g, '<span style="color:#818cf8;font-weight:700">อดีต</span>')
     .replace(/ปัจจุบัน/g, '<span style="color:#a855f7;font-weight:700">ปัจจุบัน</span>')
     .replace(/อนาคต/g, '<span style="color:#ec4899;font-weight:700">อนาคต</span>')
@@ -228,10 +223,11 @@ function colorizeReading(text) {
     .replace(/สิ่งที่ต้องระวัง/g, '<span style="color:#ef4444;font-weight:700">⚠️ สิ่งที่ต้องระวัง</span>')
     .replace(/\n/g, '<br>');
 }
+
 // Save Reading to Firestore
 async function saveReading(type, question, result) {
   const userId = localStorage.getItem('userId');
-  if (!userId) return; // ไม่ login ไม่เก็บ
+  if (!userId) return;
   try {
     const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
     const { getFirestore, collection, addDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
