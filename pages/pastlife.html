@@ -311,7 +311,7 @@ function updateSections(text) {
     gb.classList.add('show'); gb.textContent = parsed['GREETING'];
   }
   Object.entries(TAG_IDS).forEach(([key, id]) => {
-    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+    if (parsed[key]) { const el = document.getElementById(id); if (el) { el.innerHTML = ''; el.textContent = parsed[key]; } }
   });
 }
 
@@ -405,6 +405,8 @@ ${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${h
     const decoder = new TextDecoder();
     let fullText = '';
     Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+    // เคลียร์ loading ทุก section ก่อนเริ่ม stream
+    Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
 
     while (true) {
       const { done, value } = await reader.read();
@@ -414,6 +416,12 @@ ${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${h
     }
     updateSections(fullText);
     lastFullText = fullText;
+
+    // เคลียร์ loading ที่ยังค้างอยู่ใน section ที่ไม่มีข้อมูล
+    Object.values(TAG_IDS).forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.querySelector('.loading')) el.textContent = '';
+    });
 
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
       type: 'ชาติก่อนเราเป็น', result: fullText, createdAt: serverTimestamp()
