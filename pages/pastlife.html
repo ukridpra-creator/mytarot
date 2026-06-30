@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ชาติก่อนเราเป็น? — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(124,58,237,0.2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--purple-light); font-size: 16px; text-decoration: none; flex-shrink: 0; }
+    .page-title { font-size: 18px; font-weight: 700; color: white; }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 24px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
+    .input-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+    .input-label { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; display: block; }
+    .date-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .sel { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; color: white; font-size: 13px; font-family: 'Sarabun', sans-serif; outline: none; text-align: center; appearance: none; cursor: pointer; }
+    .sel:focus { border-color: var(--purple-light); }
+    .text-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; box-sizing: border-box; margin-bottom: 10px; }
+    .text-input:focus { border-color: var(--purple-light); }
+    .text-input::placeholder { color: rgba(255,255,255,0.2); }
+    .why-box { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--dim); line-height: 1.8; }
+    .why-box strong { color: var(--purple-light); }
+    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
+    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .coin-hint { font-size: 11px; color: var(--dim); }
+    .btn-read { width: 100%; background: linear-gradient(135deg, #6b21a8, #a855f7); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* GREETING */
+    .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(107,33,168,0.1); border-radius: 16px; border-left: 3px solid #a855f7; display: none; }
+    .greeting-box.show { display: block; }
+
+    /* RESULT */
+    #resultBox { display: none; }
+    #resultBox.show { display: block; }
+    .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+    .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+    .sec-who      { background: rgba(168,85,247,0.08);  border-color: #a855f7; }
+    .sec-who h3   { color: #a855f7; }
+    .sec-daily    { background: rgba(96,165,250,0.08);  border-color: #60a5fa; }
+    .sec-daily h3 { color: #60a5fa; }
+    .sec-pain     { background: rgba(236,72,153,0.08);  border-color: #ec4899; }
+    .sec-pain h3  { color: #ec4899; }
+    .sec-conflict { background: rgba(245,158,11,0.08);  border-color: #f59e0b; }
+    .sec-conflict h3 { color: #f59e0b; }
+    .sec-death    { background: rgba(107,114,128,0.08); border-color: #6b7280; }
+    .sec-death h3 { color: #9ca3af; }
+    .sec-karma    { background: rgba(16,185,129,0.08);  border-color: #10b981; }
+    .sec-karma h3 { color: #10b981; }
+
+    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
+    .loading-dots { display: flex; gap: 8px; }
+    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #a855f7; animation: bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
+    .loading-text { font-size: 14px; color: var(--dim); }
+
+    .followup-box { margin-top: 16px; padding: 16px; background: rgba(107,33,168,0.06); border: 1px solid rgba(107,33,168,0.2); border-radius: 16px; }
+    .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
+    .followup-input:focus { border-color: #a855f7; }
+    .followup-input::placeholder { color: rgba(255,255,255,0.25); }
+    .followup-btn { width: 100%; background: rgba(107,33,168,0.2); border: 1px solid rgba(107,33,168,0.4); border-radius: 12px; padding: 12px; color: #a855f7; font-size: 14px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 12px; }
+    .followup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .followup-result { font-size: 14px; line-height: 1.9; color: var(--text); word-break: break-word; }
+    .followup-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .followup-q { color: var(--gold); font-size: 13px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🔮 ชาติก่อนเราเป็น?</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔮</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-pastlife.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🔮 ชาติก่อนเราเป็นใคร?</div>
+    <div class="hero-desc">ค้นพบตัวตนในชาติที่แล้วผ่านดวงดาว<br>วิเคราะห์จากตำแหน่งดาวเคราะห์ Vedic Astrology</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+    <label class="input-label">⏰ เวลาเกิด</label>
+    <div class="date-row" style="margin-bottom:16px;">
+      <select class="sel" id="inHour"></select>
+      <select class="sel" id="inMinute"></select>
+    </div>
+    <label class="input-label">📍 สถานที่เกิด (ไม่บังคับ)</label>
+    <input class="text-input" id="inCity" placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่, London">
+    <div class="why-box">
+      <strong>ทำไมต้องใส่เวลาและสถานที่เกิด?</strong><br>
+      ตำแหน่งของ <strong>เกตุ (Ketu)</strong> และ <strong>ราหู (Rahu)</strong> ในดวงชะตา Vedic คือกุญแจสำคัญในการอ่านชาติที่แล้ว เวลาและสถานที่เกิดช่วยให้การคำนวณแม่นยำขึ้นค่ะ
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">🔮 เปิดเผยชาติที่แล้วของฉัน</button>
+
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
+
+  <!-- RESULT -->
+  <div id="resultBox">
+    <div class="result-section sec-who"><h3>👤 คุณเป็นใคร</h3><p id="secWho"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังอ่านชาติที่แล้ว...</div></div></p></div>
+    <div class="result-section sec-daily"><h3>🏡 ชีวิตประจำวัน</h3><p id="secDaily"></p></div>
+    <div class="result-section sec-pain"><h3>💔 ความเจ็บปวด</h3><p id="secPain"></p></div>
+    <div class="result-section sec-conflict"><h3>⚔️ ความขัดแย้ง</h3><p id="secConflict"></p></div>
+    <div class="result-section sec-death"><h3>🕊️ การตายและเวลาที่จากไป</h3><p id="secDeath"></p></div>
+    <div class="result-section sec-karma"><h3>🌱 สิ่งที่ติดมาชาตินี้</h3><p id="secKarma"></p></div>
+
+    <div class="followup-box" id="followupBox" style="display:none">
+      <div class="followup-result" id="followupResult"></div>
+      <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามเพิ่มเติมได้เลยนะคะ เช่น ชาติที่แล้วอยู่ที่ไหน?"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => {
+  setPersistence(auth, browserLocalPersistence);
+});
+const db = getFirestore(app);
+let currentUser = null;
+let lastFullText = '';
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinDisplay').textContent = coins;
+};
+
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
+}
+
+window.loginNow = async function() {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+};
+window.logoutNow = async function() {
+  await signOut(auth); window.location.href = '../index.html';
+};
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+  }
+});
+
+// DROPDOWNS
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl = document.getElementById('inDay');
+  for (var d = 1; d <= 31; d++) { var o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o); }
+  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl = document.getElementById('inMonth');
+  months.forEach(function(m, i) { var o = document.createElement('option'); o.value = i+1; o.textContent = m; monthEl.appendChild(o); });
+  var yearEl = document.getElementById('inYear');
+  var curY = new Date().getFullYear();
+  for (var y = curY; y >= curY-100; y--) { var o = document.createElement('option'); o.value = y; o.textContent = y; if (y === 1990) o.selected = true; yearEl.appendChild(o); }
+  var hourEl = document.getElementById('inHour');
+  var oh = document.createElement('option'); oh.value = ''; oh.textContent = '--'; hourEl.appendChild(oh);
+  for (var h = 0; h <= 23; h++) { var o = document.createElement('option'); o.value = h; o.textContent = (h<10?'0'+h:h)+' น.'; hourEl.appendChild(o); }
+  var minEl = document.getElementById('inMinute');
+  var om = document.createElement('option'); om.value = ''; om.textContent = '--'; minEl.appendChild(om);
+  for (var m2 = 0; m2 <= 59; m2 += 5) { var o = document.createElement('option'); o.value = m2; o.textContent = (m2<10?'0'+m2:m2)+' นาที'; minEl.appendChild(o); }
+});
+
+const CITY_COORDS = {
+  'กรุงเทพ':{lat:13.7563,lng:100.5018}, 'กรุงเทพมหานคร':{lat:13.7563,lng:100.5018},
+  'เชียงใหม่':{lat:18.7883,lng:98.9853}, 'ภูเก็ต':{lat:7.8804,lng:98.3923},
+  'ขอนแก่น':{lat:16.4419,lng:102.8360}, 'london':{lat:51.5074,lng:-0.1278},
+  'tokyo':{lat:35.6762,lng:139.6503}
+};
+
+function getCityCoords(city) {
+  if (!city) return { lat:13.7563, lng:100.5018 };
+  const key = city.toLowerCase().trim();
+  for (const [name, coords] of Object.entries(CITY_COORDS)) {
+    if (key.includes(name.toLowerCase())) return coords;
+  }
+  return { lat:13.7563, lng:100.5018 };
+}
+
+// TAG MAP
+const TAG_KEYS = ['GREETING','WHO','DAILY','PAIN','CONFLICT','DEATH','KARMA'];
+const TAG_IDS  = { WHO:'secWho', DAILY:'secDaily', PAIN:'secPain', CONFLICT:'secConflict', DEATH:'secDeath', KARMA:'secKarma' };
+
+function parseDelimiter(text, keys) {
+  const result = {};
+  keys.forEach((key, i) => {
+    const tag = '[' + key + ']';
+    const start = text.indexOf(tag);
+    if (start === -1) return;
+    const cs = start + tag.length;
+    const nk = keys[i+1];
+    const nt = nk ? '[' + nk + ']' : null;
+    const end = nt ? text.indexOf(nt) : text.length;
+    result[key] = text.slice(cs, end === -1 ? text.length : end).trim();
+  });
+  return result;
+}
+
+function updateSections(text) {
+  const parsed = parseDelimiter(text, TAG_KEYS);
+  if (parsed['GREETING']) {
+    const gb = document.getElementById('greetingBox');
+    gb.classList.add('show'); gb.textContent = parsed['GREETING'];
+  }
+  Object.entries(TAG_IDS).forEach(([key, id]) => {
+    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+  });
+}
+
+window.startReading = async function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  const day    = parseInt(document.getElementById('inDay').value);
+  const month  = parseInt(document.getElementById('inMonth').value);
+  const year   = parseInt(document.getElementById('inYear').value);
+  const hour   = document.getElementById('inHour').value !== '' ? parseInt(document.getElementById('inHour').value) : 12;
+  const minute = document.getElementById('inMinute').value !== '' ? parseInt(document.getElementById('inMinute').value) : 0;
+  const city   = document.getElementById('inCity').value.trim();
+  const { lat, lng } = getCityCoords(city);
+
+  const btn = document.getElementById('readBtn');
+  btn.disabled = true; btn.textContent = '⏳ กำลังเปิดเผย...';
+
+  // reset
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  Object.values(TAG_IDS).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังอ่านชาติที่แล้ว...</div></div>';
+  });
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
+
+  // เรียก western API เพื่อดึง natal chart
+  let planetDesc = '';
+  try {
+    const idToken = await currentUser.getIdToken();
+    const apiRes = await fetch('/api/western', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({ year, month, day, hour, minute, lat, lng })
+    });
+    const apiData = await apiRes.json();
+    if (apiData.data?.planets) {
+      const SIGN_TH = { aries:'เมษ', taurus:'พฤษภ', gemini:'เมถุน', cancer:'กรกฎ', leo:'สิงห์', virgo:'กันย์', libra:'ตุลย์', scorpio:'พิจิก', sagittarius:'ธนู', capricorn:'มังกร', aquarius:'กุมภ์', pisces:'มีน' };
+      const PLANET_TH = { sun:'อาทิตย์', moon:'จันทร์', mercury:'พุธ', venus:'ศุกร์', mars:'อังคาร', jupiter:'พฤหัส', saturn:'เสาร์', uranus:'ยูเรนัส', neptune:'เนปจูน', pluto:'พลูโต', 'true node':'ราหู', 'mean node':'ราหู', 'south node':'เกตุ' };
+      planetDesc = apiData.data.planets.map(p =>
+        `${PLANET_TH[p.id] || p.name}: ${SIGN_TH[p.sign_id] || p.sign} เรือน ${p.house}${p.retrograde ? ' (ถอยหลัง)' : ''}`
+      ).join('\n');
+    }
+  } catch(e) { console.error(e); }
+
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({
+        service: 'bazi',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        system: `คุณคือผู้เชี่ยวชาญโหราศาสตร์ Vedic ที่อ่านชาติที่แล้วจากดวงชะตา โดยเฉพาะตำแหน่งเกตุ (Ketu) ราหู (Rahu) และดาวเคราะห์อื่นๆ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "คุณ" ต้องใช้ tag [GREETING][WHO][DAILY][PAIN][CONFLICT][DEATH][KARMA] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์ ให้ความรู้สึกลึกซึ้งและเป็นเรื่องราว ไม่ใช่แค่การวิเคราะห์ทางเทคนิค`,
+        messages: [{ role:'user', content: `natal chart ของผู้ถาม:
+${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${hour}:${String(minute).padStart(2,'0')} น.`}
+
+ตอบโดยใช้ tag นำหน้าแต่ละส่วน วิเคราะห์ชาติที่แล้วจากดวงดาวโดยเฉพาะตำแหน่งเกตุและราหู:
+[GREETING]
+ทักทายผู้ถาม 1-2 ประโยค บอกว่ากำลังจะเปิดเผยอะไร
+[WHO]
+👤 คุณเป็นใคร — บอกว่าชาติที่แล้วเป็นใคร ทำอาชีพอะไร อยู่ยุคไหน ประเทศแถวไหน 3-4 ประโยค
+[DAILY]
+🏡 ชีวิตประจำวัน — ชีวิตในแต่ละวันเป็นแบบไหน 3-4 ประโยค
+[PAIN]
+💔 ความเจ็บปวด — สิ่งที่เจ็บปวดที่สุดในชาตินั้น 3-4 ประโยค
+[CONFLICT]
+⚔️ ความขัดแย้ง — ความขัดแย้งภายในหรือภายนอกที่ยังค้างอยู่ 3-4 ประโยค
+[DEATH]
+🕊️ การตายและเวลาที่จากไป — ตายอย่างไร อายุเท่าไหร่ช่วงนั้น 3-4 ประโยค
+[KARMA]
+🌱 สิ่งที่ติดมาชาตินี้ — ความรู้สึก ความกลัว พรสวรรค์ที่ติดมา 4-5 ประโยค
+ห้ามมีข้อความนอก tag ห้ามใช้ markdown` }]
+      })
+    });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; btn.textContent = '🔮 เปิดเผยชาติที่แล้วของฉัน'; return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      fullText += decoder.decode(value, { stream: true });
+      updateSections(fullText);
+    }
+    updateSections(fullText);
+    lastFullText = fullText;
+
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'ชาติก่อนเราเป็น', result: fullText, createdAt: serverTimestamp()
+    });
+
+    document.getElementById('followupBox').style.display = 'block';
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('secKarma').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+  }
+
+  btn.disabled = false; btn.textContent = '🔮 เปิดเผยชาติที่แล้วของฉัน';
+};
+
+window.askFollowup = async function() {
+  if (!currentUser) return;
+  const input = document.getElementById('followupInput');
+  const question = input.value.trim();
+  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
+
+  const followupBtn = document.getElementById('followupBtn');
+  const resultDiv = document.getElementById('followupResult');
+  followupBtn.disabled = true;
+
+  const time = Date.now();
+  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv = document.getElementById('ans_' + time);
+
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({
+        service: 'tarot_followup',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{ role:'user', content:`ผลวิเคราะห์ชาติที่แล้ว: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown` }]
+      })
+    });
+
+    const newBalance = res.headers.get('X-New-Coin-Balance');
+    if (newBalance != null) updateCoinUI(parseInt(newBalance));
+    if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      text += decoder.decode(value);
+      answerDiv.textContent = text;
+    }
+    answerDiv.scrollIntoView({ behavior:'smooth' });
+  } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
+
+  input.value = ''; followupBtn.disabled = false;
+};
+</script>
+</body>
+</html>
