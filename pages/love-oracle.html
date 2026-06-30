@@ -459,13 +459,13 @@
   <div class="title-th">เลิฟ ออราเคิล</div>
   <div class="subtitle">ไพ่แห่งหัวใจและความรัก</div>
   <div class="coin-bar">
-    🪙 <span id="coinCount">—</span>
+    🪙 <span id="coinCount">-</span>
   </div>
 </div>
 
 <!-- STEP 1: GENDER -->
 <div class="divider"><span>💕</span></div>
-<div class="step-label">— เลือกเพศของคุณก่อนนะคะ —</div>
+<div class="step-label">- เลือกเพศของคุณก่อนนะคะ -</div>
 
 <div class="gender-grid">
   <button class="gender-btn" onclick="selectGender(this, 'male', 'พี่ชาย')">
@@ -480,7 +480,7 @@
 
 <!-- STEP 2: STATUS -->
 <div class="divider"><span>🌹</span></div>
-<div class="step-label">— สถานะความรักตอนนี้ —</div>
+<div class="step-label">- สถานะความรักตอนนี้ -</div>
 
 <div class="status-grid">
   <button class="status-btn" onclick="selectStatus(this, 'โสดสนิท ยังไม่มีใครในใจ')">
@@ -709,7 +709,7 @@ window.selectMode = function(n) {
   var descs = {
     1: "พลังงานความรักในวันนี้",
     3: "อดีต • ปัจจุบัน • อนาคต ของความรัก",
-    5: "ลึกเข้าไปในหัวใจ — ห้ามิติแห่งความรัก"
+    5: "ลึกเข้าไปในหัวใจ - ห้ามิติแห่งความรัก"
   };
   document.getElementById("modeDesc").textContent = descs[n];
   document.getElementById("cardsArea").innerHTML = "";
@@ -805,14 +805,14 @@ async function callReading() {
   var specialText = "";
   if (specials.length > 0) {
     specials.forEach(function(c) {
-      if (c.special === "third") specialText += "\n⚠️ ไพ่พิเศษ: เงาที่สาม — มีมือที่สามเกี่ยวข้อง ให้เตือนอย่างจริงจัง";
-      if (c.special === "fake") specialText += "\n⚠️ ไพ่พิเศษ: หน้ากากรัก — ระวังการคบซ้อน ให้เตือนอย่างชัดเจน";
-      if (c.special === "rival") specialText += "\n⚠️ ไพ่พิเศษ: นักล่าหัวใจ — มีคู่แข่งเคลื่อนไหว ให้ระบุความเสี่ยง";
+      if (c.special === "third") specialText += "\n⚠️ ไพ่พิเศษ: เงาที่สาม - มีมือที่สามเกี่ยวข้อง ให้เตือนอย่างจริงจัง";
+      if (c.special === "fake") specialText += "\n⚠️ ไพ่พิเศษ: หน้ากากรัก - ระวังการคบซ้อน ให้เตือนอย่างชัดเจน";
+      if (c.special === "rival") specialText += "\n⚠️ ไพ่พิเศษ: นักล่าหัวใจ - มีคู่แข่งเคลื่อนไหว ให้ระบุความเสี่ยง";
     });
   }
 
   var cardList = drawnCards.map(function(c, i) {
-    return "ตำแหน่ง "" + posLabels[i] + "": " + c.name + " [" + energyLabel[c.energy] + "] — " + c.kw;
+    return 'ตำแหน่ง [' + posLabels[i] + ']: ' + c.name + ' [' + energyLabel[c.energy] + '] - ' + c.kw;
   }).join("\n");
 
   var promptText =
