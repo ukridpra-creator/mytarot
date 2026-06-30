@@ -394,10 +394,17 @@ async function giveTreeReward(colorKey) {
     const data = await res.json();
     if (data.reward) {
       updateCoinUI(data.coins);
+      // ข้อความใน reveal
       const rewardEl = document.getElementById('revealReward');
       const bagLabel = colorKey === 'yellow' ? 'ถุงทอง' : 'ถุงนำโชค';
       rewardEl.textContent = `✦ ${bagLabel}มอบรางวัล ${data.reward} เหรียญ ✦`;
       rewardEl.style.opacity = '1';
+      // coin pop animation
+      const pop = document.createElement('div');
+      pop.style.cssText = 'position:fixed;left:50%;bottom:30%;font-size:26px;font-weight:800;color:#fbbf24;z-index:500;pointer-events:none;animation:treeCoinPop 1.4s ease-out forwards;white-space:nowrap;text-shadow:0 2px 8px rgba(0,0,0,0.5);';
+      pop.textContent = '+' + data.reward + ' 🪙';
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 1500);
     }
   } catch(e) { console.error('tree-reward error:', e); }
 }
