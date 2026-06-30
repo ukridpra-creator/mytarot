@@ -152,6 +152,7 @@
   </div>
   <div class="reveal-cat" id="revealCat"></div>
   <div class="reveal-text" id="revealText"></div>
+  <div class="reveal-reward" id="revealReward" style="opacity:0;transition:opacity 0.4s;font-size:15px;font-weight:700;color:#fbbf24;margin-bottom:20px;"></div>
   <div class="reveal-btns" id="revealBtns">
     <button class="btn-again2" onclick="shakeAgain()">🌳 ขอพรอีกครั้ง</button>
     <button class="btn-close2" onclick="closeReveal()">ปิด</button>
@@ -358,6 +359,8 @@ function showReveal(colorKey, data, blessing){
   document.getElementById('revealCat').className = 'reveal-cat';
   document.getElementById('revealText').className = 'reveal-text';
   document.getElementById('revealBtns').className = 'reveal-btns';
+  document.getElementById('revealReward').style.opacity = '0';
+  document.getElementById('revealReward').textContent = '';
 
   const isGold = colorKey === 'yellow';
   document.getElementById('revealCat').textContent  = isGold ? `✦ ${data.label} — ถุงทอง! ✦` : `✦ ${data.label} ✦`;
@@ -390,14 +393,11 @@ async function giveTreeReward(colorKey) {
     });
     const data = await res.json();
     if (data.reward) {
-      // อัปเดต coin UI
       updateCoinUI(data.coins);
-      // แสดง coin pop
-      const pop = document.createElement('div');
-      pop.style.cssText = 'position:fixed;left:50%;bottom:35%;transform:translateX(-50%);font-size:22px;font-weight:800;color:#fbbf24;z-index:500;pointer-events:none;animation:treeCoinPop 1.4s ease-out forwards;white-space:nowrap;text-shadow:0 2px 8px rgba(0,0,0,0.5);';
-      pop.textContent = '+' + data.reward + ' 🪙';
-      document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 1500);
+      const rewardEl = document.getElementById('revealReward');
+      const bagLabel = colorKey === 'yellow' ? 'ถุงทอง' : 'ถุงนำโชค';
+      rewardEl.textContent = `✦ ${bagLabel}มอบรางวัล ${data.reward} เหรียญ ✦`;
+      rewardEl.style.opacity = '1';
     }
   } catch(e) { console.error('tree-reward error:', e); }
 }
