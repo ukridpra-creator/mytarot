@@ -19,7 +19,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
     import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -33,6 +33,9 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    setPersistence(auth, indexedDBLocalPersistence).catch(() => {
+      setPersistence(auth, browserLocalPersistence);
+    });
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
     let currentUser = null;
@@ -207,7 +210,7 @@
     </div>
 
     <div class="card" onclick="window.location.href='pages/foot.html'">
-      <div class="card-icon"><img src="images/icon-foot.png" alt="ดูลายเท้า"></div>
+      <div class="card-icon"><img src="images/icon-palm.png" alt="ดูลายเท้า"></div>
       <div class="card-title">ดูลายเท้า</div>
       <div class="card-desc">วิเคราะห์ดวงจากฝ่าเท้าตามศาสตร์จีนและตะวันตก เผยนิสัยและชะตา</div>
     </div>
