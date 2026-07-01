@@ -42,6 +42,8 @@ const SERVICE_COSTS = {
 "love-code": 10,
 "saju": 30,
 "saju-read": 0,
+"loshu": 20,
+"pinnacle": 20,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
