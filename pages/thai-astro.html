@@ -285,13 +285,27 @@ window.startReading = async function() {
   // ลัคนา
   var lagnaSign, lagnaType;
   if(hasTime){
-    var lagnaResult=calcLagna(yearCE,month,day,hour,min);
-    lagnaSign = lagnaResult.sign;
+  try {
+    var lagnaRes = await fetch('/api/lagna', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        year: yearCE, month: month, day: day,
+        hour: hour, minute: min,
+        lat: 13.752555, lon: 100.494066
+      })
+    });
+    var lagnaData = await lagnaRes.json();
+    lagnaSign = lagnaData.signIdx >= 0 ? lagnaData.signIdx : signs.sun;
     lagnaType = 'จากเวลาเกิด '+hour+':'+String(min).padStart(2,'0')+' น.';
-  } else {
+  } catch(e) {
     lagnaSign = signs.sun;
-    lagnaType = 'Solar Chart (ไม่มีเวลาเกิด)';
+    lagnaType = 'Solar Chart (fallback)';
   }
+} else {
+  lagnaSign = signs.sun;
+  lagnaType = 'Solar Chart (ไม่มีเวลาเกิด)';
+}
 
   // ฤกษ์
   var moonLon  = moonResult ? moonResult.lon : (signs.moon*30+15);
