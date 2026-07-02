@@ -44,6 +44,8 @@ const SERVICE_COSTS = {
 "saju-read": 0,
 "loshu": 20,
 "pinnacle": 20,
+"thai-astro": 99,
+"thai-astro-read": 0,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
