@@ -380,19 +380,18 @@ window.startReading = async function(){
     }
   });
 
-  var prompt='คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้เครื่องหมาย เช่น ดอกจัน แอท ชาแนล หรือสัญลักษณ์พิเศษ ใช้ emoji ได้ค่ะ\n\n'
-    +'ข้อมูลซาจู:\n'
+  var prompt='ข้อมูลซาจู:\n'
     +name1+' เกิด '+day1+'/'+month1+'/'+year1+' นักษัตร'+ZODIAC_TH[s1.zodiac]+' ธาตุ'+s1.element+'\n'
     +name2+' เกิด '+day2+'/'+month2+'/'+year2+' นักษัตร'+ZODIAC_TH[s2.zodiac]+' ธาตุ'+s2.element+'\n\n'
-    +'คะแนน: รวม '+scores.total+' อารมณ์ '+scores.emotion+' เสน่ห์ '+scores.romance+' การเงิน '+scores.finance+' ทัศนคติ '+scores.attitude+' ส่งเสริม '+scores.support+'\n\n'
-    +'ตอบในรูปแบบ XML tags ดังนี้ เนื้อหาละเอียด 3-4 ประโยคต่อหัวข้อ:\n\n'
-    +'<overall>ภาพรวมความเข้ากันของ'+name1+'และ'+name2+'</overall>\n\n'
-    +'<emotion>ด้านอารมณ์และความรัก</emotion>\n\n'
-    +'<romance>ด้านเสน่ห์และความดึงดูด</romance>\n\n'
-    +'<finance>ด้านการเงินและความมั่นคง</finance>\n\n'
-    +'<attitude>ด้านทัศนคติและการใช้ชีวิต</attitude>\n\n'
-    +'<support>ด้านการส่งเสริมกัน</support>\n\n'
-    +'<advice>คำแนะนำสำหรับคู่นี้และวิธีแก้เคล็ดถ้าดวงชง</advice>';
+    +'คะแนนความเข้ากัน: รวม '+scores.total+' อารมณ์ '+scores.emotion+' เสน่ห์ '+scores.romance+' การเงิน '+scores.finance+' ทัศนคติ '+scores.attitude+' ส่งเสริม '+scores.support+'\n\n'
+    +'วิเคราะห์กุงฮับของ'+name1+'และ'+name2+' โดยใส่เนื้อหาลงใน XML tags เหล่านี้ 3-4 ประโยคต่อ tag:\n'
+    +'<overall></overall>\n'
+    +'<emotion></emotion>\n'
+    +'<romance></romance>\n'
+    +'<finance></finance>\n'
+    +'<attitude></attitude>\n'
+    +'<support></support>\n'
+    +'<advice></advice>';
 
   try {
     var idToken2=await window._currentUser.getIdToken();
@@ -403,6 +402,7 @@ window.startReading = async function(){
         service:'gunghap',
         model:'claude-sonnet-4-6',
         max_tokens:6000,
+        system:'คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้ markdown ใช้ emoji ได้ ต้องใส่เนื้อหาลงใน XML tags เท่านั้น ห้ามมีข้อความนอก tag',
         messages:[{role:'user',content:prompt}]
       })
     });
