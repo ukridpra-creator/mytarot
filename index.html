@@ -14,9 +14,9 @@
     .login-required-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:20px; }
     .btn-login-now { width:100%; padding:14px; border-radius:16px; background:white; border:none; color:#333; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
     .btn-cancel-login { width:100%; padding:10px; margin-top:10px; border-radius:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .card-icon-emoji { font-size:36px; margin-bottom:8px; display:block; }
   </style>
   <script src="js/checkin.js"></script>
-
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -33,57 +33,35 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    setPersistence(auth, indexedDBLocalPersistence).catch(() => {
-      setPersistence(auth, browserLocalPersistence);
-    });
+    setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
-    let currentUser = null;
 
-    // ─── UPDATE COIN UI ───
     window.updateCoinUI = function(coins) {
       var badge = document.querySelector('.coin-badge');
       if (badge) badge.textContent = '🪙 ' + coins + ' เหรียญ';
     };
 
-    // ─── AVATAR ───
     function setAvatarDisplay(avatar) {
       var avatarEl = document.getElementById('avatarEl');
       if (!avatarEl) return;
       if (avatar && avatar.includes('.png')) {
         avatarEl.innerHTML = '<img src="' + avatar.replace('../','') + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-      } else {
-        avatarEl.textContent = avatar || '👤';
-      }
+      } else { avatarEl.textContent = avatar || '👤'; }
     }
 
-    // ─── AUTH ───
     onAuthStateChanged(auth, async user => {
-      currentUser = user;
       if (user) {
         try {
           var snap = await getDoc(doc(db, 'users', user.uid));
           var data = snap.exists() ? snap.data() : {};
-          var coins = data.coins !== undefined ? data.coins : 0;
-          var displayName = data.displayName || user.displayName || '';
-          var avatar = data.avatar || '';
-
-          updateCoinUI(coins);
-          setAvatarDisplay(avatar);
-
-          var guestView = document.getElementById('guestView');
-          var loggedView = document.getElementById('loggedView');
-          if (guestView) guestView.style.display = 'none';
-          if (loggedView) loggedView.style.display = 'block';
-          var menuName = document.getElementById('menuName');
-          var menuEmail = document.getElementById('menuEmail');
-          if (menuName) menuName.textContent = displayName;
-          if (menuEmail) menuEmail.textContent = user.email;
-
-          // setup checkin component
-          if (typeof setupCheckin === 'function') {
-            setupCheckin(user, '');
-          }
+          updateCoinUI(data.coins !== undefined ? data.coins : 0);
+          setAvatarDisplay(data.avatar || '');
+          document.getElementById('guestView').style.display = 'none';
+          document.getElementById('loggedView').style.display = 'block';
+          document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+          document.getElementById('menuEmail').textContent = user.email;
+          if (typeof setupCheckin === 'function') setupCheckin(user, '');
         } catch(e) { console.error(e); }
       } else {
         setAvatarDisplay('');
@@ -91,43 +69,25 @@
       }
     });
 
-    // ─── LOGIN / LOGOUT ───
-    window.loginGoogle = async function() {
-      try { await signInWithPopup(auth, provider); closeUserMenu(); }
-      catch(e) { console.error(e); }
-    };
-
-    window.loginNow = async function() {
-      try { await signInWithPopup(auth, provider); }
-      catch(e) { console.error(e); }
-    };
-
-    window.logout = async function() {
-      await signOut(auth);
-      closeUserMenu();
-      updateCoinUI(0);
-    };
+    window.loginGoogle = async function() { try { await signInWithPopup(auth, provider); closeUserMenu(); } catch(e) { console.error(e); } };
+    window.loginNow   = async function() { try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); } };
+    window.logout     = async function() { await signOut(auth); closeUserMenu(); updateCoinUI(0); };
   </script>
 </head>
 <body>
 
-<!-- ─── LOGIN MODAL ─── -->
 <div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="login-required-sheet">
-    <div class="login-required-icon">
-      <img src="images/mascot.png" style="width:120px;height:120px;object-fit:contain;">
-    </div>
+    <div><img src="images/mascot.png" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
     <div class="login-required-title">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
     <div class="login-required-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
     <button class="btn-login-now" onclick="loginNow();document.getElementById('loginRequiredOverlay').classList.remove('show')">
-      <img src="https://www.google.com/favicon.ico" width="18">
-      เข้าสู่ระบบด้วย Google
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
     </button>
     <button class="btn-cancel-login" onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')">ยกเลิก</button>
   </div>
 </div>
 
-<!-- ─── HEADER ─── -->
 <header class="header">
   <div class="logo">🔮 My Tarot</div>
   <div class="header-right">
@@ -138,14 +98,11 @@
   </div>
 </header>
 
-<!-- ─── USER MENU ─── -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
     <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button class="btn-google" onclick="loginGoogle()">
-      <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
-    </button>
+    <button class="btn-google" onclick="loginGoogle()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
     <div class="menu-user-info">
@@ -162,105 +119,102 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- ─── HERO ─── -->
 <section class="hero">
   <div class="hero-badge">✨ ทำนายด้วย AI + ตำราโบราณ</div>
   <h1>ค้นพบความจริง<br><span>ของชีวิตคุณ</span></h1>
   <p>เลือกศาสตร์ที่ต้องการ แล้วให้เราเปิดเผยเส้นทางชีวิต</p>
 </section>
 
-<!-- ─── GRID ─── -->
 <main class="main">
   <div class="grid">
 
+    <!-- ไพ่ทาโรต์ -->
     <div class="card" onclick="go('tarot')">
-      <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์"></div>
+      <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🃏</span>'"></div>
       <div class="card-title">ไพ่ทาโรต์</div>
       <div class="card-desc">เปิดไพ่รับคำทำนายจาก AI วิเคราะห์ความรัก การงาน การเงิน</div>
     </div>
 
+    <!-- ไพ่ออราเคิล -->
     <div class="card" onclick="go('oracle')">
-      <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล"></div>
+      <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌟</span>'"></div>
       <div class="card-title">ไพ่ออราเคิล</div>
       <div class="card-desc">รับสารจากจักรวาลและสิ่งศักดิ์สิทธิ์ที่ชี้นำเส้นทางคุณ</div>
     </div>
 
-    <div class="card" onclick="window.location.href='pages/free.html'">
-      <div class="card-icon"><img src="images/icon-free.png" alt="ดูดวงฟรี"></div>
-      <div class="card-title">ดูดวงฟรี</div>
-      <div class="card-desc">ดูดวง Yes/No ทำนายฝัน วันดี/วันห้าม และอื่นๆ ฟรีทั้งหมด</div>
-    </div>
-
-    <div class="card" onclick="go('deity')">
-      <div class="card-icon"><img src="images/icon-deity.png" alt="เทพประจำตัว"></div>
-      <div class="card-title">เทพประจำตัว</div>
-      <div class="card-desc">ค้นหาเทพที่คุ้มครองดวงชะตา พร้อมคำแนะนำจากเทพ</div>
-    </div>
-
-    <div class="card" onclick="go('saju')">
-      <div class="card-icon"><img src="images/icon-saju.png" alt="ซาจูเกาหลี"></div>
-      <div class="card-title">ซาจูเกาหลี</div>
-      <div class="card-desc">โชคชะตาเกาหลีโบราณ วิเคราะห์จากวันเดือนปีเกิด</div>
-    </div>
-
-    <div class="card" onclick="go('palm')">
-      <div class="card-icon"><img src="images/icon-palm.png" alt="ลายมือ"></div>
-      <div class="card-title">ดูลายมือ</div>
-      <div class="card-desc">เส้นมือบอกชะตา วิเคราะห์เส้นชีวิตและโชคลาภด้วย AI</div>
-    </div>
-
-    <div class="card" onclick="window.location.href='pages/foot.html'">
-      <div class="card-icon"><img src="images/icon-palm.png" alt="ดูลายเท้า"></div>
-      <div class="card-title">ดูลายเท้า</div>
-      <div class="card-desc">วิเคราะห์ดวงจากฝ่าเท้าตามศาสตร์จีนและตะวันตก เผยนิสัยและชะตา</div>
-    </div>
-
-    <div class="card" onclick="go('face')">
-      <div class="card-icon"><img src="images/icon-face.png" alt="โหงวเฮ้ง"></div>
-      <div class="card-title">โหงวเฮ้ง</div>
-      <div class="card-desc">วิเคราะห์ดวงจากใบหน้าตามศาสตร์จีน เผยโชคลาภอนาคต</div>
-    </div>
-
-    <div class="card" onclick="window.location.href='pages/divination.html'">
-      <div class="card-icon"><img src="images/icon-divination.png" alt="การทำนาย"></div>
-      <div class="card-title">การทำนาย</div>
-      <div class="card-desc">เซียมซีญี่ปุ่น กวนอิม และศาสตร์ทำนายหลากวัฒนธรรม</div>
-    </div>
-
-    <div class="card" onclick="go('numerology')">
-      <div class="card-icon"><img src="images/icon-numerology.png" alt="เลขศาสตร์"></div>
+    <!-- เลขศาสตร์ -->
+    <div class="card" onclick="window.location.href='pages/number-hub.html'">
+      <div class="card-icon"><img src="images/icon-number.png" alt="เลขศาสตร์" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🔢</span>'"></div>
       <div class="card-title">เลขศาสตร์</div>
       <div class="card-desc">ความลับในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อ</div>
     </div>
 
-    <div class="card" onclick="go('iching')">
-      <div class="card-icon"><img src="images/icon-iching.png" alt="อี้จิง"></div>
-      <div class="card-title">อี้จิง</div>
-      <div class="card-desc">ปัญญาจีน 3,000 ปี รับคำตอบจากคัมภีร์แห่งการเปลี่ยนแปลง</div>
+    <!-- ศาสตร์ร่างกาย -->
+    <div class="card" onclick="window.location.href='pages/body-hub.html'">
+      <div class="card-icon"><img src="images/icon-body.png" alt="ศาสตร์ร่างกาย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🤲</span>'"></div>
+      <div class="card-title">ศาสตร์ร่างกาย</div>
+      <div class="card-desc">ดูลายมือ ลายเท้า โหงวเฮ้ง อ่านดวงจากร่างกายของคุณ</div>
     </div>
 
-    <div class="card" onclick="go('rune')">
-      <div class="card-icon"><img src="images/icon-rune.png" alt="ไพ่รูน"></div>
-      <div class="card-title">ไพ่รูน</div>
-      <div class="card-desc">อักษรนอร์สโบราณ เผยความจริงที่ซ่อนอยู่แห่งชะตา</div>
+    <!-- โหราศาสตร์ไทย -->
+    <div class="card" onclick="window.location.href='pages/thai-hub.html'">
+      <div class="card-icon"><img src="images/icon-thai.png" alt="โหราศาสตร์ไทย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇹🇭</span>'"></div>
+      <div class="card-title">โหราศาสตร์ไทย 🇹🇭</div>
+      <div class="card-desc">สุริยยาตร์ เลข 7 ตัว ทักษา ตรีวัย ศาสตร์ไทยโบราณ</div>
     </div>
 
+    <!-- โหราศาสตร์เกาหลี -->
+    <div class="card" onclick="window.location.href='pages/korean.html'">
+      <div class="card-icon"><img src="images/icon-korean.png" alt="โหราศาสตร์เกาหลี" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇰🇷</span>'"></div>
+      <div class="card-title">โหราศาสตร์เกาหลี 🇰🇷</div>
+      <div class="card-desc">ซาจู กุงฮับ ซัมแจ ศาสตร์เกาหลีโบราณแห่งชะตา</div>
+    </div>
+
+    <!-- โหราศาสตร์จีน -->
+    <div class="card" onclick="go('chinese')">
+      <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇨🇳</span>'"></div>
+      <div class="card-title">โหราศาสตร์จีน 🇨🇳</div>
+      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา ห้าธาตุ เปิดเผยดวงชะตาตลอดชีวิต</div>
+    </div>
+
+    <!-- โหราศาสตร์ตะวันตก -->
     <div class="card" onclick="go('western')">
-      <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก"></div>
-      <div class="card-title">โหราศาสตร์ตะวันตก</div>
+      <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌍</span>'"></div>
+      <div class="card-title">โหราศาสตร์ตะวันตก 🌍</div>
       <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์จากตำแหน่งดาวเคราะห์</div>
     </div>
 
-    <div class="card" onclick="go('chinese')">
-      <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน"></div>
-      <div class="card-title">โหราศาสตร์จีน</div>
-      <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา เปิดเผยดวงชะตาตลอดชีวิต</div>
+    <!-- โหราศาสตร์อินเดีย -->
+    <div class="card" onclick="go('indian')">
+      <div class="card-icon"><img src="images/icon-indian.png" alt="โหราศาสตร์อินเดีย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇮🇳</span>'"></div>
+      <div class="card-title">โหราศาสตร์อินเดีย 🇮🇳</div>
+      <div class="card-desc">เวทิก โหราศาสตร์อินเดียโบราณ ดาวนพเคราะห์และราศี</div>
+    </div>
+
+    <!-- โหราศาสตร์อื่นๆ -->
+    <div class="card" onclick="go('other-astro')">
+      <div class="card-icon"><img src="images/icon-other-astro.png" alt="โหราศาสตร์อื่นๆ" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>✨</span>'"></div>
+      <div class="card-title">โหราศาสตร์อื่นๆ ✨</div>
+      <div class="card-desc">มายัน อาหรับ เซลติก และศาสตร์ดูดวงจากทั่วโลก</div>
+    </div>
+
+    <!-- ศาสตร์เสี่ยงทาย -->
+    <div class="card" onclick="window.location.href='pages/divination.html'">
+      <div class="card-icon"><img src="images/icon-divination.png" alt="ศาสตร์เสี่ยงทาย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎴</span>'"></div>
+      <div class="card-title">ศาสตร์เสี่ยงทาย</div>
+      <div class="card-desc">เซียมซี กวนอิม โอมิคุจิ อี้จิง ไพ่รูน เสี่ยงทายหลากวัฒนธรรม</div>
+    </div>
+
+    <!-- กิจกรรม -->
+    <div class="card" onclick="go('activity')">
+      <div class="card-icon"><img src="images/icon-activity.png" alt="กิจกรรม" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎪</span>'"></div>
+      <div class="card-title">กิจกรรม</div>
+      <div class="card-desc">มินิเกม ทดสอบดวง และกิจกรรมสนุกๆ อีกมากมาย</div>
     </div>
 
   </div>
 </main>
 
-<!-- ─── FOOTER ─── -->
 <footer style="background:rgba(10,6,8,0.95);border-top:1px solid rgba(212,175,55,0.15);padding:32px 20px 100px;text-align:center;position:relative;z-index:1;">
   <div style="font-size:20px;margin-bottom:8px;">🔮 My Tarot</div>
   <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;letter-spacing:1px;">ดูดวงออนไลน์ด้วย · ไพ่ทาโรต์ · ไพ่ออราเคิล · เซียมซี · โหราศาสตร์</div>
@@ -272,27 +226,14 @@
   <div style="font-size:10px;color:rgba(255,255,255,0.2);">© 2026 MyTarot.vip · All rights reserved</div>
 </footer>
 
-<!-- ─── BOTTOM NAV ─── -->
 <nav class="bottom-nav">
-  <div class="nav-item active" onclick="window.location.href='index.html'">
-    <span>🏠</span><span>หน้าหลัก</span>
-  </div>
-  <div class="nav-item" onclick="window.location.href='pages/history.html'">
-    <span>📜</span><span>ประวัติ</span>
-  </div>
-  <div class="nav-item" onclick="openCheckin()">
-    <span>🎁</span><span>เช็คอิน</span>
-  </div>
-  <div class="nav-item" onclick="window.location.href='pages/coins.html'">
-    <span>🪙</span><span>เหรียญ</span>
-  </div>
-  <div class="nav-item" onclick="window.location.href='pages/profile.html'">
-    <span>👤</span><span>โปรไฟล์</span>
-  </div>
+  <div class="nav-item active" onclick="window.location.href='index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='pages/history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='pages/coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='pages/profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
 
-<!-- ─── SCRIPTS ─── -->
 <script src="js/main.js"></script>
-
 </body>
 </html>
