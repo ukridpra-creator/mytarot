@@ -325,21 +325,7 @@ window.startReading = async function(){
   var btn=document.getElementById('readBtn');
   btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
 
-  try {
-    var idToken=await window._currentUser.getIdToken();
-    var res=await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'gunghap',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'x'}]})
-    });
-    var newBal=res.headers.get('X-New-Coin-Balance');
-    if(newBal!=null) updateCoinUI(parseInt(newBal));
-    if(!res.ok){
-      var err=await res.json().catch(()=>({}));
-      alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
-      btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
-    }
-  } catch(e){ console.error(e); btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
+
 
   var s1=getSaju(year1,month1,day1);
   var s2=getSaju(year2,month2,day2);
@@ -415,13 +401,19 @@ window.startReading = async function(){
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken2},
       body:JSON.stringify({
-        service:'gunghap-read',
+        service:'gunghap',
         model:'claude-sonnet-4-6',
         max_tokens:6000,
         messages:[{role:'user',content:prompt}]
       })
     });
-    if(!resp.ok){ btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
+    var newBal=resp.headers.get('X-New-Coin-Balance');
+    if(newBal!=null) updateCoinUI(parseInt(newBal));
+    if(!resp.ok){
+      var err=await resp.json().catch(()=>({}));
+      alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
+    }
 
     var reader=resp.body.getReader();
     var decoder=new TextDecoder();
