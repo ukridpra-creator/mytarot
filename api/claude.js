@@ -46,6 +46,8 @@ const SERVICE_COSTS = {
 "pinnacle": 20,
 "thai-astro": 99,
 "thai-astro-read": 0,
+'gunghap': 59,
+'gunghap-read': 0,
 };
 
 // ตั้งเป็นโดเมนจริงของเว็บ (ใส่ใน .env: ALLOWED_ORIGIN=https://yourdomain.com)
