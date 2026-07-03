@@ -57,6 +57,7 @@ const SERVICE_COSTS = {
   "thai-astro-read": 0,
   "gunghap":        TIER.T39,
   "gunghap-read":   TIER.FREE,
+  "tojung": TIER.T29,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
