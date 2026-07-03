@@ -1,109 +1,75 @@
 // pages/api/lagna.js
-// คำนวณลัคนาด้วย Prokerala API
-// รับ: { year, month, day, hour, minute, lat, lon } (CE, UTC+7)
-// ส่งกลับ: { sign, deg, min, signIdx }
+// Proxy fetch myhora แล้ว parse ลัคนา
+// รับ: { year (BE), month, day, hour, minute, lat, lon }
+
+const SIGNS_TH = ['เมษ','พฤษภ','มิถุน','กรกฏ','สิงห์','กันย์','ตุลย์','พิจิก','ธนู','มกร','กุมภ์','มีน'];
+
+export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).end();
-  }
-
   res.setHeader('Access-Control-Allow-Origin', '*');
-
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
   let body;
   try {
     body = await new Promise((resolve, reject) => {
       let data = '';
-      req.on('data', chunk => data += chunk);
-      req.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { reject(e); } });
+      req.on('data', c => data += c);
+      req.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { reject(e); }});
       req.on('error', reject);
     });
-  } catch(e) {
-    return res.status(400).json({ error: 'invalid_body' });
-  }
+  } catch(e) { return res.status(400).json({ error: 'invalid_body' }); }
 
   const { year, month, day, hour, minute, lat, lon } = body;
   if (!year || !month || !day) return res.status(400).json({ error: 'missing_params' });
 
+  const yearBE = year > 2300 ? year : year + 543;
+  const h  = hour   ?? 12;
+  const mn = minute ?? 0;
+  const latitude  = lat || 13.752555;
+  const longitude = lon || 100.494066;
+
   try {
-    // Step 1: Get Prokerala token
-    const tokenRes = await fetch('https://api.prokerala.com/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        grant_type: 'client_credentials',
-        client_id: process.env.PROKERALA_CLIENT_ID,
-        client_secret: process.env.PROKERALA_CLIENT_SECRET,
-      }),
-    });
-    const tokenData = await tokenRes.json();
-    const token = tokenData.access_token;
-    if (!token) throw new Error('no_token');
+    // URL ผูกดวง myhora
+    const url = `https://myhora.com/astrology/thai.aspx?yr=${yearBE}&mt=${month}&dt=${day}&hr=${h}&mi=${mn}&lat=${latitude}&lon=${longitude}&tz=7`;
 
-    // Step 2: Format datetime UTC+7
-    const h  = hour   || 0;
-    const mn = minute || 0;
-    const datetime = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}T${String(h).padStart(2,'0')}:${String(mn).padStart(2,'0')}:00+07:00`;
-
-    // lat/lon default กรุงเทพ
-    const latitude  = lat || 13.752555;
-    const longitude = lon || 100.494066;
-    const coords    = `${latitude},${longitude}`;
-
-    // Step 3: Call birth-details
-    const params = new URLSearchParams({
-      ayanamsa: 1,  // Lahiri
-      coordinates: coords,
-      datetime: datetime,
+    const resp = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'th-TH,th;q=0.9',
+        'Referer': 'https://myhora.com/astrology/thai.aspx',
+      }
     });
 
-    const astroRes = await fetch(
-      `https://api.prokerala.com/v2/astrology/birth-details?${params}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const astroData = await astroRes.json();
+    if (!resp.ok) throw new Error(`myhora_${resp.status}`);
+    const html = await resp.text();
 
-    if (!astroData.data) throw new Error('no_data');
+    let signIdx = -1, deg = 0, min = 0;
 
-    // Parse ascendant
-    const asc = astroData.data.ascendant;
-    // Prokerala returns: { id, name, longitude, ... }
-    // longitude in degrees (sidereal)
-
-    const SIGNS = ['เมษ','พฤษภ','มิถุน','กรกฏ','สิงห์','กันย์','ตุลย์','พิจิก','ธนู','มกร','กุมภ์','มีน'];
-
-    let signIdx, signName, deg, min;
-
-    if (asc && asc.longitude !== undefined) {
-      const lon_deg = asc.longitude;
-      signIdx  = Math.floor(lon_deg / 30);
-      const d  = lon_deg % 30;
-      deg  = Math.floor(d);
-      min  = Math.floor((d - deg) * 60);
-      signName = SIGNS[signIdx] || asc.name || '?';
-    } else if (asc && asc.name) {
-      // fallback: use name
-      signName = asc.name;
-      signIdx  = SIGNS.indexOf(signName);
-      deg = 0; min = 0;
-    } else {
-      throw new Error('no_ascendant');
+    // parse ลัคนา: "ลัคนาสถิตราศีตุล"
+    const m1 = html.match(/ลัคนาสถิตราศี([\u0E00-\u0E7F]+)/);
+    if (m1) {
+      const s = m1[1];
+      signIdx = SIGNS_TH.findIndex(sign => s.startsWith(sign));
     }
 
-    return res.status(200).json({
-      sign:     signName,
-      signIdx:  signIdx,
-      deg:      deg,
-      min:      min,
-      raw:      asc,
-    });
+    // parse องศา
+    if (signIdx >= 0) {
+      const m2 = html.match(/ลัคนา[^<]{0,100}?(\d{1,2})[°]\s*(\d{1,2})/);
+      if (m2) { deg = parseInt(m2[1]); min = parseInt(m2[2]); }
+    }
+
+    if (signIdx < 0) {
+      // debug: ส่ง snippet กลับมาดู
+      const snippet = html.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').substring(0,500);
+      return res.status(500).json({ error: 'parse_failed', snippet });
+    }
+
+    return res.status(200).json({ sign: SIGNS_TH[signIdx], signIdx, deg, min });
 
   } catch(e) {
-    console.error('lagna error:', e);
-    return res.status(500).json({ error: e.message || 'server_error' });
+    return res.status(500).json({ error: e.message });
   }
 }
