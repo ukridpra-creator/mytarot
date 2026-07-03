@@ -211,7 +211,7 @@ onAuthStateChanged(auth, async user => {
   } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   var dayEl=document.getElementById('inDay');
   for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
   var months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var yearEl=document.getElementById('inYear');
   var curY=new Date().getFullYear()+543;
   for(var y=curY;y>=2480;y--){var o=document.createElement('option');o.value=y;o.textContent='พ.ศ.'+y;yearEl.appendChild(o);}
-});
+})();
 
 // ─── ข้อมูลซัมแจ ───
 var ZODIAC = [
