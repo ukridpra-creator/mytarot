@@ -254,7 +254,7 @@ window.checkTojung=async function(){
       alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
       btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return;
     }
-  } catch(e){ btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return; }
+  } catch(e){ console.error(e); alert('เกิดข้อผิดพลาดค่ะ'); btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return; }
 
   document.getElementById('zodiacEmoji').textContent=ZODIAC_EMOJI[zIdx];
   document.getElementById('zodiacName').textContent='ปีเกิด: '+ZODIAC_TH[zIdx]+' ค.ศ.'+birthYearCE;
