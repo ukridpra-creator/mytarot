@@ -176,7 +176,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -333,6 +333,7 @@ window.startReading = async function(){
 
   document.getElementById('resultBox').style.display='block';
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+  initSections();
 
   document.getElementById('totalScore').textContent=scores.total;
   var desc=scores.total>=85?'เข้ากันอย่างลงตัว 💕':scores.total>=70?'เข้ากันได้ดี 💖':scores.total>=55?'พอเข้ากันได้ 💛':scores.total>=40?'ต้องปรับตัวกัน 💙':'ท้าทายพอสมควร 🤍';
@@ -379,8 +380,6 @@ window.startReading = async function(){
     }
   });
 
-  initSections();
-
   var prompt='คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้เครื่องหมาย เช่น ดอกจัน แอท ชาแนล หรือสัญลักษณ์พิเศษ ใช้ emoji ได้ค่ะ\n\n'
     +'ข้อมูลซาจู:\n'
     +name1+' เกิด '+day1+'/'+month1+'/'+year1+' นักษัตร'+ZODIAC_TH[s1.zodiac]+' ธาตุ'+s1.element+'\n'
@@ -425,6 +424,18 @@ window.startReading = async function(){
       parseAndRender(fullText, false);
     }
     parseAndRender(fullText, true);
+
+    // บันทึกประวัติ
+    if(window._currentUser){
+      addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+        type:'กุงฮับ ดูดวงคู่รัก',
+        person1: name1+' ('+ZODIAC_TH[s1.zodiac]+')',
+        person2: name2+' ('+ZODIAC_TH[s2.zodiac]+')',
+        score: scores.total,
+        result: fullText,
+        createdAt: serverTimestamp()
+      }).catch(function(){});
+    }
 
   } catch(e){ console.error(e); }
 
