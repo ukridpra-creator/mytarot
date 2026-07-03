@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ซัมแจ ปีซวย — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom:80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:12px 0 28px; }
+    .hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#d4af37; margin-bottom:4px; letter-spacing:2px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:#d4af37; font-weight:700; margin-bottom:10px; display:block; letter-spacing:1px; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:#d4af37; }
+
+    .btn-check { width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; letter-spacing:1px; }
+    .btn-check:hover { opacity:0.9; }
+
+    #resultBox { display:none; }
+
+    /* zodiac card */
+    .zodiac-card { border-radius:20px; padding:24px; margin-bottom:16px; text-align:center; }
+    .zodiac-safe { background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05)); border:1px solid rgba(16,185,129,0.3); }
+    .zodiac-warn { background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05)); border:1px solid rgba(239,68,68,0.3); }
+    .zodiac-emoji { font-size:56px; margin-bottom:12px; }
+    .zodiac-name { font-size:24px; font-weight:800; color:white; margin-bottom:4px; }
+    .zodiac-year { font-size:13px; color:var(--dim); margin-bottom:16px; }
+    .status-badge { display:inline-block; padding:8px 24px; border-radius:20px; font-size:15px; font-weight:800; }
+    .badge-safe { background:rgba(16,185,129,0.2); color:#10b981; border:1px solid rgba(16,185,129,0.4); }
+    .badge-warn { background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid rgba(239,68,68,0.4); }
+    .badge-light { background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); }
+
+    /* year timeline */
+    .timeline { margin-bottom:16px; }
+    .timeline-title { font-size:12px; color:#d4af37; font-weight:700; letter-spacing:1.5px; margin-bottom:12px; text-align:center; }
+    .year-row { display:flex; gap:8px; margin-bottom:8px; }
+    .year-card { flex:1; border-radius:14px; padding:14px 8px; text-align:center; border:1px solid; }
+    .year-card.safe  { background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.3); }
+    .year-card.warn1 { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3); }
+    .year-card.warn2 { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
+    .year-card.warn3 { background:rgba(245,158,11,0.08); border-color:rgba(245,158,11,0.3); }
+    .year-be { font-size:13px; font-weight:800; color:white; margin-bottom:2px; }
+    .year-animal { font-size:18px; margin-bottom:4px; }
+    .year-label { font-size:10px; }
+    .year-card.safe .year-label  { color:#10b981; }
+    .year-card.warn1 .year-label { color:#f59e0b; }
+    .year-card.warn2 .year-label { color:#ef4444; }
+    .year-card.warn3 .year-label { color:#f59e0b; }
+
+    /* info sections */
+    .info-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .info-section h3 { font-size:14px; font-weight:700; margin-bottom:10px; }
+    .info-section p { font-size:13px; line-height:2; color:rgba(255,255,255,0.8); }
+    .sec-what   { background:rgba(168,85,247,0.08); border-color:#a855f7; }
+    .sec-what h3 { color:#a855f7; }
+    .sec-care   { background:rgba(239,68,68,0.08); border-color:#ef4444; }
+    .sec-care h3 { color:#ef4444; }
+    .sec-fix    { background:rgba(16,185,129,0.08); border-color:#10b981; }
+    .sec-fix h3 { color:#10b981; }
+    .sec-safe   { background:rgba(16,185,129,0.08); border-color:#10b981; }
+    .sec-safe h3 { color:#10b981; }
+
+    .free-badge { display:inline-block; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:4px 14px; font-size:11px; font-weight:700; margin-bottom:16px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="korean.html" class="back-btn">←</a>
+  <div class="page-title">⚡ ซัมแจ ปีซวย</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">⚡</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อใช้งานได้เลยค่ะ</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').style.display='none'" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-samjae.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">삼재 ซัมแจ</div>
+    <div class="hero-desc">เช็กปีซวย 3 ปีติดของคุณพี่ตามศาสตร์เกาหลีค่ะ<br>รู้ไว้ระวังตัวได้ทันค่ะ</div>
+    <div style="margin-top:12px"><span class="free-badge">ฟรี ไม่เสียเหรียญ</span></div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิดคุณพี่</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <button class="btn-check" onclick="checkSamjae()">⚡ เช็กซัมแจเลย</button>
+
+  <div id="resultBox">
+
+    <div class="zodiac-card" id="zodiacCard">
+      <div class="zodiac-emoji" id="zodiacEmoji"></div>
+      <div class="zodiac-name" id="zodiacName"></div>
+      <div class="zodiac-year" id="zodiacYear"></div>
+      <span class="status-badge" id="statusBadge"></span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-title">✦ ปีซัมแจของคุณพี่ ✦</div>
+      <div class="year-row" id="yearRow"></div>
+    </div>
+
+    <div id="infoSections"></div>
+
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+
+window._currentUser = null;
+window.updateCoinUI = function(c) { document.getElementById('coinCount').textContent = c; };
+function setAvatarDisplay(a) {
+  var el=document.getElementById('avatarEl'); if(!el) return;
+  if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent=a||'👤';
+}
+window.loginNow  = async function(){ try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){} };
+window.logoutNow = async function(){ await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  window._currentUser = user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear()+543;
+  for(var y=curY;y>=2480;y--){var o=document.createElement('option');o.value=y;o.textContent='พ.ศ.'+y;yearEl.appendChild(o);}
+});
+
+// ─── ข้อมูลซัมแจ ───
+var ZODIAC = [
+  {th:'หนู',  emoji:'🐭', ko:'쥐'},
+  {th:'วัว',  emoji:'🐮', ko:'소'},
+  {th:'เสือ', emoji:'🐯', ko:'호랑이'},
+  {th:'กระต่าย',emoji:'🐰',ko:'토끼'},
+  {th:'มังกร',emoji:'🐲',ko:'용'},
+  {th:'งู',   emoji:'🐍', ko:'뱀'},
+  {th:'ม้า',  emoji:'🐴', ko:'말'},
+  {th:'แพะ',  emoji:'🐏', ko:'양'},
+  {th:'ลิง',  emoji:'🐵', ko:'원숭이'},
+  {th:'ไก่',  emoji:'🐔', ko:'닭'},
+  {th:'หมา',  emoji:'🐶', ko:'개'},
+  {th:'หมู',  emoji:'🐷', ko:'돼지'},
+];
+
+// กลุ่มซัมแจ — แต่ละกลุ่มเจอปีซวย 3 ปีของกลุ่มตรงข้าม
+// กลุ่ม [หนู=0,วัว=1,งู=5] → เจอซวยปี [ม้า=6,แพะ=7,ลิง=8]
+// กลุ่ม [เสือ=2,กระต่าย=3,มังกร=4] → เจอซวยปี [ไก่=9,หมา=10,หมู=11]
+// กลุ่ม [ม้า=6,แพะ=7,ลิง=8] → เจอซวยปี [หนู=0,วัว=1,เสือ=2]
+// กลุ่ม [ไก่=9,หมา=10,หมู=11] → เจอซวยปี [เสือ=2,กระต่าย=3,มังกร=4]
+
+var SAMJAE_MAP = {
+  0: [6,7,8],   // หนู → ม้า แพะ ลิง
+  1: [6,7,8],   // วัว → ม้า แพะ ลิง
+  5: [6,7,8],   // งู  → ม้า แพะ ลิง
+  2: [9,10,11], // เสือ → ไก่ หมา หมู
+  3: [9,10,11], // กระต่าย → ไก่ หมา หมู
+  4: [9,10,11], // มังกร → ไก่ หมา หมู
+  6: [0,1,2],   // ม้า → หนู วัว เสือ
+  7: [0,1,2],   // แพะ → หนู วัว เสือ
+  8: [0,1,2],   // ลิง → หนู วัว เสือ
+  9: [2,3,4],   // ไก่ → เสือ กระต่าย มังกร
+  10:[2,3,4],   // หมา → เสือ กระต่าย มังกร
+  11:[2,3,4],   // หมู → เสือ กระต่าย มังกร
+};
+
+var SAMJAE_INFO = {
+  care: [
+    'ด้านสุขภาพ — ระวังอุบัติเหตุและเจ็บป่วยโดยไม่คาดคิดค่ะ ดูแลตัวเองให้มากขึ้นนะคะ',
+    'ด้านการเงิน — ระวังการลงทุนเสี่ยง การสูญเสียทรัพย์สิน และหนี้สินค่ะ',
+    'ด้านความสัมพันธ์ — อาจเกิดความขัดแย้งกับคนรอบข้าง ควรระวังคำพูดค่ะ',
+    'ด้านการงาน — อาจเจอปัญหาหรืออุปสรรคที่คาดไม่ถึง ต้องอดทนค่ะ',
+  ],
+  fix: [
+    'สวดมนต์หรือทำบุญให้มากขึ้นในปีซัมแจค่ะ',
+    'ทำพิธีแก้ซัมแจ (삼재풀이) กับหมอดูเกาหลีค่ะ',
+    'ห้ามย้ายบ้านหรือเริ่มกิจการใหม่ในปีซัมแจค่ะ',
+    'พกสิ่งมงคลประจำตัว เช่น หยกสีเขียวหรือแหวนทองค่ะ',
+    'ระวังการเดินทางไกล โดยเฉพาะปีซัมแจกลางค่ะ',
+  ]
+};
+
+function getZodiacIndex(yearBE) {
+  var year = yearBE - 543;
+  return ((year - 4) % 12 + 12) % 12;
+}
+
+function getYearZodiac(yearBE) {
+  var year = yearBE - 543;
+  return ((year - 4) % 12 + 12) % 12;
+}
+
+window.checkSamjae = function() {
+  if(!window._currentUser){
+    document.getElementById('loginRequiredOverlay').style.display='flex';
+    return;
+  }
+
+  var yearBE = parseInt(document.getElementById('inYear').value);
+  var month  = parseInt(document.getElementById('inMonth').value);
+  var day    = parseInt(document.getElementById('inDay').value);
+
+  // นักษัตรปีเกิด
+  var zIdx = getZodiacIndex(yearBE);
+  var z    = ZODIAC[zIdx];
+
+  // ปีซัมแจ (zodiac index)
+  var samjaeZiIdx = SAMJAE_MAP[zIdx]; // [z1,z2,z3]
+
+  // ปี CE ปัจจุบัน
+  var nowYear = new Date().getFullYear();
+  var nowYearBE = nowYear + 543;
+
+  // หาปี BE ที่เป็นปีซัมแจถัดไป (หรือปัจจุบัน)
+  // หาปี CE ที่นักษัตรตรงกับ samjaeZiIdx[0]
+  function findSamjaeStartYear(fromYearCE) {
+    for(var y=fromYearCE-5; y<=fromYearCE+20; y++){
+      var zi=((y-4)%12+12)%12;
+      if(zi===samjaeZiIdx[0]) return y+543; // return BE
+    }
+    return fromYearCE+543;
+  }
+
+  // หาปีซัมแจที่ใกล้ปัจจุบันที่สุด (อาจกำลังอยู่ในช่วงซัมแจ)
+  var samjaeYears = [];
+  for(var offset=-12; offset<=24; offset+=12){
+    var sy = findSamjaeStartYear(nowYear+offset) - 543; // CE
+    if(samjaeYears.indexOf(sy)===-1) samjaeYears.push(sy);
+  }
+  samjaeYears.sort(function(a,b){return a-b;});
+
+  // หาช่วงซัมแจที่ครอบคลุมปีปัจจุบัน หรือถัดไป
+  var targetStart = null;
+  for(var i=0;i<samjaeYears.length;i++){
+    if(samjaeYears[i]+2 >= nowYear){ // ปีซัมแจ 3 ปี: start, start+1, start+2
+      targetStart = samjaeYears[i];
+      break;
+    }
+  }
+  if(!targetStart) targetStart = samjaeYears[samjaeYears.length-1];
+
+  var y1 = targetStart,     y1BE = y1+543;
+  var y2 = targetStart+1,   y2BE = y2+543;
+  var y3 = targetStart+2,   y3BE = y3+543;
+
+  var z1 = ZODIAC[((y1-4)%12+12)%12];
+  var z2 = ZODIAC[((y2-4)%12+12)%12];
+  var z3 = ZODIAC[((y3-4)%12+12)%12];
+
+  // สถานะปัจจุบัน
+  var inSamjae = (nowYear>=y1 && nowYear<=y3);
+  var samjaePhase = inSamjae ? (nowYear-y1) : -1; // 0=เข้า 1=กลาง 2=ออก
+
+  // แสดง zodiac card
+  document.getElementById('zodiacEmoji').textContent = z.emoji;
+  document.getElementById('zodiacName').textContent  = 'ปีนักษัตร'+z.th+' '+z.ko;
+  document.getElementById('zodiacYear').textContent  = 'เกิดปี พ.ศ.'+yearBE+' (ค.ศ.'+(yearBE-543)+')';
+
+  var card   = document.getElementById('zodiacCard');
+  var badge  = document.getElementById('statusBadge');
+  if(inSamjae){
+    card.className='zodiac-card zodiac-warn';
+    var phaseText=['ซัมแจเข้า ปีที่ 1','ซัมแจกลาง ปีที่ 2 หนักสุด','ซัมแจออก ปีที่ 3'][samjaePhase];
+    badge.className='status-badge badge-warn';
+    badge.textContent='⚡ กำลังอยู่ในช่วงซัมแจ — '+phaseText;
+  } else {
+    card.className='zodiac-card zodiac-safe';
+    badge.className='status-badge badge-safe';
+    badge.textContent='✅ ปลอดภัย ยังไม่ถึงซัมแจค่ะ';
+  }
+
+  // year timeline
+  var yearRowHtml='';
+  var years=[{y:y1BE,z:z1,cls:'warn1',label:'ซัมแจเข้า'},{y:y2BE,z:z2,cls:'warn2',label:'กลาง หนักสุด'},{y:y3BE,z:z3,cls:'warn3',label:'ซัมแจออก'}];
+  years.forEach(function(yr){
+    var highlight=inSamjae&&(nowYear===(yr.y-543))?'border-width:2px;':'';
+    yearRowHtml+='<div class="year-card '+yr.cls+'" style="'+highlight+'">'
+      +'<div class="year-be">พ.ศ.'+yr.y+'</div>'
+      +'<div class="year-animal">'+yr.z.emoji+'</div>'
+      +'<div class="year-label">'+yr.label+'</div>'
+      +'</div>';
+  });
+  document.getElementById('yearRow').innerHTML=yearRowHtml;
+
+  // info sections
+  var careHtml=SAMJAE_INFO.care.map(function(c){return c;}).join('<br>');
+  var fixHtml=SAMJAE_INFO.fix.map(function(f){return f;}).join('<br>');
+
+  var sectionsHtml='';
+  if(inSamjae){
+    sectionsHtml+=
+      '<div class="info-section sec-what"><h3>⚡ ซัมแจคืออะไรคะ</h3><p>ซัมแจ คือช่วงเวลา 3 ปีติดกันที่ดวงชะตาของคุณพี่อาจเผชิญกับความท้าทายและอุปสรรคมากกว่าปกติค่ะ ไม่ใช่เรื่องน่ากลัวเกินไป แค่รู้ไว้ระวังตัวได้ทันค่ะ</p></div>'
+      +'<div class="info-section sec-care"><h3>⚠️ สิ่งที่ควรระวังในช่วงซัมแจค่ะ</h3><p>'+careHtml+'</p></div>'
+      +'<div class="info-section sec-fix"><h3>🌿 วิธีแก้เคล็ดซัมแจค่ะ</h3><p>'+fixHtml+'</p></div>';
+  } else {
+    var yearsLeft=y1-nowYear;
+    sectionsHtml+=
+      '<div class="info-section sec-safe"><h3>✅ ปลอดภัยค่ะ</h3><p>คุณพี่ยังไม่ได้อยู่ในช่วงซัมแจค่ะ ซัมแจจะมาถึงในอีก '+yearsLeft+' ปีข้างหน้า คือปี พ.ศ.'+y1BE+' ค่ะ เตรียมตัวรับมือล่วงหน้าได้เลยนะคะ</p></div>'
+      +'<div class="info-section sec-what"><h3>⚡ ซัมแจคืออะไรคะ</h3><p>ซัมแจ คือช่วงเวลา 3 ปีติดกันที่ดวงชะตาอาจเจออุปสรรคมากกว่าปกติค่ะ รู้ไว้ล่วงหน้าดีกว่าตั้งรับทันค่ะ</p></div>'
+      +'<div class="info-section sec-fix"><h3>🌿 เตรียมตัวรับมือล่วงหน้าค่ะ</h3><p>'+fixHtml+'</p></div>';
+  }
+  document.getElementById('infoSections').innerHTML=sectionsHtml;
+
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+};
+</script>
+</body>
+</html>
