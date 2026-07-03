@@ -297,7 +297,7 @@ function initSections(){
 
 function parseAndRender(fullText, finalize){
   SECTIONS.forEach(function(s){
-    var re=new RegExp('<'+s.tag+'>([\s\S]*?)<\/'+s.tag+'>','i');
+    var re=new RegExp('<'+s.tag+''>([\\s\\S]*?)<\\/'+s.tag+'>','i');
     var m=fullText.match(re);
     var el=document.getElementById('txt_'+s.tag);
     if(m&&el){
