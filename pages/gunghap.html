@@ -296,15 +296,29 @@ function initSections(){
   document.getElementById('readingSections').innerHTML=html;
 }
 
-function parseAndRender(fullText, finalize){
-  SECTIONS.forEach(function(s){
-    var re=new RegExp('<'+s.tag+'>([\\s\\S]*?)<\\/'+s.tag+'>','i');
-    var m=fullText.match(re);
-    var el=document.getElementById('txt_'+s.tag);
-    if(m&&el){
-      if(finalize) el.textContent=m[1].trim();
-      else el.innerHTML=m[1].trim()+'<span class="cursor"></span>';
-    }
+var TAG_MAP_GUN = {
+  '[OVERALL]':  'txt_overall',
+  '[EMOTION]':  'txt_emotion',
+  '[ROMANCE]':  'txt_romance',
+  '[FINANCE]':  'txt_finance',
+  '[ATTITUDE]': 'txt_attitude',
+  '[SUPPORT]':  'txt_support',
+  '[ADVICE]':   'txt_advice',
+};
+
+function parseAndRender(text, finalize){
+  var currentId = null;
+  var content = {};
+  text.split('\n').forEach(function(line){
+    var t = line.trim();
+    if(TAG_MAP_GUN[t]){ currentId = TAG_MAP_GUN[t]; if(!content[currentId]) content[currentId]=''; }
+    else if(currentId && t) content[currentId] += t + ' ';
+  });
+  Object.keys(content).forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(finalize) el.textContent = content[id].trim();
+    else el.innerHTML = content[id].trim() + '<span class="cursor"></span>';
   });
 }
 
@@ -383,15 +397,15 @@ window.startReading = async function(){
   var prompt='ข้อมูลซาจู:\n'
     +name1+' เกิด '+day1+'/'+month1+'/'+year1+' นักษัตร'+ZODIAC_TH[s1.zodiac]+' ธาตุ'+s1.element+'\n'
     +name2+' เกิด '+day2+'/'+month2+'/'+year2+' นักษัตร'+ZODIAC_TH[s2.zodiac]+' ธาตุ'+s2.element+'\n\n'
-    +'คะแนนความเข้ากัน: รวม '+scores.total+' อารมณ์ '+scores.emotion+' เสน่ห์ '+scores.romance+' การเงิน '+scores.finance+' ทัศนคติ '+scores.attitude+' ส่งเสริม '+scores.support+'\n\n'
-    +'วิเคราะห์กุงฮับของ'+name1+'และ'+name2+' โดยใส่เนื้อหาลงใน XML tags เหล่านี้ 3-4 ประโยคต่อ tag:\n'
-    +'<overall></overall>\n'
-    +'<emotion></emotion>\n'
-    +'<romance></romance>\n'
-    +'<finance></finance>\n'
-    +'<attitude></attitude>\n'
-    +'<support></support>\n'
-    +'<advice></advice>';
+    +'คะแนน: รวม '+scores.total+' อารมณ์ '+scores.emotion+' เสน่ห์ '+scores.romance+' การเงิน '+scores.finance+' ทัศนคติ '+scores.attitude+' ส่งเสริม '+scores.support+'\n\n'
+    +'วิเคราะห์กุงฮับของ'+name1+'และ'+name2+' ตอบโดยใช้ tag นำหน้าแต่ละส่วน 3-4 ประโยคต่อส่วน:\n'
+    +'[OVERALL]\nภาพรวมความเข้ากัน\n'
+    +'[EMOTION]\nด้านอารมณ์และความรัก\n'
+    +'[ROMANCE]\nด้านเสน่ห์และความดึงดูด\n'
+    +'[FINANCE]\nด้านการเงินและความมั่นคง\n'
+    +'[ATTITUDE]\nด้านทัศนคติและการใช้ชีวิต\n'
+    +'[SUPPORT]\nด้านการส่งเสริมกัน\n'
+    +'[ADVICE]\nคำแนะนำและวิธีแก้เคล็ด';
 
   try {
     var idToken2=await window._currentUser.getIdToken();
@@ -402,7 +416,7 @@ window.startReading = async function(){
         service:'gunghap',
         model:'claude-sonnet-4-6',
         max_tokens:6000,
-        system:'คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้ markdown ใช้ emoji ได้ ต้องใส่เนื้อหาลงใน XML tags เท่านั้น ห้ามมีข้อความนอก tag',
+        system:'คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้ markdown ใช้ emoji ได้ ต้องใช้ tag [OVERALL] [EMOTION] [ROMANCE] [FINANCE] [ATTITUDE] [SUPPORT] [ADVICE] นำหน้าแต่ละส่วน เขียนให้จบสมบูรณ์',
         messages:[{role:'user',content:prompt}]
       })
     });
