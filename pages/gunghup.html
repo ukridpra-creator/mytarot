@@ -229,7 +229,7 @@ onAuthStateChanged(auth, async user => {
     var curY=new Date().getFullYear()+543;
     for(var y=curY;y>=2480;y--){var o=document.createElement('option');o.value=y;o.textContent='พ.ศ.'+y;yearEl.appendChild(o);}
   });
-});
+})();
 
 var ZODIAC_TH=['หนู','วัว','เสือ','กระต่าย','มังกร','งู','ม้า','แพะ','ลิง','ไก่','หมา','หมู'];
 var ELEMENT=['ไม้','ไม้','ไฟ','ไฟ','ดิน','ดิน','โลหะ','โลหะ','น้ำ','น้ำ'];
