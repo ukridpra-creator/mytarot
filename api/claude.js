@@ -49,7 +49,7 @@ const SERVICE_COSTS = {
   "foot-reading":   30,
   "deity":          20,
   "love-code":      10,
-  "saju":           30,
+  "saju":           59,
   "saju-read":       0,
   "loshu":          20,
   "pinnacle":       20,
