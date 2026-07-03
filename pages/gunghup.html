@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>กุงฮับ ดูดวงคู่รัก — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { padding-bottom:80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:12px 0 24px; }
+    .hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#d4af37; margin-bottom:4px; letter-spacing:2px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .person-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:12px; }
+    .person-label { font-size:13px; font-weight:700; margin-bottom:12px; letter-spacing:1px; }
+    .person-1 .person-label { color:#ff6b9d; }
+    .person-2 .person-label { color:#6b9dff; }
+    .name-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; margin-bottom:10px; box-sizing:border-box; }
+    .name-input:focus { border-color:#d4af37; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:#d4af37; }
+    .coin-box { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:#d4af37; margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+    .btn-read { width:100%; background:linear-gradient(135deg,#c0392b,#e91e8c); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; letter-spacing:1px; }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+    #resultBox { display:none; }
+    .score-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:20px; margin-bottom:16px; text-align:center; }
+    .total-score { font-size:48px; font-weight:800; background:linear-gradient(135deg,#ff6b9d,#6b9dff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .score-label { font-size:13px; color:var(--dim); margin-top:4px; }
+    .score-desc { font-size:15px; font-weight:700; color:white; margin-top:8px; }
+    .chart-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .chart-title { font-size:12px; color:#d4af37; font-weight:700; letter-spacing:1.5px; margin-bottom:16px; text-align:center; }
+    .section-scores { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .section-score { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:12px; text-align:center; }
+    .section-icon { font-size:20px; margin-bottom:4px; }
+    .section-name { font-size:11px; color:var(--dim); margin-bottom:6px; }
+    .section-val { font-size:18px; font-weight:800; color:white; }
+    .reading-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .reading-section { margin-bottom:20px; }
+    .reading-section-title { font-size:13px; font-weight:700; color:#d4af37; margin-bottom:10px; padding:8px 12px; background:rgba(212,175,55,0.1); border-radius:10px; border-left:3px solid #d4af37; }
+    .reading-text { font-size:14px; color:rgba(255,255,255,0.75); line-height:2; white-space:pre-wrap; }
+    .cursor { display:inline-block; width:2px; height:16px; background:#ff6b9d; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    .heart-divider { text-align:center; font-size:24px; margin:8px 0; }
+    .compat-badge { display:inline-block; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="korean.html" class="back-btn">←</a>
+  <div class="page-title">💑 กุงฮับ ดูดวงคู่รัก</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">💑</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').style.display='none'" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-gunghap.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">궁합 กุงฮับ</div>
+    <div class="hero-desc">ดูความเข้ากันของคู่รักตามศาสตร์เกาหลี<br>วิเคราะห์ 5 ด้านด้วยซาจู (사주) ค่ะ</div>
+  </div>
+
+  <div class="person-card person-1">
+    <div class="person-label">💗 คนที่ 1</div>
+    <input class="name-input" type="text" id="name1" placeholder="ชื่อ (ไม่บังคับ)">
+    <div class="date-row">
+      <select class="sel" id="day1"></select>
+      <select class="sel" id="month1"></select>
+      <select class="sel" id="year1"></select>
+    </div>
+  </div>
+
+  <div class="heart-divider">💕</div>
+
+  <div class="person-card person-2">
+    <div class="person-label">💙 คนที่ 2</div>
+    <input class="name-input" type="text" id="name2" placeholder="ชื่อ (ไม่บังคับ)">
+    <div class="date-row">
+      <select class="sel" id="day2"></select>
+      <select class="sel" id="month2"></select>
+      <select class="sel" id="year2"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 59 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">💑 วิเคราะห์ความเข้ากัน</button>
+
+  <div id="resultBox">
+    <div class="score-box">
+      <div class="total-score" id="totalScore">—</div>
+      <div class="score-label">คะแนนความเข้ากัน / 100</div>
+      <div class="score-desc" id="scoreDesc">—</div>
+      <span class="compat-badge" id="compatBadge">—</span>
+    </div>
+
+    <div class="section-scores" id="sectionScores"></div>
+
+    <div class="chart-box">
+      <div class="chart-title">✦ แผนภูมิความเข้ากัน ✦</div>
+      <canvas id="radarChart" style="max-height:280px;"></canvas>
+    </div>
+
+    <div class="reading-box" id="readingBox">
+      <div class="reading-text" id="readingText">⏳ กำลังวิเคราะห์...</div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+
+window._currentUser = null;
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
+};
+function setAvatarDisplay(a) {
+  var el=document.getElementById('avatarEl'); if(!el) return;
+  if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent=a||'👤';
+}
+window.loginNow  = async function(){ try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){console.error(e);} };
+window.logoutNow = async function(){ await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  window._currentUser = user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+// dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+  ['1','2'].forEach(function(n) {
+    var dayEl=document.getElementById('day'+n);
+    for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+    var months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+    var monthEl=document.getElementById('month'+n);
+    months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+    var yearEl=document.getElementById('year'+n);
+    var curY=new Date().getFullYear()+543;
+    for(var y=curY;y>=2480;y--){var o=document.createElement('option');o.value=y;o.textContent='พ.ศ.'+y;yearEl.appendChild(o);}
+  });
+});
+
+// Saju calculation
+var HEAVENLY_STEMS = ['갑','을','병','정','무','기','경','신','임','계'];
+var EARTHLY_BRANCHES = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
+var STEMS_TH = ['กัป','อึล','บยอง','จอง','มู','กี','กยอง','ชิน','อิม','เก'];
+var BRANCHES_TH = ['จา','ชุก','อิน','มโย','จิน','ซา','โอ','มี','ชิน','ยู','ซุล','แฮ'];
+var ELEMENT = ['ไม้','ไม้','ไฟ','ไฟ','ดิน','ดิน','โลหะ','โลหะ','น้ำ','น้ำ'];
+var BRANCH_ELEMENT = ['น้ำ','ดิน','ไม้','ไม้','ดิน','ไฟ','ไฟ','ดิน','โลหะ','โลหะ','ดิน','น้ำ'];
+var ZODIAC_KO = ['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
+var ZODIAC_TH = ['หนู','วัว','เสือ','กระต่าย','มังกร','งู','ม้า','แพะ','ลิง','ไก่','หมา','หมู'];
+
+function getSaju(yearBE, month, day) {
+  var year = yearBE - 543;
+  // Year pillar
+  var yIdx = (year - 4) % 60;
+  var yStem = ((year - 4) % 10 + 10) % 10;
+  var yBranch = ((year - 4) % 12 + 12) % 12;
+  // Month pillar (approximate)
+  var mStem = ((yStem % 5) * 2 + month - 1) % 10;
+  var mBranch = (month + 1) % 12;
+  // Day pillar (approximate JD)
+  var a = Math.floor((14-month)/12);
+  var y2 = year + 4800 - a;
+  var m2 = month + 12*a - 3;
+  var jd = day + Math.floor((153*m2+2)/5) + 365*y2 + Math.floor(y2/4) - Math.floor(y2/100) + Math.floor(y2/400) - 32045;
+  var dStem = (jd + 4) % 10;
+  var dBranch = (jd + 8) % 12;
+  return {
+    year: { stem: yStem, branch: yBranch },
+    month: { stem: mStem, branch: mBranch },
+    day: { stem: dStem, branch: dBranch },
+    zodiac: yBranch,
+    element: ELEMENT[yStem]
+  };
+}
+
+function calcCompatScore(s1, s2) {
+  // ความเข้ากันของนักษัตร (육합, 삼합, 형충파해)
+  var z1 = s1.year.branch, z2 = s2.year.branch;
+  var LIUHE = [[0,11],[1,10],[2,9],[3,8],[4,7],[5,6]]; // 육합 (6 combinations)
+  var SANHE = [[0,4,8],[1,5,9],[2,6,10],[3,7,11]]; // 삼합
+  var CHONG = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]]; // 충 (clash)
+
+  var zodiacScore = 60;
+  for(var i=0;i<LIUHE.length;i++) {
+    if((LIUHE[i][0]===z1&&LIUHE[i][1]===z2)||(LIUHE[i][0]===z2&&LIUHE[i][1]===z1)) { zodiacScore=95; break; }
+  }
+  for(var i=0;i<SANHE.length;i++) {
+    if(SANHE[i].includes(z1)&&SANHE[i].includes(z2)) { zodiacScore=Math.max(zodiacScore,85); break; }
+  }
+  for(var i=0;i<CHONG.length;i++) {
+    if((CHONG[i][0]===z1&&CHONG[i][1]===z2)||(CHONG[i][0]===z2&&CHONG[i][1]===z1)) { zodiacScore=30; break; }
+  }
+
+  // ธาตุ
+  var e1=s1.element, e2=s2.element;
+  var GENERATE = {'ไม้':'ไฟ','ไฟ':'ดิน','ดิน':'โลหะ','โลหะ':'น้ำ','น้ำ':'ไม้'};
+  var CONTROL  = {'ไม้':'ดิน','ดิน':'น้ำ','น้ำ':'ไฟ','ไฟ':'โลหะ','โลหะ':'ไม้'};
+  var elemScore = 70;
+  if(e1===e2) elemScore=80;
+  else if(GENERATE[e1]===e2||GENERATE[e2]===e1) elemScore=90;
+  else if(CONTROL[e1]===e2||CONTROL[e2]===e1) elemScore=45;
+
+  // Day stem compat
+  var ds1=s1.day.stem, ds2=s2.day.stem;
+  var DAY_PAIRS = [[0,5],[1,6],[2,7],[3,8],[4,9]];
+  var dayScore = 65;
+  for(var i=0;i<DAY_PAIRS.length;i++) {
+    if((DAY_PAIRS[i][0]===ds1&&DAY_PAIRS[i][1]===ds2)||(DAY_PAIRS[i][0]===ds2&&DAY_PAIRS[i][1]===ds1)) { dayScore=88; break; }
+  }
+  if(ds1===ds2) dayScore=75;
+
+  // คำนวณ 5 ด้าน
+  var emotion  = Math.round((zodiacScore*0.4 + elemScore*0.4 + dayScore*0.2) + (Math.sin(z1*z2)*5));
+  var romance  = Math.round((elemScore*0.5 + dayScore*0.3 + zodiacScore*0.2) + (Math.cos(z1+z2)*5));
+  var finance  = Math.round((elemScore*0.3 + zodiacScore*0.4 + dayScore*0.3) + (Math.sin(ds1+ds2)*4));
+  var attitude = Math.round((dayScore*0.4 + zodiacScore*0.3 + elemScore*0.3) + (Math.cos(ds1*ds2)*4));
+  var support  = Math.round((zodiacScore*0.3 + elemScore*0.3 + dayScore*0.4) + (Math.sin(z1+ds2)*4));
+
+  // clamp
+  var clamp = function(v){ return Math.min(99, Math.max(30, v)); };
+  emotion=clamp(emotion); romance=clamp(romance); finance=clamp(finance);
+  attitude=clamp(attitude); support=clamp(support);
+
+  var total = Math.round((emotion+romance+finance+attitude+support)/5);
+  return { total, emotion, romance, finance, attitude, support };
+}
+
+var radarChart = null;
+
+window.startReading = async function() {
+  if(!window._currentUser){
+    document.getElementById('loginRequiredOverlay').style.display='flex';
+    return;
+  }
+
+  var name1 = document.getElementById('name1').value.trim() || 'คนที่ 1';
+  var name2 = document.getElementById('name2').value.trim() || 'คนที่ 2';
+  var day1   = parseInt(document.getElementById('day1').value);
+  var month1 = parseInt(document.getElementById('month1').value);
+  var year1  = parseInt(document.getElementById('year1').value);
+  var day2   = parseInt(document.getElementById('day2').value);
+  var month2 = parseInt(document.getElementById('month2').value);
+  var year2  = parseInt(document.getElementById('year2').value);
+
+  var btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
+
+  // หักเหรียญ
+  try {
+    var idToken=await window._currentUser.getIdToken();
+    var res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'gunghap',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'x'}]})
+    });
+    var newBal=res.headers.get('X-New-Coin-Balance');
+    if(newBal!=null) updateCoinUI(parseInt(newBal));
+    if(!res.ok){
+      var err=await res.json().catch(()=>({}));
+      alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
+    }
+  } catch(e){
+    console.error(e); btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
+  }
+
+  // คำนวณ Saju
+  var s1 = getSaju(year1, month1, day1);
+  var s2 = getSaju(year2, month2, day2);
+  var scores = calcCompatScore(s1, s2);
+
+  // แสดง UI
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+
+  // Total score
+  document.getElementById('totalScore').textContent = scores.total;
+  var desc = scores.total>=85?'เข้ากันอย่างลงตัว 💕':scores.total>=70?'เข้ากันได้ดี 💖':scores.total>=55?'พอเข้ากันได้ 💛':scores.total>=40?'ต้องปรับตัวกัน 💙':'ท้าทายพอสมควร 🤍';
+  document.getElementById('scoreDesc').textContent = desc;
+
+  var badgeColor = scores.total>=85?'#ff6b9d':scores.total>=70?'#e91e8c':scores.total>=55?'#f59e0b':scores.total>=40?'#6b9dff':'#94a3b8';
+  var badgeText  = scores.total>=85?'💕 คู่แท้':scores.total>=70?'💖 เข้ากันดี':scores.total>=55?'💛 พอเข้ากัน':scores.total>=40?'💙 ต้องปรับตัว':'🤍 ท้าทาย';
+  var badge = document.getElementById('compatBadge');
+  badge.textContent = badgeText;
+  badge.style.cssText = 'background:'+badgeColor+'22;color:'+badgeColor+';border:1px solid '+badgeColor+'44;display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px;';
+
+  // Section scores
+  var sections = [
+    {icon:'❤️', name:'อารมณ์/ความรัก', val:scores.emotion},
+    {icon:'🔥', name:'แรงดึงดูด', val:scores.romance},
+    {icon:'💰', name:'การเงิน', val:scores.finance},
+    {icon:'🧠', name:'ทัศนคติ', val:scores.attitude},
+    {icon:'⭐', name:'ส่งเสริมกัน', val:scores.support},
+  ];
+  var html='';
+  sections.forEach(function(s){
+    var c=s.val>=80?'#ff6b9d':s.val>=65?'#f59e0b':s.val>=50?'#6b9dff':'#94a3b8';
+    html+='<div class="section-score"><div class="section-icon">'+s.icon+'</div><div class="section-name">'+s.name+'</div><div class="section-val" style="color:'+c+'">'+s.val+'</div></div>';
+  });
+  document.getElementById('sectionScores').innerHTML=html;
+
+  // Radar Chart
+  if(radarChart) radarChart.destroy();
+  var ctx=document.getElementById('radarChart').getContext('2d');
+  radarChart = new Chart(ctx, {
+    type:'radar',
+    data:{
+      labels:['❤️ อารมณ์','🔥 แรงดึงดูด','💰 การเงิน','🧠 ทัศนคติ','⭐ ส่งเสริม'],
+      datasets:[{
+        label: name1+' & '+name2,
+        data:[scores.emotion,scores.romance,scores.finance,scores.attitude,scores.support],
+        backgroundColor:'rgba(233,30,140,0.2)',
+        borderColor:'rgba(233,30,140,0.8)',
+        pointBackgroundColor:'rgba(233,30,140,1)',
+        borderWidth:2
+      }]
+    },
+    options:{
+      scales:{r:{min:0,max:100,ticks:{display:false},grid:{color:'rgba(255,255,255,0.1)'},pointLabels:{color:'rgba(255,255,255,0.7)',font:{size:11}}}},
+      plugins:{legend:{display:false}},
+      elements:{line:{tension:0.1}}
+    }
+  });
+
+  // สร้าง prompt
+  var prompt = '당신은 한국 사주 전문가입니다. (คุณเป็นผู้เชี่ยวชาญซาจูเกาหลี) ตอบเป็นภาษาไทย ใช้ภาษาสวยงาม อ่านง่าย\n\n'
+    +'═══ ข้อมูลซาจูทั้งคู่ ═══\n'
+    +name1+' เกิด '+day1+'/'+month1+'/'+year1+' (พ.ศ.)\n'
+    +'  นักษัตร: '+ZODIAC_TH[s1.zodiac]+' ('+ZODIAC_KO[s1.zodiac]+')\n'
+    +'  ธาตุปี: '+s1.element+'\n'
+    +'  เสาปี: '+STEMS_TH[s1.year.stem]+BRANCHES_TH[s1.year.branch]+'\n'
+    +'  เสาวัน: '+STEMS_TH[s1.day.stem]+BRANCHES_TH[s1.day.branch]+'\n\n'
+    +name2+' เกิด '+day2+'/'+month2+'/'+year2+' (พ.ศ.)\n'
+    +'  นักษัตร: '+ZODIAC_TH[s2.zodiac]+' ('+ZODIAC_KO[s2.zodiac]+')\n'
+    +'  ธาตุปี: '+s2.element+'\n'
+    +'  เสาปี: '+STEMS_TH[s2.year.stem]+BRANCHES_TH[s2.year.branch]+'\n'
+    +'  เสาวัน: '+STEMS_TH[s2.day.stem]+BRANCHES_TH[s2.day.branch]+'\n\n'
+    +'═══ คะแนนความเข้ากัน ═══\n'
+    +'คะแนนรวม: '+scores.total+'/100\n'
+    +'❤️ อารมณ์/ความรัก: '+scores.emotion+'\n'
+    +'🔥 แรงดึงดูด: '+scores.romance+'\n'
+    +'💰 การเงิน: '+scores.finance+'\n'
+    +'🧠 ทัศนคติ: '+scores.attitude+'\n'
+    +'⭐ ส่งเสริมกัน: '+scores.support+'\n\n'
+    +'═══ คำขอ ═══\n'
+    +'วิเคราะห์กุงฮับของคู่นี้ให้ครบ โดยใส่ในกรอบ XML tags ดังนี้:\n\n'
+    +'<overall>ภาพรวมความเข้ากันของคู่นี้ (2-3 ประโยค)</overall>\n\n'
+    +'<emotion>วิเคราะห์ด้านอารมณ์และความรัก จุดแข็งจุดอ่อน</emotion>\n\n'
+    +'<romance>วิเคราะห์แรงดึงดูดและเคมีระหว่างกัน</romance>\n\n'
+    +'<finance>วิเคราะห์ด้านการเงินและความมั่นคง</finance>\n\n'
+    +'<attitude>วิเคราะห์ด้านทัศนคติและการใช้ชีวิตร่วมกัน</attitude>\n\n'
+    +'<support>วิเคราะห์การส่งเสริมและพัฒนากันของทั้งคู่</support>\n\n'
+    +'<advice>คำแนะนำสำหรับคู่นี้ รวมถึงวิธีแก้เคล็ดหากมีจุดที่ชน</advice>';
+
+  // เรียก Claude แบบ stream
+  document.getElementById('readingBox').innerHTML = '<div class="reading-text" id="readingText"><span class="cursor"></span></div>';
+
+  try {
+    var idToken2=await window._currentUser.getIdToken();
+    var resp=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken2},
+      body:JSON.stringify({
+        service:'gunghap-read',
+        model:'claude-sonnet-4-6',
+        max_tokens:6000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+
+    if(!resp.ok){ document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ'; btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
+
+    var reader=resp.body.getReader();
+    var decoder=new TextDecoder();
+    var fullText='';
+
+    while(true){
+      var result=await reader.read();
+      if(result.done) break;
+      fullText+=decoder.decode(result.value,{stream:true});
+      document.getElementById('readingText').innerHTML=fullText+'<span class="cursor"></span>';
+    }
+
+    // parse XML tags
+    var sections2 = [
+      {tag:'overall', icon:'💑', title:'ภาพรวมความเข้ากัน'},
+      {tag:'emotion', icon:'❤️', title:'อารมณ์และความรัก'},
+      {tag:'romance', icon:'🔥', title:'แรงดึงดูดและเคมี'},
+      {tag:'finance', icon:'💰', title:'การเงินและความมั่นคง'},
+      {tag:'attitude',icon:'🧠', title:'ทัศนคติและการใช้ชีวิต'},
+      {tag:'support', icon:'⭐', title:'การส่งเสริมกัน'},
+      {tag:'advice',  icon:'🌸', title:'คำแนะนำและแก้เคล็ด'},
+    ];
+
+    var boxHtml='';
+    sections2.forEach(function(s){
+      var re=new RegExp('<'+s.tag+'>([\s\S]*?)<\/'+s.tag+'>','i');
+      var m=fullText.match(re);
+      if(m){
+        boxHtml+='<div class="reading-section">'
+          +'<div class="reading-section-title">'+s.icon+' '+s.title+'</div>'
+          +'<div class="reading-text">'+m[1].trim()+'</div>'
+          +'</div>';
+      }
+    });
+
+    if(boxHtml){
+      document.getElementById('readingBox').innerHTML=boxHtml;
+    } else {
+      document.getElementById('readingText').innerHTML=fullText;
+    }
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ';
+  }
+
+  btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน';
+};
+</script>
+</body>
+</html>
