@@ -46,7 +46,7 @@ const SERVICE_COSTS = {
 "pinnacle": 20,
 "thai-astro": 99,
 "thai-astro-read": 0,
-'gunghap': 59,
+'gunghap': 39,
 'gunghap-read': 0,
 };
 
