@@ -43,10 +43,26 @@
     .section-icon { font-size:20px; margin-bottom:4px; }
     .section-name { font-size:11px; color:var(--dim); margin-bottom:6px; }
     .section-val { font-size:18px; font-weight:800; color:white; }
-    .reading-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:20px; margin-bottom:16px; }
-    .reading-section { margin-bottom:20px; }
-    .reading-section-title { font-size:13px; font-weight:700; color:#d4af37; margin-bottom:10px; padding:8px 12px; background:rgba(212,175,55,0.1); border-radius:10px; border-left:3px solid #d4af37; }
-    .reading-text { font-size:14px; color:rgba(255,255,255,0.75); line-height:2; white-space:pre-wrap; }
+
+    /* กรอบสีแต่ละ section เหมือน chinese.html */
+    .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .result-section h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+    .result-section p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
+    .sec-overall  { background:rgba(233,30,140,0.08);  border-color:#e91e8c; }
+    .sec-overall h3 { color:#e91e8c; }
+    .sec-emotion  { background:rgba(236,72,153,0.08);  border-color:#ec4899; }
+    .sec-emotion h3 { color:#ec4899; }
+    .sec-romance  { background:rgba(239,68,68,0.08);   border-color:#ef4444; }
+    .sec-romance h3 { color:#ef4444; }
+    .sec-finance  { background:rgba(16,185,129,0.08);  border-color:#10b981; }
+    .sec-finance h3 { color:#10b981; }
+    .sec-attitude { background:rgba(168,85,247,0.08);  border-color:#a855f7; }
+    .sec-attitude h3 { color:#a855f7; }
+    .sec-support  { background:rgba(96,165,250,0.08);  border-color:#60a5fa; }
+    .sec-support h3 { color:#60a5fa; }
+    .sec-advice   { background:rgba(245,158,11,0.08);  border-color:#f59e0b; }
+    .sec-advice h3 { color:#f59e0b; }
+
     .cursor { display:inline-block; width:2px; height:16px; background:#ff6b9d; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
     .heart-divider { text-align:center; font-size:24px; margin:8px 0; }
@@ -97,11 +113,11 @@
       <img src="../images/mascot-gunghap.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
     </div>
     <div class="hero-title">궁합 กุงฮับ</div>
-    <div class="hero-desc">ดูความเข้ากันของคู่รักตามศาสตร์เกาหลี<br>วิเคราะห์ 5 ด้านด้วยซาจู (사주) ค่ะ</div>
+    <div class="hero-desc">ดูความเข้ากันของคู่รักตามศาสตร์เกาหลี<br>วิเคราะห์ 5 ด้านด้วยซาจู 사주 ค่ะ</div>
   </div>
 
   <div class="person-card person-1">
-    <div class="person-label">💗 คนที่ 1</div>
+    <div class="person-label">💗 คุณพี่คนที่ 1</div>
     <input class="name-input" type="text" id="name1" placeholder="ชื่อ (ไม่บังคับ)">
     <div class="date-row">
       <select class="sel" id="day1"></select>
@@ -113,7 +129,7 @@
   <div class="heart-divider">💕</div>
 
   <div class="person-card person-2">
-    <div class="person-label">💙 คนที่ 2</div>
+    <div class="person-label">💙 คุณพี่คนที่ 2</div>
     <input class="name-input" type="text" id="name2" placeholder="ชื่อ (ไม่บังคับ)">
     <div class="date-row">
       <select class="sel" id="day2"></select>
@@ -123,7 +139,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 59 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-text">🪙 ใช้ 39 เหรียญต่อการวิเคราะห์</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
@@ -144,9 +160,7 @@
       <canvas id="radarChart" style="max-height:280px;"></canvas>
     </div>
 
-    <div class="reading-box" id="readingBox">
-      <div class="reading-text" id="readingText">⏳ กำลังวิเคราะห์...</div>
-    </div>
+    <div id="readingSections"></div>
   </div>
 </div>
 
@@ -203,7 +217,6 @@ onAuthStateChanged(auth, async user => {
   } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-// dropdowns
 document.addEventListener('DOMContentLoaded', function() {
   ['1','2'].forEach(function(n) {
     var dayEl=document.getElementById('day'+n);
@@ -217,114 +230,100 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Saju calculation
-var HEAVENLY_STEMS = ['갑','을','병','정','무','기','경','신','임','계'];
-var EARTHLY_BRANCHES = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
-var STEMS_TH = ['กัป','อึล','บยอง','จอง','มู','กี','กยอง','ชิน','อิม','เก'];
-var BRANCHES_TH = ['จา','ชุก','อิน','มโย','จิน','ซา','โอ','มี','ชิน','ยู','ซุล','แฮ'];
-var ELEMENT = ['ไม้','ไม้','ไฟ','ไฟ','ดิน','ดิน','โลหะ','โลหะ','น้ำ','น้ำ'];
-var BRANCH_ELEMENT = ['น้ำ','ดิน','ไม้','ไม้','ดิน','ไฟ','ไฟ','ดิน','โลหะ','โลหะ','ดิน','น้ำ'];
-var ZODIAC_KO = ['쥐','소','호랑이','토끼','용','뱀','말','양','원숭이','닭','개','돼지'];
-var ZODIAC_TH = ['หนู','วัว','เสือ','กระต่าย','มังกร','งู','ม้า','แพะ','ลิง','ไก่','หมา','หมู'];
+var ZODIAC_TH=['หนู','วัว','เสือ','กระต่าย','มังกร','งู','ม้า','แพะ','ลิง','ไก่','หมา','หมู'];
+var ELEMENT=['ไม้','ไม้','ไฟ','ไฟ','ดิน','ดิน','โลหะ','โลหะ','น้ำ','น้ำ'];
 
-function getSaju(yearBE, month, day) {
-  var year = yearBE - 543;
-  // Year pillar
-  var yIdx = (year - 4) % 60;
-  var yStem = ((year - 4) % 10 + 10) % 10;
-  var yBranch = ((year - 4) % 12 + 12) % 12;
-  // Month pillar (approximate)
-  var mStem = ((yStem % 5) * 2 + month - 1) % 10;
-  var mBranch = (month + 1) % 12;
-  // Day pillar (approximate JD)
-  var a = Math.floor((14-month)/12);
-  var y2 = year + 4800 - a;
-  var m2 = month + 12*a - 3;
-  var jd = day + Math.floor((153*m2+2)/5) + 365*y2 + Math.floor(y2/4) - Math.floor(y2/100) + Math.floor(y2/400) - 32045;
-  var dStem = (jd + 4) % 10;
-  var dBranch = (jd + 8) % 12;
-  return {
-    year: { stem: yStem, branch: yBranch },
-    month: { stem: mStem, branch: mBranch },
-    day: { stem: dStem, branch: dBranch },
-    zodiac: yBranch,
-    element: ELEMENT[yStem]
-  };
+function getSaju(yearBE,month,day){
+  var year=yearBE-543;
+  var yStem=((year-4)%10+10)%10;
+  var yBranch=((year-4)%12+12)%12;
+  var mStem=((yStem%5)*2+month-1)%10;
+  var mBranch=(month+1)%12;
+  var a=Math.floor((14-month)/12);
+  var y2=year+4800-a; var m2=month+12*a-3;
+  var jd=day+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045;
+  var dStem=(jd+4)%10; var dBranch=(jd+8)%12;
+  return { year:{stem:yStem,branch:yBranch}, month:{stem:mStem,branch:mBranch}, day:{stem:dStem,branch:dBranch}, zodiac:yBranch, element:ELEMENT[yStem] };
 }
 
-function calcCompatScore(s1, s2) {
-  // ความเข้ากันของนักษัตร (육합, 삼합, 형충파해)
-  var z1 = s1.year.branch, z2 = s2.year.branch;
-  var LIUHE = [[0,11],[1,10],[2,9],[3,8],[4,7],[5,6]]; // 육합 (6 combinations)
-  var SANHE = [[0,4,8],[1,5,9],[2,6,10],[3,7,11]]; // 삼합
-  var CHONG = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]]; // 충 (clash)
-
-  var zodiacScore = 60;
-  for(var i=0;i<LIUHE.length;i++) {
-    if((LIUHE[i][0]===z1&&LIUHE[i][1]===z2)||(LIUHE[i][0]===z2&&LIUHE[i][1]===z1)) { zodiacScore=95; break; }
-  }
-  for(var i=0;i<SANHE.length;i++) {
-    if(SANHE[i].includes(z1)&&SANHE[i].includes(z2)) { zodiacScore=Math.max(zodiacScore,85); break; }
-  }
-  for(var i=0;i<CHONG.length;i++) {
-    if((CHONG[i][0]===z1&&CHONG[i][1]===z2)||(CHONG[i][0]===z2&&CHONG[i][1]===z1)) { zodiacScore=30; break; }
-  }
-
-  // ธาตุ
+function calcCompatScore(s1,s2){
+  var z1=s1.year.branch, z2=s2.year.branch;
+  var LIUHE=[[0,11],[1,10],[2,9],[3,8],[4,7],[5,6]];
+  var SANHE=[[0,4,8],[1,5,9],[2,6,10],[3,7,11]];
+  var CHONG=[[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
+  var zodiacScore=60;
+  for(var i=0;i<LIUHE.length;i++) if((LIUHE[i][0]===z1&&LIUHE[i][1]===z2)||(LIUHE[i][0]===z2&&LIUHE[i][1]===z1)){zodiacScore=95;break;}
+  for(var i=0;i<SANHE.length;i++) if(SANHE[i].includes(z1)&&SANHE[i].includes(z2)){zodiacScore=Math.max(zodiacScore,85);break;}
+  for(var i=0;i<CHONG.length;i++) if((CHONG[i][0]===z1&&CHONG[i][1]===z2)||(CHONG[i][0]===z2&&CHONG[i][1]===z1)){zodiacScore=30;break;}
   var e1=s1.element, e2=s2.element;
-  var GENERATE = {'ไม้':'ไฟ','ไฟ':'ดิน','ดิน':'โลหะ','โลหะ':'น้ำ','น้ำ':'ไม้'};
-  var CONTROL  = {'ไม้':'ดิน','ดิน':'น้ำ','น้ำ':'ไฟ','ไฟ':'โลหะ','โลหะ':'ไม้'};
-  var elemScore = 70;
+  var GENERATE={'ไม้':'ไฟ','ไฟ':'ดิน','ดิน':'โลหะ','โลหะ':'น้ำ','น้ำ':'ไม้'};
+  var CONTROL={'ไม้':'ดิน','ดิน':'น้ำ','น้ำ':'ไฟ','ไฟ':'โลหะ','โลหะ':'ไม้'};
+  var elemScore=70;
   if(e1===e2) elemScore=80;
   else if(GENERATE[e1]===e2||GENERATE[e2]===e1) elemScore=90;
   else if(CONTROL[e1]===e2||CONTROL[e2]===e1) elemScore=45;
-
-  // Day stem compat
   var ds1=s1.day.stem, ds2=s2.day.stem;
-  var DAY_PAIRS = [[0,5],[1,6],[2,7],[3,8],[4,9]];
-  var dayScore = 65;
-  for(var i=0;i<DAY_PAIRS.length;i++) {
-    if((DAY_PAIRS[i][0]===ds1&&DAY_PAIRS[i][1]===ds2)||(DAY_PAIRS[i][0]===ds2&&DAY_PAIRS[i][1]===ds1)) { dayScore=88; break; }
-  }
+  var DAY_PAIRS=[[0,5],[1,6],[2,7],[3,8],[4,9]];
+  var dayScore=65;
+  for(var i=0;i<DAY_PAIRS.length;i++) if((DAY_PAIRS[i][0]===ds1&&DAY_PAIRS[i][1]===ds2)||(DAY_PAIRS[i][0]===ds2&&DAY_PAIRS[i][1]===ds1)){dayScore=88;break;}
   if(ds1===ds2) dayScore=75;
-
-  // คำนวณ 5 ด้าน
-  var emotion  = Math.round((zodiacScore*0.4 + elemScore*0.4 + dayScore*0.2) + (Math.sin(z1*z2)*5));
-  var romance  = Math.round((elemScore*0.5 + dayScore*0.3 + zodiacScore*0.2) + (Math.cos(z1+z2)*5));
-  var finance  = Math.round((elemScore*0.3 + zodiacScore*0.4 + dayScore*0.3) + (Math.sin(ds1+ds2)*4));
-  var attitude = Math.round((dayScore*0.4 + zodiacScore*0.3 + elemScore*0.3) + (Math.cos(ds1*ds2)*4));
-  var support  = Math.round((zodiacScore*0.3 + elemScore*0.3 + dayScore*0.4) + (Math.sin(z1+ds2)*4));
-
-  // clamp
-  var clamp = function(v){ return Math.min(99, Math.max(30, v)); };
-  emotion=clamp(emotion); romance=clamp(romance); finance=clamp(finance);
-  attitude=clamp(attitude); support=clamp(support);
-
-  var total = Math.round((emotion+romance+finance+attitude+support)/5);
-  return { total, emotion, romance, finance, attitude, support };
+  var clamp=function(v){return Math.min(99,Math.max(30,v));};
+  var emotion =clamp(Math.round(zodiacScore*0.4+elemScore*0.4+dayScore*0.2+Math.sin(z1*z2)*5));
+  var romance =clamp(Math.round(elemScore*0.5+dayScore*0.3+zodiacScore*0.2+Math.cos(z1+z2)*5));
+  var finance =clamp(Math.round(elemScore*0.3+zodiacScore*0.4+dayScore*0.3+Math.sin(ds1+ds2)*4));
+  var attitude=clamp(Math.round(dayScore*0.4+zodiacScore*0.3+elemScore*0.3+Math.cos(ds1*ds2)*4));
+  var support =clamp(Math.round(zodiacScore*0.3+elemScore*0.3+dayScore*0.4+Math.sin(z1+ds2)*4));
+  var total=Math.round((emotion+romance+finance+attitude+support)/5);
+  return {total,emotion,romance,finance,attitude,support};
 }
 
-var radarChart = null;
+var SECTIONS=[
+  {tag:'overall', cls:'sec-overall', icon:'💑', title:'ภาพรวมความเข้ากัน'},
+  {tag:'emotion', cls:'sec-emotion', icon:'❤️', title:'อารมณ์และความรัก'},
+  {tag:'romance', cls:'sec-romance', icon:'💋', title:'เสน่ห์และความดึงดูด'},
+  {tag:'finance', cls:'sec-finance', icon:'💰', title:'การเงินและความมั่นคง'},
+  {tag:'attitude',cls:'sec-attitude',icon:'🧠', title:'ทัศนคติและการใช้ชีวิต'},
+  {tag:'support', cls:'sec-support', icon:'⭐', title:'การส่งเสริมกัน'},
+  {tag:'advice',  cls:'sec-advice',  icon:'🌸', title:'คำแนะนำและแก้เคล็ด'},
+];
 
-window.startReading = async function() {
-  if(!window._currentUser){
-    document.getElementById('loginRequiredOverlay').style.display='flex';
-    return;
-  }
+function initSections(){
+  var html='';
+  SECTIONS.forEach(function(s){
+    html+='<div class="result-section '+s.cls+'" id="sec_'+s.tag+'"><h3>'+s.icon+' '+s.title+'</h3><p id="txt_'+s.tag+'"></p></div>';
+  });
+  document.getElementById('readingSections').innerHTML=html;
+}
 
-  var name1 = document.getElementById('name1').value.trim() || 'คนที่ 1';
-  var name2 = document.getElementById('name2').value.trim() || 'คนที่ 2';
-  var day1   = parseInt(document.getElementById('day1').value);
-  var month1 = parseInt(document.getElementById('month1').value);
-  var year1  = parseInt(document.getElementById('year1').value);
-  var day2   = parseInt(document.getElementById('day2').value);
-  var month2 = parseInt(document.getElementById('month2').value);
-  var year2  = parseInt(document.getElementById('year2').value);
+function parseAndRender(fullText, finalize){
+  SECTIONS.forEach(function(s){
+    var re=new RegExp('<'+s.tag+'>([\s\S]*?)<\/'+s.tag+'>','i');
+    var m=fullText.match(re);
+    var el=document.getElementById('txt_'+s.tag);
+    if(m&&el){
+      if(finalize) el.textContent=m[1].trim();
+      else el.innerHTML=m[1].trim()+'<span class="cursor"></span>';
+    }
+  });
+}
+
+var radarChart=null;
+
+window.startReading = async function(){
+  if(!window._currentUser){ document.getElementById('loginRequiredOverlay').style.display='flex'; return; }
+
+  var name1=document.getElementById('name1').value.trim()||'คุณพี่คนที่ 1';
+  var name2=document.getElementById('name2').value.trim()||'คุณพี่คนที่ 2';
+  var day1=parseInt(document.getElementById('day1').value);
+  var month1=parseInt(document.getElementById('month1').value);
+  var year1=parseInt(document.getElementById('year1').value);
+  var day2=parseInt(document.getElementById('day2').value);
+  var month2=parseInt(document.getElementById('month2').value);
+  var year2=parseInt(document.getElementById('year2').value);
 
   var btn=document.getElementById('readBtn');
   btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
 
-  // หักเหรียญ
   try {
     var idToken=await window._currentUser.getIdToken();
     var res=await fetch('/api/claude',{
@@ -339,54 +338,46 @@ window.startReading = async function() {
       alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
       btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
     }
-  } catch(e){
-    console.error(e); btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return;
-  }
+  } catch(e){ console.error(e); btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
 
-  // คำนวณ Saju
-  var s1 = getSaju(year1, month1, day1);
-  var s2 = getSaju(year2, month2, day2);
-  var scores = calcCompatScore(s1, s2);
+  var s1=getSaju(year1,month1,day1);
+  var s2=getSaju(year2,month2,day2);
+  var scores=calcCompatScore(s1,s2);
 
-  // แสดง UI
   document.getElementById('resultBox').style.display='block';
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
 
-  // Total score
-  document.getElementById('totalScore').textContent = scores.total;
-  var desc = scores.total>=85?'เข้ากันอย่างลงตัว 💕':scores.total>=70?'เข้ากันได้ดี 💖':scores.total>=55?'พอเข้ากันได้ 💛':scores.total>=40?'ต้องปรับตัวกัน 💙':'ท้าทายพอสมควร 🤍';
-  document.getElementById('scoreDesc').textContent = desc;
+  document.getElementById('totalScore').textContent=scores.total;
+  var desc=scores.total>=85?'เข้ากันอย่างลงตัว 💕':scores.total>=70?'เข้ากันได้ดี 💖':scores.total>=55?'พอเข้ากันได้ 💛':scores.total>=40?'ต้องปรับตัวกัน 💙':'ท้าทายพอสมควร 🤍';
+  document.getElementById('scoreDesc').textContent=desc;
+  var badgeColor=scores.total>=85?'#ff6b9d':scores.total>=70?'#e91e8c':scores.total>=55?'#f59e0b':scores.total>=40?'#6b9dff':'#94a3b8';
+  var badgeText=scores.total>=85?'💕 คู่แท้':scores.total>=70?'💖 เข้ากันดี':scores.total>=55?'💛 พอเข้ากัน':scores.total>=40?'💙 ต้องปรับตัว':'🤍 ท้าทาย';
+  var badge=document.getElementById('compatBadge');
+  badge.textContent=badgeText;
+  badge.style.cssText='background:'+badgeColor+'22;color:'+badgeColor+';border:1px solid '+badgeColor+'44;display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px;';
 
-  var badgeColor = scores.total>=85?'#ff6b9d':scores.total>=70?'#e91e8c':scores.total>=55?'#f59e0b':scores.total>=40?'#6b9dff':'#94a3b8';
-  var badgeText  = scores.total>=85?'💕 คู่แท้':scores.total>=70?'💖 เข้ากันดี':scores.total>=55?'💛 พอเข้ากัน':scores.total>=40?'💙 ต้องปรับตัว':'🤍 ท้าทาย';
-  var badge = document.getElementById('compatBadge');
-  badge.textContent = badgeText;
-  badge.style.cssText = 'background:'+badgeColor+'22;color:'+badgeColor+';border:1px solid '+badgeColor+'44;display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-top:8px;';
-
-  // Section scores
-  var sections = [
-    {icon:'❤️', name:'อารมณ์/ความรัก', val:scores.emotion},
-    {icon:'🔥', name:'แรงดึงดูด', val:scores.romance},
-    {icon:'💰', name:'การเงิน', val:scores.finance},
-    {icon:'🧠', name:'ทัศนคติ', val:scores.attitude},
-    {icon:'⭐', name:'ส่งเสริมกัน', val:scores.support},
+  var sectionDefs=[
+    {icon:'❤️',name:'อารมณ์',val:scores.emotion},
+    {icon:'💋',name:'เสน่ห์',val:scores.romance},
+    {icon:'💰',name:'การเงิน',val:scores.finance},
+    {icon:'🧠',name:'ทัศนคติ',val:scores.attitude},
+    {icon:'⭐',name:'ส่งเสริม',val:scores.support},
   ];
   var html='';
-  sections.forEach(function(s){
+  sectionDefs.forEach(function(s){
     var c=s.val>=80?'#ff6b9d':s.val>=65?'#f59e0b':s.val>=50?'#6b9dff':'#94a3b8';
     html+='<div class="section-score"><div class="section-icon">'+s.icon+'</div><div class="section-name">'+s.name+'</div><div class="section-val" style="color:'+c+'">'+s.val+'</div></div>';
   });
   document.getElementById('sectionScores').innerHTML=html;
 
-  // Radar Chart
   if(radarChart) radarChart.destroy();
   var ctx=document.getElementById('radarChart').getContext('2d');
-  radarChart = new Chart(ctx, {
+  radarChart=new Chart(ctx,{
     type:'radar',
     data:{
-      labels:['❤️ อารมณ์','🔥 แรงดึงดูด','💰 การเงิน','🧠 ทัศนคติ','⭐ ส่งเสริม'],
+      labels:['❤️ อารมณ์','💋 เสน่ห์','💰 การเงิน','🧠 ทัศนคติ','⭐ ส่งเสริม'],
       datasets:[{
-        label: name1+' & '+name2,
+        label:name1+' & '+name2,
         data:[scores.emotion,scores.romance,scores.finance,scores.attitude,scores.support],
         backgroundColor:'rgba(233,30,140,0.2)',
         borderColor:'rgba(233,30,140,0.8)',
@@ -401,38 +392,21 @@ window.startReading = async function() {
     }
   });
 
-  // สร้าง prompt
-  var prompt = '당신은 한국 사주 전문가입니다. (คุณเป็นผู้เชี่ยวชาญซาจูเกาหลี) ตอบเป็นภาษาไทย ใช้ภาษาสวยงาม อ่านง่าย\n\n'
-    +'═══ ข้อมูลซาจูทั้งคู่ ═══\n'
-    +name1+' เกิด '+day1+'/'+month1+'/'+year1+' (พ.ศ.)\n'
-    +'  นักษัตร: '+ZODIAC_TH[s1.zodiac]+' ('+ZODIAC_KO[s1.zodiac]+')\n'
-    +'  ธาตุปี: '+s1.element+'\n'
-    +'  เสาปี: '+STEMS_TH[s1.year.stem]+BRANCHES_TH[s1.year.branch]+'\n'
-    +'  เสาวัน: '+STEMS_TH[s1.day.stem]+BRANCHES_TH[s1.day.branch]+'\n\n'
-    +name2+' เกิด '+day2+'/'+month2+'/'+year2+' (พ.ศ.)\n'
-    +'  นักษัตร: '+ZODIAC_TH[s2.zodiac]+' ('+ZODIAC_KO[s2.zodiac]+')\n'
-    +'  ธาตุปี: '+s2.element+'\n'
-    +'  เสาปี: '+STEMS_TH[s2.year.stem]+BRANCHES_TH[s2.year.branch]+'\n'
-    +'  เสาวัน: '+STEMS_TH[s2.day.stem]+BRANCHES_TH[s2.day.branch]+'\n\n'
-    +'═══ คะแนนความเข้ากัน ═══\n'
-    +'คะแนนรวม: '+scores.total+'/100\n'
-    +'❤️ อารมณ์/ความรัก: '+scores.emotion+'\n'
-    +'🔥 แรงดึงดูด: '+scores.romance+'\n'
-    +'💰 การเงิน: '+scores.finance+'\n'
-    +'🧠 ทัศนคติ: '+scores.attitude+'\n'
-    +'⭐ ส่งเสริมกัน: '+scores.support+'\n\n'
-    +'═══ คำขอ ═══\n'
-    +'วิเคราะห์กุงฮับของคู่นี้ให้ครบ โดยใส่ในกรอบ XML tags ดังนี้:\n\n'
-    +'<overall>ภาพรวมความเข้ากันของคู่นี้ (2-3 ประโยค)</overall>\n\n'
-    +'<emotion>วิเคราะห์ด้านอารมณ์และความรัก จุดแข็งจุดอ่อน</emotion>\n\n'
-    +'<romance>วิเคราะห์แรงดึงดูดและเคมีระหว่างกัน</romance>\n\n'
-    +'<finance>วิเคราะห์ด้านการเงินและความมั่นคง</finance>\n\n'
-    +'<attitude>วิเคราะห์ด้านทัศนคติและการใช้ชีวิตร่วมกัน</attitude>\n\n'
-    +'<support>วิเคราะห์การส่งเสริมและพัฒนากันของทั้งคู่</support>\n\n'
-    +'<advice>คำแนะนำสำหรับคู่นี้ รวมถึงวิธีแก้เคล็ดหากมีจุดที่ชน</advice>';
+  initSections();
 
-  // เรียก Claude แบบ stream
-  document.getElementById('readingBox').innerHTML = '<div class="reading-text" id="readingText"><span class="cursor"></span></div>';
+  var prompt='คุณเป็นผู้เชี่ยวชาญกุงฮับเกาหลีและซาจู เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ใช้ภาษาไทยสวยงาม ห้ามใช้เครื่องหมาย เช่น ดอกจัน แอท ชาแนล หรือสัญลักษณ์พิเศษ ใช้ emoji ได้ค่ะ\n\n'
+    +'ข้อมูลซาจู:\n'
+    +name1+' เกิด '+day1+'/'+month1+'/'+year1+' นักษัตร'+ZODIAC_TH[s1.zodiac]+' ธาตุ'+s1.element+'\n'
+    +name2+' เกิด '+day2+'/'+month2+'/'+year2+' นักษัตร'+ZODIAC_TH[s2.zodiac]+' ธาตุ'+s2.element+'\n\n'
+    +'คะแนน: รวม '+scores.total+' อารมณ์ '+scores.emotion+' เสน่ห์ '+scores.romance+' การเงิน '+scores.finance+' ทัศนคติ '+scores.attitude+' ส่งเสริม '+scores.support+'\n\n'
+    +'ตอบในรูปแบบ XML tags ดังนี้ เนื้อหาละเอียด 3-4 ประโยคต่อหัวข้อ:\n\n'
+    +'<overall>ภาพรวมความเข้ากันของ'+name1+'และ'+name2+'</overall>\n\n'
+    +'<emotion>ด้านอารมณ์และความรัก</emotion>\n\n'
+    +'<romance>ด้านเสน่ห์และความดึงดูด</romance>\n\n'
+    +'<finance>ด้านการเงินและความมั่นคง</finance>\n\n'
+    +'<attitude>ด้านทัศนคติและการใช้ชีวิต</attitude>\n\n'
+    +'<support>ด้านการส่งเสริมกัน</support>\n\n'
+    +'<advice>คำแนะนำสำหรับคู่นี้และวิธีแก้เคล็ดถ้าดวงชง</advice>';
 
   try {
     var idToken2=await window._currentUser.getIdToken();
@@ -446,53 +420,20 @@ window.startReading = async function() {
         messages:[{role:'user',content:prompt}]
       })
     });
-
-    if(!resp.ok){ document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ'; btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
+    if(!resp.ok){ btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน'; return; }
 
     var reader=resp.body.getReader();
     var decoder=new TextDecoder();
     var fullText='';
-
     while(true){
       var result=await reader.read();
       if(result.done) break;
       fullText+=decoder.decode(result.value,{stream:true});
-      document.getElementById('readingText').innerHTML=fullText+'<span class="cursor"></span>';
+      parseAndRender(fullText, false);
     }
+    parseAndRender(fullText, true);
 
-    // parse XML tags
-    var sections2 = [
-      {tag:'overall', icon:'💑', title:'ภาพรวมความเข้ากัน'},
-      {tag:'emotion', icon:'❤️', title:'อารมณ์และความรัก'},
-      {tag:'romance', icon:'🔥', title:'แรงดึงดูดและเคมี'},
-      {tag:'finance', icon:'💰', title:'การเงินและความมั่นคง'},
-      {tag:'attitude',icon:'🧠', title:'ทัศนคติและการใช้ชีวิต'},
-      {tag:'support', icon:'⭐', title:'การส่งเสริมกัน'},
-      {tag:'advice',  icon:'🌸', title:'คำแนะนำและแก้เคล็ด'},
-    ];
-
-    var boxHtml='';
-    sections2.forEach(function(s){
-      var re=new RegExp('<'+s.tag+'>([\s\S]*?)<\/'+s.tag+'>','i');
-      var m=fullText.match(re);
-      if(m){
-        boxHtml+='<div class="reading-section">'
-          +'<div class="reading-section-title">'+s.icon+' '+s.title+'</div>'
-          +'<div class="reading-text">'+m[1].trim()+'</div>'
-          +'</div>';
-      }
-    });
-
-    if(boxHtml){
-      document.getElementById('readingBox').innerHTML=boxHtml;
-    } else {
-      document.getElementById('readingText').innerHTML=fullText;
-    }
-
-  } catch(e){
-    console.error(e);
-    document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ';
-  }
+  } catch(e){ console.error(e); }
 
   btn.disabled=false; btn.textContent='💑 วิเคราะห์ความเข้ากัน';
 };
