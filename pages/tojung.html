@@ -254,6 +254,9 @@ window.checkTojung=async function(){
       alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
       btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return;
     }
+    // drain stream body
+    var reader=res.body.getReader();
+    while(true){ var r=await reader.read(); if(r.done) break; }
   } catch(e){ console.error(e); alert('เกิดข้อผิดพลาดค่ะ'); btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return; }
 
   document.getElementById('zodiacEmoji').textContent=ZODIAC_EMOJI[zIdx];
