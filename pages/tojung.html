@@ -233,7 +233,9 @@ window.checkTojung=async function(){
 
   var birthYearCE=parseInt(document.getElementById('birthYear').value);
   var zIdx=getZodiacIndex(birthYearCE);
+  alert('debug: year='+birthYearCE+' zIdx='+zIdx+' selectedYear='+selectedYear);
   var data=getTojung(selectedYear, zIdx);
+  alert('debug: data='+(data?'found':'NOT FOUND'));
 
   if(!data){ alert('ไม่พบข้อมูลดวงสำหรับปีนี้ค่ะ'); return; }
 
@@ -245,7 +247,7 @@ window.checkTojung=async function(){
     var res=await fetch('/api/claude',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'tojung'})
+      body:JSON.stringify({service:'tojung',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'x'}]})
     });
     var newBal=res.headers.get('X-New-Coin-Balance');
     if(newBal!=null) updateCoinUI(parseInt(newBal));
