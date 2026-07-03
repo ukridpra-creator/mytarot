@@ -217,7 +217,8 @@ onAuthStateChanged(auth, async user => {
   } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+// init dropdowns
+(function() {
   ['1','2'].forEach(function(n) {
     var dayEl=document.getElementById('day'+n);
     for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
