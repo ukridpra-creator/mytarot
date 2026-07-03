@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โทจองบีกยอล — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="tojung-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:12px 0 24px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .form-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .form-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:var(--purple-light); }
+    .year-tabs { display:flex; gap:8px; margin-bottom:16px; }
+    .year-tab { flex:1; padding:12px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--dim); font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; text-align:center; }
+    .year-tab.active { background:rgba(124,58,237,0.2); border-color:var(--purple-light); color:var(--purple-light); }
+    .btn-check { width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+    .free-badge { display:inline-block; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:3px 12px; font-size:12px; font-weight:700; margin-bottom:16px; }
+    #resultBox { display:none; }
+    .zodiac-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; text-align:center; }
+    .zodiac-emoji { font-size:48px; margin-bottom:8px; }
+    .zodiac-name { font-size:20px; font-weight:800; color:white; margin-bottom:4px; }
+    .zodiac-year { font-size:13px; color:var(--dim); }
+    .overview-box { background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.3); border-radius:16px; padding:16px 20px; margin-bottom:16px; }
+    .overview-box p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
+    .section-box { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .section-box h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+    .section-box p { font-size:14px; line-height:1.9; color:rgba(255,255,255,0.85); }
+    .sec-months { background:rgba(245,158,11,0.08); border-color:#f59e0b; }
+    .sec-months h3 { color:#f59e0b; }
+    .month-item { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; line-height:1.7; color:rgba(255,255,255,0.8); }
+    .month-item:last-child { border-bottom:none; }
+    .sec-career { background:rgba(96,165,250,0.08); border-color:#60a5fa; }
+    .sec-career h3 { color:#60a5fa; }
+    .sec-money { background:rgba(16,185,129,0.08); border-color:#10b981; }
+    .sec-money h3 { color:#10b981; }
+    .sec-love { background:rgba(236,72,153,0.08); border-color:#ec4899; }
+    .sec-love h3 { color:#ec4899; }
+    .sec-health { background:rgba(52,211,153,0.08); border-color:#34d399; }
+    .sec-health h3 { color:#34d399; }
+    .lucky-box { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:16px; padding:16px 20px; margin-bottom:12px; }
+    .lucky-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .lucky-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; color:rgba(255,255,255,0.8); }
+    .lucky-label { color:var(--dim); min-width:80px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="korean.html" class="back-btn">←</a>
+  <div class="page-title">토정비결 โทจองบีกยอล</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-tojung.png" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">토정비결 โทจองบีกยอล</div>
+    <div class="hero-desc">ดูดวงรายปีตามตำราเกาหลีโบราณค่ะ<br>วิเคราะห์จากนักษัตรปีเกิดและปีปัจจุบันค่ะ</div>
+  </div>
+
+  <div style="text-align:center;margin-bottom:16px"><span style="display:inline-block;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;">🪙 29 เหรียญ</span></div>
+
+  <div class="form-box">
+    <label class="form-label">📅 ปีเกิด (ค.ศ.)</label>
+    <div class="date-row">
+      <select class="sel" id="birthYear"></select>
+    </div>
+  </div>
+
+  <div class="form-box">
+    <label class="form-label">📆 เลือกปีที่ต้องการดูดวง</label>
+    <div class="year-tabs">
+      <div class="year-tab active" id="tab2569" onclick="selectYear(2569)">พ.ศ.2569</div>
+      <div class="year-tab" id="tab2570" onclick="selectYear(2570)">พ.ศ.2570</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center;">
+    <div style="font-size:13px;color:var(--gold);margin-bottom:4px;">🪙 ใช้ 29 เหรียญต่อครั้งค่ะ</div>
+    <div style="font-size:11px;color:var(--dim);">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+  <button class="btn-check" id="checkBtn" onclick="checkTojung()">🔮 ดูโทจองบีกยอล</button>
+
+  <div id="resultBox">
+    <div class="zodiac-card">
+      <div class="zodiac-emoji" id="zodiacEmoji"></div>
+      <div class="zodiac-name" id="zodiacName"></div>
+      <div class="zodiac-year" id="zodiacYear"></div>
+    </div>
+
+    <div class="overview-box">
+      <h3 style="font-size:15px;font-weight:700;color:var(--purple-light);margin-bottom:10px;">✦ ภาพรวมปีนี้ค่ะ</h3>
+      <p id="overviewText"></p>
+    </div>
+
+    <div class="section-box sec-months">
+      <h3>📅 ดวงรายเดือนค่ะ</h3>
+      <div id="monthsList"></div>
+    </div>
+
+    <div class="section-box sec-career">
+      <h3>💼 การงานและความสำเร็จค่ะ</h3>
+      <p id="careerText"></p>
+    </div>
+
+    <div class="section-box sec-money">
+      <h3>💰 การเงินและทรัพย์สินค่ะ</h3>
+      <p id="moneyText"></p>
+    </div>
+
+    <div class="section-box sec-love">
+      <h3>❤️ ความรักและชีวิตคู่ค่ะ</h3>
+      <p id="loveText"></p>
+    </div>
+
+    <div class="section-box sec-health">
+      <h3>🏥 สุขภาพค่ะ</h3>
+      <p id="healthText"></p>
+    </div>
+
+    <div class="lucky-box">
+      <div class="lucky-title">🧧 สิ่งมงคลประจำปีค่ะ</div>
+      <div class="lucky-row"><span class="lucky-label">🎨 สีมงคล</span><span id="luckyColor"></span></div>
+      <div class="lucky-row"><span class="lucky-label">🧭 ทิศมงคล</span><span id="luckyDir"></span></div>
+      <div class="lucky-row"><span class="lucky-label">🔢 เลขมงคล</span><span id="luckyNum"></span></div>
+      <div class="lucky-row"><span class="lucky-label">💎 สิ่งของ</span><span id="luckyItem"></span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+
+window._currentUser = null;
+window.updateCoinUI = function(c){ document.getElementById('coinCount').textContent=c; var d=document.getElementById('coinDisplay'); if(d) d.textContent=c; };
+function setAvatarDisplay(a){
+  var el=document.getElementById('avatarEl'); if(!el) return;
+  if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent=a||'👤';
+}
+window.loginNow  = async function(){ try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){} };
+window._currentUser = null;
+window.logoutNow = async function(){ await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  window._currentUser = user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+// init year dropdown
+(function(){
+  var yearEl=document.getElementById('birthYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-90;y--){
+    var o=document.createElement('option');
+    o.value=y; o.textContent='ค.ศ.'+y+(y===1995?' (แนะนำ)':'');
+    if(y===1995) o.selected=true;
+    yearEl.appendChild(o);
+  }
+})();
+
+var selectedYear=2569;
+window.selectYear=function(y){
+  selectedYear=y;
+  document.getElementById('tab2569').className=y===2569?'year-tab active':'year-tab';
+  document.getElementById('tab2570').className=y===2570?'year-tab active':'year-tab';
+};
+
+window.checkTojung=async function(){
+  if(!window._currentUser){ alert('กรุณาเข้าสู่ระบบก่อนค่ะ'); return; }
+
+  var birthYearCE=parseInt(document.getElementById('birthYear').value);
+  var zIdx=getZodiacIndex(birthYearCE);
+  var data=getTojung(selectedYear, zIdx);
+
+  if(!data){ alert('ไม่พบข้อมูลดวงสำหรับปีนี้ค่ะ'); return; }
+
+  var btn=document.getElementById('checkBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังโหลด...';
+
+  try {
+    var idToken=await window._currentUser.getIdToken();
+    var res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'tojung',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'x'}]})
+    });
+    var newBal=res.headers.get('X-New-Coin-Balance');
+    if(newBal!=null) updateCoinUI(parseInt(newBal));
+    if(!res.ok){
+      var err=await res.json().catch(()=>({}));
+      alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return;
+    }
+  } catch(e){ btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return; }
+
+  document.getElementById('zodiacEmoji').textContent=ZODIAC_EMOJI[zIdx];
+  document.getElementById('zodiacName').textContent='ปีเกิด: '+ZODIAC_TH[zIdx]+' ค.ศ.'+birthYearCE;
+  document.getElementById('zodiacYear').textContent='โทจองบีกยอล พ.ศ.'+selectedYear;
+  document.getElementById('overviewText').textContent=data.overview;
+
+  var monthsHtml='';
+  data.months.forEach(function(m){
+    monthsHtml+='<div class="month-item">'+m+'</div>';
+  });
+  document.getElementById('monthsList').innerHTML=monthsHtml;
+
+  document.getElementById('careerText').textContent=data.career;
+  document.getElementById('moneyText').textContent=data.money;
+  document.getElementById('loveText').textContent=data.love;
+  document.getElementById('healthText').textContent=data.health;
+  document.getElementById('luckyColor').textContent=data.lucky.colors;
+  document.getElementById('luckyDir').textContent=data.lucky.direction;
+  document.getElementById('luckyNum').textContent=data.lucky.numbers;
+  document.getElementById('luckyItem').textContent=data.lucky.item;
+
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+
+  // บันทึกประวัติ
+  addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+    type:'โทจองบีกยอล',
+    zodiac: ZODIAC_TH[zIdx],
+    year: selectedYear,
+    result: data.overview,
+    createdAt: serverTimestamp()
+  }).catch(function(){});
+
+  btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอลอีกครั้ง';
+};
+</script>
+</body>
+</html>
