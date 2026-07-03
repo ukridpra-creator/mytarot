@@ -68,6 +68,15 @@
     .sec-care h3 { color:#ef4444; }
     .sec-fix    { background:rgba(16,185,129,0.08); border-color:#10b981; }
     .sec-fix h3 { color:#10b981; }
+    .sec-career { background:rgba(96,165,250,0.08);  border-color:#60a5fa; }
+    .sec-career h3 { color:#60a5fa; }
+    .sec-money  { background:rgba(16,185,129,0.08);  border-color:#10b981; }
+    .sec-money h3 { color:#10b981; }
+    .sec-love   { background:rgba(236,72,153,0.08);  border-color:#ec4899; }
+    .sec-love h3 { color:#ec4899; }
+    .sec-health { background:rgba(168,85,247,0.08);  border-color:#a855f7; }
+    .sec-health h3 { color:#a855f7; }
+    .sec-fix h3 { color:#10b981; }
     .sec-safe   { background:rgba(16,185,129,0.08); border-color:#10b981; }
     .sec-safe h3 { color:#10b981; }
 
@@ -371,38 +380,42 @@ window.checkSamjae = function() {
   // info sections
   var fixHtml=SAMJAE_INFO.fix.map(function(f){return f;}).join('<br>');
 
-  var PHASE_INFO=[
-    {cls:'sec-care',icon:'🌱',title:'ซัมแจเข้า (입삼재) ปีที่ 1',
-     desc:'เป็นปีที่ดวงชะตาเริ่มเข้าสู่ช่วงท้าทายค่ะ ยังไม่หนักมาก แต่จะรู้สึกว่าสิ่งต่างๆ เริ่มสะดุดค่ะ ควรระวังการตัดสินใจใหญ่ อย่าเพิ่งลงทุน ย้ายงาน หรือเปิดกิจการใหม่ค่ะ ทำบุญและสวดมนต์ให้มากขึ้นเพื่อเสริมดวงค่ะ'},
-    {cls:'sec-care',icon:'⚡',title:'ซัมแจกลาง (중삼재) ปีที่ 2 หนักสุด',
-     desc:'เป็นปีที่หนักที่สุดในช่วงซัมแจค่ะ ดวงชะตาอยู่ในจุดต่ำสุด อาจเจออุบัติเหตุ เจ็บป่วย ความสัมพันธ์มีปัญหา หรือการเงินสะดุดค่ะ ควรระวังตัวมากเป็นพิเศษ หลีกเลี่ยงการเดินทางไกล การเสี่ยงโชค และการทะเลาะเบาะแว้งค่ะ แนะนำให้ทำพิธีแก้ซัมแจหรือทำบุญใหญ่ค่ะ'},
-    {cls:'sec-what',icon:'🌅',title:'ซัมแจออก (날삼재) ปีที่ 3',
-     desc:'เป็นปีที่ดวงชะตาเริ่มคลี่คลายค่ะ สิ่งต่างๆ จะค่อยๆ ดีขึ้น แต่ยังไม่หมดซัมแจโดยสมบูรณ์ค่ะ ยังควรระวังตัวต่อเนื่อง และทำบุญสม่ำเสมอค่ะ เมื่อผ่านปีนี้ไปได้ ชีวิตจะกลับมาราบรื่นอีกครั้งค่ะ'},
-  ];
+  var sectionsHtml='<div class="info-section sec-what"><h3>⚡ ซัมแจคืออะไรคะ</h3><p>ซัมแจ (삼재) เป็นศาสตร์โบราณของเกาหลีที่เชื่อว่าทุกคนจะเผชิญช่วงเวลาท้าทาย 3 ปีติดกัน วนเวียนมาทุก 12 ปีค่ะ เกิดจากพลังงานของนักษัตรปีที่ขัดแย้งกับนักษัตรปีเกิด ไม่ใช่เรื่องน่ากลัวเกินไปค่ะ แต่รู้ไว้ระวังตัวได้ทันและเตรียมรับมือได้ดีกว่าค่ะ</p></div>';
 
-  var sectionsHtml='<div class="info-section sec-what"><h3>⚡ ซัมแจคืออะไรคะ</h3><p>ซัมแจ (삼재) คือช่วงเวลา 3 ปีติดกันที่ดวงชะตาอาจเผชิญกับความท้าทายมากกว่าปกติค่ะ เกิดจากพลังงานของนักษัตรปีที่ขัดแย้งกับนักษัตรปีเกิด วนเวียนมาทุก 12 ปีค่ะ รู้ไว้ระวังตัวได้ทันค่ะ</p></div>';
+  function buildPhaseSection(ph) {
+    return '<div class="info-section sec-care"><h3>'+ph.icon+' '+ph.title+'</h3><p>'+ph.overview+'</p></div>'
+      +'<div class="info-section sec-career"><h3>💼 ด้านการงานค่ะ</h3><p>'+ph.career+'</p></div>'
+      +'<div class="info-section sec-money"><h3>💰 ด้านการเงินค่ะ</h3><p>'+ph.money+'</p></div>'
+      +'<div class="info-section sec-love"><h3>❤️ ด้านความรักค่ะ</h3><p>'+ph.love+'</p></div>'
+      +'<div class="info-section sec-health"><h3>🏥 ด้านสุขภาพค่ะ</h3><p>'+ph.health+'</p></div>'
+      +'<div class="info-section sec-fix"><h3>✅ สิ่งที่ควรทำค่ะ</h3><p>'+ph.todo+'</p></div>'
+      +'<div class="info-section sec-what"><h3>🧧 สิ่งมงคลค่ะ</h3><p>'+ph.amulet+'</p></div>';
+  }
 
   if(inSamjae){
-    var ph=PHASE_INFO[samjaePhase];
-    sectionsHtml+=
-      '<div class="info-section '+ph.cls+'"><h3>'+ph.icon+' คุณพี่กำลังอยู่ในช่วง '+ph.title+'</h3><p>'+ph.desc+'</p></div>'
-      +'<div class="info-section sec-care"><h3>⚠️ สิ่งที่ควรระวังค่ะ</h3><p>'
-      +'ด้านสุขภาพ — ระวังอุบัติเหตุและเจ็บป่วยโดยไม่คาดคิดค่ะ<br>'
-      +'ด้านการเงิน — ระวังการลงทุนเสี่ยงและการสูญเสียทรัพย์สินค่ะ<br>'
-      +'ด้านความสัมพันธ์ — อาจเกิดความขัดแย้งกับคนรอบข้าง ควรระวังคำพูดค่ะ<br>'
-      +'ด้านการงาน — อาจเจอปัญหาที่คาดไม่ถึง ต้องอดทนค่ะ'
-      +'</p></div>'
-      +'<div class="info-section sec-fix"><h3>🌿 วิธีแก้เคล็ดซัมแจค่ะ</h3><p>'+fixHtml+'</p></div>';
+    var ph=PHASE_DETAIL[samjaePhase];
+    sectionsHtml+='<div class="info-section sec-safe" style="background:rgba(239,68,68,0.08);border-color:#ef4444"><h3 style="color:#ef4444">⚡ คุณพี่กำลังอยู่ในช่วง '+ph.title+'</h3><p>'+ph.overview+'</p></div>';
+    sectionsHtml+=buildPhaseSection(ph);
+    sectionsHtml+='<div class="info-section sec-fix"><h3>🌿 วิธีแก้เคล็ดซัมแจค่ะ</h3><p>'+fixHtml+'</p></div>';
+    sectionsHtml+='<div class="info-section sec-what"><h3>🙏 พิธีแก้ซัมแจค่ะ</h3><p>พิธีแก้ซัมแจ (삼재풀이) ของเกาหลีค่ะ ทำได้โดยไปวัดเพื่อทำพิธีขับไล่พลังงานลบค่ะ หรือจะทำบุญปล่อยนก ปล่อยปลา ทำทาน และสวดมนต์ขอพรจากเทพเจ้าที่นับถือก็ได้ค่ะ คนเกาหลีนิยมไปวัดในวันขึ้นปีใหม่ (설날 ซอลลัล) เพื่อทำพิธีแก้ซัมแจค่ะ</p></div>';
+    // ซัมแจรอบที่ผ่านมา
+    var prevStart=y1-12; var prevBE=prevStart+543;
+    sectionsHtml+='<div class="info-section sec-career"><h3>🕐 ซัมแจรอบก่อนหน้าค่ะ</h3><p>ซัมแจรอบก่อนหน้าของคุณพี่คือ พ.ศ.'+(prevBE)+'-'+(prevBE+2)+' ค่ะ ลองนึกดูว่าช่วงนั้นชีวิตเป็นยังไงบ้างคะ ถ้าจำได้ว่าเจอความท้าทายอะไร ก็จะช่วยเตรียมรับมือซัมแจครั้งนี้ได้ดีขึ้นค่ะ</p></div>';
   } else {
     var yearsLeft=y1-nowYear;
-    sectionsHtml+=
-      '<div class="info-section sec-safe"><h3>✅ ปลอดภัยค่ะ</h3><p>คุณพี่ยังไม่ได้อยู่ในช่วงซัมแจค่ะ ซัมแจจะมาถึงในอีก '+yearsLeft+' ปีข้างหน้า คือปี พ.ศ.'+y1BE+' ค่ะ เตรียมตัวรับมือล่วงหน้าได้เลยนะคะ</p></div>'
-      +'<div class="info-section sec-what"><h3>📖 เตรียมรับมือล่วงหน้าค่ะ</h3><p>'
-      +'ซัมแจเข้า — ปีแรก เริ่มสะดุด ยังไม่หนักมากค่ะ<br>'
-      +'ซัมแจกลาง — ปีที่ 2 หนักสุด ต้องระวังมากค่ะ<br>'
-      +'ซัมแจออก — ปีที่ 3 เริ่มดีขึ้น ค่อยๆ คลี่คลายค่ะ'
-      +'</p></div>'
-      +'<div class="info-section sec-fix"><h3>🌿 วิธีเตรียมตัวค่ะ</h3><p>'+fixHtml+'</p></div>';
+    // แสดงทั้ง 3 ช่วงให้รู้ไว้ล่วงหน้า
+    sectionsHtml+='<div class="info-section sec-safe"><h3>✅ ปลอดภัยค่ะ</h3><p>คุณพี่ยังไม่ได้อยู่ในช่วงซัมแจค่ะ ซัมแจจะมาถึงในอีก '+yearsLeft+' ปีข้างหน้า คือปี พ.ศ.'+y1BE+' ค่ะ เตรียมตัวรับมือล่วงหน้าได้เลยนะคะ</p></div>';
+    PHASE_DETAIL.forEach(function(ph, i) {
+      var yearBEshow = [y1BE, y2BE, y3BE][i];
+      sectionsHtml+='<div class="info-section sec-what"><h3>'+ph.icon+' พ.ศ.'+yearBEshow+' — '+ph.title+'</h3><p>'+ph.overview+'</p>'
+        +'<p style="margin-top:8px;font-size:13px;opacity:0.7">💼 '+ph.career+'</p>'
+        +'<p style="margin-top:6px;font-size:13px;opacity:0.7">💰 '+ph.money+'</p>'
+        +'<p style="margin-top:6px;font-size:13px;opacity:0.7">✅ '+ph.todo+'</p></div>';
+    });
+    sectionsHtml+='<div class="info-section sec-fix"><h3>🌿 เตรียมตัวไว้ก่อนค่ะ</h3><p>'+fixHtml+'</p></div>';
+    // ซัมแจรอบที่ผ่านมา
+    var prevStart=y1-12; var prevBE=prevStart+543;
+    sectionsHtml+='<div class="info-section sec-career"><h3>🕐 ซัมแจรอบก่อนหน้าค่ะ</h3><p>ซัมแจรอบก่อนหน้าของคุณพี่คือ พ.ศ.'+(prevBE)+'-'+(prevBE+2)+' ค่ะ ลองนึกดูว่าช่วงนั้นชีวิตเป็นยังไงบ้างคะ จะได้รู้ว่าซัมแจส่งผลกับคุณพี่แรงแค่ไหนค่ะ</p></div>';
   }
   document.getElementById('infoSections').innerHTML=sectionsHtml;
 
