@@ -208,7 +208,7 @@ onAuthStateChanged(auth, async user => {
   if(user){
     var snap=await getDoc(doc(db,'users',user.uid));
     var data=snap.exists()?snap.data():{};
-    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    window.updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
     document.getElementById('guestView').style.display='none';
     document.getElementById('loggedView').style.display='block';
     document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
@@ -298,7 +298,7 @@ function initSections(){
 
 function parseAndRender(fullText, finalize){
   SECTIONS.forEach(function(s){
-    var re=new RegExp('<'+s.tag+''>([\\s\\S]*?)<\\/'+s.tag+'>','i');
+    var re=new RegExp('<'+s.tag+'>([\\s\\S]*?)<\\/'+s.tag+'>','i');
     var m=fullText.match(re);
     var el=document.getElementById('txt_'+s.tag);
     if(m&&el){
