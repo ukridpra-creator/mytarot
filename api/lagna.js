@@ -32,7 +32,8 @@ export default async function handler(req, res) {
 
   try {
     // URL ผูกดวง myhora
-    const url = `https://myhora.com/astrology/thai.aspx?yr=${yearBE}&mt=${month}&dt=${day}&hr=${h}&mi=${mn}&lat=${latitude}&lon=${longitude}&tz=7`;
+    const url = `https://myhora.com/ดูดวง/ดวงชะตา.aspx?yr=${yearBE}&mt=${month}&dt=${day}&hr=${h}&mi=${mn}&lat=${latitude}&lon=${longitude}&tz=7&lang=1`;
+
 
     const resp = await fetch(url, {
       headers: {

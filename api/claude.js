@@ -97,7 +97,7 @@ export default async function handler(req, res) {
   // 3) ราคามาจาก server เท่านั้น โดยดูจาก "service" ที่ client บอกว่าใช้บริการไหน
   const service = body.service;
   const cost = SERVICE_COSTS[service];
-  if (!cost) return res.status(400).json({ error: 'invalid_service' });
+  if (cost === undefined) return res.status(400).json({ error: 'invalid_service' });
 
   // 4) หักเหรียญแบบ transaction ก่อนเรียก Anthropic — กันใช้ฟรี/กันกดซ้ำ-ยิงซ้อน
   const userRef = db.collection('users').doc(uid);
