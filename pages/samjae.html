@@ -173,7 +173,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -260,12 +260,6 @@ var SAMJAE_MAP = {
 };
 
 var SAMJAE_INFO = {
-  care: [
-    'ด้านสุขภาพ — ระวังอุบัติเหตุและเจ็บป่วยโดยไม่คาดคิดค่ะ ดูแลตัวเองให้มากขึ้นนะคะ',
-    'ด้านการเงิน — ระวังการลงทุนเสี่ยง การสูญเสียทรัพย์สิน และหนี้สินค่ะ',
-    'ด้านความสัมพันธ์ — อาจเกิดความขัดแย้งกับคนรอบข้าง ควรระวังคำพูดค่ะ',
-    'ด้านการงาน — อาจเจอปัญหาหรืออุปสรรคที่คาดไม่ถึง ต้องอดทนค่ะ',
-  ],
   fix: [
     'สวดมนต์หรือทำบุญให้มากขึ้นในปีซัมแจค่ะ',
     'ทำพิธีแก้ซัมแจ (삼재풀이) กับหมอดูเกาหลีค่ะ',
@@ -421,6 +415,19 @@ window.checkSamjae = function() {
 
   document.getElementById('resultBox').style.display='block';
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+
+  // บันทึกประวัติ
+  if(window._currentUser){
+    var saveText = inSamjae
+      ? 'ซัมแจ: อยู่ในช่วงซัมแจ '+PHASE_DETAIL[samjaePhase].title+' พ.ศ.'+y1BE+'-'+y3BE
+      : 'ซัมแจ: ปลอดภัย ซัมแจถัดไปปี พ.ศ.'+y1BE+'-'+y3BE;
+    addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+      type:'ซัมแจ ปีซวย',
+      zodiac: z.th,
+      result: saveText,
+      createdAt: serverTimestamp()
+    }).catch(function(){});
+  }
 };
 </script>
 </body>
