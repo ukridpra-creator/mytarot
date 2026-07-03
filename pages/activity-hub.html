@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์ — My Tarot</title>
+  <title>กิจกรรม — My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
@@ -18,21 +18,14 @@
     .reading-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
     .menu-list { display: flex; flex-direction: column; gap: 12px; }
     .menu-card { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 20px; cursor: pointer; text-decoration: none; transition: all 0.3s; position: relative; overflow: hidden; }
-    .menu-card::before { content: \'\'; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.05)); opacity: 0; transition: opacity 0.3s; }
-    .menu-card:hover::before { opacity: 1; }
     .menu-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.15); }
-    .menu-card.accent { border-left: 3px solid #a855f7; }
-    .menu-icon { width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-    .menu-icon.purple { background: rgba(124,58,237,0.2); }
-    .menu-icon.red    { background: rgba(239,68,68,0.15); }
-    .menu-icon.blue   { background: rgba(59,130,246,0.15); }
-    .menu-icon.green  { background: rgba(16,185,129,0.15); }
-    .menu-icon.yellow { background: rgba(245,158,11,0.15); }
+    .menu-icon { width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0; overflow: hidden; }
+    .menu-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+    .menu-icon-emoji { width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
     .menu-info { flex: 1; }
     .menu-name { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
     .menu-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
-    .menu-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
-    .menu-badge.free { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .menu-badge.free { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; flex-shrink: 0; }
     .menu-arrow { font-size: 18px; color: var(--dim); flex-shrink: 0; }
     .section-title { font-size: 12px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; margin-top: 20px; padding-left: 4px; }
     .section-title:first-of-type { margin-top: 0; }
@@ -42,7 +35,7 @@
 
 <div class="page-header">
   <a href="../index.html" class="back-btn">←</a>
-  <div class="page-title">🃏 ไพ่ทาโรต์</div>
+  <div class="page-title">🎪 กิจกรรม</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()">
@@ -74,76 +67,23 @@
 
 <div class="page-content">
   <div class="reading-hero">
-    <div style="margin-bottom:12px"><img src="../images/mascot-tarot.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
-    <div class="reading-title">🃏 ไพ่ทาโรต์</div>
-    <div class="reading-desc">เลือกโหมดที่ต้องการค่ะ ไพ่จะเป็นแสงนำทางให้ค่ะ 🔮</div>
+    <div style="margin-bottom:12px"><img src="../images/mascot-activity.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="reading-title">🎪 กิจกรรม</div>
+    <div class="reading-desc">กิจกรรมสนุกๆ และสิ่งศักดิ์สิทธิ์<br>ที่จะช่วยเสริมดวงและความเป็นสิริมงคลค่ะ</div>
   </div>
 
   <!-- ฟรี -->
   <div class="section-title">✨ ฟรี</div>
   <div class="menu-list">
-    <a href="tarot-yesno.html" class="menu-card accent" style="border-left-color:#10b981;border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));">
-      <div class="menu-icon green">🎴</div>
+    <a href="tree.html" class="menu-card" style="border-left:3px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));border-color:rgba(16,185,129,0.25);">
+      <div class="menu-icon" style="background:rgba(16,185,129,0.2);">
+        <img src="../images/icon-tree.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🌳</span>'">
+      </div>
       <div class="menu-info">
-        <div class="menu-name">ไพ่ Yes / No</div>
-        <div class="menu-desc">สุ่มไพ่ 1 ใบ รับคำตอบใช่หรือไม่ใช่ทันทีค่ะ</div>
+        <div class="menu-name">ขอพรต้นไม้ศักดิ์สิทธิ์</div>
+        <div class="menu-desc">อธิษฐานขอพรจากต้นไม้ศักดิ์สิทธิ์ เสริมมงคลและโชคลาภค่ะ</div>
       </div>
       <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-  </div>
-
-  <!-- ถามทั่วไป -->
-  <div class="section-title">🔮 ถามทั่วไป</div>
-  <div class="menu-list">
-    <a href="tarot-ask.html" class="menu-card accent">
-      <div class="menu-icon purple">🔮</div>
-      <div class="menu-info">
-        <div class="menu-name">ถามอะไรก็ได้</div>
-        <div class="menu-desc">ให้ไพ่ช่วยตอบปัญหาคาใจ เลือกไพ่ 3 ใบค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 20</div>
-      <div class="menu-arrow">›</div>
-    </a>
-  </div>
-
-  <!-- เจาะลึก -->
-  <div class="section-title">✨ เจาะลึกรายด้าน</div>
-  <div class="menu-list">
-    <a href="tarot-love.html" class="menu-card accent">
-      <div class="menu-icon red">❤️</div>
-      <div class="menu-info">
-        <div class="menu-name">เจาะลึกความรัก</div>
-        <div class="menu-desc">ไพ่ 5 ใบ อ่านดวงรักลึกๆ อดีต ปัจจุบัน อนาคต คู่ และอุปสรรคค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 20</div>
-      <div class="menu-arrow">›</div>
-    </a>
-    <a href="tarot-work.html" class="menu-card accent">
-      <div class="menu-icon blue">💼</div>
-      <div class="menu-info">
-        <div class="menu-name">เจาะลึกการงาน</div>
-        <div class="menu-desc">ไพ่ 5 ใบ เส้นทางอาชีพ จุดแข็ง อุปสรรค และโอกาสที่กำลังมาค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 20</div>
-      <div class="menu-arrow">›</div>
-    </a>
-    <a href="tarot-money.html" class="menu-card accent">
-      <div class="menu-icon yellow">💰</div>
-      <div class="menu-info">
-        <div class="menu-name">เจาะลึกการเงิน</div>
-        <div class="menu-desc">ไพ่ 4 ใบ ดวงเงินทอง รายรับ รายจ่าย และคำแนะนำค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 20</div>
-      <div class="menu-arrow">›</div>
-    </a>
-    <a href="tarot-health.html" class="menu-card accent">
-      <div class="menu-icon green">🌿</div>
-      <div class="menu-info">
-        <div class="menu-name">เจาะลึกสุขภาพ</div>
-        <div class="menu-desc">ไพ่ 3 ใบ ดูแลกายและใจ สิ่งที่ต้องระวัง และคำแนะนำค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 20</div>
       <div class="menu-arrow">›</div>
     </a>
   </div>
@@ -179,18 +119,23 @@ setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth,
 const db = getFirestore(app);
 
 window.updateCoinUI = function(coins) { document.getElementById('coinCount').textContent = coins; };
+
 function setAvatarDisplay(avatar) {
   var el = document.getElementById('avatarEl'); if (!el) return;
-  if (avatar && avatar.includes('.png')) { el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; }
-  else { el.textContent = avatar || '👤'; }
+  if (avatar && avatar.includes('.png')) {
+    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  } else { el.textContent = avatar || '👤'; }
 }
+
 window.loginNow  = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
 window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
 onAuthStateChanged(auth, async user => {
   if (user) {
     var snap = await getDoc(doc(db, 'users', user.uid));
     var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0); setAvatarDisplay(data.avatar || '');
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
     document.getElementById('guestView').style.display = 'none';
     document.getElementById('loggedView').style.display = 'block';
     document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
