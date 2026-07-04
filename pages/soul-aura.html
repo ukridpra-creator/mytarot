@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Aura Color - My Tarot</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome สำหรับ ไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Anchan & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anchan:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Anchan', sans-serif;
+            background-color: #0d0d1a;
+        }
+        /* แอนิเมชันสำหรับออร่าหลังบ้าน */
+        @keyframes pulseAura {
+            0% { transform: scale(1) translate(0px, 0px); opacity: 0.5; }
+            50% { transform: scale(1.2) translate(10px, -20px); opacity: 0.8; }
+            100% { transform: scale(1) translate(0px, 0px); opacity: 0.5; }
+        }
+        .aura-glow {
+            animation: pulseAura 8s infinite ease-in-out;
+            filter: blur(60px);
+        }
+        /* ซ่อน Scrollbar ของ Dropdown */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- BACKGROUND AURA (DYNAMIC) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div id="dynamic-aura" class="aura-glow absolute -top-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-br from-indigo-600 to-purple-800 opacity-40"></div>
+        <div id="dynamic-aura-2" class="aura-glow absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-blue-600 to-pink-700 opacity-30" style="animation-delay: 3s;"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col flex-grow bg-[#090915]/80 backdrop-blur-md shadow-2xl min-h-screen pb-24">
+        
+        <!-- HEADER: ระบบเหรียญ & โปรไฟล์ -->
+        <header class="flex items-center justify-between px-4 py-3 border-b border-purple-900/40 bg-[#0c0c1f]/90 sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer" onclick="toggleProfileMenu()">
+                    M
+                </div>
+                <span class="text-sm font-semibold tracking-wide text-purple-300">My Tarot</span>
+            </div>
+            
+            <!-- แสดงเหรียญทิพย์ (สวยๆ ไม่โดนตัดจริงในหน้านี้) -->
+            <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full shadow-inner animate-pulse">
+                <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                <span id="header-coins" class="text-xs font-bold text-amber-300">120</span>
+                <span class="text-[10px] text-amber-400/70">เหรียญ</span>
+            </div>
+
+            <!-- Profile Dropdown (ซ่อนอยู่) -->
+            <div id="profile-menu" class="hidden absolute left-4 top-14 w-48 bg-[#12122c] border border-purple-500/30 rounded-xl shadow-xl overflow-hidden z-50">
+                <div class="px-4 py-2 border-b border-purple-500/20 text-xs text-gray-400">ผู้ใช้งาน: คุณมิกกี้</div>
+                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-purple-600/20 transition flex items-center gap-2"><i class="fa-solid fa-history text-purple-400"></i> ประวัติการดูดวง</a>
+                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-purple-600/20 transition flex items-center gap-2 text-amber-400"><i class="fa-solid fa-store"></i> เติมเหรียญ</a>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-grow px-4 pt-6">
+            
+            <!-- Title Section -->
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-wide">
+                    🔮 สีประทีปวิญญาณ
+                </h1>
+                <p class="text-[11px] text-gray-400 mt-1">Soul Aura Color Astrology</p>
+                <p class="text-xs text-purple-300/80 mt-2 max-w-xs mx-auto px-2">
+                    ค้นหาความลับของดวงจิตผ่าน "สีออร่าพลังงาน" ประจำตัวคุณตามศาสตร์ตะวันตกโบราณ
+                </p>
+            </div>
+
+            <!-- INPUT FORM CARD -->
+            <div id="input-card" class="bg-[#13132e]/70 border border-purple-500/20 rounded-2xl p-5 shadow-lg backdrop-blur-sm">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-purple-300 mb-2">เลือกวันเกิดของคุณ</label>
+                        <select id="birth-day" class="w-full bg-[#090918] border border-purple-500/30 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-purple-400">
+                            <!-- จะถูกเจนวันด้วย JS -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-purple-300 mb-2">เลือกเดือนเกิดของคุณ</label>
+                        <select id="birth-month" class="w-full bg-[#090918] border border-purple-500/30 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-purple-400">
+                            <option value="1">มกราคม</option>
+                            <option value="2">กุมภาพันธ์</option>
+                            <option value="3">มีนาคม</option>
+                            <option value="4">เมษายน</option>
+                            <option value="5">พฤษภาคม</option>
+                            <option value="6">มิถุนายน</option>
+                            <option value="7">กรกฎาคม</option>
+                            <option value="8">สิงหาคม</option>
+                            <option value="9">กันยายน</option>
+                            <option value="10">ตุลาคม</option>
+                            <option value="11">พฤศจิกายน</option>
+                            <option value="12">ธันวาคม</option>
+                        </select>
+                    </div>
+
+                    <!-- ปุ่มกดทำนายฟรี -->
+                    <button onclick="calculateAura()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold text-xs py-3 rounded-xl transition shadow-lg shadow-purple-900/40 mt-2 flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles animate-spin" style="animation-duration: 3s;"></i>
+                        เปิดเนตรออร่าวิญญาณฟรี
+                    </button>
+                </div>
+            </div>
+
+            <!-- LOADING STATE (ซ่อนอยู่) -->
+            <div id="loading-state" class="hidden text-center py-12 space-y-4">
+                <div class="inline-block relative w-16 h-16">
+                    <div class="absolute inset-0 border-4 border-purple-500/20 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-t-purple-400 rounded-full animate-spin"></div>
+                </div>
+                <p class="text-xs text-purple-300 animate-pulse">กำลังสื่อสารกับประทีปวิญญาณส่วนลึก...</p>
+            </div>
+
+            <!-- RESULT CARD (ซ่อนอยู่ตอนแรก) -->
+            <div id="result-card" class="hidden space-y-5 mt-2">
+                <!-- วงแหวนออร่าจำลอง -->
+                <div class="flex justify-center py-4">
+                    <div id="aura-circle" class="w-32 h-32 rounded-full shadow-[0_0_50px_rgba(168,85,247,0.5)] flex items-center justify-center transition-all duration-1000">
+                        <i class="fa-solid fa-om text-white/90 text-3xl animate-pulse"></i>
+                    </div>
+                </div>
+
+                <!-- รายละเอียดสีออร่า -->
+                <div class="bg-[#121230]/90 border border-purple-500/30 rounded-2xl p-5 space-y-3">
+                    <div class="text-center">
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400">สีดวงจิตของคุณคือ</span>
+                        <h2 id="aura-title" class="text-xl font-bold text-purple-300 mt-0.5">สีทองคำศักดิ์สิทธิ์ (Solar Gold)</h2>
+                    </div>
+                    
+                    <div class="border-t border-purple-500/20 pt-3">
+                        <p class="text-xs font-semibold text-cyan-400 mb-1"><i class="fa-solid fa-comment-dots mr-1"></i> คำทำนายตัวตนลึกๆ :</p>
+                        <!-- กล่องข้อความแบบสตรีมทิพย์ -->
+                        <div id="stream-text" class="text-xs text-gray-300 leading-relaxed min-h-[80px]"></div>
+                    </div>
+
+                    <div class="border-t border-purple-500/20 pt-3 flex justify-between text-[11px]">
+                        <div><span class="text-purple-400">จุดเด่น:</span> <span id="aura-strength" class="text-gray-300">-</span></div>
+                        <div><span class="text-pink-400">ออร่าคู่สมพงษ์:</span> <span id="aura-match" class="text-gray-300">-</span></div>
+                    </div>
+                </div>
+
+                <!-- 🪙 UPSELL BANNER: ตัวล่อซื้อไปต่อหน้าเสียเงินด้านล่างผลลัพธ์ -->
+                <div class="bg-gradient-to-br from-amber-900/40 via-yellow-950/50 to-amber-900/40 border border-amber-500/40 rounded-2xl p-4 shadow-xl text-center space-y-3">
+                    <div class="space-y-1">
+                        <h3 class="text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-crown text-amber-400 text-xs"></i> ปลดล็อกขั้นกว่า: คู่แท้และทิศนำโชค
+                        </h3>
+                        <p class="text-[10.5px] text-amber-200/80 max-w-xs mx-auto leading-relaxed">
+                            เจาะลึกออร่าความรักก้าวหน้า เผยชื่อคนลักษณะสีออร่าที่จะเข้ามาอุปถัมภ์คุณในปี 2026 พร้อมสีกาลกิณีห้ามใช้เด็ดขาด!
+                        </p>
+                    </div>
+                    <!-- วาร์ปไปหน้าจีนหรือหน้าเสียเงินหลัก -->
+                    <a href="chinese.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-gray-950 font-bold text-[11px] px-5 py-2 rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-coins"></i> เจาะลึกดวงชะตาออร่าขั้นสูง (20 เหรียญ)
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR (ครบดีไซน์แอป) -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#0a0a1a]/95 border-t border-purple-900/60 flex justify-around items-center py-2 z-50 shadow-2xl backdrop-blur-md">
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-purple-400 transition">
+                <i class="fa-solid fa-house text-sm"></i>
+                <span class="text-[9px]">หน้าแรก</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-purple-400 font-medium">
+                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                <span class="text-[9px]">ศาสตร์ฟรี</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-purple-400 transition">
+                <i class="fa-solid fa-id-card text-sm"></i>
+                <span class="text-[9px]">ดูดวงจริง</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-purple-400 transition">
+                <i class="fa-solid fa-wallet text-sm"></i>
+                <span class="text-[9px]">กระเป๋าเงิน</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC หลังบ้าน -->
+    <script>
+        // เติมตัวเลือกวันเกิด 1-31 เข้าใน Select
+        const daySelect = document.getElementById('birth-day');
+        for (let i = 1; i <= 31; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerHTML = `วันที่ ${i}`;
+            daySelect.appendChild(opt);
+        }
+
+        // ฟังก์ชันเปิด/ปิดเมนูโปรไฟล์
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // คลังชุดข้อมูลสีออร่า 9 กลุ่มจิตพยากรณ์
+        const AURA_DATABASE = [
+            {
+                title: "สีแดงทับทิมเพลิง (Ruby Red Aura)",
+                desc: "คุณคือดวงจิตแห่งผู้นำ ทะเยอทะยาน มีพลังขับเคลื่อนชีวิตสูงมาก ตรงไปตรงมา รักใครรักจริงและเกลียดการทรยศหักหลังเป็นที่สุด คนรอบข้างมักสัมผัสได้ถึงความน่าเกรงขามและไฟในตัวคุณในยามที่มุ่งมั่นทำงาน",
+                bg: "linear-gradient(to br, #dc2626, #7f1d1d)",
+                glow: "0 0 50px rgba(220,38,38,0.6)",
+                strength: "ความกล้าหาญ / ความเป็นผู้นำ",
+                match: "ออร่าสีทอง"
+            },
+            {
+                title: "สีส้มแอมเบอร์สว่าง (Radiant Orange Aura)",
+                desc: "ดวงจิตของคุณเต็มไปด้วยความสร้างสรรค์ มีเสน่ห์ทางสังคม ปรับตัวเข้ากับสิ่งใหม่ๆ เก่งเลิศ เป็นคนรักอิสระและมีความสุขกับสิ่งรอบตัวง่าย แต่แอบเบื่อง่ายหากต้องอยู่ในกฎเกณฑ์ที่ซ้ำซากจำเจ",
+                bg: "linear-gradient(to br, #f97316, #7c2d12)",
+                glow: "0 0 50px rgba(249,115,22,0.6)",
+                strength: "คิดบวก / ไอเดียสร้างสรรค์",
+                match: "ออร่าสีคราม"
+            },
+            {
+                title: "สีเหลืองโซลาร์ส่องสว่าง (Solar Yellow Aura)",
+                desc: "คุณคือดวงจิตแห่งปัญญา ไหวพริบปฏิภาณดี มีตรรกะเหตุผลเฉียบคม ชื่นชอบการเรียนรู้และมีความขี้เล่นอารมณ์ดีอยู่ในตัว เป็นศูนย์รวมเสียงหัวเราะและคำปรึกษาที่ชาญฉลาดให้กับเพื่อนฝูงเสมอ",
+                bg: "linear-gradient(to br, #eab308, #713f12)",
+                glow: "0 0 50px rgba(234,179,8,0.6)",
+                strength: "สติปัญญา / วาทศิลป์",
+                match: "ออร่าสีเขียวมรกต"
+            },
+            {
+                title: "สีเขียวมรกตป่าเวทมนตร์ (Emerald Green Aura)",
+                desc: "ดวงจิตของคุณคือผู้พิทักษ์และการเยียวยา (Healer) รักความสงบ อ่อนโยน มีเมตตาสูงและใจเย็น เป็นคนเก็บความลับเก่งและรักธรรมชาติ คนอยู่ใกล้คุณจะรู้สึกปลอดภัยและผ่อนคลายจิตใจอย่างประหลาด",
+                bg: "linear-gradient(to br, #10b981, #064e3b)",
+                glow: "0 0 50px rgba(16,185,129,0.6)",
+                strength: "บำบัดจิตใจ / ความซื่อสัตย์",
+                match: "ออร่าสีชมพู"
+            },
+            {
+                title: "สีฟ้าคริสตัลธารา (Crystal Blue Aura)",
+                desc: "ดวงจิตของคุณคือสัญลักษณ์แห่งความสงบและการสื่อสาร คุณมีความประนีประนอมสูง พูดจามีเสน่ห์โน้มน้าวใจคนเก่ง มีความรักสงบ ไม่ชอบการขัดแย้ง และมีสัมผัสที่ซื่อสัตย์ต่อความรู้สึกของผู้อื่นสูง",
+                bg: "linear-gradient(to br, #06b6d4, #164e63)",
+                glow: "0 0 50px rgba(6,182,212,0.6)",
+                strength: "เจรจาพาที / รักความสงบ",
+                match: "ออร่าสีส้มแอมเบอร์"
+            },
+            {
+                title: "สีครามอินดิโก้ลึกลับ (Indigo Blue Aura)",
+                desc: "คุณมีดวงจิตที่มีพลังสัญชาตญาณสูง (Intuition) มีซิกส์เซนส์เฉียบคม อ่านใจคนเก่ง มักมองเห็นธาตุแท้ของผู้คนได้เร็ว ลึกลับ น่าค้นหา เป็นคนชอบคิดทบทวนลึกซึ้งและมีความเป็นผู้ใหญ่เกินตัว",
+                bg: "linear-gradient(to br, #6366f1, #1e1b4b)",
+                glow: "0 0 50px rgba(99,102,241,0.6)",
+                strength: "ลางสังหรณ์ / การอ่านใจ",
+                match: "ออร่าสีม่วงไวโอเลต"
+            },
+            {
+                title: "สีม่วงไวโอเลตมนตรา (Mystic Violet Aura)",
+                desc: "ดวงจิตของคุณผูกพันกับศาสตร์ลึกลับ จิตวิญญาณ หรือโลกแห่งศิลปะขั้นสูง เป็นคนมีความฝันยิ่งใหญ่ จินตนาการล้ำลึก แฝงไปด้วยเสน่ห์ชวนลุ่มหลง คาดเดาใจได้ยาก แต่มีพลังดึงดูดสิ่งศักดิ์สิทธิ์รอบตัวให้คุ้มครอง",
+                bg: "linear-gradient(to br, #a855f7, #4c1d95)",
+                glow: "0 0 50px rgba(168,85,247,0.6)",
+                strength: "แรงบันดาลใจ / มีเสน่ห์ลึกลับ",
+                match: "ออร่าสีครามอินดิโก้"
+            },
+            {
+                title: "สีชมพูคอสโมสอ่อนโยน (Magenta Pink Aura)",
+                desc: "คุณคือดวงจิตแห่งความรักที่บริสุทธิ์ อ่อนหวาน โรแมนติก ใส่ใจรายละเอียดรอบตัวและเทคแคร์ผู้อื่นเก่งเป็นที่หนึ่ง แต่อาจเป็นคนขี้สงสารคนจนมักโดนเอาเปรียบได้ง่าย มีโชคเรื่องความเอ็นดูจากผู้ใหญ่",
+                bg: "linear-gradient(to br, #ec4899, #4c0519)",
+                glow: "0 0 50px rgba(236,72,153,0.6)",
+                strength: "ความเมตตา / เสน่ห์เมตตามหานิยม",
+                match: "ออร่าสีเขียวมรกต"
+            },
+            {
+                title: "สีทองคำคอสมิกจักรวาล (Cosmic Gold Aura)",
+                desc: "คุณคือดวงจิตระดับสูงที่ผ่านเกณฑ์ชะตาที่แกร่งกล้า มีความอุดมสมบูรณ์ มีพลังบารมี ดวงแข็ง อุปสรรคทำอะไรคุณไม่ได้นาน มักมีโชคลาภลอยแบบไม่คาดฝัน และเป็นดวงชะตาที่พร้อมเจริญรุ่งเรืองครั้งใหญ่เมื่อถึงเวลา",
+                bg: "linear-gradient(to br, #f59e0b, #78350f)",
+                glow: "0 0 60px rgba(245,158,11,0.7)",
+                strength: "โชคลาภ / บารมีและดวงแข็ง",
+                match: "ออร่าสีแดงทับทิม"
+            }
+        ];
+
+        // ระบบลอจิกทำนาย (ฟรี ไม่หักเงิน)
+        function calculateAura() {
+            const day = parseInt(document.getElementById('birth-day').value);
+            const month = parseInt(document.getElementById('birth-month').value);
+            
+            // ปิดการแสดงผลเก่า ย้ายเข้าลูปโหลดดิ่ง
+            document.getElementById('input-card').classList.add('hidden');
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
+
+            // ใช้หลักเลขศาสตร์รวมกันเพื่อหา Index 0-8 แบบสุ่มลอจิกจากวันเกิดจริง
+            const score = (day + month) % AURA_DATABASE.length;
+            const resultData = AURA_DATABASE[score];
+
+            // หน่วงเวลาสมมุติว่าประมวลผล 1.5 วินาทีเพื่อความขลัง
+            setTimeout(() => {
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('result-card').classList.remove('hidden');
+
+                // เปลี่ยนสีลูกแก้วออร่าตามผลลัพธ์ดวงชะตาจริงผ่าน CSS
+                const auraCircle = document.getElementById('aura-circle');
+                auraCircle.style.background = resultData.bg;
+                auraCircle.style.boxShadow = resultData.glow;
+
+                // อัปเดตเอฟเฟกต์ออร่าพื้นหลังแอปให้ล้อไปตามสีดวงจิตเพื่อความว้าว
+                document.getElementById('dynamic-aura').style.background = resultData.bg;
+                document.getElementById('dynamic-aura-2').style.background = resultData.bg;
+
+                // ใส่หัวข้อคำทำนาย
+                document.getElementById('aura-title').innerText = resultData.title;
+                document.getElementById('aura-strength').innerText = resultData.strength;
+                document.getElementById('aura-match').innerText = resultData.match;
+
+                // สั่งล้างคำเดิมแล้วทำการ Stream Text ทิพย์ ค่อยๆ พิมพ์ออกมาตัวอักษรต่อตัวอักษร
+                const textContainer = document.getElementById('stream-text');
+                textContainer.innerHTML = "";
+                let index = 0;
+                
+                function stream() {
+                    if (index < resultData.desc.length) {
+                        textContainer.innerHTML += resultData.desc.charAt(index);
+                        index++;
+                        setTimeout(stream, 25); // ความเร็วในการพิมพ์ (มิลลิวินาที)
+                    }
+                }
+                stream();
+
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
