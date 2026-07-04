@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biorhythm กราฟชีวิต — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#1a1535; }
+
+    .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+
+    .btn-read { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#ef4444,#3b82f6,#eab308); background-size:200%; animation:gradbtn 3s ease infinite; }
+    @keyframes gradbtn{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; animation:none; }
+
+    /* RESULT */
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+
+    /* TODAY CARDS */
+    .today-date { text-align:center; font-size:13px; color:var(--dim); margin-bottom:16px; letter-spacing:1px; }
+
+    .bio-cards { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+    .bio-card { border-radius:16px; padding:14px 16px; border:1px solid; position:relative; overflow:hidden; opacity:0; transform:translateX(-20px); transition:all 0.4s; }
+    .bio-card.visible { opacity:1; transform:translateX(0); }
+    .bio-card-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .bio-card-icon { font-size:22px; }
+    .bio-card-title { font-size:14px; font-weight:700; color:white; flex:1; }
+    .bio-card-trend { font-size:18px; }
+    .bio-card-pct { font-size:24px; font-weight:900; color:white; margin-bottom:6px; }
+    .bio-bar-bg { height:6px; background:rgba(255,255,255,0.1); border-radius:3px; margin-bottom:8px; overflow:hidden; }
+    .bio-bar { height:100%; border-radius:3px; width:0; transition:width 1s ease; }
+    .bio-card-text { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.7; }
+
+    .phys-card  { background:rgba(239,68,68,0.1);  border-color:rgba(239,68,68,0.3); }
+    .emo-card   { background:rgba(59,130,246,0.1); border-color:rgba(59,130,246,0.3); }
+    .intel-card { background:rgba(234,179,8,0.1);  border-color:rgba(234,179,8,0.3); }
+
+    /* GRAPH */
+    .graph-wrap { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:20px; padding:16px; margin-bottom:16px; }
+    .graph-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .graph-legend { display:flex; gap:14px; margin-bottom:10px; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--dim); }
+    .legend-dot { width:10px; height:3px; border-radius:2px; }
+    canvas#bioGraph { width:100%; border-radius:12px; }
+
+    /* CRITICAL DAYS */
+    .critical-wrap { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:16px; padding:14px; margin-bottom:16px; }
+    .critical-title { font-size:13px; color:#ef4444; font-weight:700; margin-bottom:10px; }
+    .critical-item { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; font-size:12px; color:var(--dim); }
+    .critical-date { color:white; font-weight:700; flex-shrink:0; width:60px; }
+
+    /* 7 DAYS */
+    .week-wrap { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:16px; }
+    .week-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .week-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .week-day { font-size:11px; color:var(--dim); width:50px; flex-shrink:0; }
+    .week-bars { display:flex; gap:3px; flex:1; }
+    .week-mini-bar { height:16px; border-radius:4px; flex:1; opacity:0.7; }
+    .week-label { font-size:10px; color:var(--dim); width:80px; text-align:right; flex-shrink:0; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="other-hub.html" class="back-btn">←</a>
+  <div class="page-title">📊 Biorhythm กราฟชีวิต</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">📊</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">📊 Biorhythm กราฟชีวิต</div>
+    <div class="hero-desc">วิเคราะห์วงจรพลังงานชีวิต 3 ด้าน<br>คำนวณจากวันเกิดของคุณค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิดของคุณพี่ค่ะ</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">📊 วิเคราะห์กราฟชีวิตเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="today-date" id="todayDate"></div>
+
+    <!-- TODAY CARDS -->
+    <div class="bio-cards">
+      <div class="bio-card phys-card" id="physCard">
+        <div class="bio-card-header">
+          <span class="bio-card-icon">🔴</span>
+          <span class="bio-card-title">ร่างกาย (Physical)</span>
+          <span class="bio-card-trend" id="physTrend"></span>
+        </div>
+        <div class="bio-card-pct" id="physPct"></div>
+        <div class="bio-bar-bg"><div class="bio-bar" id="physBar" style="background:linear-gradient(90deg,#ef4444,#f97316)"></div></div>
+        <div class="bio-card-text" id="physText"></div>
+      </div>
+      <div class="bio-card emo-card" id="emoCard">
+        <div class="bio-card-header">
+          <span class="bio-card-icon">🔵</span>
+          <span class="bio-card-title">อารมณ์ (Emotional)</span>
+          <span class="bio-card-trend" id="emoTrend"></span>
+        </div>
+        <div class="bio-card-pct" id="emoPct"></div>
+        <div class="bio-bar-bg"><div class="bio-bar" id="emoBar" style="background:linear-gradient(90deg,#3b82f6,#8b5cf6)"></div></div>
+        <div class="bio-card-text" id="emoText"></div>
+      </div>
+      <div class="bio-card intel-card" id="intelCard">
+        <div class="bio-card-header">
+          <span class="bio-card-icon">🟡</span>
+          <span class="bio-card-title">สติปัญญา (Intellectual)</span>
+          <span class="bio-card-trend" id="intelTrend"></span>
+        </div>
+        <div class="bio-card-pct" id="intelPct"></div>
+        <div class="bio-bar-bg"><div class="bio-bar" id="intelBar" style="background:linear-gradient(90deg,#eab308,#84cc16)"></div></div>
+        <div class="bio-card-text" id="intelText"></div>
+      </div>
+    </div>
+
+    <!-- GRAPH -->
+    <div class="graph-wrap">
+      <div class="graph-title">📈 กราฟ 30 วัน</div>
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>ร่างกาย</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>อารมณ์</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>สติปัญญา</div>
+      </div>
+      <canvas id="bioGraph" height="160"></canvas>
+    </div>
+
+    <!-- CRITICAL DAYS -->
+    <div class="critical-wrap" id="criticalWrap">
+      <div class="critical-title">⚠️ วันวิกฤตที่ต้องระวังค่ะ</div>
+      <div id="criticalList"></div>
+    </div>
+
+    <!-- 7 DAYS -->
+    <div class="week-wrap">
+      <div class="week-title">📅 7 วันข้างหน้าค่ะ</div>
+      <div id="weekList"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 คำนวณใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;document.getElementById('coinDisplay').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+});
+
+// ── BIORHYTHM CALC ──
+function daysSince(birthDate, targetDate) {
+  return Math.floor((targetDate - birthDate) / 86400000);
+}
+function bio(days, period) {
+  return Math.sin(2 * Math.PI * days / period);
+}
+function toPct(val) { return Math.round(val * 100); }
+
+// TEXT DATA
+const PHYS_TEXT = {
+  peak:   'พลังกายอยู่ในจุดสูงสุดค่ะ! เหมาะกับการออกกำลังกาย ทำงานหนัก หรือกิจกรรมที่ใช้แรงมากค่ะ ร่างกายตอบสนองดีมากวันนี้ค่ะ',
+  high:   'พลังกายอยู่ในช่วงดีค่ะ มีพลังงานเพียงพอสำหรับทุกกิจกรรมค่ะ เหมาะกับการเริ่มต้นโปรเจกต์ใหม่ค่ะ',
+  mid:    'พลังกายอยู่ในระดับปานกลางค่ะ ทำได้ปกติแต่ไม่ควรฝืนร่างกายมากเกินไปนะคะ',
+  low:    'พลังกายกำลังลดลงค่ะ ให้พักผ่อนให้เพียงพอและหลีกเลี่ยงกิจกรรมหนักในช่วงนี้ค่ะ',
+  valley: 'พลังกายอยู่ในจุดต่ำสุดค่ะ ควรพักผ่อนมากๆ และระวังการเจ็บป่วยในช่วงนี้เป็นพิเศษนะคะ',
+};
+const EMO_TEXT = {
+  peak:   'อารมณ์ดีเยี่ยมมากค่ะ! เหมาะกับการพบปะสังสรรค์ สื่อสาร หรือแก้ปัญหาความสัมพันธ์ค่ะ พลังงานบวกล้นเหลือค่ะ',
+  high:   'อารมณ์อยู่ในช่วงดีค่ะ มีความสุขและมองโลกในแง่ดีค่ะ เหมาะกับการพบเจอผู้คนใหม่ๆ ค่ะ',
+  mid:    'อารมณ์อยู่ในระดับปกติค่ะ ไม่ดีไม่แย่ ทำกิจกรรมประจำวันได้ตามปกติค่ะ',
+  low:    'อารมณ์กำลังลดลงค่ะ อาจรู้สึกอ่อนไหวกว่าปกติบ้างค่ะ ไม่แนะนำตัดสินใจเรื่องสำคัญในช่วงนี้นะคะ',
+  valley: 'อารมณ์อยู่ในจุดต่ำสุดค่ะ ระวังการทะเลาะและตัดสินใจผิดพลาดในช่วงนี้นะคะ ดูแลจิตใจตัวเองให้ดีค่ะ',
+};
+const INTEL_TEXT = {
+  peak:   'สมองแล่นพีคมากค่ะ! เหมาะกับการเรียน สอบ ประชุม วางแผน หรืองานที่ต้องใช้ความคิดสูงค่ะ วันนี้ไอเดียจะออกมาดีเป็นพิเศษค่ะ',
+  high:   'สติปัญญาอยู่ในช่วงดีค่ะ คิดวิเคราะห์ได้คมชัด เหมาะกับงานที่ต้องการความละเอียดค่ะ',
+  mid:    'สติปัญญาอยู่ในระดับปกติค่ะ ทำงานได้ตามปกติแต่อาจไม่ได้ไอเดียใหม่มากนักค่ะ',
+  low:    'สมองกำลังล้าค่ะ หลีกเลี่ยงการตัดสินใจสำคัญและงานที่ต้องการสมาธิสูงในช่วงนี้นะคะ',
+  valley: 'สมองล้ามากค่ะ ไม่แนะนำทำงานหนักหรือสอบในช่วงนี้ค่ะ พักสมองและเตรียมพร้อมสำหรับรอบใหม่ค่ะ',
+};
+
+function getLevel(val) {
+  if(val >= 0.75) return 'peak';
+  if(val >= 0.3)  return 'high';
+  if(val >= -0.3) return 'mid';
+  if(val >= -0.75)return 'low';
+  return 'valley';
+}
+function getTrend(val) {
+  if(val >= 0.75) return '🔝';
+  if(val >= 0.3)  return '⬆️';
+  if(val >= -0.3) return '➡️';
+  if(val >= -0.75)return '⬇️';
+  return '🔻';
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// DRAW GRAPH with animation
+function drawGraph(birthDate, today) {
+  const canvas = document.getElementById('bioGraph');
+  const W = canvas.offsetWidth || 320;
+  canvas.width = W;
+  const H = 160;
+  const ctx = canvas.getContext('2d');
+  const days = 30;
+  const startDay = -7; // 7 วันก่อน ถึง 23 วันข้างหน้า
+
+  const colors = { p:'#ef4444', e:'#3b82f6', i:'#eab308' };
+  const periods = { p:23, e:28, i:33 };
+  const today0 = daysSince(birthDate, today);
+
+  let frame = 0;
+  const totalFrames = 40;
+
+  function drawFrame() {
+    ctx.clearRect(0,0,W,H);
+
+    // BG grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    for(let y=0;y<=4;y++){
+      ctx.beginPath();
+      ctx.moveTo(0, y*H/4);
+      ctx.lineTo(W, y*H/4);
+      ctx.stroke();
+    }
+
+    // Center line
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(0, H/2);
+    ctx.lineTo(W, H/2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // TODAY line
+    const todayX = (7/(days)) * W;
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(todayX, 0);
+    ctx.lineTo(todayX, H);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '9px Sarabun';
+    ctx.fillText('วันนี้', todayX+3, 12);
+
+    // Draw each cycle
+    const progress = Math.min(1, frame/totalFrames);
+    const maxI = Math.floor(progress * days);
+
+    ['p','e','i'].forEach(k => {
+      ctx.beginPath();
+      ctx.strokeStyle = colors[k];
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = colors[k];
+      ctx.shadowBlur = 6;
+
+      for(let x=0; x<=maxI; x++){
+        const d = today0 + (startDay + x);
+        const val = bio(d, periods[k]);
+        const px = (x/days)*W;
+        const py = H/2 - val*(H/2-8);
+        if(x===0) ctx.moveTo(px,py);
+        else ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Glow fill
+      ctx.globalAlpha = 0.08;
+      ctx.beginPath();
+      for(let x=0;x<=maxI;x++){
+        const d=today0+(startDay+x);
+        const val=bio(d,periods[k]);
+        const px=(x/days)*W;
+        const py=H/2-val*(H/2-8);
+        if(x===0)ctx.moveTo(px,py);
+        else ctx.lineTo(px,py);
+      }
+      ctx.lineTo((maxI/days)*W,H/2);
+      ctx.lineTo(0,H/2);
+      ctx.fillStyle=colors[k];
+      ctx.fill();
+      ctx.globalAlpha=1;
+    });
+
+    frame++;
+    if(frame <= totalFrames) requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+}
+
+// CRITICAL DAYS
+function findCriticalDays(birthDate, today) {
+  const result = [];
+  const t0 = daysSince(birthDate, today);
+  const thNames = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const cycleNames = {23:'ร่างกาย', 28:'อารมณ์', 33:'สติปัญญา'};
+  const warnText = {23:'ระวังอุบัติเหตุและเจ็บป่วยค่ะ', 28:'ระวังทะเลาะและตัดสินใจผิดพลาดค่ะ', 33:'ระวังคิดวิเคราะห์ผิดพลาดค่ะ'};
+
+  for(let i=1; i<=15; i++){
+    const d = today0 => t0 + i;
+    const target = new Date(today.getTime() + i*86400000);
+    const m = target.getMonth()+1;
+    const dd = target.getDate();
+    [23,28,33].forEach(p => {
+      const prev = bio(t0+i-1, p);
+      const curr = bio(t0+i, p);
+      if(prev * curr < 0) { // ตัดศูนย์
+        result.push({
+          dateStr: `${dd} ${thNames[m]}`,
+          cycle: cycleNames[p],
+          warn: warnText[p]
+        });
+      }
+    });
+  }
+  return result.slice(0,4);
+}
+
+// 7 DAYS
+const DAY_TH = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+function getWeekSummary(birthDate, today) {
+  const t0 = daysSince(birthDate, today);
+  const rows = [];
+  const thNames = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  for(let i=1;i<=7;i++){
+    const d = t0+i;
+    const p = bio(d,23), e = bio(d,28), int = bio(d,33);
+    const target = new Date(today.getTime()+i*86400000);
+    const dayName = DAY_TH[target.getDay()];
+    const dd = target.getDate();
+    const mm = thNames[target.getMonth()+1];
+    // best cycle
+    const max = Math.max(p,e,int);
+    let label = '';
+    if(max===p) label = toPct(p)>50?'💪 ออกกำลังกาย':'😴 พักผ่อน';
+    else if(max===e) label = toPct(e)>50?'❤️ วันดีสำหรับรัก':'😶 ระวังอารมณ์';
+    else label = toPct(int)>50?'🧠 เหมาะทำงาน':'😵 ระวังสมองล้า';
+    rows.push({dayName, dd, mm, p:toPct(p), e:toPct(e), int:toPct(int), label});
+  }
+  return rows;
+}
+
+function barColor(pct) {
+  if(pct>50) return '#10b981';
+  if(pct>0)  return '#f59e0b';
+  return '#ef4444';
+}
+
+window.startReading = async function() {
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const day=parseInt(document.getElementById('inDay').value);
+  const month=parseInt(document.getElementById('inMonth').value);
+  const year=parseInt(document.getElementById('inYear').value);
+
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังคำนวณ...';
+
+  // ตัดเหรียญ
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'biorhythm',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'bio'}]})
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false;btn.textContent='📊 วิเคราะห์กราฟชีวิตเลยค่ะ';return;
+    }
+    if(res.body){const r=res.body.getReader();while(true){const{done}=await r.read();if(done)break;}}
+  }catch(e){console.error(e);btn.disabled=false;btn.textContent='📊 วิเคราะห์กราฟชีวิตเลยค่ะ';return;}
+
+  const birthDate = new Date(year, month-1, day);
+  const today = new Date();
+  const t0 = daysSince(birthDate, today);
+
+  const p  = bio(t0, 23);
+  const e  = bio(t0, 28);
+  const int= bio(t0, 33);
+
+  // Today date
+  const thMonths=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('todayDate').textContent =
+    `📅 วันนี้ ${today.getDate()} ${thMonths[today.getMonth()+1]} ${today.getFullYear()+543}`;
+
+  // Show result
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+
+  await sleep(200);
+
+  // PHYS
+  const physCard=document.getElementById('physCard');
+  physCard.classList.add('visible');
+  const physPct=toPct(p);
+  document.getElementById('physPct').textContent = physPct+'%';
+  document.getElementById('physTrend').textContent = getTrend(p);
+  document.getElementById('physText').textContent = PHYS_TEXT[getLevel(p)];
+  setTimeout(()=>{document.getElementById('physBar').style.width=Math.abs(physPct)+'%';},100);
+  await sleep(250);
+
+  // EMO
+  const emoCard=document.getElementById('emoCard');
+  emoCard.classList.add('visible');
+  const emoPct=toPct(e);
+  document.getElementById('emoPct').textContent = emoPct+'%';
+  document.getElementById('emoTrend').textContent = getTrend(e);
+  document.getElementById('emoText').textContent = EMO_TEXT[getLevel(e)];
+  setTimeout(()=>{document.getElementById('emoBar').style.width=Math.abs(emoPct)+'%';},100);
+  await sleep(250);
+
+  // INTEL
+  const intelCard=document.getElementById('intelCard');
+  intelCard.classList.add('visible');
+  const intelPct=toPct(int);
+  document.getElementById('intelPct').textContent = intelPct+'%';
+  document.getElementById('intelTrend').textContent = getTrend(int);
+  document.getElementById('intelText').textContent = INTEL_TEXT[getLevel(int)];
+  setTimeout(()=>{document.getElementById('intelBar').style.width=Math.abs(intelPct)+'%';},100);
+  await sleep(400);
+
+  // GRAPH
+  drawGraph(birthDate, today);
+  await sleep(500);
+
+  // CRITICAL DAYS
+  const criticals = findCriticalDays(birthDate, today);
+  const cl = document.getElementById('criticalList');
+  cl.innerHTML = '';
+  if(criticals.length===0){
+    document.getElementById('criticalWrap').style.display='none';
+  } else {
+    criticals.forEach(c=>{
+      const div=document.createElement('div');
+      div.className='critical-item';
+      div.innerHTML=`<span class="critical-date">⚠️ ${c.dateStr}</span><span>${c.cycle} ตัดศูนย์ — ${c.warn}</span>`;
+      cl.appendChild(div);
+    });
+  }
+
+  // 7 DAYS
+  const weeks = getWeekSummary(birthDate, today);
+  const wl = document.getElementById('weekList');
+  wl.innerHTML = '';
+  weeks.forEach(w=>{
+    const div=document.createElement('div');
+    div.className='week-row';
+    const pW=Math.max(0,w.p); const eW=Math.max(0,w.e); const iW=Math.max(0,w.int);
+    div.innerHTML=`
+      <span class="week-day">${w.dayName} ${w.dd}</span>
+      <div class="week-bars">
+        <div class="week-mini-bar" style="background:${barColor(w.p)};opacity:${0.4+Math.abs(w.p/200)}"></div>
+        <div class="week-mini-bar" style="background:${barColor(w.e)};opacity:${0.4+Math.abs(w.e/200)}"></div>
+        <div class="week-mini-bar" style="background:${barColor(w.int)};opacity:${0.4+Math.abs(w.int/200)}"></div>
+      </div>
+      <span class="week-label">${w.label}</span>`;
+    wl.appendChild(div);
+  });
+
+  // save
+  try{
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'Biorhythm กราฟชีวิต',
+      question:`${day}/${month}/${year}`,
+      result:`ร่างกาย:${physPct}% อารมณ์:${emoPct}% สติปัญญา:${intelPct}%`,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+
+  btn.disabled=false; btn.textContent='📊 วิเคราะห์อีกครั้ง';
+};
+
+window.resetResult = function(){
+  document.getElementById('resultBox').classList.remove('show');
+  ['physCard','emoCard','intelCard'].forEach(id=>document.getElementById(id).classList.remove('visible'));
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+</body>
+</html>
