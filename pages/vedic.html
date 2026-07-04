@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
   for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
   var minEl=document.getElementById('inMinute');
   var om=document.createElement('option');om.value='';om.textContent='-- นาที';minEl.appendChild(om);
-  for(var m2=0;m2<=59;m2+=5){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+  for(var m2=0;m2<=59;m2++){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
 });
 
 // TAG MAP
@@ -317,10 +317,12 @@ window.startReading = async function() {
 
   const yearAD = year > 2400 ? year - 543 : year;
   const timeInfo = hour !== '' ? `เวลา ${hour}:${minute||'00'} น.` : 'ไม่ทราบเวลาเกิด';
+  const currentYear = new Date().getFullYear();
 
   const prompt = `วิเคราะห์โหราศาสตร์อินเดีย Vedic Jyotish สำหรับ:
 วันเกิด: ${day}/${month}/${yearAD} ${timeInfo}
 สถานที่เกิด: ${city}
+ปีปัจจุบัน: ${currentYear} (ใช้ปีนี้อ้างอิงในการทำนายดวงปัจจุบันและอนาคตทุกหัวข้อ)
 
 ตอบโดยใช้ tag นำหน้าแต่ละหัวข้อ ห้ามมีข้อความนอก tag:
 [RASHI]
