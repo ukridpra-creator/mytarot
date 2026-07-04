@@ -1,308 +1,327 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune Cookie Break - My Tarot</title>
-    <!-- Tailwind CSS v3 เสถียรสุด -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome สำหรับ ไอคอน -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Anchan & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anchan:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortune Cookie — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; background:#09070f; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
 
-    <style>
-        body {
-            font-family: 'Inter', 'Anchan', sans-serif;
-            background-color: #09070f;
-        }
-        /* แอนิเมชันคุกกี้สั่นสู้มือเวลาโดนเคาะ */
-        @keyframes cookieShake {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            20% { transform: scale(0.92) rotate(-6deg); }
-            40% { transform: scale(1.05) rotate(6deg); }
-            60% { transform: scale(0.95) rotate(-4deg); }
-            80% { transform: scale(1.02) rotate(4deg); }
-        }
-        .cookie-hit {
-            animation: cookieShake 0.4s ease-in-out;
-        }
-        /* แอนิเมชันคุกกี้แยกเงาพันร่างตอนแตกออก */
-        @keyframes breakLeft {
-            100% { transform: translateX(-60px) translateY(30px) rotate(-35deg); opacity: 0.3; }
-        }
-        @keyframes breakRight {
-            100% { transform: translateX(60px) translateY(30px) rotate(35deg); opacity: 0.3; }
-        }
-        .cookie-split-left { animation: breakLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .cookie-split-right { animation: breakRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    </style>
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    /* ── COOKIE STAGE ── */
+    .cookie-stage { background:rgba(20,17,36,0.7); border:1px solid rgba(124,58,237,0.2); border-radius:24px; padding:32px 20px; text-align:center; margin-bottom:20px; min-height:320px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+
+    /* HP BAR */
+    .hp-bar-wrap { width:160px; height:6px; background:rgba(255,255,255,0.08); border-radius:4px; margin-bottom:28px; overflow:hidden; }
+    .hp-bar { height:100%; width:100%; background:linear-gradient(90deg,#f59e0b,#f97316); border-radius:4px; transition:width 0.3s ease; }
+
+    /* COOKIE SVG */
+    .cookie-wrap { width:160px; height:160px; cursor:pointer; position:relative; user-select:none; -webkit-tap-highlight-color:transparent; }
+    .cookie-wrap:active { transform:scale(0.96); }
+
+    .cookie-svg { width:100%; height:100%; filter:drop-shadow(0 0 20px rgba(245,158,11,0.4)); transition:filter 0.2s; }
+    .cookie-wrap:active .cookie-svg { filter:drop-shadow(0 0 30px rgba(245,158,11,0.7)); }
+
+    /* crack lines — hidden by default */
+    .crack { opacity:0; transition:opacity 0.2s; stroke:#7c4a00; stroke-width:2; fill:none; stroke-linecap:round; }
+    .crack.show { opacity:1; }
+
+    /* BREAK ANIMATION */
+    @keyframes breakLeft  { 0%{transform:translate(0,0) rotate(0)} 100%{transform:translate(-80px,60px) rotate(-40deg); opacity:0;} }
+    @keyframes breakRight { 0%{transform:translate(0,0) rotate(0)} 100%{transform:translate(80px,60px) rotate(40deg); opacity:0;} }
+    .cookie-wrap.breaking #half-left  { animation:breakLeft  0.6s cubic-bezier(.175,.885,.32,1.275) forwards; }
+    .cookie-wrap.breaking #half-right { animation:breakRight 0.6s cubic-bezier(.175,.885,.32,1.275) forwards; }
+
+    /* SHAKE */
+    @keyframes shake { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-5deg) scale(0.95)} 40%{transform:rotate(5deg) scale(1.04)} 60%{transform:rotate(-3deg)} 80%{transform:rotate(3deg)} }
+    .cookie-wrap.shaking { animation:shake 0.35s ease; }
+
+    .tap-hint { font-size:12px; color:rgba(255,255,255,0.4); margin-top:14px; letter-spacing:1px; }
+
+    /* FORTUNE PAPER */
+    .fortune-paper { display:none; background:white; border-radius:12px; border-top:4px solid #f59e0b; border-bottom:4px solid #f59e0b; padding:20px 16px; max-width:320px; width:100%; text-align:left; box-shadow:0 0 40px rgba(245,158,11,0.4); transform:translateY(20px); opacity:0; transition:all 0.5s ease; }
+    .fortune-paper.show { transform:translateY(0); opacity:1; }
+    .fortune-header { text-align:center; font-size:9px; color:#d97706; font-weight:800; letter-spacing:2px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px dashed #e5e7eb; }
+    .fortune-text { font-size:13px; color:#1f2937; line-height:1.9; font-weight:600; font-family:'Sarabun',sans-serif; min-height:60px; }
+    .fortune-footer { display:flex; justify-content:space-between; margin-top:12px; padding-top:10px; border-top:1px solid #f3f4f6; font-size:11px; font-weight:700; color:#92400e; }
+    .cursor-blink { display:inline-block; width:2px; height:13px; background:#f59e0b; margin-left:1px; animation:blink .7s infinite; vertical-align:middle; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* RESET BTN */
+    .btn-reset { display:none; margin-top:16px; padding:12px 28px; border-radius:20px; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); color:#a855f7; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .btn-reset.show { display:inline-block; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
 </head>
-<body class="text-gray-200 min-h-screen flex flex-col justify-between overflow-x-hidden">
+<body>
 
-    <!-- BACKGROUND GLOW EFFECTS (ฟีลกาแล็กซี่หรูหรา) -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-40">
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-amber-500 blur-[90px]"></div>
-        <div class="absolute bottom-20 -left-10 w-72 h-72 rounded-full bg-fuchsia-600 blur-[80px]"></div>
+<div class="page-header">
+  <a href="divination.html" class="back-btn">←</a>
+  <div class="page-title">🥠 Fortune Cookie</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge" style="background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">FREE</div>
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🥠 Fortune Cookie</div>
+    <div class="hero-desc">รวบรวมสมาธิแล้วกดทุบคุกกี้ทองคำ<br>เพื่อเปิดเผยคำทำนายลับของวันนี้ค่ะ</div>
+  </div>
+
+  <div class="cookie-stage">
+    <!-- HP BAR -->
+    <div class="hp-bar-wrap"><div class="hp-bar" id="hpBar"></div></div>
+
+    <!-- COOKIE -->
+    <div class="cookie-wrap" id="cookieWrap" onclick="hitCookie()">
+      <svg class="cookie-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cookieGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#fde68a"/>
+            <stop offset="50%" stop-color="#f59e0b"/>
+            <stop offset="100%" stop-color="#d97706"/>
+          </radialGradient>
+          <radialGradient id="shineGrad" cx="35%" cy="30%" r="40%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- ครึ่งซ้าย -->
+        <g id="half-left" style="transform-origin:80px 80px">
+          <path d="M80,30 C50,30 20,52 18,80 C16,108 40,130 80,130 Z" fill="url(#cookieGrad)"/>
+          <path d="M80,30 C50,30 20,52 18,80 C16,108 40,130 80,130 Z" fill="url(#shineGrad)"/>
+          <!-- texture dots -->
+          <circle cx="45" cy="65" r="3" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="38" cy="90" r="2.5" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="55" cy="108" r="2" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="62" cy="50" r="2" fill="rgba(120,60,0,0.15)"/>
+        </g>
+
+        <!-- ครึ่งขวา -->
+        <g id="half-right" style="transform-origin:80px 80px">
+          <path d="M80,30 C110,30 140,52 142,80 C144,108 120,130 80,130 Z" fill="url(#cookieGrad)"/>
+          <path d="M80,30 C110,30 140,52 142,80 C144,108 120,130 80,130 Z" fill="url(#shineGrad)"/>
+          <circle cx="115" cy="65" r="3" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="122" cy="90" r="2.5" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="105" cy="108" r="2" fill="rgba(120,60,0,0.2)"/>
+          <circle cx="98" cy="50" r="2" fill="rgba(120,60,0,0.15)"/>
+        </g>
+
+        <!-- รอยร้าว 1 -->
+        <polyline id="crack1" class="crack" points="80,55 74,68 82,75"/>
+        <!-- รอยร้าว 2 -->
+        <polyline id="crack2" class="crack" points="80,75 88,85 78,95 85,108"/>
+        <!-- รอยร้าว 3 -->
+        <polyline id="crack3" class="crack" points="72,70 65,80 70,88"/>
+        <!-- รอยร้าว 4 -->
+        <polyline id="crack4" class="crack" points="88,72 95,78 90,90 98,98"/>
+        <!-- กลีบส่วนกลาง -->
+        <ellipse cx="80" cy="80" rx="6" ry="12" fill="#b45309" opacity="0.4"/>
+      </svg>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col flex-grow bg-[#0c0a14]/90 backdrop-blur-md shadow-2xl min-h-screen pb-24 border-x border-purple-950/20">
-        
-        <!-- HEADER -->
-        <header class="flex items-center justify-between px-4 py-3 border-b border-purple-950/30 bg-[#0e0c1a]/95 sticky top-0 z-50">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-fuchsia-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer" onclick="toggleProfileMenu()">
-                    M
-                </div>
-                <span class="text-sm font-semibold tracking-wide text-amber-400/90">My Tarot</span>
-            </div>
-            
-            <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
-                <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
-                <span class="text-xs font-bold text-amber-300">120</span>
-                <span class="text-[10px] text-amber-400/70">เหรียญ</span>
-            </div>
+    <div class="tap-hint" id="tapHint">กดที่คุกกี้เพื่อทุบค่ะ — เหลือ <span id="clicksLeft">3</span> ครั้ง</div>
 
-            <div id="profile-menu" class="hidden absolute left-4 top-14 w-48 bg-[#151224]/95 border border-amber-500/20 rounded-xl shadow-xl overflow-hidden z-50">
-                <div class="px-4 py-2 border-b border-purple-500/10 text-xs text-gray-400">ผู้ใช้งาน: คุณมิกกี้</div>
-                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-amber-600/10 transition flex items-center gap-2"><i class="fa-solid fa-history text-amber-400"></i> ประวัติการดูดวง</a>
-                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-amber-600/10 transition flex items-center gap-2 text-amber-300"><i class="fa-solid fa-store"></i> เติมเหรียญ</a>
-            </div>
-        </header>
-
-        <!-- CONTENT AREA -->
-        <main class="flex-grow px-4 pt-5">
-            
-            <!-- Title Section -->
-            <div class="text-center mb-2">
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent tracking-wide">
-                    🥠 ทุบคุกกี้เสี่ยงทายยักษ์
-                </h1>
-                <p class="text-[10px] text-gray-400 tracking-wider mt-0.5">Epic Fortune Cookie Breaker</p>
-                <p class="text-xs text-purple-300/80 mt-2 max-w-xs mx-auto">
-                    รวบรวมสมาธิแล้วใช้นิ้วทุบ "คุกกี้ทองคำยักษ์" เพื่อกระชากหน้ากากลิขิตดวงใจของคุณวันนี้!
-                </p>
-            </div>
-
-            <!-- COOKIE STAGE (โซนตบคุกกี้) -->
-            <div class="bg-[#141124]/70 border border-purple-900/30 rounded-3xl p-6 text-center relative overflow-hidden my-4 shadow-xl min-h-[320px] flex flex-col justify-center items-center">
-                
-                <!-- หลอดวัดแรงทุบด้านบน -->
-                <div id="hp-bar-zone" class="w-full max-w-[180px] bg-purple-950/60 h-2 rounded-full mb-6 overflow-hidden border border-purple-500/20">
-                    <div id="hp-bar" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 h-full transition-all duration-300"></div>
-                </div>
-
-                <!-- ตัวคุกกี้ทองคำยักษ์ -->
-                <div id="cookie-container" class="relative w-44 h-44 flex items-center justify-center cursor-pointer select-none active:scale-95 transition-transform" onclick="hitCookie()">
-                    
-                    <!-- ส่วนซ้าย -->
-                    <div id="cookie-left" class="absolute left-0 w-24 h-40 bg-gradient-to-l from-amber-400 via-amber-500 to-orange-600 rounded-l-full shadow-lg border-r border-amber-300/30 transform origin-right"></div>
-                    <!-- ส่วนขวา -->
-                    <div id="cookie-right" class="absolute right-0 w-24 h-40 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 rounded-r-full shadow-lg border-l border-amber-300/30 transform origin-left"></div>
-
-                    <!-- แสงเรืองรองตรงกลางคุกกี้ -->
-                    <div id="cookie-core" class="w-8 h-8 rounded-full bg-amber-300 filter blur-md absolute z-10 opacity-70 animate-ping"></div>
-                    
-                    <!-- ตัวเลขบอกจำนวนครั้งที่เหลือ -->
-                    <div id="tap-hint" class="absolute z-20 text-gray-950 font-black text-xs bg-white/90 px-3 py-1 rounded-full shadow-md pointer-events-none tracking-wide animate-bounce">
-                        💥 เคาะทุบ! <span id="clicks-left">3</span> ที
-                    </div>
-                </div>
-
-                <!-- ป้ายคำทำนายที่เด้งดึ๋งออกมา (ซ่อนอยู่ตอนแรกและจะกางใบออก) -->
-                <div id="fortune-paper" class="hidden opacity-0 max-w-xs w-full bg-white text-gray-900 border-y-4 border-amber-500 px-4 py-5 rounded-lg shadow-[0_0_30px_rgba(245,158,11,0.5)] transform translate-y-6 transition-all duration-700 z-30">
-                    <div class="text-center border-b border-dashed border-gray-300 pb-2 mb-2">
-                        <span class="text-[9px] text-orange-600 uppercase font-bold tracking-widest">✨ สาส์นลับจากคุกกี้สวรรค์ ✨</span>
-                    </div>
-                    <!-- ข้อความสตรีมทิพย์ตรงนี้ -->
-                    <p id="stream-text" class="text-xs font-semibold text-gray-800 leading-relaxed min-h-[60px] text-left px-1"></p>
-                    
-                    <div class="flex justify-between items-center pt-2.5 border-t border-gray-100 text-[10px] font-bold text-amber-700">
-                        <div>🔮 เลขมงคล: <span id="lucky-num" class="text-red-600">-</span></div>
-                        <div>💎 สีนำโชค: <span id="lucky-color" class="text-purple-900">-</span></div>
-                    </div>
-                </div>
-
-                <!-- ปุ่มกดรีเซ็ต สุ่มใหม่ (ซ่อนอยู่) -->
-                <button id="reset-btn" onclick="resetCookie()" class="hidden mt-6 bg-purple-950 hover:bg-purple-900 text-amber-300 text-[11px] font-bold px-4 py-1.5 rounded-full border border-purple-500/30 transition">
-                    <i class="fa-solid fa-rotate-right mr-1"></i> อบการ์ดใหม่ (เล่นอีกครั้ง)
-                </button>
-            </div>
-
-            <!-- 🪙 UPSELL ADVANCED BANNER -->
-            <div id="upsell-banner" class="hidden bg-gradient-to-br from-amber-950/40 via-purple-950/40 to-black/60 border border-amber-500/30 rounded-2xl p-4 text-center space-y-3 animate-fade-in">
-                <div class="space-y-1">
-                    <h3 class="text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-crown text-amber-400"></i> เจาะดวงจิตเศรษฐี 2026 ขั้นเทพ
-                    </h3>
-                    <p class="text-[10.5px] text-gray-400 max-w-xs mx-auto leading-relaxed">
-                        อยากรู้ไหมว่าใครกำลังแอบนำโชคใหญ่มาให้คุณ? ปลดล็อกคำทำนายพิกัดคนอุปถัมภ์ พร้อมทริคเรียกเงินล้านเข้ากระเป๋าตังค์ด่วน!
-                    </p>
-                </div>
-                <a href="#" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-gray-950 font-bold text-[11px] px-5 py-2 rounded-xl shadow-md transition transform active:scale-95">
-                    <i class="fa-solid fa-coins"></i> ทุบคุกกี้ VIP เจาะลึกดวง (20 เหรียญ)
-                </a>
-            </div>
-
-        </main>
-
-        <!-- BOTTOM NAVIGATION BAR -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#07050d]/95 border-t border-purple-950/60 flex justify-around items-center py-2 z-50 shadow-2xl backdrop-blur-md">
-            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
-                <i class="fa-solid fa-house text-sm"></i>
-                <span class="text-[9px]">หน้าแรก</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 text-amber-400 font-medium">
-                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                <span class="text-[9px]">ศาสตร์ฟรี</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
-                <i class="fa-solid fa-id-card text-sm"></i>
-                <span class="text-[9px]">ดูดวงจริง</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
-                <i class="fa-solid fa-wallet text-sm"></i>
-                <span class="text-[9px]">กระเป๋าเงิน</span>
-            </a>
-        </nav>
-
+    <!-- FORTUNE PAPER -->
+    <div class="fortune-paper" id="fortunePaper">
+      <div class="fortune-header">✨ สาส์นลับจากคุกกี้สวรรค์ ✨</div>
+      <div class="fortune-text" id="fortuneText"></div>
+      <div class="fortune-footer">
+        <span>🔮 เลขมงคล: <span id="luckyNum">—</span></span>
+        <span>💎 สีนำโชค: <span id="luckyColor">—</span></span>
+      </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        function toggleProfileMenu() {
-            const menu = document.getElementById('profile-menu');
-            menu.classList.toggle('hidden');
-        }
+    <button class="btn-reset" id="resetBtn" onclick="resetCookie()">🔄 ทุบใหม่อีกครั้ง</button>
+  </div>
+</div>
 
-        let clicks = 3;
-        let isLocked = false;
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
 
-        const COOKIE_DATABASE = [
-            {
-                desc: "อย่ากลัวความเปลี่ยนแปลงที่กำลังจะเกิดขึ้นในเร็ววันนี้ เพราะมันคือกุญแจดอกใหญ่ที่จะนำพากล่องเงินกล่องทองและความเป็นอยู่ระดับเศรษฐีมาให้คุณเองค๊า!",
-                num: "9, 89",
-                color: "สีทองแชมเปญ"
-            },
-            {
-                desc: "ช่วงนี้เสน่ห์เมตตามหานิยมทำงานหนักมาก จะมีคนลักษณะผิวขาวท้วม นำพาผลประโยชน์หรือโอกาสช่องทางทำเงินใหม่ๆ เข้ามามอบให้ถึงมือ จงอ้าแขนรับไว้เลยค๊า!",
-                num: "2, 42",
-                color: "สีชมพูมาเจนต้า"
-            },
-            {
-                desc: "ดวงจิตของคุณส่งสัญญาณเตือนว่าให้งดออกความเห็นหรือใจเย็นๆ ในเรื่องของคนอื่นชั่วคราว โฟกัสที่กระเป๋าตังค์ตัวเองแล้วเงินจะวิ่งเข้าหาแบบรัวๆ ค๊า!",
-                num: "4, 46",
-                color: "สีเขียวเหนี่ยวทรัพย์"
-            },
-            {
-                desc: "โชคลาภลอยที่รอคอยกำลังเดินทางมาถึงในไม่ช้า สิ่งที่คุณเคยลงแรงอธิษฐานจิตไว้เกี่ยวกับเรื่องเงินทองจะออกดอกออกผลให้ชื่นใจตาแตกแน่นอนค๊า!",
-                num: "7, 78",
-                color: "สีน้ำเงินคริสตัล"
-            }
-        ];
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-        function hitCookie() {
-            if (isLocked || clicks <= 0) return;
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
 
-            const container = document.getElementById('cookie-container');
-            const hpBar = document.getElementById('hp-bar');
-            const clicksText = document.getElementById('clicks-left');
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
 
-            // ลบแอนิเมชันเก่าแล้วสาดแอนิเมชันสั่นรับแรงกระแทกเข้าไปใหม่ค๊า
-            container.classList.remove('cookie-hit');
-            void container.offsetWidth; // Trigger reflow
-            container.classList.add('cookie-hit');
+// ── FORTUNE DATA ──
+const FORTUNES = [
+  { text:'ความเปลี่ยนแปลงที่กำลังจะเกิดขึ้นในไม่ช้านี้คือพรที่จักรวาลเตรียมไว้ให้ค่ะ อย่ากลัวการเริ่มต้นใหม่ เพราะเบื้องหลังทุกประตูที่ปิดลงมักมีทางออกที่สว่างกว่ารออยู่เสมอค่ะ', num:'9, 19', color:'ทองแชมเปญ' },
+  { text:'มีคนที่คิดถึงคุณอยู่เงียบๆ โดยที่คุณยังไม่รู้ค่ะ ช่วงนี้เสน่ห์ของคุณทำงานหนักมาก ความรักและมิตรภาพที่ดีกำลังเดินทางเข้ามาหาอย่างเงียบๆ ค่ะ', num:'2, 22', color:'ชมพูโรส' },
+  { text:'สิ่งที่คุณเฝ้ารอมานานกำลังจะเป็นจริงในเร็ววันนี้ค่ะ จงอดทนและเชื่อมั่นในตัวเองต่อไปนะคะ เพราะดวงดาวกำลังจัดแจงทุกอย่างให้เหมาะสมกับคุณอยู่ค่ะ', num:'7, 77', color:'ม่วงลาเวนเดอร์' },
+  { text:'โชคลาภจากทิศที่ไม่คาดคิดกำลังเดินทางมาหาคุณค่ะ เปิดใจรับโอกาสใหม่ๆ และอย่าปิดกั้นตัวเองด้วยความกลัวนะคะ ความกล้าของคุณจะนำพาสิ่งดีๆ มาให้ค่ะ', num:'8, 88', color:'ทองเหลือง' },
+  { text:'คนที่คุณไว้ใจอยู่ข้างๆ คือสมบัติล้ำค่าที่สุดในชีวิตค่ะ ช่วงนี้ให้ความสำคัญกับความสัมพันธ์ที่มีอยู่ ความรักและความเอาใจใส่จะสร้างความสุขที่ยั่งยืนให้คุณค่ะ', num:'6, 66', color:'แดงกุหลาบ' },
+  { text:'ปัญญาที่คุณสะสมมาตลอดกำลังจะออกดอกออกผลค่ะ อย่ากังวลกับสิ่งที่ยังมาไม่ถึง เพราะวันนี้คุณมีทุกอย่างที่จำเป็นสำหรับการก้าวไปข้างหน้าแล้วค่ะ', num:'4, 14', color:'น้ำเงินคราม' },
+  { text:'ความฝันที่คุณยังไม่กล้าบอกใครนั้น จักรวาลรับรู้แล้วค่ะ เริ่มก้าวแรกเล็กๆ ไปในทิศทางนั้นวันนี้เลยนะคะ เพราะทุกการเดินทางยิ่งใหญ่เริ่มจากก้าวเดียวเสมอค่ะ', num:'1, 11', color:'ขาวบริสุทธิ์' },
+  { text:'มีพลังงานดีๆ ไหลเข้ามาในชีวิตคุณอยู่ตอนนี้ค่ะ จงใช้ช่วงเวลานี้ให้คุ้มค่า ลงมือทำสิ่งที่คั่งค้างอยู่ เพราะดวงดาวพร้อมสนับสนุนคุณอย่างเต็มที่ค่ะ', num:'3, 33', color:'เขียวมรกต' },
+  { text:'การปล่อยวางสิ่งที่ทำให้หนักใจจะเปิดพื้นที่ให้สิ่งดีๆ เข้ามาได้ค่ะ อย่ายึดติดกับอดีต เพราะอนาคตที่รออยู่ข้างหน้านั้นสวยงามกว่าที่คิดไว้มากค่ะ', num:'5, 55', color:'ส้มอำพัน' },
+  { text:'บุคคลที่ดูเหมือนเป็นอุปสรรคในตอนนี้กำลังสอนบทเรียนสำคัญที่สุดในชีวิตคุณอยู่ค่ะ จงขอบคุณทุกประสบการณ์ เพราะมันกำลังหล่อหลอมให้คุณแข็งแกร่งขึ้นค่ะ', num:'9, 99', color:'เงินบริสุทธิ์' },
+  { text:'เงินทองกำลังไหลเข้ามาจากทิศตะวันออกค่ะ ช่วงนี้เหมาะกับการลงทุนหรือเริ่มต้นธุรกิจใหม่ ความมั่งคั่งกำลังรอรับคุณอยู่ค่ะ', num:'6, 68', color:'ทองคำเปลว' },
+  { text:'สัญชาตญาณของคุณถูกต้องเสมอค่ะ เชื่อมั่นในความรู้สึกภายในของตัวเอง เพราะจิตใต้สำนึกของคุณมองเห็นสิ่งที่ตาเปล่ามองไม่เห็นค่ะ', num:'7, 17', color:'ม่วงอมฟ้า' },
+  { text:'ความอดทนที่คุณมีอยู่กำลังจะได้รับรางวัลค่ะ สิ่งที่รอคอยอยู่นั้นคุ้มค่ากับทุกวินาทีที่ผ่านมาแน่นอนค่ะ อย่าเพิ่งยอมแพ้ตอนนี้นะคะ', num:'4, 44', color:'น้ำตาลอบอุ่น' },
+  { text:'มีข่าวดีจากคนที่ห่างหายไปนานกำลังจะเข้ามาเร็วๆ นี้ค่ะ ความสัมพันธ์เก่าที่คิดว่าสิ้นสุดแล้วอาจกลับมาสร้างความสุขให้อีกครั้งค่ะ', num:'2, 12', color:'เขียวมิ้นต์' },
+  { text:'สุขภาพของคุณดีขึ้นและพลังงานกำลังฟื้นคืนมาค่ะ ดูแลตัวเองต่อไปและอย่าลืมพักผ่อน ร่างกายที่แข็งแรงคือรากฐานของทุกความสำเร็จค่ะ', num:'1, 19', color:'ขาวหยก' },
+];
 
-            clicks--;
-            clicksText.innerText = clicks;
+let clicks = 3;
+let isLocked = false;
 
-            // บังคับลดหลอด HP ด้านบน
-            hpBar.style.width = (clicks * 33.3) + "%";
+window.hitCookie = function() {
+  if(isLocked) return;
+  const wrap = document.getElementById('cookieWrap');
+  const hpBar = document.getElementById('hpBar');
+  const hint = document.getElementById('tapHint');
 
-            // ถ้าทุบครบ 3 ทีระเบิดโพล๊ะ!
-            if (clicks === 0) {
-                explodeCookie();
-            }
-        }
+  // shake
+  wrap.classList.remove('shaking');
+  void wrap.offsetWidth;
+  wrap.classList.add('shaking');
 
-        function explodeCookie() {
-            isLocked = true;
-            
-            const leftPart = document.getElementById('cookie-left');
-            const rightPart = document.getElementById('cookie-right');
-            const core = document.getElementById('cookie-core');
-            const hint = document.getElementById('tap-hint');
-            const hpBarZone = document.getElementById('hp-bar-zone');
-            
-            const paper = document.getElementById('fortune-paper');
-            const resetBtn = document.getElementById('reset-btn');
-            const upsell = document.getElementById('upsell-banner');
+  clicks--;
+  document.getElementById('clicksLeft').textContent = clicks;
+  hpBar.style.width = (clicks/3*100)+'%';
 
-            // 1. สาดเอฟเฟกต์ดีดแยกฝั่งซ้าย-ขวาออกจากกันค๊า
-            leftPart.classList.add('cookie-split-left');
-            rightPart.classList.add('cookie-split-right');
-            core.classList.add('hidden');
-            hint.classList.add('hidden');
-            hpBarZone.classList.add('opacity-0');
+  // show cracks progressively
+  if(clicks <= 2) document.getElementById('crack1').classList.add('show');
+  if(clicks <= 2) document.getElementById('crack3').classList.add('show');
+  if(clicks <= 1) document.getElementById('crack2').classList.add('show');
+  if(clicks <= 1) document.getElementById('crack4').classList.add('show');
 
-            // สุ่มสาส์นลับ
-            const rand = COOKIE_DATABASE[Math.floor(Math.random() * COOKIE_DATABASE.length)];
+  if(clicks <= 0) {
+    isLocked = true;
+    hint.style.display = 'none';
+    hpBar.style.width = '0%';
+    explode();
+  }
+};
 
-            // 2. ปล่อยเวลาให้เศษคุกกี้ปลิวดีดแป๊บนึง แล้วค่อยเลื่อนแผ่นป้ายสาส์นลับพุ่งลอยเด่นขึ้นมา
-            setTimeout(() => {
-                paper.classList.remove('hidden');
-                // ทริกเกอร์ให้แผ่นป้ายจางและขยับสไลด์ขึ้นสวยๆ
-                setTimeout(() => {
-                    paper.classList.remove('opacity-0', 'translate-y-6');
-                }, 50);
+function explode() {
+  const wrap = document.getElementById('cookieWrap');
+  wrap.classList.add('breaking');
 
-                document.getElementById('lucky-num').innerText = rand.num;
-                document.getElementById('lucky-color').innerText = rand.color;
+  setTimeout(()=>{
+    wrap.style.display='none';
+    showFortune();
+  }, 650);
+}
 
-                // ระบบพิมพ์สตรีมมิ่งตัวหนังสือให้อารมณ์ขลังๆ
-                const textContainer = document.getElementById('stream-text');
-                textContainer.innerHTML = "";
-                let index = 0;
+function showFortune() {
+  const rand = FORTUNES[Math.floor(Math.random()*FORTUNES.length)];
+  const paper = document.getElementById('fortunePaper');
+  paper.style.display = 'block';
+  setTimeout(()=>paper.classList.add('show'), 50);
 
-                function stream() {
-                    if (index < rand.desc.length) {
-                        textContainer.innerHTML += rand.desc.charAt(index);
-                        index++;
-                        setTimeout(stream, 25);
-                    } else {
-                        // พอพิมพ์เสร็จสิ้น ให้เปิดกล่อง Upsell แบนเนอร์และปุ่มเริ่มใหม่ค๊า
-                        resetBtn.classList.remove('hidden');
-                        upsell.classList.remove('hidden');
-                    }
-                }
-                stream();
+  document.getElementById('luckyNum').textContent = rand.num;
+  document.getElementById('luckyColor').textContent = rand.color;
 
-            }, 600);
-        }
+  const textEl = document.getElementById('fortuneText');
+  textEl.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor-blink';
+  textEl.appendChild(cursor);
 
-        // ระบบล้างกระดานเปิดคุกกี้ชิ้นใหม่ค๊าคุณพี่มิกกี้
-        function resetCookie() {
-            clicks = 3;
-            isLocked = false;
+  let i=0;
+  function stream(){
+    if(i < rand.text.length){
+      textEl.insertBefore(document.createTextNode(rand.text[i]), cursor);
+      i++;
+      setTimeout(stream, 22);
+    } else {
+      cursor.remove();
+      document.getElementById('resetBtn').classList.add('show');
+    }
+  }
+  stream();
+}
 
-            document.getElementById('cookie-left').className = "absolute left-0 w-24 h-40 bg-gradient-to-l from-amber-400 via-amber-500 to-orange-600 rounded-l-full shadow-lg border-r border-amber-300/30 transform origin-right";
-            document.getElementById('cookie-right').className = "absolute right-0 w-24 h-40 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 rounded-r-full shadow-lg border-l border-amber-300/30 transform origin-left";
-            
-            document.getElementById('cookie-core').classList.remove('hidden');
-            document.getElementById('tap-hint').classList.remove('hidden');
-            document.getElementById('hp-bar-zone').classList.remove('opacity-0');
-            document.getElementById('hp-bar').style.width = "100%";
-            document.getElementById('clicks-left').innerText = "3";
+window.resetCookie = function() {
+  clicks = 3;
+  isLocked = false;
 
-            const paper = document.getElementById('fortune-paper');
-            paper.classList.add('hidden', 'opacity-0', 'translate-y-6');
-            
-            document.getElementById('reset-btn').classList.add('hidden');
-            document.getElementById('upsell-banner').classList.add('hidden');
-        }
-    </script>
+  // reset cookie
+  const wrap = document.getElementById('cookieWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('breaking','shaking');
+
+  ['crack1','crack2','crack3','crack4'].forEach(id=>{
+    document.getElementById(id).classList.remove('show');
+  });
+
+  document.getElementById('hpBar').style.width = '100%';
+  document.getElementById('clicksLeft').textContent = '3';
+  document.getElementById('tapHint').style.display = 'block';
+
+  const paper = document.getElementById('fortunePaper');
+  paper.classList.remove('show');
+  paper.style.display = 'none';
+
+  document.getElementById('resetBtn').classList.remove('show');
+};
+</script>
 </body>
 </html>
