@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตรีวัย — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/triwai-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 24px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:var(--purple-light); }
+    .sel option { background:#1a1535; }
+
+    .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+
+    .btn-read { width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+
+    /* result */
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+
+    .dob-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:20px; text-align:center; }
+    .dob-day { font-size:18px; font-weight:800; color:white; margin-bottom:4px; }
+    .dob-planet { font-size:13px; color:var(--gold); }
+
+    .vai-card { border-radius:20px; padding:20px; margin-bottom:14px; border-left:4px solid; opacity:0; transform:translateY(16px); transition:all 0.4s ease; }
+    .vai-card.visible { opacity:1; transform:translateY(0); }
+    .vai-card.own-day { border-width:4px; }
+
+    .vai-header { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .vai-emoji { font-size:32px; }
+    .vai-info { flex:1; }
+    .vai-name { font-size:17px; font-weight:800; color:white; margin-bottom:2px; }
+    .vai-age { font-size:12px; color:rgba(255,255,255,0.4); }
+    .vai-planet-badge { font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
+    .own-badge { background:rgba(212,175,55,0.2); color:#d4af37; border:1px solid rgba(212,175,55,0.4); }
+    .other-badge { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); }
+
+    .vai-title { font-size:14px; font-weight:700; color:white; margin-bottom:8px; }
+    .vai-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.9; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="thai-hub.html" class="back-btn">←</a>
+  <div class="page-title">🌅 ตรีวัย</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌅</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-thai.png" alt="" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🌅 ตรีวัย</div>
+    <div class="hero-desc">โหราศาสตร์ไทยโบราณ แบ่งชีวิต 3 ช่วงวัย<br>วิเคราะห์ดวงชะตาจากวันเกิดค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 9 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">🌅 ดูตรีวัยเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="dob-card">
+      <div class="dob-day" id="dobDay"></div>
+      <div class="dob-planet" id="dobPlanet"></div>
+    </div>
+    <div id="vaiList"></div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;document.getElementById('coinDisplay').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+});
+
+var VAI_COLORS=[
+  {bg:'rgba(96,165,250,0.1)',border:'#60a5fa'},
+  {bg:'rgba(212,175,55,0.1)',border:'#d4af37'},
+  {bg:'rgba(168,85,247,0.1)',border:'#a855f7'},
+];
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+window.startReading=async function(){
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const day=parseInt(document.getElementById('inDay').value);
+  const month=parseInt(document.getElementById('inMonth').value);
+  const year=parseInt(document.getElementById('inYear').value);
+
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true;btn.textContent='⏳ กำลังวิเคราะห์...';
+
+  // ตัดเหรียญ
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'triwai',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'triwai'}]})
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false;btn.textContent='🌅 ดูตรีวัยเลยค่ะ';return;
+    }
+    if(res.body){const r=res.body.getReader();while(true){const{done}=await r.read();if(done)break;}}
+  }catch(e){console.error(e);btn.disabled=false;btn.textContent='🌅 ดูตรีวัยเลยค่ะ';return;}
+
+  // คำนวณ
+  const dateStr=year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  const calc=calcTriwai(dateStr);
+
+  document.getElementById('dobDay').textContent=`วัน${calc.dayName}`;
+  document.getElementById('dobPlanet').textContent=`🌟 ดาวประจำวัน: ${calc.planetName}`;
+
+  const list=document.getElementById('vaiList');
+  list.innerHTML='';
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+
+  for(var i=0;i<calc.vais.length;i++){
+    var v=calc.vais[i];
+    var c=VAI_COLORS[v.vaiIdx];
+    var card=document.createElement('div');
+    card.className='vai-card'+(v.isOwnDay?' own-day':'');
+    card.style.background=c.bg;
+    card.style.borderColor=c.border;
+
+    var badgeClass=v.isOwnDay?'own-badge':'other-badge';
+    var badgeText=v.isOwnDay?`⭐ ดาว${v.planetName} (ดาวเดียวกับวันเกิด)`:`ดาว${v.planetName}`;
+
+    card.innerHTML=`
+      <div class="vai-header">
+        <span class="vai-emoji">${v.vaiEmoji}</span>
+        <div class="vai-info">
+          <div class="vai-name">${v.vaiName}</div>
+          <div class="vai-age">${v.vaiAge}</div>
+        </div>
+        <span class="vai-planet-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="vai-title">${v.title}</div>
+      <div class="vai-text">${v.text}</div>`;
+
+    list.appendChild(card);
+    await sleep(200);
+    card.classList.add('visible');
+  }
+
+  // save
+  try{
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'ตรีวัย',
+      question:`วัน${calc.dayName} ${day}/${month}/${year}`,
+      result:`ดาว${calc.planetName} | ปฐม:ดาว${calc.vais[0].planetName} | มัชฌิม:ดาว${calc.vais[1].planetName} | ปัจฉิม:ดาว${calc.vais[2].planetName}`,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+
+  btn.disabled=false;btn.textContent='🌅 ดูตรีวัยอีกครั้ง';
+};
+</script>
+</body>
+</html>
