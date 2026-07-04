@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challenge Numbers — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/challenge-data.js"></script>
+  <script src="../js/pinnacle-engine.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:12px 0 24px; }
+    .hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#ef4444; margin-bottom:4px; letter-spacing:2px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:#ef4444; font-weight:700; margin-bottom:10px; display:block; letter-spacing:1px; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:#ef4444; }
+
+    .coin-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:#ef4444; margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+
+    .btn-read { width:100%; background:linear-gradient(135deg,#b91c1c,#ef4444); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:20px; letter-spacing:1px; }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+
+    #resultBox { display:none; }
+    .dob-tag { text-align:center; font-size:12px; color:rgba(255,255,255,0.3); letter-spacing:2px; margin-bottom:20px; }
+
+    .chal-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:20px; margin-bottom:16px; opacity:0; transform:translateY(16px); transition:opacity 0.4s ease, transform 0.4s ease; }
+    .chal-card.visible { opacity:1; transform:translateY(0); }
+
+    .formula-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px; }
+    .formula-box { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px 14px; text-align:center; min-width:64px; }
+    .formula-box.filled { border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.08); }
+    .formula-val { font-size:22px; font-weight:900; font-family:'Cinzel',serif; color:white; line-height:1; min-height:28px; display:flex; align-items:center; justify-content:center; }
+    .formula-val.counting { color:#ef4444; }
+    .formula-lbl { font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; letter-spacing:0.5px; }
+    .formula-op { font-size:20px; color:rgba(239,68,68,0.6); font-weight:700; }
+    .formula-result { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; font-family:'Cinzel',serif; color:white; flex-shrink:0; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.15); transition:all 0.4s; }
+    .formula-raw { text-align:center; font-size:11px; color:rgba(239,68,68,0.5); margin-top:0; margin-bottom:14px; letter-spacing:1px; min-height:16px; }
+
+    .chal-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:800; color:white; margin-bottom:12px; letter-spacing:1px; }
+    .chal-age { font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:12px; letter-spacing:1px; }
+    .chal-meaning-title { font-size:14px; font-weight:700; color:white; margin-bottom:8px; }
+    .chal-meaning-text { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.9; min-height:20px; }
+    .chal-meaning-text .cursor { display:inline-block; width:2px; height:14px; background:#ef4444; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .zero-tag { font-size:10px; color:#4ade80; font-weight:700; margin-bottom:6px; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="number-hub.html" class="back-btn">←</a>
+  <div class="page-title">⬇️ Challenge Numbers</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(239,68,68,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">⬇️</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').style.display='none'" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-challenge.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">CHALLENGE NUMBERS</div>
+    <div class="hero-desc">สี่บทเรียนแห่งชีวิต<br>ค้นพบอุปสรรคและบทเรียนในแต่ละช่วงชีวิตของคุณ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">⬇️ วิเคราะห์ Challenge</button>
+
+  <div id="resultBox">
+    <div class="dob-tag" id="dobTag"></div>
+
+    <!-- Challenge 1 -->
+    <div class="chal-card" id="chalCard0">
+      <div class="chal-badge" id="chalBadge0">Challenge 1</div>
+      <div class="chal-age" id="chalAge0"></div>
+      <div class="formula-row">
+        <div class="formula-box" id="fb0a"><div class="formula-val" id="fv0a">?</div><div class="formula-lbl">Month</div></div>
+        <div class="formula-op">|−|</div>
+        <div class="formula-box" id="fb0b"><div class="formula-val" id="fv0b">?</div><div class="formula-lbl">Day</div></div>
+        <div class="formula-op">=</div>
+        <div class="formula-result" id="fr0">?</div>
+      </div>
+      <div class="formula-raw" id="fraw0"></div>
+      <div class="chal-meaning-title" id="chalTitle0"></div>
+      <div class="chal-meaning-text" id="chalText0"></div>
+    </div>
+
+    <!-- Challenge 2 -->
+    <div class="chal-card" id="chalCard1">
+      <div class="chal-badge" id="chalBadge1">Challenge 2</div>
+      <div class="chal-age" id="chalAge1"></div>
+      <div class="formula-row">
+        <div class="formula-box" id="fb1a"><div class="formula-val" id="fv1a">?</div><div class="formula-lbl">Day</div></div>
+        <div class="formula-op">|−|</div>
+        <div class="formula-box" id="fb1b"><div class="formula-val" id="fv1b">?</div><div class="formula-lbl">Year</div></div>
+        <div class="formula-op">=</div>
+        <div class="formula-result" id="fr1">?</div>
+      </div>
+      <div class="formula-raw" id="fraw1"></div>
+      <div class="chal-meaning-title" id="chalTitle1"></div>
+      <div class="chal-meaning-text" id="chalText1"></div>
+    </div>
+
+    <!-- Challenge 3 -->
+    <div class="chal-card" id="chalCard2">
+      <div class="chal-badge" id="chalBadge2">Challenge 3</div>
+      <div class="chal-age" id="chalAge2"></div>
+      <div class="formula-row">
+        <div class="formula-box" id="fb2a"><div class="formula-val" id="fv2a">?</div><div class="formula-lbl">C1</div></div>
+        <div class="formula-op">|−|</div>
+        <div class="formula-box" id="fb2b"><div class="formula-val" id="fv2b">?</div><div class="formula-lbl">C2</div></div>
+        <div class="formula-op">=</div>
+        <div class="formula-result" id="fr2">?</div>
+      </div>
+      <div class="formula-raw" id="fraw2"></div>
+      <div class="chal-meaning-title" id="chalTitle2"></div>
+      <div class="chal-meaning-text" id="chalText2"></div>
+    </div>
+
+    <!-- Challenge 4 -->
+    <div class="chal-card" id="chalCard3">
+      <div class="chal-badge" id="chalBadge3">Challenge 4</div>
+      <div class="chal-age" id="chalAge3"></div>
+      <div class="formula-row">
+        <div class="formula-box" id="fb3a"><div class="formula-val" id="fv3a">?</div><div class="formula-lbl">Month</div></div>
+        <div class="formula-op">|−|</div>
+        <div class="formula-box" id="fb3b"><div class="formula-val" id="fv3b">?</div><div class="formula-lbl">Year</div></div>
+        <div class="formula-op">=</div>
+        <div class="formula-result" id="fr3">?</div>
+      </div>
+      <div class="formula-raw" id="fraw3"></div>
+      <div class="chal-meaning-title" id="chalTitle3"></div>
+      <div class="chal-meaning-text" id="chalText3"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+window._currentUser = null;
+
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
+};
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+window.loginNow  = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e){console.error(e);} };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  window._currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent  = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl = document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+});
+
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+function getChalColor(num) {
+  var m = CHALLENGE_MEANINGS[num];
+  return m ? m.color : '#ef4444';
+}
+
+function getChalKey(i) {
+  return i===0?'c1': i===1?'c2': i===2?'c3':'c4';
+}
+
+async function countUp(el, target, duration) {
+  el.classList.add('counting');
+  var steps=18, delay=duration/steps;
+  for(var i=0;i<=steps;i++){
+    el.textContent=Math.round((i/steps)*target);
+    await sleep(delay);
+  }
+  el.textContent=target;
+  el.classList.remove('counting');
+}
+
+async function streamText(el, text, speed) {
+  el.innerHTML='<span class="cursor"></span>';
+  for(var i=0;i<text.length;i++){
+    el.innerHTML=text.substring(0,i+1)+'<span class="cursor"></span>';
+    await sleep(speed);
+  }
+  el.innerHTML=text;
+}
+
+window.startReading = async function() {
+  if (!window._currentUser) { document.getElementById('loginRequiredOverlay').style.display='flex'; return; }
+  var btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
+
+  var day   = parseInt(document.getElementById('inDay').value);
+  var month = parseInt(document.getElementById('inMonth').value);
+  var year  = parseInt(document.getElementById('inYear').value);
+
+  // ตัดเหรียญ
+  try {
+    var idToken = await window._currentUser.getIdToken();
+    var res = await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'challenge',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'challenge'}]})
+    });
+    var newBal=res.headers.get('X-New-Coin-Balance');
+    if(newBal!=null) updateCoinUI(parseInt(newBal));
+    if(!res.ok){
+      var err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false; btn.textContent='⬇️ วิเคราะห์ Challenge'; return;
+    }
+  } catch(e){ console.error(e); btn.disabled=false; btn.textContent='⬇️ วิเคราะห์ Challenge'; return; }
+
+  var calc = calcAllPinnacle(day, month, year);
+  var chals = calc.challenges;
+  var ranges = calc.ranges;
+
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('dobTag').textContent = day+' / '+month+' / '+year;
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+
+  // formula inputs
+  var formulaA = [calc.month, calc.day,    chals[0], calc.month];
+  var formulaB = [calc.day,   calc.year,   chals[1], calc.year];
+  var rawSums  = [
+    Math.abs(calc.month - calc.day),
+    Math.abs(calc.day   - calc.year),
+    Math.abs(chals[0]   - chals[1]),
+    Math.abs(calc.month - calc.year)
+  ];
+
+  for(var i=0;i<4;i++){
+    var card    = document.getElementById('chalCard'+i);
+    var badge   = document.getElementById('chalBadge'+i);
+    var age     = document.getElementById('chalAge'+i);
+    var fva     = document.getElementById('fv'+i+'a');
+    var fvb     = document.getElementById('fv'+i+'b');
+    var fr      = document.getElementById('fr'+i);
+    var fba     = document.getElementById('fb'+i+'a');
+    var fbb     = document.getElementById('fb'+i+'b');
+    var rawEl   = document.getElementById('fraw'+i);
+    var titleEl = document.getElementById('chalTitle'+i);
+    var textEl  = document.getElementById('chalText'+i);
+
+    var m     = CHALLENGE_MEANINGS[chals[i]];
+    var cKey  = getChalKey(i);
+    var color = getChalColor(chals[i]);
+    var range = ranges[i];
+
+    badge.style.background = color;
+    badge.textContent = 'Challenge '+(i+1);
+    age.textContent = range.label;
+
+    // เลข 0 = ช่วงดี
+    if(chals[i] === 0){
+      var tag=document.createElement('div');
+      tag.className='zero-tag';
+      tag.textContent='✨ ไม่มีอุปสรรคใหญ่ในช่วงนี้ค่ะ';
+      badge.after(tag);
+    }
+
+    card.classList.add('visible');
+    await sleep(200);
+
+    fva.textContent='?';
+    await sleep(300);
+    await countUp(fva, formulaA[i], 600);
+    fba.classList.add('filled');
+    await sleep(200);
+
+    fvb.textContent='?';
+    await sleep(100);
+    await countUp(fvb, formulaB[i], 600);
+    fbb.classList.add('filled');
+    await sleep(200);
+
+    fr.textContent='?';
+    await sleep(200);
+    await countUp(fr, chals[i], 500);
+    fr.style.background = color;
+    fr.style.border = '2px solid '+color;
+
+    // raw diff ถ้าต่างจากผลลัพธ์
+    rawEl.textContent = rawSums[i] !== chals[i] ? rawSums[i]+' → '+chals[i] : '';
+
+    await sleep(300);
+    titleEl.textContent = m ? m[cKey].title : '';
+    await sleep(100);
+    var text = m ? m[cKey].text : '';
+    await streamText(textEl, text, 8);
+    await sleep(500);
+  }
+
+  // save
+  try {
+    await addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+      type: 'Challenge Numbers',
+      question: day+'/'+month+'/'+year,
+      result: 'C1:'+chals[0]+' C2:'+chals[1]+' C3:'+chals[2]+' C4:'+chals[3],
+      createdAt: serverTimestamp()
+    });
+  } catch(e){ console.error('save error:',e); }
+
+  btn.disabled=false; btn.textContent='⬇️ วิเคราะห์ Challenge';
+};
+</script>
+</body>
+</html>
