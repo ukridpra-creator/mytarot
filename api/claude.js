@@ -60,6 +60,7 @@ const SERVICE_COSTS = {
   "tojung": TIER.T29,
   "numerology": TIER.T39,
   "mole-reading": TIER.T10,
+  "voice-reading": TIER.T49,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
