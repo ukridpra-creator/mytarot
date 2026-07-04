@@ -61,6 +61,7 @@ const SERVICE_COSTS = {
   "numerology": TIER.T39,
   "mole-reading": TIER.T10,
   "voice-reading": TIER.T49,
+  "nakshatras": TIER.T19,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
