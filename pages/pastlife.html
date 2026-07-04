@@ -31,17 +31,13 @@
     .coin-hint { font-size: 11px; color: var(--dim); }
     .btn-read { width: 100%; background: linear-gradient(135deg, #6b21a8, #a855f7); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* GREETING */
     .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(107,33,168,0.1); border-radius: 16px; border-left: 3px solid #a855f7; display: none; }
     .greeting-box.show { display: block; }
-
-    /* RESULT */
     #resultBox { display: none; }
     #resultBox.show { display: block; }
     .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
     .result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
-    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+    .result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); }
     .sec-who      { background: rgba(168,85,247,0.08);  border-color: #a855f7; }
     .sec-who h3   { color: #a855f7; }
     .sec-daily    { background: rgba(96,165,250,0.08);  border-color: #60a5fa; }
@@ -54,7 +50,6 @@
     .sec-death h3 { color: #9ca3af; }
     .sec-karma    { background: rgba(16,185,129,0.08);  border-color: #10b981; }
     .sec-karma h3 { color: #10b981; }
-
     .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #a855f7; animation: bounce 1.2s ease-in-out infinite; }
@@ -62,7 +57,6 @@
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
     .loading-text { font-size: 14px; color: var(--dim); }
-
     .followup-box { margin-top: 16px; padding: 16px; background: rgba(107,33,168,0.06); border: 1px solid rgba(107,33,168,0.2); border-radius: 16px; }
     .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
     .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
@@ -77,19 +71,15 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
+  <a href="indian-hub.html" class="back-btn">←</a>
   <div class="page-title">🔮 ชาติก่อนเราเป็น?</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
-    <div class="user-btn" onclick="toggleUserMenu()">
-      <div class="avatar" id="avatarEl">👤</div>
-    </div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
   </div>
 </div>
 
-<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
@@ -97,13 +87,7 @@
     <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
-    <div class="menu-user-info">
-      <div class="menu-avatar">👤</div>
-      <div>
-        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
-        <div class="menu-email" id="menuEmail">email@gmail.com</div>
-      </div>
-    </div>
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName">ชื่อผู้ใช้</div><div class="menu-email" id="menuEmail">email@gmail.com</div></div></div>
     <div class="menu-divider"></div>
     <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
     <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
@@ -111,7 +95,6 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- LOGIN MODAL -->
 <div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
   <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
     <div style="font-size:48px;margin-bottom:12px;">🔮</div>
@@ -159,12 +142,10 @@
 
   <button class="btn-read" id="readBtn" onclick="startReading()">🔮 เปิดเผยชาติที่แล้วของฉัน</button>
 
-  <!-- GREETING -->
   <div class="greeting-box" id="greetingBox"></div>
 
-  <!-- RESULT -->
   <div id="resultBox">
-    <div class="result-section sec-who"><h3>👤 คุณเป็นใคร</h3><p id="secWho"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังอ่านชาติที่แล้ว...</div></div></p></div>
+    <div class="result-section sec-who"><h3>👤 คุณเป็นใคร</h3><p id="secWho"></p></div>
     <div class="result-section sec-daily"><h3>🏡 ชีวิตประจำวัน</h3><p id="secDaily"></p></div>
     <div class="result-section sec-pain"><h3>💔 ความเจ็บปวด</h3><p id="secPain"></p></div>
     <div class="result-section sec-conflict"><h3>⚔️ ความขัดแย้ง</h3><p id="secConflict"></p></div>
@@ -180,7 +161,6 @@
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -204,12 +184,9 @@ const firebaseConfig = {
   messagingSenderId: "33661162829",
   appId: "1:33661162829:web:9e06a7cd5a00d613785304"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(() => {
-  setPersistence(auth, browserLocalPersistence);
-});
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
 const db = getFirestore(app);
 let currentUser = null;
 let lastFullText = '';
@@ -218,37 +195,26 @@ window.updateCoinUI = function(coins) {
   document.getElementById('coinCount').textContent = coins;
   document.getElementById('coinDisplay').textContent = coins;
 };
-
 function setAvatarDisplay(avatar) {
-  var el = document.getElementById('avatarEl');
-  if (!el) return;
-  if (avatar && avatar.includes('.png')) {
-    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-  } else { el.textContent = avatar || '👤'; }
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (avatar && avatar.includes('.png')) el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = avatar || '👤';
 }
-
-window.loginNow = async function() {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
-};
-window.logoutNow = async function() {
-  await signOut(auth); window.location.href = '../index.html';
-};
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
 
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   if (user) {
     var snap = await getDoc(doc(db, 'users', user.uid));
     var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0);
-    setAvatarDisplay(data.avatar || '');
+    updateCoinUI(data.coins || 0); setAvatarDisplay(data.avatar || '');
     document.getElementById('guestView').style.display = 'none';
     document.getElementById('loggedView').style.display = 'block';
     document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
     document.getElementById('menuEmail').textContent = user.email;
     if (typeof setupCheckin === 'function') setupCheckin(user, '../');
-  } else {
-    updateCoinUI('—'); setAvatarDisplay('');
-  }
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
 // DROPDOWNS
@@ -262,12 +228,29 @@ document.addEventListener('DOMContentLoaded', function() {
   var curY = new Date().getFullYear();
   for (var y = curY; y >= curY-100; y--) { var o = document.createElement('option'); o.value = y; o.textContent = y; if (y === 1990) o.selected = true; yearEl.appendChild(o); }
   var hourEl = document.getElementById('inHour');
-  var oh = document.createElement('option'); oh.value = ''; oh.textContent = '--'; hourEl.appendChild(oh);
+  var oh = document.createElement('option'); oh.value = ''; oh.textContent = 'ไม่ทราบ'; hourEl.appendChild(oh);
   for (var h = 0; h <= 23; h++) { var o = document.createElement('option'); o.value = h; o.textContent = (h<10?'0'+h:h)+' น.'; hourEl.appendChild(o); }
   var minEl = document.getElementById('inMinute');
   var om = document.createElement('option'); om.value = ''; om.textContent = '--'; minEl.appendChild(om);
-  for (var m2 = 0; m2 <= 59; m2 += 5) { var o = document.createElement('option'); o.value = m2; o.textContent = (m2<10?'0'+m2:m2)+' นาที'; minEl.appendChild(o); }
+  // ✅ แก้แล้ว ครบ 0-59 ทุกนาที
+  for (var m2 = 0; m2 <= 59; m2++) { var o = document.createElement('option'); o.value = m2; o.textContent = (m2<10?'0'+m2:m2)+' นาที'; minEl.appendChild(o); }
 });
+
+// ─── KETU SIGN → อาชีพชาติก่อน (Vedic หลักการจริง) ───
+const KETU_CAREER = {
+  aries:       { career: 'นักรบ ทหาร ผู้นำกองทัพ หรือผู้บุกเบิก',       trait: 'กล้าหาญ ใจร้อน พึ่งตัวเองสูง' },
+  taurus:      { career: 'ชาวนา พ่อค้า ช่างฝีมือ หรือผู้ดูแลที่ดิน',    trait: 'มั่นคง ขยัน รักสิ่งสวยงาม' },
+  gemini:      { career: 'นักเขียน กวี พ่อค้าเร่ หรือนักสื่อสาร',        trait: 'ฉลาด ปรับตัวเก่ง พูดเก่ง' },
+  cancer:      { career: 'แม่บ้าน พ่อครัว นักดูแลผู้อื่น หรือชาวประมง',  trait: 'อ่อนโยน ผูกพันครอบครัว ห่วงใย' },
+  leo:         { career: 'ขุนนาง ราชวงศ์ นักแสดง หรือผู้มีอำนาจ',        trait: 'มีบารมี โอ้อวด รักเกียรติ' },
+  virgo:       { career: 'แพทย์ นักบัญชี คนรับใช้ หรือนักวิเคราะห์',     trait: 'ละเอียด รอบคอบ ชอบระเบียบ' },
+  libra:       { career: 'ผู้พิพากษา นักการทูต ศิลปิน หรือพ่อค้าทอง',    trait: 'ยุติธรรม สวยงาม รักสันติ' },
+  scorpio:     { career: 'นักสืบ นักเวทย์ นักรบลับ หรือหมอผี',           trait: 'ลึกลับ เข้มแข็ง ล้างแค้น' },
+  sagittarius: { career: 'นักสำรวจ นักปรัชญา ครู หรือนักล่า',            trait: 'อิสระ ผจญภัย ใจกว้าง' },
+  capricorn:   { career: 'ผู้บริหาร นักการเมือง สถาปนิก หรือนายทาส',     trait: 'ทะเยอทะยาน วินัยสูง เย็นชา' },
+  aquarius:    { career: 'นักปฏิวัติ นักวิทยาศาสตร์ หมอดู หรือผู้พยากรณ์', trait: 'แปลกแยก ก้าวหน้า ต่อต้านระบบ' },
+  pisces:      { career: 'ชาวประมง นักดนตรี คนทำนาย หรือนักบวชศิลปะ',   trait: 'อ่อนไหว ฝันมาก จิตวิญญาณสูง' }
+};
 
 const CITY_COORDS = {
   'กรุงเทพ':{lat:13.7563,lng:100.5018}, 'กรุงเทพมหานคร':{lat:13.7563,lng:100.5018},
@@ -275,7 +258,6 @@ const CITY_COORDS = {
   'ขอนแก่น':{lat:16.4419,lng:102.8360}, 'london':{lat:51.5074,lng:-0.1278},
   'tokyo':{lat:35.6762,lng:139.6503}
 };
-
 function getCityCoords(city) {
   if (!city) return { lat:13.7563, lng:100.5018 };
   const key = city.toLowerCase().trim();
@@ -285,7 +267,6 @@ function getCityCoords(city) {
   return { lat:13.7563, lng:100.5018 };
 }
 
-// TAG MAP
 const TAG_KEYS = ['GREETING','WHO','DAILY','PAIN','CONFLICT','DEATH','KARMA'];
 const TAG_IDS  = { WHO:'secWho', DAILY:'secDaily', PAIN:'secPain', CONFLICT:'secConflict', DEATH:'secDeath', KARMA:'secKarma' };
 
@@ -311,7 +292,7 @@ function updateSections(text) {
     gb.classList.add('show'); gb.textContent = parsed['GREETING'];
   }
   Object.entries(TAG_IDS).forEach(([key, id]) => {
-    if (parsed[key]) { const el = document.getElementById(id); if (el) { el.innerHTML = ''; el.textContent = parsed[key]; } }
+    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
   });
 }
 
@@ -329,7 +310,7 @@ window.startReading = async function() {
   const btn = document.getElementById('readBtn');
   btn.disabled = true; btn.textContent = '⏳ กำลังเปิดเผย...';
 
-  // reset
+  // reset + loading
   document.getElementById('greetingBox').classList.remove('show');
   document.getElementById('greetingBox').textContent = '';
   Object.values(TAG_IDS).forEach(id => {
@@ -340,8 +321,12 @@ window.startReading = async function() {
   resultBox.classList.add('show');
   setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
 
-  // เรียก western API เพื่อดึง natal chart
+  // ─── ดึงตำแหน่งดาวจาก /api/western ───
+  let ketuSign = '';
+  let ketuHouse = '';
+  let saturnSign = '';
   let planetDesc = '';
+
   try {
     const idToken = await currentUser.getIdToken();
     const apiRes = await fetch('/api/western', {
@@ -352,12 +337,37 @@ window.startReading = async function() {
     const apiData = await apiRes.json();
     if (apiData.data?.planets) {
       const SIGN_TH = { aries:'เมษ', taurus:'พฤษภ', gemini:'เมถุน', cancer:'กรกฎ', leo:'สิงห์', virgo:'กันย์', libra:'ตุลย์', scorpio:'พิจิก', sagittarius:'ธนู', capricorn:'มังกร', aquarius:'กุมภ์', pisces:'มีน' };
-      const PLANET_TH = { sun:'อาทิตย์', moon:'จันทร์', mercury:'พุธ', venus:'ศุกร์', mars:'อังคาร', jupiter:'พฤหัส', saturn:'เสาร์', uranus:'ยูเรนัส', neptune:'เนปจูน', pluto:'พลูโต', 'true node':'ราหู', 'mean node':'ราหู', 'south node':'เกตุ' };
+      const PLANET_TH = { sun:'อาทิตย์', moon:'จันทร์', mercury:'พุธ', venus:'ศุกร์', mars:'อังคาร', jupiter:'พฤหัส', saturn:'เสาร์', 'true node':'ราหู', 'mean node':'ราหู', 'south node':'เกตุ' };
+
       planetDesc = apiData.data.planets.map(p =>
         `${PLANET_TH[p.id] || p.name}: ${SIGN_TH[p.sign_id] || p.sign} เรือน ${p.house}${p.retrograde ? ' (ถอยหลัง)' : ''}`
       ).join('\n');
+
+      // หาเกตุและเสาร์
+      const ketu = apiData.data.planets.find(p => p.id === 'south node' || p.id === 'true node' && p.name?.toLowerCase().includes('south'));
+      const saturn = apiData.data.planets.find(p => p.id === 'saturn');
+      if (ketu) {
+        ketuSign = ketu.sign_id || '';
+        ketuHouse = ketu.house || '';
+      }
+      if (saturn) saturnSign = SIGN_TH[saturn.sign_id] || saturn.sign || '';
     }
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('western api error:', e); }
+
+  // ─── สร้าง Ketu context ───
+  let ketuContext = '';
+  if (ketuSign && KETU_CAREER[ketuSign]) {
+    const k = KETU_CAREER[ketuSign];
+    ketuContext = `
+ข้อมูลสำคัญสำหรับการวิเคราะห์ชาติก่อน:
+- เกตุ (Ketu) อยู่ราศี${ketuSign} เรือน ${ketuHouse}
+- อาชีพชาติก่อนตามหลัก Vedic: ${k.career}
+- บุคลิกที่ติดมา: ${k.trait}
+- เสาร์ (กรรมเก่า) อยู่ราศี${saturnSign}
+ให้วิเคราะห์ชาติก่อนโดยยึดตามข้อมูลเกตุนี้เป็นหลักค่ะ อาชีพต้องตรงกับที่ระบุไว้`;
+  } else {
+    ketuContext = `วันเกิด: ${day}/${month}/${year} เวลา ${hour}:${String(minute).padStart(2,'0')} น.`;
+  }
 
   try {
     const idToken = await currentUser.getIdToken();
@@ -365,29 +375,31 @@ window.startReading = async function() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        service: 'bazi',
+        service: 'pastlife',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
-        system: `คุณคือผู้เชี่ยวชาญโหราศาสตร์ Vedic ที่อ่านชาติที่แล้วจากดวงชะตา โดยเฉพาะตำแหน่งเกตุ (Ketu) ราหู (Rahu) และดาวเคราะห์อื่นๆ ตอบเป็นภาษาไทย เรียกผู้ถามว่า "คุณ" ต้องใช้ tag [GREETING][WHO][DAILY][PAIN][CONFLICT][DEATH][KARMA] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์ ให้ความรู้สึกลึกซึ้งและเป็นเรื่องราว ไม่ใช่แค่การวิเคราะห์ทางเทคนิค`,
-        messages: [{ role:'user', content: `natal chart ของผู้ถาม:
-${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${hour}:${String(minute).padStart(2,'0')} น.`}
+        system: `คุณคือผู้เชี่ยวชาญโหราศาสตร์ Vedic ที่อ่านชาติที่แล้วจากตำแหน่งเกตุ (Ketu) ราหู (Rahu) และเสาร์ (Saturn) ตอบเป็นภาษาไทย เรียกผู้ถามว่า "คุณ" ต้องใช้ tag [GREETING][WHO][DAILY][PAIN][CONFLICT][DEATH][KARMA] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์ ให้ความรู้สึกเป็นเรื่องราว ไม่ใช่แค่วิเคราะห์เทคนิค อาชีพต้องตรงตามตำแหน่งเกตุที่ระบุมาเท่านั้น ห้ามเดาเองหรือใช้อาชีพ generic`,
+        messages: [{ role: 'user', content: `${ketuContext}
 
-ตอบโดยใช้ tag นำหน้าแต่ละส่วน วิเคราะห์ชาติที่แล้วจากดวงดาวโดยเฉพาะตำแหน่งเกตุและราหู:
+natal chart ทั้งหมด:
+${planetDesc || `วันเกิด: ${day}/${month}/${year}`}
+
+ตอบโดยใช้ tag นำหน้าแต่ละส่วน:
 [GREETING]
-ทักทายผู้ถาม 1-2 ประโยค บอกว่ากำลังจะเปิดเผยอะไร
+ทักทายผู้ถาม 1-2 ประโยค
 [WHO]
-👤 คุณเป็นใคร — บอกว่าชาติที่แล้วเป็นใคร ทำอาชีพอะไร อยู่ยุคไหน ประเทศแถวไหน 3-4 ประโยค
+ชาติที่แล้วเป็นใคร — ต้องระบุอาชีพให้ตรงตาม Ketu ที่ระบุ อยู่ยุคไหน ประเทศแถวไหน 3-4 ประโยค
 [DAILY]
-🏡 ชีวิตประจำวัน — ชีวิตในแต่ละวันเป็นแบบไหน 3-4 ประโยค
+ชีวิตประจำวันในชาตินั้นเป็นอย่างไร 3-4 ประโยค
 [PAIN]
-💔 ความเจ็บปวด — สิ่งที่เจ็บปวดที่สุดในชาตินั้น 3-4 ประโยค
+สิ่งที่เจ็บปวดที่สุดในชาตินั้น 3-4 ประโยค
 [CONFLICT]
-⚔️ ความขัดแย้ง — ความขัดแย้งภายในหรือภายนอกที่ยังค้างอยู่ 3-4 ประโยค
+ความขัดแย้งภายในหรือภายนอกที่ยังค้างอยู่ 3-4 ประโยค
 [DEATH]
-🕊️ การตายและเวลาที่จากไป — ตายอย่างไร อายุเท่าไหร่ช่วงนั้น 3-4 ประโยค
+ตายอย่างไร อายุเท่าไหร่ช่วงนั้น 3-4 ประโยค
 [KARMA]
-🌱 สิ่งที่ติดมาชาตินี้ — ความรู้สึก ความกลัว พรสวรรค์ที่ติดมา 4-5 ประโยค
-ห้ามมีข้อความนอก tag ห้ามใช้ markdown` }]
+ความรู้สึก ความกลัว พรสวรรค์ที่ติดมาชาตินี้ 4-5 ประโยค
+ห้ามมีข้อความนอก tag` }]
       })
     });
 
@@ -401,13 +413,11 @@ ${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${h
       btn.disabled = false; btn.textContent = '🔮 เปิดเผยชาติที่แล้วของฉัน'; return;
     }
 
+    Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
+
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let fullText = '';
-    Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
-    // เคลียร์ loading ทุก section ก่อนเริ่ม stream
-    Object.values(TAG_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = ''; });
-
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -417,14 +427,11 @@ ${planetDesc || `วันเกิด: ${day}/${month}/${year} เวลา ${h
     updateSections(fullText);
     lastFullText = fullText;
 
-    // เคลียร์ loading ที่ยังค้างอยู่ใน section ที่ไม่มีข้อมูล
-    Object.values(TAG_IDS).forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.querySelector('.loading')) el.textContent = '';
-    });
-
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'ชาติก่อนเราเป็น', result: fullText, createdAt: serverTimestamp()
+      type: 'ชาติก่อนเราเป็น',
+      question: `${day}/${month}/${year} — เกตุราศี${ketuSign}`,
+      result: fullText,
+      createdAt: serverTimestamp()
     });
 
     document.getElementById('followupBox').style.display = 'block';
@@ -442,15 +449,12 @@ window.askFollowup = async function() {
   const input = document.getElementById('followupInput');
   const question = input.value.trim();
   if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
-
   const followupBtn = document.getElementById('followupBtn');
   const resultDiv = document.getElementById('followupResult');
   followupBtn.disabled = true;
-
   const time = Date.now();
   resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
   const answerDiv = document.getElementById('ans_' + time);
-
   try {
     const idToken = await currentUser.getIdToken();
     const res = await fetch('/api/claude', {
@@ -463,11 +467,9 @@ window.askFollowup = async function() {
         messages: [{ role:'user', content:`ผลวิเคราะห์ชาติที่แล้ว: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown` }]
       })
     });
-
     const newBalance = res.headers.get('X-New-Coin-Balance');
     if (newBalance != null) updateCoinUI(parseInt(newBalance));
     if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
-
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let text = '';
@@ -479,7 +481,6 @@ window.askFollowup = async function() {
     }
     answerDiv.scrollIntoView({ behavior:'smooth' });
   } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
-
   input.value = ''; followupBtn.disabled = false;
 };
 </script>
