@@ -63,6 +63,7 @@ const SERVICE_COSTS = {
   "voice-reading": TIER.T49,
   "nakshatras": TIER.T19,
   "vedic": TIER.T49,
+  "pastlife": TIER.T30,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
