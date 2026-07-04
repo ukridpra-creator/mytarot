@@ -3,7 +3,6 @@
 
 // ─── REDUCE FUNCTIONS ───
 
-// ลดเลขเป็น 1-9 (รักษา 11 และ 22 ไว้)
 function reduceKeepMaster(n) {
   if (n === 11 || n === 22) return n;
   while (n > 9) {
@@ -13,7 +12,6 @@ function reduceKeepMaster(n) {
   return n;
 }
 
-// ลดเลขปีทั้งหมด (บวกทีละหลัก)
 function reduceYear(year) {
   var sum = String(year).split('').reduce(function(a, b) { return a + parseInt(b); }, 0);
   return reduceKeepMaster(sum);
@@ -21,7 +19,6 @@ function reduceYear(year) {
 
 // ─── CORE CALCULATIONS ───
 
-// คำนวณ Life Path Number
 function calcLifePath(day, month, year) {
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
@@ -30,7 +27,6 @@ function calcLifePath(day, month, year) {
   return reduceKeepMaster(total);
 }
 
-// คำนวณ Pinnacle Numbers ทั้ง 4
 function calcPinnacles(day, month, year) {
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
@@ -44,21 +40,19 @@ function calcPinnacles(day, month, year) {
   return [p1, p2, p3, p4];
 }
 
-// คำนวณช่วงอายุแต่ละ Pinnacle
 function calcAgeRanges(lifePath) {
   var lp = lifePath === 11 ? 2 : lifePath === 22 ? 4 : lifePath;
   var end1 = 36 - lp;
   var end2 = end1 + 9;
   var end3 = end2 + 9;
   return [
-    { start: 0,      end: end1,      label: 'แรกเกิด — อายุ ' + end1 + ' ปี' },
-    { start: end1+1, end: end2,      label: 'อายุ ' + (end1+1) + ' — ' + end2 + ' ปี' },
-    { start: end2+1, end: end3,      label: 'อายุ ' + (end2+1) + ' — ' + end3 + ' ปี' },
-    { start: end3+1, end: 999,       label: 'อายุ ' + (end3+1) + ' ปีขึ้นไป' }
+    { start: 0,      end: end1, label: 'แรกเกิด — อายุ ' + end1 + ' ปี' },
+    { start: end1+1, end: end2, label: 'อายุ ' + (end1+1) + ' — ' + end2 + ' ปี' },
+    { start: end2+1, end: end3, label: 'อายุ ' + (end2+1) + ' — ' + end3 + ' ปี' },
+    { start: end3+1, end: 999,  label: 'อายุ ' + (end3+1) + ' ปีขึ้นไป' }
   ];
 }
 
-// หา Pinnacle ปัจจุบัน (1-4)
 function getCurrentPinnacle(birthYear, ranges) {
   var curAge = new Date().getFullYear() - birthYear;
   for (var i = 0; i < ranges.length; i++) {
@@ -67,7 +61,6 @@ function getCurrentPinnacle(birthYear, ranges) {
   return 4;
 }
 
-// คำนวณ Personal Year
 function calcPersonalYear(day, month, targetYear) {
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
@@ -75,45 +68,50 @@ function calcPersonalYear(day, month, targetYear) {
   return reduceKeepMaster(d + m + y);
 }
 
-// คำนวณ Challenge Numbers
 function calcChallenges(day, month, year) {
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
   var y = reduceYear(year);
-
   var c1 = Math.abs(m - d);
   var c2 = Math.abs(d - y);
   var c3 = Math.abs(c1 - c2);
   var c4 = Math.abs(m - y);
-
   return [c1, c2, c3, c4];
 }
 
-// ─── MAIN FUNCTION — คำนวณทุกอย่างในครั้งเดียว ───
+// ─── MAIN FUNCTION ───
 function calcAllPinnacle(day, month, year) {
-  var lp        = calcLifePath(day, month, year);
-  var pins      = calcPinnacles(day, month, year);
-  var ranges    = calcAgeRanges(lp);
-  var curPin    = getCurrentPinnacle(year, ranges);
-  var pyNow     = calcPersonalYear(day, month, new Date().getFullYear());
-  var pyNext    = calcPersonalYear(day, month, new Date().getFullYear() + 1);
+  var lp     = calcLifePath(day, month, year);
+  var pins   = calcPinnacles(day, month, year);
+  var ranges = calcAgeRanges(lp);
+  var curPin = getCurrentPinnacle(year, ranges);
+  var pyNow  = calcPersonalYear(day, month, new Date().getFullYear());
+  var pyNext = calcPersonalYear(day, month, new Date().getFullYear() + 1);
   var challenges = calcChallenges(day, month, year);
 
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
   var y = reduceYear(year);
 
+  // ─── raw sums ก่อน reduce (เพื่อแสดง เช่น 13 → 4) ───
+  var raw0 = m + d;       // P1: month + day
+  var raw1 = d + y;       // P2: day + year
+  var raw2 = pins[0] + pins[1]; // P3: P1 + P2
+  var raw3 = m + y;       // P4: month + year
+
   return {
     day:        d,
     month:      m,
     year:       y,
     lifePath:   lp,
-    pinnacles:  pins,       // [P1, P2, P3, P4]
-    ranges:     ranges,     // [{start,end,label}, ...]
-    currentPin: curPin,     // 1-4
+    pinnacles:  pins,
+    ranges:     ranges,
+    currentPin: curPin,
     currentAge: new Date().getFullYear() - year,
     personalYearNow:  pyNow,
     personalYearNext: pyNext,
-    challenges: challenges  // [C1, C2, C3, C4]
+    challenges: challenges,
+    // raw sums ก่อน reduce — ใช้แสดง "13 → 4"
+    rawSums: [raw0, raw1, raw2, raw3]
   };
 }
