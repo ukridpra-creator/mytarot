@@ -386,8 +386,10 @@ window.calculate = async function() {
 
   try {
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'energy-code', birthday: day+'/'+month+'/'+year,
-      code: G, name: data.name, createdAt: serverTimestamp()
+  type: 'Energy Code',
+  question: 'วันเกิด ' + day + '/' + month + '/' + year,
+  result: 'Energy Code: ' + G + ' — ' + data.name + '\n' + data.desc + '\n\n' + data.fortune,
+  createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
 
