@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เลข 7 ตัว 9 ฐาน — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/thai-lunar.js"></script>
+  <script src="../js/seven-engine.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 24px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; margin-bottom:14px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:var(--purple-light); }
+    .sel option { background:#1a1535; }
+
+    .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+
+    .btn-read { width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+
+    /* ── ตาราง 9 ฐาน ── */
+    .table-wrap { display:none; margin-bottom:16px; }
+    .table-wrap.show { display:block; }
+    .dob-info { text-align:center; font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; margin-bottom:12px; }
+
+    .seven-table { width:100%; border-collapse:collapse; font-size:11px; }
+    .seven-table th { background:rgba(124,58,237,0.3); color:white; font-weight:700; padding:5px 2px; text-align:center; border:1px solid rgba(255,255,255,0.1); font-size:10px; }
+    .seven-table td { padding:5px 2px; text-align:center; border:1px solid rgba(255,255,255,0.08); color:white; font-weight:700; font-size:12px; }
+    .seven-table .row-label { color:rgba(255,255,255,0.4); font-size:10px; font-weight:600; background:rgba(255,255,255,0.03); }
+    .seven-table .base4 { background:rgba(212,175,55,0.15); color:#d4af37; }
+    .seven-table .base5 { background:rgba(168,85,247,0.12); color:#c084fc; }
+    .seven-table .base89 { background:rgba(96,165,250,0.1); color:#93c5fd; }
+
+    /* ── ผลทำนาย ── */
+    .result-wrap { display:none; }
+    .result-wrap.show { display:block; }
+
+    .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .result-section h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+    .result-section p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
+
+    .sec-atta    { background:rgba(239,68,68,0.08);   border-color:#ef4444; }
+    .sec-atta h3 { color:#ef4444; }
+    .sec-hina    { background:rgba(249,115,22,0.08);  border-color:#f97316; }
+    .sec-hina h3 { color:#f97316; }
+    .sec-dhana   { background:rgba(16,185,129,0.08);  border-color:#10b981; }
+    .sec-dhana h3{ color:#10b981; }
+    .sec-kamma   { background:rgba(96,165,250,0.08);  border-color:#60a5fa; }
+    .sec-kamma h3{ color:#60a5fa; }
+    .sec-patni   { background:rgba(236,72,153,0.08);  border-color:#ec4899; }
+    .sec-patni h3{ color:#ec4899; }
+    .sec-marana  { background:rgba(168,85,247,0.08);  border-color:#a855f7; }
+    .sec-marana h3{color:#a855f7; }
+    .sec-phoga   { background:rgba(245,158,11,0.08);  border-color:#f59e0b; }
+    .sec-phoga h3{ color:#f59e0b; }
+    .sec-lucky   { background:rgba(212,175,55,0.08);  border-color:#d4af37; }
+    .sec-lucky h3{ color:#d4af37; }
+
+    .loading { display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px 0; }
+    .loading-dots { display:flex; gap:8px; }
+    .loading-dots span { width:10px; height:10px; border-radius:50%; background:#a855f7; animation:bounce 1.2s ease-in-out infinite; }
+    .loading-dots span:nth-child(2){animation-delay:.2s}
+    .loading-dots span:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-10px);opacity:1}}
+
+    .followup-box { margin-top:16px; padding:16px; background:rgba(124,58,237,0.06); border:1px solid rgba(124,58,237,0.2); border-radius:16px; display:none; }
+    .followup-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; }
+    .followup-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; resize:none; margin-bottom:10px; box-sizing:border-box; }
+    .followup-input::placeholder { color:rgba(255,255,255,0.25); }
+    .followup-btn { width:100%; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.4); border-radius:12px; padding:12px; color:#a855f7; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .followup-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .followup-result { font-size:14px; line-height:1.9; color:var(--text); word-break:break-word; }
+    .followup-divider { border:none; border-top:1px solid var(--border); margin:12px 0; }
+    .followup-q { color:var(--gold); font-size:13px; margin-bottom:8px; }
+    .cursor { display:inline-block; width:2px; height:14px; background:#a855f7; margin-left:2px; animation:blink .8s infinite; vertical-align:middle; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="thai-hub.html" class="back-btn">←</a>
+  <div class="page-title">🔯 เลข 7 ตัว 9 ฐาน</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔯</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-thai.png" alt="" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🔯 เลข 7 ตัว 9 ฐาน</div>
+    <div class="hero-desc">โหราศาสตร์ไทยโบราณ วิเคราะห์ดวงชะตา<br>จากวันเดือนปีเกิดตามปฏิทินจันทรคติค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+    <label class="input-label">⏰ เวลาเกิด (ถ้าทราบค่ะ)</label>
+    <div class="date-row" style="margin-bottom:0">
+      <select class="sel" id="inHour"></select>
+      <select class="sel" id="inMinute"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 39 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">🔯 วิเคราะห์เลข 7 ตัว 9 ฐาน</button>
+
+  <!-- ตาราง -->
+  <div class="table-wrap" id="tableWrap">
+    <div class="dob-info" id="dobInfo"></div>
+    <table class="seven-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>อัตตะ</th><th>หินะ</th><th>ธนัง</th><th>ปัตตา</th><th>มาตา</th><th>โภคา</th><th>มัชฌิมา</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ผลทำนาย -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-section sec-atta"><h3>✦ อัตตะ — ตัวตนและบุคลิก</h3><p id="secAtta"></p></div>
+    <div class="result-section sec-hina"><h3>✦ หินะ พันธุ ลาภะ — พี่น้องและโชคลาภ</h3><p id="secHina"></p></div>
+    <div class="result-section sec-dhana"><h3>✦ ธนัง ปุตตะ พยายะ — การเงินและทรัพย์</h3><p id="secDhana"></p></div>
+    <div class="result-section sec-kamma"><h3>✦ ปิตา อริ ทาสา — การงานอาชีพ</h3><p id="secKamma"></p></div>
+    <div class="result-section sec-patni"><h3>✦ มาตา ปัตนิ ทาสิ — ความรักและคู่ครอง</h3><p id="secPatni"></p></div>
+    <div class="result-section sec-marana"><h3>✦ โภคา ตนุ มรณะ — สุขภาพ</h3><p id="secMarana"></p></div>
+    <div class="result-section sec-phoga"><h3>✦ มัชฌิมา กภุมกะ สุข — ความสุขและจิตใจ</h3><p id="secPhoga"></p></div>
+    <div class="result-section sec-lucky"><h3>✦ ช่วงอายุที่ดาวให้คุณค่ะ</h3><p id="secLucky"></p></div>
+
+    <div class="followup-box" id="followupBox">
+      <div class="followup-result" id="followupResult"></div>
+      <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="ถามเพิ่มเติมได้เลยค่ะ"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
+let lastFullText = '';
+
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('coinDisplay').textContent = c;
+};
+function setAvatarDisplay(a) {
+  var el=document.getElementById('avatarEl'); if(!el) return;
+  if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent=a||'👤';
+}
+window.loginNow = async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow = async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth, async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+// dropdowns
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+  var hourEl=document.getElementById('inHour');
+  var oh=document.createElement('option');oh.value='';oh.textContent='ไม่ทราบ';hourEl.appendChild(oh);
+  for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
+  var minEl=document.getElementById('inMinute');
+  var om=document.createElement('option');om.value='';om.textContent='-- นาที';minEl.appendChild(om);
+  for(var m2=0;m2<=59;m2++){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+});
+
+// แสดงตาราง
+function renderTable(calc) {
+  var labels = ['ฐาน 1','ฐาน 2','ฐาน 3','ฐาน 4','ฐาน 5','ฐาน 6','ฐาน 7','ฐาน 8','ฐาน 9'];
+  var rowClass = ['','','','base4','base5','','','base89','base89'];
+  var tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  calc.bases.forEach(function(row, i) {
+    var tr = document.createElement('tr');
+    var tdLabel = document.createElement('td');
+    tdLabel.className = 'row-label';
+    tdLabel.textContent = labels[i];
+    tr.appendChild(tdLabel);
+    row.forEach(function(val) {
+      var td = document.createElement('td');
+      td.className = rowClass[i];
+      td.textContent = val;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+// TAG MAP
+const TAG_MAP = {
+  '[ATTA]':   'secAtta',
+  '[HINA]':   'secHina',
+  '[DHANA]':  'secDhana',
+  '[KAMMA]':  'secKamma',
+  '[PATNI]':  'secPatni',
+  '[MARANA]': 'secMarana',
+  '[PHOGA]':  'secPhoga',
+  '[LUCKY]':  'secLucky',
+};
+
+function parseByTag(text) {
+  let current = null;
+  const content = {};
+  for (const line of text.split('\n')) {
+    const t = line.trim();
+    if (TAG_MAP[t]) { current = TAG_MAP[t]; if(!content[current]) content[current]=''; }
+    else if (current && t) content[current] += t + ' ';
+  }
+  for (const [id, txt] of Object.entries(content)) {
+    const el = document.getElementById(id);
+    if(el) el.textContent = txt;
+  }
+}
+
+window.startReading = async function() {
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const day   = parseInt(document.getElementById('inDay').value);
+  const month = parseInt(document.getElementById('inMonth').value);
+  const year  = parseInt(document.getElementById('inYear').value);
+  const hour  = document.getElementById('inHour').value !== '' ? parseInt(document.getElementById('inHour').value) : undefined;
+  const minute= document.getElementById('inMinute').value !== '' ? parseInt(document.getElementById('inMinute').value) : 0;
+
+  const btn = document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
+
+  // คำนวณตาราง
+  const dateStr = year+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  const calc = calcSevenBase(dateStr, hour);
+
+  // แสดงตาราง
+  document.getElementById('dobInfo').textContent =
+    `${calc.dayName} | ${calc.lunarText} | ปี${calc.nakName} พ.ศ.${calc.yearBE}`;
+  renderTable(calc);
+  document.getElementById('tableWrap').classList.add('show');
+
+  // loading sections
+  document.getElementById('resultWrap').classList.add('show');
+  Object.values(TAG_MAP).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+  });
+  setTimeout(()=>document.getElementById('tableWrap').scrollIntoView({behavior:'smooth'}),100);
+
+  // ตัดเหรียญ
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body: JSON.stringify({
+        service:'seven',
+        model:'claude-sonnet-4-6',
+        max_tokens:6000,
+        system:`คุณคือผู้เชี่ยวชาญโหราศาสตร์ไทย วิชาเลข 7 ตัว 9 ฐาน เรียกผู้ถามว่า "คุณ" ตอบเป็นภาษาไทย ห้ามใช้ markdown ห้ามใช้เลขไทย ต้องใช้ tag [ATTA][HINA][DHANA][KAMMA][PATNI][MARANA][PHOGA][LUCKY] นำหน้าแต่ละ section เสมอ เขียนให้จบสมบูรณ์ทุก section ละเอียดและลึกซึ้ง`,
+        messages:[{role:'user',content:`วิเคราะห์ดวงชะตาเลข 7 ตัว 9 ฐาน สำหรับ:
+วัน: ${calc.dayName} (${calc.dayNum}) ดาว${calc.planetName}
+จันทรคติ: ${calc.lunarText}
+ปีนักษัตร: ${calc.nakName} (${calc.nakIdx})
+ปีปัจจุบัน: ${new Date().getFullYear()}
+
+ตาราง 9 ฐาน:
+        อัตตะ หินะ ธนัง ปัตตา มาตา โภคา มัชฌิมา
+ฐาน 1:  ${calc.bases[0].join('  ')}
+ฐาน 2:  ${calc.bases[1].join('  ')}
+ฐาน 3:  ${calc.bases[2].join('  ')}
+ฐาน 4:  ${calc.bases[3].join('  ')}
+ฐาน 5:  ${calc.bases[4].join('  ')}
+ฐาน 6:  ${calc.bases[5].join('  ')}
+ฐาน 7:  ${calc.bases[6].join('  ')}
+ฐาน 8:  ${calc.bases[7].join('  ')}
+ฐาน 9:  ${calc.bases[8].join('  ')}
+
+ตอบโดยใช้ tag นำหน้าแต่ละหัวข้อ:
+[ATTA]
+วิเคราะห์อัตตะ ตัวตน บุคลิก และดาวประจำตัว 4-5 ประโยค
+[HINA]
+วิเคราะห์หินะ พันธุ ลาภะ พี่น้อง มิตรสหาย และโชคลาภ 3-4 ประโยค
+[DHANA]
+วิเคราะห์ธนัง ปุตตะ พยายะ การเงิน ทรัพย์สิน และบุตร 3-4 ประโยค
+[KAMMA]
+วิเคราะห์ปิตา อริ ทาสา การงาน อาชีพที่เหมาะ และศัตรู 4-5 ประโยค
+[PATNI]
+วิเคราะห์มาตา ปัตนิ ทาสิ ความรัก คู่ครอง และมารดา 3-4 ประโยค
+[MARANA]
+วิเคราะห์โภคา ตนุ มรณะ สุขภาพ และสิ่งที่ต้องระวัง 3-4 ประโยค
+[PHOGA]
+วิเคราะห์มัชฌิมา กภุมกะ สุข ความสุข จิตใจ และการเงินระยะยาว 3-4 ประโยค
+[LUCKY]
+บอกช่วงอายุที่ดาวให้คุณมากที่สุด และคำแนะนำสำคัญ 3-4 ประโยค
+ห้ามมีข้อความนอก tag`}]
+      })
+    });
+
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null) updateCoinUI(parseInt(nb));
+
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false; btn.textContent='🔯 วิเคราะห์เลข 7 ตัว 9 ฐาน'; return;
+    }
+
+    Object.values(TAG_MAP).forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+
+    const reader=res.body.getReader();
+    const decoder=new TextDecoder();
+    let text='';
+    while(true){
+      const{done,value}=await reader.read();
+      if(done) break;
+      text+=decoder.decode(value);
+      parseByTag(text);
+    }
+    parseByTag(text);
+    lastFullText=text;
+
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'เลข 7 ตัว 9 ฐาน',
+      question:`${calc.dayName} ${calc.lunarText} ปี${calc.nakName}`,
+      result:text,
+      createdAt:serverTimestamp()
+    });
+
+    document.getElementById('followupBox').style.display='block';
+    document.getElementById('followupBox').scrollIntoView({behavior:'smooth'});
+
+  } catch(e){ console.error(e); }
+  btn.disabled=false; btn.textContent='🔯 วิเคราะห์อีกครั้ง';
+};
+
+window.askFollowup = async function(){
+  if(!currentUser) return;
+  const input=document.getElementById('followupInput');
+  const question=input.value.trim();
+  if(!question){alert('กรุณาพิมพ์คำถามก่อนค่ะ');return;}
+  const btn=document.getElementById('followupBtn');
+  const resultDiv=document.getElementById('followupResult');
+  btn.disabled=true;
+  const time=Date.now();
+  resultDiv.innerHTML+=`<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const ansDiv=document.getElementById('ans_'+time);
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({
+        service:'tarot_followup',model:'claude-sonnet-4-6',max_tokens:600,
+        messages:[{role:'user',content:`ผลวิเคราะห์เลข 7 ตัว 9 ฐาน: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown`}]
+      })
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null) updateCoinUI(parseInt(nb));
+    if(!res.ok){ansDiv.textContent='เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ';btn.disabled=false;return;}
+    const reader=res.body.getReader(),decoder=new TextDecoder();
+    let text='';
+    const cursor=document.createElement('span');cursor.className='cursor';ansDiv.appendChild(cursor);
+    while(true){const{done,value}=await reader.read();if(done)break;text+=decoder.decode(value);ansDiv.textContent=text;ansDiv.appendChild(cursor);}
+    cursor.remove();ansDiv.textContent=text;
+    ansDiv.scrollIntoView({behavior:'smooth'});
+  }catch(e){ansDiv.textContent='เกิดข้อผิดพลาดค่ะ';}
+  input.value='';btn.disabled=false;
+};
+</script>
+</body>
+</html>
