@@ -68,6 +68,7 @@ const SERVICE_COSTS = {
   "seven": TIER.T39,
   "triwai": TIER.T9,
   "thaksa": TIER.T19,
+  "soul_aura": TIER.T19,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
