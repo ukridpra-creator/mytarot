@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cookie Break - My Tarot</title>
+    <!-- Tailwind CSS v3 เสถียรสุด -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome สำหรับ ไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Anchan & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anchan:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Anchan', sans-serif;
+            background-color: #09070f;
+        }
+        /* แอนิเมชันคุกกี้สั่นสู้มือเวลาโดนเคาะ */
+        @keyframes cookieShake {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(0.92) rotate(-6deg); }
+            40% { transform: scale(1.05) rotate(6deg); }
+            60% { transform: scale(0.95) rotate(-4deg); }
+            80% { transform: scale(1.02) rotate(4deg); }
+        }
+        .cookie-hit {
+            animation: cookieShake 0.4s ease-in-out;
+        }
+        /* แอนิเมชันคุกกี้แยกเงาพันร่างตอนแตกออก */
+        @keyframes breakLeft {
+            100% { transform: translateX(-60px) translateY(30px) rotate(-35deg); opacity: 0.3; }
+        }
+        @keyframes breakRight {
+            100% { transform: translateX(60px) translateY(30px) rotate(35deg); opacity: 0.3; }
+        }
+        .cookie-split-left { animation: breakLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .cookie-split-right { animation: breakRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- BACKGROUND GLOW EFFECTS (ฟีลกาแล็กซี่หรูหรา) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-40">
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-amber-500 blur-[90px]"></div>
+        <div class="absolute bottom-20 -left-10 w-72 h-72 rounded-full bg-fuchsia-600 blur-[80px]"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col flex-grow bg-[#0c0a14]/90 backdrop-blur-md shadow-2xl min-h-screen pb-24 border-x border-purple-950/20">
+        
+        <!-- HEADER -->
+        <header class="flex items-center justify-between px-4 py-3 border-b border-purple-950/30 bg-[#0e0c1a]/95 sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-fuchsia-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer" onclick="toggleProfileMenu()">
+                    M
+                </div>
+                <span class="text-sm font-semibold tracking-wide text-amber-400/90">My Tarot</span>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                <span class="text-xs font-bold text-amber-300">120</span>
+                <span class="text-[10px] text-amber-400/70">เหรียญ</span>
+            </div>
+
+            <div id="profile-menu" class="hidden absolute left-4 top-14 w-48 bg-[#151224]/95 border border-amber-500/20 rounded-xl shadow-xl overflow-hidden z-50">
+                <div class="px-4 py-2 border-b border-purple-500/10 text-xs text-gray-400">ผู้ใช้งาน: คุณมิกกี้</div>
+                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-amber-600/10 transition flex items-center gap-2"><i class="fa-solid fa-history text-amber-400"></i> ประวัติการดูดวง</a>
+                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-amber-600/10 transition flex items-center gap-2 text-amber-300"><i class="fa-solid fa-store"></i> เติมเหรียญ</a>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-grow px-4 pt-5">
+            
+            <!-- Title Section -->
+            <div class="text-center mb-2">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-orange-400 bg-clip-text text-transparent tracking-wide">
+                    🥠 ทุบคุกกี้เสี่ยงทายยักษ์
+                </h1>
+                <p class="text-[10px] text-gray-400 tracking-wider mt-0.5">Epic Fortune Cookie Breaker</p>
+                <p class="text-xs text-purple-300/80 mt-2 max-w-xs mx-auto">
+                    รวบรวมสมาธิแล้วใช้นิ้วทุบ "คุกกี้ทองคำยักษ์" เพื่อกระชากหน้ากากลิขิตดวงใจของคุณวันนี้!
+                </p>
+            </div>
+
+            <!-- COOKIE STAGE (โซนตบคุกกี้) -->
+            <div class="bg-[#141124]/70 border border-purple-900/30 rounded-3xl p-6 text-center relative overflow-hidden my-4 shadow-xl min-h-[320px] flex flex-col justify-center items-center">
+                
+                <!-- หลอดวัดแรงทุบด้านบน -->
+                <div id="hp-bar-zone" class="w-full max-w-[180px] bg-purple-950/60 h-2 rounded-full mb-6 overflow-hidden border border-purple-500/20">
+                    <div id="hp-bar" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 h-full transition-all duration-300"></div>
+                </div>
+
+                <!-- ตัวคุกกี้ทองคำยักษ์ -->
+                <div id="cookie-container" class="relative w-44 h-44 flex items-center justify-center cursor-pointer select-none active:scale-95 transition-transform" onclick="hitCookie()">
+                    
+                    <!-- ส่วนซ้าย -->
+                    <div id="cookie-left" class="absolute left-0 w-24 h-40 bg-gradient-to-l from-amber-400 via-amber-500 to-orange-600 rounded-l-full shadow-lg border-r border-amber-300/30 transform origin-right"></div>
+                    <!-- ส่วนขวา -->
+                    <div id="cookie-right" class="absolute right-0 w-24 h-40 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 rounded-r-full shadow-lg border-l border-amber-300/30 transform origin-left"></div>
+
+                    <!-- แสงเรืองรองตรงกลางคุกกี้ -->
+                    <div id="cookie-core" class="w-8 h-8 rounded-full bg-amber-300 filter blur-md absolute z-10 opacity-70 animate-ping"></div>
+                    
+                    <!-- ตัวเลขบอกจำนวนครั้งที่เหลือ -->
+                    <div id="tap-hint" class="absolute z-20 text-gray-950 font-black text-xs bg-white/90 px-3 py-1 rounded-full shadow-md pointer-events-none tracking-wide animate-bounce">
+                        💥 เคาะทุบ! <span id="clicks-left">3</span> ที
+                    </div>
+                </div>
+
+                <!-- ป้ายคำทำนายที่เด้งดึ๋งออกมา (ซ่อนอยู่ตอนแรกและจะกางใบออก) -->
+                <div id="fortune-paper" class="hidden opacity-0 max-w-xs w-full bg-white text-gray-900 border-y-4 border-amber-500 px-4 py-5 rounded-lg shadow-[0_0_30px_rgba(245,158,11,0.5)] transform translate-y-6 transition-all duration-700 z-30">
+                    <div class="text-center border-b border-dashed border-gray-300 pb-2 mb-2">
+                        <span class="text-[9px] text-orange-600 uppercase font-bold tracking-widest">✨ สาส์นลับจากคุกกี้สวรรค์ ✨</span>
+                    </div>
+                    <!-- ข้อความสตรีมทิพย์ตรงนี้ -->
+                    <p id="stream-text" class="text-xs font-semibold text-gray-800 leading-relaxed min-h-[60px] text-left px-1"></p>
+                    
+                    <div class="flex justify-between items-center pt-2.5 border-t border-gray-100 text-[10px] font-bold text-amber-700">
+                        <div>🔮 เลขมงคล: <span id="lucky-num" class="text-red-600">-</span></div>
+                        <div>💎 สีนำโชค: <span id="lucky-color" class="text-purple-900">-</span></div>
+                    </div>
+                </div>
+
+                <!-- ปุ่มกดรีเซ็ต สุ่มใหม่ (ซ่อนอยู่) -->
+                <button id="reset-btn" onclick="resetCookie()" class="hidden mt-6 bg-purple-950 hover:bg-purple-900 text-amber-300 text-[11px] font-bold px-4 py-1.5 rounded-full border border-purple-500/30 transition">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> อบการ์ดใหม่ (เล่นอีกครั้ง)
+                </button>
+            </div>
+
+            <!-- 🪙 UPSELL ADVANCED BANNER -->
+            <div id="upsell-banner" class="hidden bg-gradient-to-br from-amber-950/40 via-purple-950/40 to-black/60 border border-amber-500/30 rounded-2xl p-4 text-center space-y-3 animate-fade-in">
+                <div class="space-y-1">
+                    <h3 class="text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-crown text-amber-400"></i> เจาะดวงจิตเศรษฐี 2026 ขั้นเทพ
+                    </h3>
+                    <p class="text-[10.5px] text-gray-400 max-w-xs mx-auto leading-relaxed">
+                        อยากรู้ไหมว่าใครกำลังแอบนำโชคใหญ่มาให้คุณ? ปลดล็อกคำทำนายพิกัดคนอุปถัมภ์ พร้อมทริคเรียกเงินล้านเข้ากระเป๋าตังค์ด่วน!
+                    </p>
+                </div>
+                <a href="#" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-gray-950 font-bold text-[11px] px-5 py-2 rounded-xl shadow-md transition transform active:scale-95">
+                    <i class="fa-solid fa-coins"></i> ทุบคุกกี้ VIP เจาะลึกดวง (20 เหรียญ)
+                </a>
+            </div>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#07050d]/95 border-t border-purple-950/60 flex justify-around items-center py-2 z-50 shadow-2xl backdrop-blur-md">
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
+                <i class="fa-solid fa-house text-sm"></i>
+                <span class="text-[9px]">หน้าแรก</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-amber-400 font-medium">
+                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                <span class="text-[9px]">ศาสตร์ฟรี</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
+                <i class="fa-solid fa-id-card text-sm"></i>
+                <span class="text-[9px]">ดูดวงจริง</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-amber-400 transition">
+                <i class="fa-solid fa-wallet text-sm"></i>
+                <span class="text-[9px]">กระเป๋าเงิน</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        let clicks = 3;
+        let isLocked = false;
+
+        const COOKIE_DATABASE = [
+            {
+                desc: "อย่ากลัวความเปลี่ยนแปลงที่กำลังจะเกิดขึ้นในเร็ววันนี้ เพราะมันคือกุญแจดอกใหญ่ที่จะนำพากล่องเงินกล่องทองและความเป็นอยู่ระดับเศรษฐีมาให้คุณเองค๊า!",
+                num: "9, 89",
+                color: "สีทองแชมเปญ"
+            },
+            {
+                desc: "ช่วงนี้เสน่ห์เมตตามหานิยมทำงานหนักมาก จะมีคนลักษณะผิวขาวท้วม นำพาผลประโยชน์หรือโอกาสช่องทางทำเงินใหม่ๆ เข้ามามอบให้ถึงมือ จงอ้าแขนรับไว้เลยค๊า!",
+                num: "2, 42",
+                color: "สีชมพูมาเจนต้า"
+            },
+            {
+                desc: "ดวงจิตของคุณส่งสัญญาณเตือนว่าให้งดออกความเห็นหรือใจเย็นๆ ในเรื่องของคนอื่นชั่วคราว โฟกัสที่กระเป๋าตังค์ตัวเองแล้วเงินจะวิ่งเข้าหาแบบรัวๆ ค๊า!",
+                num: "4, 46",
+                color: "สีเขียวเหนี่ยวทรัพย์"
+            },
+            {
+                desc: "โชคลาภลอยที่รอคอยกำลังเดินทางมาถึงในไม่ช้า สิ่งที่คุณเคยลงแรงอธิษฐานจิตไว้เกี่ยวกับเรื่องเงินทองจะออกดอกออกผลให้ชื่นใจตาแตกแน่นอนค๊า!",
+                num: "7, 78",
+                color: "สีน้ำเงินคริสตัล"
+            }
+        ];
+
+        function hitCookie() {
+            if (isLocked || clicks <= 0) return;
+
+            const container = document.getElementById('cookie-container');
+            const hpBar = document.getElementById('hp-bar');
+            const clicksText = document.getElementById('clicks-left');
+
+            // ลบแอนิเมชันเก่าแล้วสาดแอนิเมชันสั่นรับแรงกระแทกเข้าไปใหม่ค๊า
+            container.classList.remove('cookie-hit');
+            void container.offsetWidth; // Trigger reflow
+            container.classList.add('cookie-hit');
+
+            clicks--;
+            clicksText.innerText = clicks;
+
+            // บังคับลดหลอด HP ด้านบน
+            hpBar.style.width = (clicks * 33.3) + "%";
+
+            // ถ้าทุบครบ 3 ทีระเบิดโพล๊ะ!
+            if (clicks === 0) {
+                explodeCookie();
+            }
+        }
+
+        function explodeCookie() {
+            isLocked = true;
+            
+            const leftPart = document.getElementById('cookie-left');
+            const rightPart = document.getElementById('cookie-right');
+            const core = document.getElementById('cookie-core');
+            const hint = document.getElementById('tap-hint');
+            const hpBarZone = document.getElementById('hp-bar-zone');
+            
+            const paper = document.getElementById('fortune-paper');
+            const resetBtn = document.getElementById('reset-btn');
+            const upsell = document.getElementById('upsell-banner');
+
+            // 1. สาดเอฟเฟกต์ดีดแยกฝั่งซ้าย-ขวาออกจากกันค๊า
+            leftPart.classList.add('cookie-split-left');
+            rightPart.classList.add('cookie-split-right');
+            core.classList.add('hidden');
+            hint.classList.add('hidden');
+            hpBarZone.classList.add('opacity-0');
+
+            // สุ่มสาส์นลับ
+            const rand = COOKIE_DATABASE[Math.floor(Math.random() * COOKIE_DATABASE.length)];
+
+            // 2. ปล่อยเวลาให้เศษคุกกี้ปลิวดีดแป๊บนึง แล้วค่อยเลื่อนแผ่นป้ายสาส์นลับพุ่งลอยเด่นขึ้นมา
+            setTimeout(() => {
+                paper.classList.remove('hidden');
+                // ทริกเกอร์ให้แผ่นป้ายจางและขยับสไลด์ขึ้นสวยๆ
+                setTimeout(() => {
+                    paper.classList.remove('opacity-0', 'translate-y-6');
+                }, 50);
+
+                document.getElementById('lucky-num').innerText = rand.num;
+                document.getElementById('lucky-color').innerText = rand.color;
+
+                // ระบบพิมพ์สตรีมมิ่งตัวหนังสือให้อารมณ์ขลังๆ
+                const textContainer = document.getElementById('stream-text');
+                textContainer.innerHTML = "";
+                let index = 0;
+
+                function stream() {
+                    if (index < rand.desc.length) {
+                        textContainer.innerHTML += rand.desc.charAt(index);
+                        index++;
+                        setTimeout(stream, 25);
+                    } else {
+                        // พอพิมพ์เสร็จสิ้น ให้เปิดกล่อง Upsell แบนเนอร์และปุ่มเริ่มใหม่ค๊า
+                        resetBtn.classList.remove('hidden');
+                        upsell.classList.remove('hidden');
+                    }
+                }
+                stream();
+
+            }, 600);
+        }
+
+        // ระบบล้างกระดานเปิดคุกกี้ชิ้นใหม่ค๊าคุณพี่มิกกี้
+        function resetCookie() {
+            clicks = 3;
+            isLocked = false;
+
+            document.getElementById('cookie-left').className = "absolute left-0 w-24 h-40 bg-gradient-to-l from-amber-400 via-amber-500 to-orange-600 rounded-l-full shadow-lg border-r border-amber-300/30 transform origin-right";
+            document.getElementById('cookie-right').className = "absolute right-0 w-24 h-40 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-600 rounded-r-full shadow-lg border-l border-amber-300/30 transform origin-left";
+            
+            document.getElementById('cookie-core').classList.remove('hidden');
+            document.getElementById('tap-hint').classList.remove('hidden');
+            document.getElementById('hp-bar-zone').classList.remove('opacity-0');
+            document.getElementById('hp-bar').style.width = "100%";
+            document.getElementById('clicks-left').innerText = "3";
+
+            const paper = document.getElementById('fortune-paper');
+            paper.classList.add('hidden', 'opacity-0', 'translate-y-6');
+            
+            document.getElementById('reset-btn').classList.add('hidden');
+            document.getElementById('upsell-banner').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
