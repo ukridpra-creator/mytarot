@@ -513,10 +513,14 @@ window.startReading = async function() {
   document.getElementById('pyNextText').textContent = PERSONAL_YEAR_MEANINGS[calc.personalYearNext] || '';
 
   // save
-  try {
-    var idToken2 = await window._currentUser.getIdToken();
-    await fetch('/api/saveReading',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken2},body:JSON.stringify({type:'Pinnacle Numbers',question:day+'/'+month+'/'+year,result:JSON.stringify(calc)})}).catch(()=>{});
-  } catch(e){}
+try {
+  await addDoc(collection(db, 'users', window._currentUser.uid, 'readings'), {
+    type: 'Pinnacle Numbers',
+    question: day + '/' + month + '/' + year,
+    result: 'Life Path: ' + lp + ' | P1:' + pins[0] + ' P2:' + pins[1] + ' P3:' + pins[2] + ' P4:' + pins[3] + ' | ช่วงปัจจุบัน: Pinnacle ' + calc.currentPin + ' (เลข ' + pins[calc.currentPin-1] + ')',
+    createdAt: serverTimestamp()
+  });
+} catch(e){ console.error('save error:', e); }
 
   btn.disabled=false; btn.textContent='🔺 วิเคราะห์ Pinnacle';
 };
