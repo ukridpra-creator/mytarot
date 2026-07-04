@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taiwan Bird Oracle - My Tarot</title>
+    <!-- Tailwind CSS v3 เสถียรสุด -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome สำหรับ ไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Anchan & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anchan:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Anchan', sans-serif;
+            background-color: #06060c;
+        }
+        /* แอนิเมชันนกกระโดดดุ๊กดิ๊กตอนจิกไพ่ */
+        @keyframes birdHop {
+            0%, 100% { transform: translateY(0) scaleX(1); }
+            20% { transform: translateY(-12px) scaleX(1.05); }
+            40% { transform: translateY(0) scaleX(0.95); rotate: 10deg; }
+            60% { transform: translateY(-15px) rotate(-10deg); }
+            80% { transform: translateY(2px) scaleY(0.9); }
+        }
+        .bird-active {
+            animation: birdHop 1.2s ease-in-out;
+        }
+        /* เอฟเฟกต์โคมไฟจีนเรืองแสงนีออน */
+        .neon-lantern {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body class="text-gray-200 min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- BACKGROUND EFFECTS (ธีมตลาดกลางคืนนีออนไต้หวัน) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-30">
+        <div class="absolute top-10 -left-16 w-72 h-72 rounded-full bg-red-600 blur-[80px]"></div>
+        <div class="absolute top-1/2 -right-20 w-80 h-80 rounded-full bg-purple-600 blur-[90px]"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="relative z-10 w-full max-w-md mx-auto flex flex-col flex-grow bg-[#0b0b16]/90 backdrop-blur-md shadow-2xl min-h-screen pb-24 border-x border-purple-950/30">
+        
+        <!-- HEADER: ระบบเหรียญ & โปรไฟล์ -->
+        <header class="flex items-center justify-between px-4 py-3 border-b border-red-950/40 bg-[#0e0e1f]/95 sticky top-0 z-50">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-red-500 to-amber-500 flex items-center justify-center text-white font-bold shadow-md cursor-pointer" onclick="toggleProfileMenu()">
+                    M
+                </div>
+                <span class="text-sm font-semibold tracking-wide text-red-400">My Tarot</span>
+            </div>
+            
+            <!-- แสดงเหรียญ -->
+            <div class="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                <span class="text-xs font-bold text-amber-300">120</span>
+                <span class="text-[10px] text-amber-400/70">เหรียญ</span>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div id="profile-menu" class="hidden absolute left-4 top-14 w-48 bg-[#16162a] border border-red-500/20 rounded-xl shadow-xl overflow-hidden z-50">
+                <div class="px-4 py-2 border-b border-red-500/10 text-xs text-gray-400">ผู้ใช้งาน: คุณมิกกี้</div>
+                <a href="#" class="block px-4 py-2.5 text-xs hover:bg-red-600/10 transition flex items-center gap-2"><i class="fa-solid fa-history text-red-400"></i> ประวัติการดูดวง</a>
+                <a href="wallet.html" class="block px-4 py-2.5 text-xs hover:bg-red-600/10 transition flex items-center gap-2 text-amber-400"><i class="fa-solid fa-store"></i> เติมเหรียญ</a>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-grow px-4 pt-5">
+            
+            <!-- Title Section -->
+            <div class="text-center mb-4">
+                <div class="inline-flex gap-1 mb-1">
+                    <span class="w-2 h-3 bg-red-500 rounded-full animate-pulse neon-lantern"></span>
+                    <span class="w-2 h-3 bg-red-500 rounded-full animate-pulse neon-lantern" style="animation-delay: 0.3s"></span>
+                </div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-red-400 via-amber-400 to-orange-400 bg-clip-text text-transparent tracking-wide">
+                    🏮 นกจิกไพ่ไต้หวัน
+                </h1>
+                <p class="text-[10px] text-gray-400 tracking-wider mt-0.5">Taiwanese Shilin Bird Fortune-Telling</p>
+                <p class="text-xs text-amber-300/80 mt-2 max-w-xs mx-auto px-4">
+                    ศาสตร์ทำนายลับจากตลาดโต้รุ่งไต้หวัน ปล่อยนกเทพจิกเลือกคำทำนายลิขิตชะตาคุณวันต่อวัน!
+                </p>
+            </div>
+
+            <!-- BIRD STAGE CARD (เวทีของเจ้านกจิ๋ว) -->
+            <div class="bg-[#121225]/80 border border-red-900/30 rounded-2xl p-4 text-center relative overflow-hidden my-4 shadow-lg shadow-black/40">
+                
+                <!-- คอนไม้นก + ตัวนกพยากรณ์ -->
+                <div class="py-6 flex flex-col items-center justify-center relative min-h-[140px]">
+                    <!-- ตัวนกกระจอกเทพ (ใช้ฟอนต์ไอคอนดุ๊กดิ๊ก) -->
+                    <div id="fortune-bird" class="text-5xl text-amber-300 drop-shadow-[0_0_15px_rgba(252,211,77,0.4)] transition-all duration-300">
+                        <i class="fa-solid fa-dove"></i>
+                    </div>
+                    <!-- คอนไม้รองนั่ง -->
+                    <div class="w-28 h-2 bg-amber-900/60 rounded-full mt-2 border-b border-amber-700/20 shadow-md"></div>
+                </div>
+
+                <!-- โซนสำรับไพ่คว่ำรอสุ่ม -->
+                <div id="cards-deck" class="flex justify-center items-center gap-1.5 py-2 transition-all duration-500">
+                    <div class="w-7 h-11 bg-gradient-to-b from-red-800 to-red-950 border border-amber-500/30 rounded-md shadow-md transform -rotate-12"></div>
+                    <div class="w-7 h-11 bg-gradient-to-b from-red-800 to-red-950 border border-amber-500/30 rounded-md shadow-md transform -rotate-6 -translate-y-1"></div>
+                    <div class="w-7 h-11 bg-gradient-to-b from-red-800 to-red-950 border border-amber-500/30 rounded-md shadow-md transform translate-y-[-6px] border-amber-400/60 shadow-amber-500/20"></div>
+                    <div class="w-7 h-11 bg-gradient-to-b from-red-800 to-red-950 border border-amber-500/30 rounded-md shadow-md transform rotate-6 -translate-y-1"></div>
+                    <div class="w-7 h-11 bg-gradient-to-b from-red-800 to-red-950 border border-amber-500/30 rounded-md shadow-md transform rotate-12"></div>
+                </div>
+
+                <!-- ปุ่มกดปล่อยนกจิกฟรี -->
+                <div id="action-zone" class="mt-4">
+                    <button onclick="startBirdFortune()" class="w-full bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-semibold text-xs py-3 rounded-xl transition shadow-lg shadow-red-950/50 flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-feather-pointed animate-bounce"></i>
+                        ปล่อยนกเทพจิกคำทำนาย (ฟรีประจำวัน)
+                    </button>
+                </div>
+            </div>
+
+            <!-- LOADING / ANIMATION STATUS (ซ่อนอยู่) -->
+            <div id="loading-status" class="hidden text-center py-6">
+                <p class="text-xs text-amber-400 animate-pulse"><i class="fa-solid fa-circle-notch animate-spin mr-1.5"></i> เจ้านกเทพกำลังกระโดดเลือกไพ่ที่ลิขิตดวงคุณอยู่...</p>
+            </div>
+
+            <!-- RESULT CARD: ผลลัพธ์หลังนกจิกสำเร็จ (ซ่อนอยู่ตอนแรก) -->
+            <div id="result-card" class="hidden space-y-4 animate-fade-in">
+                
+                <!-- หน้าตาไพ่ที่นกคาบออกมา -->
+                <div class="flex justify-center">
+                    <div class="w-20 h-32 bg-amber-100 text-gray-900 border-2 border-amber-500 rounded-xl p-2 flex flex-col justify-between items-center shadow-[0_0_25px_rgba(251,191,36,0.4)] transform rotate-0 transition-transform duration-500">
+                        <span id="card-symbol-top" class="text-xs font-bold text-red-600 self-start">🀄</span>
+                        <div id="card-main-icon" class="text-4xl text-gray-800 my-1">
+                            <i class="fa-solid fa-gong"></i>
+                        </div>
+                        <span id="card-name" class="text-[10px] font-bold bg-red-600 text-white px-2 py-0.5 rounded-full tracking-wider">-</span>
+                    </div>
+                </div>
+
+                <!-- บล็อกรายละเอียดคำทำนาย -->
+                <div class="bg-[#14142b] border border-red-500/20 rounded-2xl p-5 space-y-3">
+                    <div class="text-center">
+                        <span class="text-[10px] uppercase tracking-widest text-red-400">นกเทพคาบป้ายเตือนชะตา</span>
+                        <h2 id="fortune-title" class="text-base font-bold text-amber-400 mt-0.5">-</h2>
+                    </div>
+                    
+                    <div class="border-t border-red-500/15 pt-3">
+                        <p class="text-xs font-semibold text-orange-400 mb-1"><i class="fa-solid fa-envelope-open-text mr-1"></i> สาส์นลับจากนกเทพ :</p>
+                        <!-- กล่องข้อความแบบสตรีมทิพย์ -->
+                        <div id="stream-text" class="text-xs text-gray-300 leading-relaxed min-h-[70px]"></div>
+                    </div>
+
+                    <div class="border-t border-red-500/15 pt-2.5 flex justify-between text-[11px]">
+                        <div><span class="text-red-400">เลขนำโชควันนี้:</span> <span id="lucky-num" class="text-amber-200 font-bold">-</span></div>
+                        <div><span class="text-amber-400">ของไหว้เสริมดวง:</span> <span id="lucky-item" class="text-gray-300">-</span></div>
+                    </div>
+                </div>
+
+                <!-- 🪙 UPSELL BANNER: ล่อซื้อดูดวงชะตาสายแข็ง -->
+                <div class="bg-gradient-to-br from-red-950/40 via-purple-950/40 to-black/60 border border-red-500/30 rounded-2xl p-4 shadow-xl text-center space-y-3">
+                    <div class="space-y-1">
+                        <h3 class="text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-dragon text-red-400"></i> ปลดล็อกเคล็ดแก้กรรมไต้หวันขั้นสูง
+                        </h3>
+                        <p class="text-[10.5px] text-gray-400 max-w-xs mx-auto leading-relaxed">
+                            เจาะลึกภัยเงียบที่นกเทพมองเห็นในดวงคุณปี 2026 พร้อมบทสวดขอพรวัดหลงซานเพื่อสลายเคราะห์ร้าย พลิกวิกฤตให้เป็นเงินล้าน!
+                        </p>
+                    </div>
+                    <a href="chinese.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-bold text-[11px] px-5 py-2 rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-coins"></i> ให้นกเทพเจาะลึกดวงขั้นสูง (20 เหรียญ)
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#070712]/95 border-t border-red-950/60 flex justify-around items-center py-2 z-50 shadow-2xl backdrop-blur-sm">
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-400 transition">
+                <i class="fa-solid fa-house text-sm"></i>
+                <span class="text-[9px]">หน้าแรก</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-red-400 font-medium">
+                <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                <span class="text-[9px]">ศาสตร์ฟรี</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-400 transition">
+                <i class="fa-solid fa-id-card text-sm"></i>
+                <span class="text-[9px]">ดูดวงจริง</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-0.5 text-gray-500 hover:text-red-400 transition">
+                <i class="fa-solid fa-wallet text-sm"></i>
+                <span class="text-[9px]">กระเป๋าเงิน</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // คลังดวงไพ่นกกระจอก/ป้ายคำทำนายไต้หวัน 6 แบบสุดแม่น
+        const BIRD_DATABASE = [
+            {
+                title: "ป้ายมังกรทองทะยานฟ้า (The Soaring Dragon)",
+                name: "มังกรทอง",
+                icon: "<i class='fa-solid fa-dragon text-red-600'></i>",
+                desc: "นกเทพจิกได้ป้ายมหาลาภ! วันนี้ดวงชะตาของคุณจะได้รับการปลดล็อก สิ่งที่ติดขัดหรือเจรจาไว้จะสำเร็จแบบงงๆ มีเกณฑ์ได้รับโชคหรือข่าวดีจากทิศตะวันออก แนะนำให้รีบลงมือทำสิ่งที่วางแผนไว้ทันทีค๊า!",
+                num: "8, 68",
+                item: "ชานมไต้หวันหวาน 100%"
+            },
+            {
+                title: "ป้ายเหรียญมหาจักรพรรดิคุ้มภัย (The Emperor Coin)",
+                name: "เหรียญทอง",
+                icon: "<i class='fa-solid fa-circle-dollar-to-slot text-amber-500'></i>",
+                desc: "นกเทพคาบป้ายเงินตราเข้ามาเกย! ดวงการเงินโดดเด่นมาก มีโอกาสได้ทรัพย์สินเงินทองหรือเงินไหลเข้ากระเป๋าเนืองๆ แต่อย่าเพิ่งใจใหญ่ให้ใครหยิบยืมเงินในช่วงนี้ เพราะดวงนารีอุปถัมภ์กำลังแรง ยิ่งขยันยิ่งรวยค๊า",
+                num: "5, 59",
+                item: "ผลไม้สีแดงหรือส้ม 3 ลูก"
+            },
+            {
+                title: "ป้ายดาบพิฆาตอุปสรรค (The Jade Sword)",
+                name: "กระบี่หยก",
+                icon: "<i class='fa-solid fa-wand-sparkles text-cyan-600'></i>",
+                desc: "วันนี้ดวงใจต้องนิ่งและเด็ดขาด! นกเทพเตือนว่าคุณกำลังจะชนะศัตรูหรือผ่านพ้นปัญหาที่น่าอึดอัดใจไปได้ด้วยสติปัญญาของตัวเอง ใครที่คิดร้ายจะแพ้ภัยตัวเองไปหมดสิ้น จงมั่นใจในสัญชาตญาณตัวเองค๊า",
+                num: "1, 14",
+                item: "น้ำชาอุ่นๆ ปราศจากน้ำตาล"
+            },
+            {
+                title: "ป้ายพัดคลายทุกข์บารมี (The Mystic Fan)",
+                name: "พัดขงเบ้ง",
+                icon: "<i class='fa-solid fa-wind text-purple-400'></i>",
+                desc: "นกเทพจิกป้ายสงบร่มเย็น! ช่วงนี้ดวงชีพจรลงเท้าหรือมีความคิดในหัวเยอะแยะไปหมด ป้ายนี้บอกให้คุณปล่อยวางความเครียดลงบ้าง ลมแห่งโชคชะตากำลังพัดเอาสิ่งไม่ดีออกไป และจะนำพาผู้อุปถัมภ์ใจดีเข้ามาช่วยเหลือในเร็ววัน",
+                num: "3, 36",
+                item: "เดินเล่นรับลมในพื้นที่เปิดโล่ง"
+            },
+            {
+                title: "ป้ายกิเลนประทานพรความรัก (The Sacred Qilin)",
+                name: "กิเลนคู่",
+                icon: "<i class='fa-solid fa-heart text-pink-500'></i>",
+                desc: "สาส์นรักจากนกเทพเด่นหรา! วันนี้เสน่ห์ของคุณจะทำงานได้ดีเยี่ยม คนโสดมีเกณฑ์สะดุดตาโดนใจใครบางคนจากการติดต่องานหรือสื่อออนไลน์ ส่วนคนมีคู่จะเข้าใจกันมากขึ้น แนะนำให้พูดจาหวานๆ อ่อนโยนจะเรียกโชคลาภเข้ามาค๊า",
+                num: "2, 28",
+                item: "ของหวานหรือขนมชิ้นเล็กๆ"
+            },
+            {
+                title: "ป้ายหอคอยเตือนสติ (The Guardian Pagoda)",
+                name: "เจดีย์เหล็ก",
+                icon: "<i class='fa-solid fa-gopuram text-orange-500'></i>",
+                desc: "นกเทพกางปีกเตือนให้ใช้ชีวิตด้วยความรอบคอบ! วันนี้ทำอะไรห้ามรีบร้อนอารมณ์เสียเด็ดขาด โดยเฉพาะการขับรถขับราหรือการลงทุนเสี่ยงดวง ให้เน้นความปลอดภัยเป็นหลัก ถือศีลสงบปากสงบคำแล้วดวงร้ายจะกลายเป็นดีค๊า",
+                num: "4, 49",
+                item: "ทำบุญโอนเงินบริจาคค่าน้ำ-ค่าไฟ"
+            }
+        ];
+
+        // ลоจิกแอนิเมชันนกจิกไพ่
+        function startBirdFortune() {
+            const bird = document.getElementById('fortune-bird');
+            const actionZone = document.getElementById('action-zone');
+            const loadingStatus = document.getElementById('loading-state') || document.getElementById('loading-status');
+            const resultCard = document.getElementById('result-card');
+            
+            // ซ่อนหน้าเก่าสลับฉาก
+            actionZone.classList.add('hidden');
+            resultCard.classList.add('hidden');
+            loadingStatus.classList.remove('hidden');
+            
+            // ใส่คลาสแอนิเมชันให้นกกระโดดดุ๊กดิ๊ก
+            bird.classList.add('bird-active');
+
+            // สุ่มผลลัพธ์ดวงชะตาจากคลังข้อมูล
+            const randIndex = Math.floor(Math.random() * BIRD_DATABASE.length);
+            const resultData = BIRD_DATABASE[randIndex];
+
+            // รอ 1.5 วินาที จำลองนกกระโดดไปจิกคาบไพ่เสร็จค๊า
+            setTimeout(() => {
+                // เอานิมนิกออกหลังเต้นจบ
+                bird.classList.remove('bird-active');
+                loadingStatus.classList.add('hidden');
+                resultCard.classList.remove('hidden');
+
+                // อัปเดตข้อมูลบนหน้าการ์ดไพ่จีนที่นกคาบออกมา
+                document.getElementById('card-main-icon').innerHTML = resultData.icon;
+                document.getElementById('card-name').innerText = resultData.name;
+                
+                // อัปเดตรายละเอียดคำทำนาย
+                document.getElementById('fortune-title').innerText = resultData.title;
+                document.getElementById('lucky-num').innerText = resultData.num;
+                document.getElementById('lucky-item').innerText = resultData.item;
+
+                // พิมพ์คำทำนายทิพย์แบบ Stream text ลื่นๆ
+                const textContainer = document.getElementById('stream-text');
+                textContainer.innerHTML = "";
+                let index = 0;
+                
+                function stream() {
+                    if (index < resultData.desc.length) {
+                        textContainer.innerHTML += resultData.desc.charAt(index);
+                        index++;
+                        setTimeout(stream, 25);
+                    } else {
+                        // พอพิมพ์เสร็จ ให้เปิดโอกาสปุ่มกดกลับมาเลือกใหม่ได้ เผื่ออยากเล่นอีกรอบ
+                        actionZone.classList.remove('hidden');
+                    }
+                }
+                stream();
+
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
