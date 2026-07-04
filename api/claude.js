@@ -65,6 +65,7 @@ const SERVICE_COSTS = {
   "vedic": TIER.T49,
   "pastlife": TIER.T30,
   "challenge": TIER.T20,
+  "seven": TIER.T39,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
