@@ -59,6 +59,7 @@ const SERVICE_COSTS = {
   "gunghap-read":   TIER.FREE,
   "tojung": TIER.T29,
   "numerology": TIER.T39,
+  "mole-reading": TIER.T10,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
