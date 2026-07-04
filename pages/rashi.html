@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ราศีอินเดีย — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/rashi-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .free-badge { background:linear-gradient(135deg,#10b981,#059669); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 24px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .hero-note { font-size:12px; color:rgba(212,175,55,0.7); margin-top:8px; background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:12px; padding:8px 14px; display:inline-block; }
+
+    /* INPUT */
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:var(--purple-light); }
+    .sel option { background:#1a1535; }
+
+    .btn-check { width:100%; background:linear-gradient(135deg,#f97316,#f59e0b); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+
+    /* RESULT */
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+
+    /* RASHI HEADER */
+    .rashi-header { border-radius:24px; padding:28px 20px; text-align:center; margin-bottom:20px; position:relative; overflow:hidden; }
+    .rashi-header::before { content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px; border-radius:50%; background:rgba(255,255,255,0.05); }
+    .rashi-emoji { font-size:52px; margin-bottom:8px; }
+    .rashi-name-th { font-size:28px; font-weight:800; color:white; margin-bottom:2px; }
+    .rashi-name-en { font-size:14px; color:rgba(255,255,255,0.5); margin-bottom:12px; letter-spacing:2px; }
+    .rashi-dates { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:16px; }
+    .rashi-planet-row { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+    .rashi-tag { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:700; background:rgba(255,255,255,0.1); color:white; }
+
+    /* NOTE */
+    .rashi-note { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:14px; padding:12px 16px; margin-bottom:16px; font-size:12px; color:rgba(255,255,255,0.5); text-align:center; line-height:1.7; }
+    .rashi-note span { color:#d4af37; font-weight:700; }
+
+    /* SECTIONS */
+    .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .result-section h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+    .result-section p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
+    .sec-personality { background:rgba(168,85,247,0.08); border-color:#a855f7; }
+    .sec-personality h3 { color:#a855f7; }
+    .sec-career { background:rgba(96,165,250,0.08); border-color:#60a5fa; }
+    .sec-career h3 { color:#60a5fa; }
+    .sec-money { background:rgba(16,185,129,0.08); border-color:#10b981; }
+    .sec-money h3 { color:#10b981; }
+    .sec-love { background:rgba(236,72,153,0.08); border-color:#ec4899; }
+    .sec-love h3 { color:#ec4899; }
+    .sec-health { background:rgba(245,158,11,0.08); border-color:#f59e0b; }
+    .sec-health h3 { color:#f59e0b; }
+
+    /* LUCKY */
+    .lucky-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
+    .lucky-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .lucky-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .lucky-item { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:12px; padding:10px 12px; }
+    .lucky-item-label { font-size:10px; color:var(--dim); margin-bottom:4px; }
+    .lucky-item-value { font-size:13px; font-weight:700; color:#d4af37; }
+
+    /* COMPATIBLE */
+    .compat-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:16px; }
+    .compat-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .compat-row { display:flex; gap:8px; flex-wrap:wrap; }
+    .compat-tag { padding:6px 16px; border-radius:20px; font-size:13px; font-weight:700; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); }
+
+    /* UPSELL */
+    .upsell-box { background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(245,158,11,0.08)); border:1px solid rgba(249,115,22,0.3); border-radius:20px; padding:20px; text-align:center; margin-bottom:16px; }
+    .upsell-title { font-size:16px; font-weight:800; color:white; margin-bottom:6px; }
+    .upsell-desc { font-size:13px; color:var(--dim); margin-bottom:14px; line-height:1.6; }
+    .btn-upsell { width:100%; padding:14px; border-radius:16px; background:linear-gradient(135deg,#f97316,#f59e0b); border:none; color:white; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:12px; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="indian-hub.html" class="back-btn">←</a>
+  <div class="page-title">🔯 ราศีอินเดีย</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔯</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-indian.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🔯 ราศีอินเดีย (Rashi)</div>
+    <div class="hero-desc">ค้นพบราศีของคุณในระบบโหราศาสตร์อินเดียโบราณค่ะ<br>ต่างจากราศีตะวันตกประมาณ 23 วันค่ะ</div>
+    <div class="hero-note">✨ ราศีอินเดียของคุณอาจต่างจากที่รู้จักนะคะ!</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเดือนเกิดของคุณพี่</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+    </div>
+  </div>
+
+  <button class="btn-check" onclick="checkRashi()">🔯 ค้นหาราศีอินเดียเลยค่ะ</button>
+
+  <!-- RESULT -->
+  <div class="result-box" id="resultBox">
+
+    <div class="rashi-header" id="rashiHeader">
+      <div class="rashi-emoji" id="rashiEmoji"></div>
+      <div class="rashi-name-th" id="rashiNameTH"></div>
+      <div class="rashi-name-en" id="rashiNameEN"></div>
+      <div class="rashi-dates" id="rashiDates"></div>
+      <div class="rashi-planet-row" id="rashiTags"></div>
+    </div>
+
+    <div class="rashi-note" id="rashiNote"></div>
+
+    <div class="result-section sec-personality">
+      <h3>✦ บุคลิกและตัวตน</h3>
+      <p id="secPersonality"></p>
+    </div>
+    <div class="result-section sec-career">
+      <h3>✦ การงาน</h3>
+      <p id="secCareer"></p>
+    </div>
+    <div class="result-section sec-money">
+      <h3>✦ การเงิน</h3>
+      <p id="secMoney"></p>
+    </div>
+    <div class="result-section sec-love">
+      <h3>✦ ความรัก</h3>
+      <p id="secLove"></p>
+    </div>
+    <div class="result-section sec-health">
+      <h3>✦ สุขภาพ</h3>
+      <p id="secHealth"></p>
+    </div>
+
+    <div class="lucky-card">
+      <div class="lucky-title">🌟 สิ่งมงคลประจำราศีค่ะ</div>
+      <div class="lucky-grid">
+        <div class="lucky-item"><div class="lucky-item-label">💎 อัญมณีมงคล</div><div class="lucky-item-value" id="luckyGem"></div></div>
+        <div class="lucky-item"><div class="lucky-item-label">🎨 สีมงคล</div><div class="lucky-item-value" id="luckyColor"></div></div>
+        <div class="lucky-item"><div class="lucky-item-label">📅 วันมงคล</div><div class="lucky-item-value" id="luckyDay"></div></div>
+        <div class="lucky-item"><div class="lucky-item-label">🔢 เลขมงคล</div><div class="lucky-item-value" id="luckyNumber"></div></div>
+        <div class="lucky-item" style="grid-column:span 2"><div class="lucky-item-label">🙏 เทพประจำราศี</div><div class="lucky-item-value" id="luckyDeity"></div></div>
+      </div>
+    </div>
+
+    <div class="compat-card">
+      <div class="compat-title">💕 ราศีที่เข้ากันได้ดีค่ะ</div>
+      <div class="compat-row" id="compatRow"></div>
+    </div>
+
+    <div class="upsell-box">
+      <div class="upsell-title">⭐ อยากรู้ดวงอินเดียลึกกว่านี้?</div>
+      <div class="upsell-desc">Nakshatras — ดาวประจำตัวในโหราศาสตร์อินเดีย<br>บอกชะตาชีวิตเชิงลึกที่ละเอียดกว่าราศีมากค่ะ</div>
+      <button class="btn-upsell" onclick="window.location.href='nakshatras.html'">✨ ดู Nakshatras เลยค่ะ</button>
+    </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 เลือกวันเกิดใหม่</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(c) { document.getElementById('coinCount').textContent = c; };
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e){console.error(e);} };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+// DROPDOWNS
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl = document.getElementById('inDay');
+  for (var d=1;d<=31;d++) { var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o); }
+  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl = document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+});
+
+window.checkRashi = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  const day = parseInt(document.getElementById('inDay').value);
+  const month = parseInt(document.getElementById('inMonth').value);
+
+  const rashiKey = getIndianRashi(day, month);
+  const r = RASHI_DATA[rashiKey];
+
+  // header
+  const header = document.getElementById('rashiHeader');
+  header.style.background = `linear-gradient(135deg, ${r.colorLight.replace('0.15','0.3')}, ${r.colorLight})`;
+  header.style.border = `1px solid ${r.colorBorder}`;
+  document.getElementById('rashiEmoji').textContent = r.emoji;
+  document.getElementById('rashiNameTH').textContent = 'ราศี' + r.nameTH;
+  document.getElementById('rashiNameEN').textContent = r.nameEN + ' ' + r.symbol;
+  document.getElementById('rashiDates').textContent = '📅 ' + r.dates;
+  document.getElementById('rashiTags').innerHTML = [
+    `<span class="rashi-tag">🪐 ${r.planet}</span>`,
+    `<span class="rashi-tag">🌿 ธาตุ${r.element}</span>`
+  ].join('');
+
+  // note
+  document.getElementById('rashiNote').innerHTML = `ราศีตะวันตกเกิด ${day} เดือน ${month} อาจเป็นคนละราศีกับ <span>ราศีอินเดีย${r.nameTH}</span> นะคะ เพราะระบบอินเดียคำนวณต่างกันค่ะ`;
+
+  // sections
+  document.getElementById('secPersonality').textContent = r.personality;
+  document.getElementById('secCareer').textContent = r.career;
+  document.getElementById('secMoney').textContent = r.money;
+  document.getElementById('secLove').textContent = r.love;
+  document.getElementById('secHealth').textContent = r.health;
+
+  // lucky
+  document.getElementById('luckyGem').textContent = r.gem;
+  document.getElementById('luckyColor').textContent = r.luckyColor;
+  document.getElementById('luckyDay').textContent = 'วัน' + r.luckyDay;
+  document.getElementById('luckyNumber').textContent = r.luckyNumber;
+  document.getElementById('luckyDeity').textContent = r.deity;
+
+  // compatible
+  document.getElementById('compatRow').innerHTML = r.compatible.map(k =>
+    `<span class="compat-tag">${RASHI_NAMES[k] || k}</span>`
+  ).join('');
+
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(() => document.getElementById('resultBox').scrollIntoView({ behavior:'smooth' }), 100);
+
+  // save
+  if (currentUser) {
+    try {
+      addDoc(collection(db,'users',currentUser.uid,'readings'), {
+        type: 'ราศีอินเดีย',
+        question: `วันที่ ${day} เดือน ${month}`,
+        result: `ราศี${r.nameTH} (${r.nameEN}) ${r.symbol} — ${r.dates}`,
+        createdAt: serverTimestamp()
+      });
+    } catch(e) { console.error(e); }
+  }
+};
+
+window.resetResult = function() {
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
+</script>
+</body>
+</html>
