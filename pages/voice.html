@@ -518,7 +518,7 @@ window.startReading = async function() {
       body: JSON.stringify({
         service: 'voice-reading',
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: `คุณคือผู้เชี่ยวชาญการวิเคราะห์เสียงและพลังงานชีวิต เรียกผู้ถามว่า "คุณ" เขียนคำทำนายภาษาไทยที่ลึกซึ้ง อบอุ่น และละเอียด ต้องใช้ tag [SOUL][CHARM][CAREER][MONEY][LOVE][HEALTH][MSG] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{
           role: 'user',
