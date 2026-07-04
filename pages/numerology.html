@@ -109,7 +109,7 @@
 
 <!-- HEADER -->
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
+  <a href="number-hub.html" class="back-btn">←</a>
   <div class="page-title">เลขศาสตร์</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
@@ -407,7 +407,7 @@ window.startReading = async function() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        service: 'foot-reading',
+        service: 'numerology',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         system: `คุณคือหมอดูเลขศาสตร์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น ต้องใช้ tag [GREETING][LIFE][EXPRESS][SOUL][PERSONA][CAREER][MONEY][LOVE][YEAR][LUCKY][AVOID][DAY][COLOR][WARNING] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
@@ -443,8 +443,11 @@ window.startReading = async function() {
     lastFullText = text;
 
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'เลขศาสตร์', name, birthDate, result: text, createdAt: serverTimestamp()
-    });
+  type: 'เลขศาสตร์',
+  question: name + ' เกิด ' + birthDate,
+  result: text,
+  createdAt: serverTimestamp()
+});
 
     document.getElementById('followupBox').style.display = 'block';
 
