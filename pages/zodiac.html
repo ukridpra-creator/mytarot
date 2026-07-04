@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12 Chinese Zodiac — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); display:flex; align-items:center; justify-content:center; color:#ef4444; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:12px 0 24px; }
+    .hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#ef4444; margin-bottom:4px; letter-spacing:2px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:#ef4444; font-weight:700; margin-bottom:10px; display:block; letter-spacing:1px; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:#ef4444; }
+
+    .btn-read { width:100%; background:linear-gradient(135deg,#991b1b,#ef4444); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.3s; margin-bottom:20px; letter-spacing:1px; box-shadow: 0 4px 15px rgba(239,68,68,0.2); }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+
+    #resultBox { display:none; }
+    .zodiac-badge { display:inline-block; padding:6px 16px; border-radius:20px; font-size:13px; font-weight:800; color:white; background:#ef4444; margin-bottom:16px; letter-spacing:1px; }
+    
+    .reading-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .reading-section-title { font-size:14px; font-weight:700; color:#ef4444; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+    .reading-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.9; min-height:24px; text-align:justify; }
+    
+    /* Upsell Banner */
+    .upsell-box { background:linear-gradient(135deg, rgba(212,175,55,0.1), rgba(239,68,68,0.1)); border:1px solid rgba(212,175,55,0.3); border-radius:20px; padding:20px; text-align:center; margin-top:24px; }
+    .upsell-title { font-size:15px; font-weight:700; color:#d4af37; margin-bottom:6px; }
+    .upsell-desc { font-size:12px; color:rgba(255,255,255,0.5); line-height:1.6; margin-bottom:14px; }
+    .btn-upsell { display:inline-block; background:linear-gradient(135deg,#b8860b,#d4af37); color:#1a1000; padding:10px 24px; border-radius:12px; font-size:13px; font-weight:700; text-decoration:none; transition:0.3s; }
+
+    .cursor { display:inline-block; width:2px; height:14px; background:#ef4444; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="chinese-hub.html" class="back-btn">←</a>
+  <div class="page-title">🐉 12 นักษัตรจีน</div>
+</div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <!-- 🌟 เว้นที่ไว้สำหรับรูป mascot ตามที่คุณพี่บรีฟเลยค่ะ -->
+      <img src="../images/mascot-zodiac.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">CHINESE ZODIAC</div>
+    <div class="hero-desc">เจาะลึกความลึกลับของพลังงานปีเกิด<br>อ่านตัวตน เผยดวงชะตาสไตล์โหราศาสตร์ตะวันออก</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเดือนปีเกิดของคุณ</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startZodiacReading()">🐉 ดูดวงนักษัตรฟรี</button>
+
+  <div id="resultBox">
+    <div style="text-align:center;">
+      <div class="zodiac-badge" id="zodiacSignBadge">ปีนักษัตรของคุณ: ปี...</div>
+    </div>
+
+    <!-- บล็อกคำทำนาย 1: ตัวตน -->
+    <div class="reading-card">
+      <div class="reading-section-title">👤 บุคลิกและนิสัยใจคอ</div>
+      <div class="reading-text" id="textTrait"></div>
+    </div>
+
+    <!-- บล็อกคำทำนาย 2: ความรัก -->
+    <div class="reading-card">
+      <div class="reading-section-title">❤️ เรื่องความรักความสัมพันธ์</div>
+      <div class="reading-text" id="textLove"></div>
+    </div>
+
+    <!-- บล็อกคำทำนาย 3: เคล็ดลับ -->
+    <div class="reading-card">
+      <div class="reading-section-title">✨ ทริคเสริมดวงชะตา</div>
+      <div class="reading-text" id="textTip"></div>
+    </div>
+
+    <!-- 🌟 ระบบป้ายยาชวนไปเสียเงิน 20 เหรียญต่อ -->
+    <div class="upsell-box">
+      <div class="upsell-title">🔮 อยากรู้ชะตาชีวิตแบบเจาะลึก 100% ไหมคะ?</div>
+      <div class="upsell-desc">พลังจากปีเกิดเป็นเพียง 25% เท่านั้นค่ะ มาร่วมเจาะลึกวันและเวลาเกิดผ่านศาสตร์ "ปาจื้อ สี่เสาแห่งชะตา" เพื่อค้นหาธาตุเจ้าเรือนที่แท้จริงของคุณกันเถอะค่ะ!</div>
+      <a href="chinese.html" class="btn-upsell">🪙 ดูดวงปาจื้อ (20 เหรียญ)</a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// 🗃️ ฐานข้อมูลคำทำนายสำเร็จรูปฝั่งหน้าบ้าน (ประหยัดค่า API)
+const ZODIAC_DATA = {
+  0: { name: "ปีชวด (หนู) 🐀", trait: "คุณเป็นคนเฉลียวฉลาด ไหวพริบปฏิภาณเป็นเลิศ มีความกระตือรือร้นและปรับตัวเข้ากับสถานการณ์รอบตัวได้เก่งมาก มักชอบวางแผนชีวิตล่วงหน้าและเก็บออมเงินเก่ง แต่บางครั้งอาจจะขี้ระแวงหรือคิดมากเกินไปหน่อยค่ะ", love: "ในเรื่องความรัก คุณเป็นคนรักอิสระแต่ก็ต้องการความมั่นคง ถ้าได้รักใครจะดูแลใส่ใจเป็นอย่างดี คู่ที่ส่งเสริมกันที่สุดคือ คนปีฉลู ปีมะโรง และปีวอก ค่ะ", tip: "สีนำโชคของคุณคือ สีน้ำเงินและสีดำ แนะนำให้พยายามปล่อยวางความกังวลแล้วปล่อยให้ชีวิตรันไปตามธรรมชาติบ้างจะปังมากค่ะ" },
+  1: { name: "ปีฉลู (วัว) 🐂", trait: "คุณเป็นสัญลักษณ์ของความอดทน มั่นคง และพึ่งพาได้มากที่สุด มีความรับผิดชอบสูง ทำอะไรทำจริงและมีระบบระเบียบ ไม่ชอบความโลดโผนหรือความเสี่ยง แต่ข้อเสียคือบางครั้งแอบดื้อเงียบและไม่ค่อยยอมเปลี่ยนใจง่ายๆ", love: "เรื่องหัวใจคุณเป็นคนรักเดียวใจเดียว มั่นคงเหมือนหินผา ไม่ชอบการหวือหวาแต่เน้นความสัมพันธ์ระยะยาว คู่แท้ที่อยู่ด้วยกันแล้วรุ่งเรืองคือ คนปีชวด ปีมะเส็ง และปีระกา ค่ะ", tip: "สีนำโชคคือ สีเหลืองและสีครีม ทริคเสริมดวงคือการหัดยืดหยุ่นและรับฟังความคิดเห็นของคนรอบข้างให้มากขึ้น" },
+  2: { name: "ปีขาล (เสือ) 🐅", trait: "คุณมีความเป็นผู้นำสูง กล้าหาญ มั่นใจในตัวเอง และรักศักดิ์ศรีเป็นที่สุด ชอบความท้าทายและไม่กลัวอุปสรรคใดๆ มีเสน่ห์ต่อผู้พบเห็น แต่อาจจะมีอารมณ์ร้อนวู่วามและเอาแต่ใจตัวเองเป็นบางครั้งค่ะ", love: "เรื่องความรักคุณเป็นคนโรแมนติก แต่อยากเป็นผู้นำหรืออยากให้แฟนเอาใจใส่มากๆ ถ้าชอบใครจะรุกจีบตรงๆ คู่สร้างคู่สมของคุณคือ คนปีมะเมีย ปีจอ และปีกุน ค่ะ", tip: "สีนำโชคคือ สีเขียว ทริคสำคัญคือการฝึกสมาธิและควบคุมอารมณ์ร้อน จะช่วยลดปัญหาขัดแย้งในชีวิตได้ดีมาก" },
+  3: { name: "ปีเถาะ (กระต่าย) 🐇", trait: "คุณเป็นคนนุ่มนวล มีรสนิยมดี รักสงบ และมีจิตวิทยาในการเข้าหาผู้คนสูงมาก เกลียดการปะทะหรือการทะเลาะเบาะแว้ง เป็นผู้ฟังที่ดี แต่อาจจะแอบเป็นคนโลเล เจ้าน้ำตา หรืออ่อนไหวต่อคำพูดคนอื่นง่ายเกินไปค่ะ", love: "ในความสัมพันธ์ คุณต้องการความโรแมนติกและความปลอดภัยทางอารมณ์สูงมาก ชอบคนสุภาพและดูแลเอาใจใส่ คู่ชะตาที่เข้ากันได้ดีที่สุดคือ คนปีมะแม ปีจอ และปีกุน ค่ะ", tip: "สีนำโชคคือ สีชมพูและสีม่วง ทริคเสริมดวงคือต้องกล้าปฏิเสธคนอื่นให้เป็น เพื่อไม่ให้ตัวเองต้องแบกรับความเดือดร้อน" },
+  4: { name: "ปีมะโรง (มังกร) 🐉", trait: "คุณเป็นคนมีพาวเวอร์ มีเสน่ห์ลึกลับและน่าเกรงขาม มีอุดมการณ์สูงและทะเยอทะยาน มักประสบความสำเร็จในหน้าที่การงานได้เร็วเพราะมีความมุ่งมั่น แต่อาจแอบเป็นคนเจ้าระเบียบ คาดหวังสูง และยอมหักไม่ยอมงอ", love: "เรื่องความรักคุณชอบความสัมพันธ์ที่ดูดีและต่างฝ่ายต่างส่งเสริมชื่อเสียงให้กัน มีความโรแมนติกแบบยิ่งใหญ่ คู่ที่อยู่ด้วยแล้วพากันรวยคือ คนปีชวด ปีมะเส็ง และปีวอก ค่ะ", tip: "สีนำโชคคือ สีทองและสีแดง ทริคเสริมดวงคือการลดความสมบูรณ์แบบลงมาหน่อย จะช่วยให้ใช้ชีวิตได้อย่างมีความสุขขึ้น" },
+  5: { name: "ปีมะเส็ง (งูเล็ก) 🐍", trait: "คุณเป็นคนฉลาดลึกซึ้ง มีซิกส์เซนส์และสัญชาตญาณที่แม่นยำมาก เงียบขรึมและดูน่าค้นหา มีความสามารถในการจัดการปัญหาเฉพาะหน้าได้อย่างเยือกเย็น แต่ข้อเสียคือแอบเป็นคนขี้หึงและมีความลับเยอะขี้ระแวง", love: "เวลารักใครคุณจะทุ่มเทและแสดงความเป็นเจ้าของสูงมาก มีเสน่ห์ดึงดูดทางเพศสูง คู่ชะตาที่จะช่วยเกื้อหนุนดวงชะตาได้ดีคือ คนปีฉลู และปีระกา ค่ะ", tip: "สีนำโชคคือ สีแดงและสีเขียวเข้ม แนะนำให้หัดเปิดใจแชร์ความรู้สึกกับคนสนิทบ้าง จะช่วยลดความเครียดสะสมได้ดี" },
+  6: { name: "ปีมะเมีย (ม้า) 🐎", trait: "คุณรักอิสระเหนือสิ่งอื่นใด มีพลังงานล้นเหลือ ร่าเริง มนุษยสัมพันธ์ดีเยี่ยม ชอบเดินทางท่องเที่ยวและหาประสบการณ์ใหม่ๆ ตลอดเวลา แต่อาจจะเป็นคนเบื่อง่าย ทำอะไรตามอารมณ์ และไม่ค่อยมีความอดทนกับเรื่องซ้ำซาก", love: "เรื่องหัวใจคุณชอบความรักที่ตื่นเต้นและมีพื้นที่ส่วนตัวให้กัน ไม่ชอบโดนผูกมัดหรือบังคับ คู่ที่อยู่ด้วยกันแล้วสนุกสนานไม่มีเบื่อคือ คนปีขาล ปีมะแม และปีจอ ค่ะ", tip: "สีนำโชคคือ สีส้มและสีแดง ทริคเสริมดวงคือการฝึกทำอะไรให้จบเป็นชิ้นๆ อย่าเพิ่งถอดใจกลางคัน" },
+  7: { name: "ปีมะแม (แพะ) 🐑", trait: "คุณเป็นคนใจดี มีเมตตา อ่อนโยนและเห็นอกเห็นใจผู้อื่นเสมอ มีหัวศิลปะและรักความสวยงาม เป็นคนประนีประนอมเก่ง แต่แอบเป็นคนคิดมาก ชอบตีตนไปก่อนไข้ และมักพึ่งพิงคนอื่นทางจิตใจสูง", love: "คุณต้องการคนรักที่อบอุ่น เป็นผู้นำ และคอยปกป้องคุณได้ คุณจะปรนนิบัติพัดวีแฟนเป็นอย่างดี คู่สร้างคู่สมคือ คนปีเถาะ ปีมะเมีย และปีกุน ค่ะ", tip: "สีนำโชคคือ สีขาวและสีครีม ทริคเสริมดวงคือการฝึกพึ่งพาตัวเองและมั่นใจในศักยภาพของตัวเองให้มากขึ้น" },
+  8: { name: "ปีวอก (ลิง) 🐒", trait: "คุณเป็นคนสนุกสนาน อารมณ์ดี มีมุกตลกเพียบ ขี้เล่นและฉลาดแกมโกง เรียนรู้อะไรได้รวดเร็วมาก มีไหวพริบเอาตัวรอดได้ในทุกสถานการณ์ แต่บางครั้งอาจดูไม่จริงจัง โลเล หรือชอบแกล้งคนอื่นเกินงาม", love: "เรื่องความรักคุณชอบคนคุยสนุก ไม่น่าเบื่อ และเข้าใจมุกตลกของคุณ คุณเป็นคนมีเสน่ห์แพรวพราว คู่แท้ที่อยู่ด้วยกันแล้วพากันสร้างตัวได้คือ คนปีชวด และปีมะโรง ค่ะ", tip: "สีนำโชคคือ สีขาวและสีเหลือง ทริคเสริมดวงคือการรักษาสัจจะและทำสิ่งต่างๆ ด้วยความจริงใจจะทำให้ผู้ใหญ่เอ็นดู" },
+  9: { name: "ปีระกา (ไก่) 🐓", trait: "คุณเป็นคนตรงไปตรงมา ขยันขันแข็ง รักความสะอาดยืนหนึ่ง เจ้าระเบียบและแต่งตัวดูดีอยู่เสมอ ช่างสังเกตและมีความสามารถในการบริหารจัดการสูง แต่ข้อเสียคือแอบพูดจาขวานผ่าซากและชอบวิจารณ์คนอื่น", love: "เรื่องหัวใจคุณชอบคนที่ดูแลตัวเองดีและซื่อสัตย์ คุณพร้อมปกป้องและสร้างอนาคตไปกับคนรัก คู่ชะตาที่เข้ากันได้ราวกับกิ่งทองใบหยกคือ คนปีฉลู ปีมะ dragons และปีมะเส็ง ค่ะ", tip: "สีนำโชคคือ สีทองและสีน้ำตาล ทริคเสริมดวงคือการเลือกใช้คำพูดที่ถนอมน้ำใจคนฟังให้มากขึ้นจะช่วยลดศัตรูได้ค่ะ" },
+  10: { name: "ปีจอ (สุนัข) 🐕", trait: "คุณคือสัญลักษณ์แห่งความซื่อสัตย์ รักคุณธรรมและพวกพ้องเป็นที่สุด มีความรับผิดชอบสูงและพร้อมสู้เพื่อความถูกต้อง เป็นที่ปรึกษาที่ดี แต่ข้อเสียคือชอบมองโลกในแง่ร้าย แอบขี้บ่นและตึงเครียดกับชีวิตเกินไป", love: "ในด้านความรัก คุณเป็นคนรักจริงหวังแต่ง ซื่อสัตย์ไม่นอกใจแน่นอน และพร้อมร่วมทุกข์ร่วมสุขไปด้วยกัน คู่ที่อยู่ด้วยกันแล้วอบอุ่นใจที่สุดคือ คนปีขาล ปีเถาะ และปีมะเมีย ค่ะ", tip: "สีนำโชคคือ สีเขียวและสีเหลือง ทริคเสริมดวงคือหาเวลาไปทำกิจกรรมผ่อนคลายเพื่อลดความตึงเครียดในสมอง" },
+  11: { name: "ปีกุน (หมู) 🐖", trait: "คุณเป็นคนใจกว้าง รักความสนุกสนาน ใช้ชีวิตเรียบง่ายไม่ค่อยงกหรือคิดร้ายกับใคร มีโชคลาภเรื่องการกินและการอยู่เสมอ แต่อาจจะใจอ่อนง่ายเกินไปจนโดนคนอื่นหลอกเอาได้ง่ายๆ และแอบมีความขี้เกียจซ่อนอยู่ค่ะ", love: "เรื่องความรักคุณเป็นคนอบอุ่น เอาใจเก่ง ชอบตามใจแฟน และอภัยให้ได้เสมอ คู่แท้ที่จะพากันมีความสุขและอุดมสมบูรณ์คือ คนปีขาล ปีเถาะ และปีมะแม ค่ะ", tip: "สีนำโชคคือ สีเทาและสีดำ ทริคเสริมดวงคือฝึกปฏิเสธคำขอยืมเงินหรือการค้ำประกัน เพื่อป้องกันการเดือดร้อนภายหลัง" }
+};
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+window._currentUser = null;
+
+onAuthStateChanged(auth, u => { window._currentUser = u; });
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dayEl = document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear() + 543; // พ.ศ.
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y-543;o.textContent=y;if(y===curY-30)o.selected=true;yearEl.appendChild(o);}
+});
+
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+async function streamText(el, text, speed) {
+  el.innerHTML='<span class="cursor"></span>';
+  for(var i=0;i<text.length;i++){
+    el.innerHTML=text.substring(0,i+1)+'<span class="cursor"></span>';
+    await sleep(speed);
+  }
+  el.innerHTML=text;
+}
+
+// 🧮 ฟังก์ชันคำนวณปีนักษัตรจีนแบบดักตรุษจีนภาพรวม (ตัดรอบเฉลี่ยที่ 5 กุมภาพันธ์)
+function getZodiacIndex(d, m, y) {
+  let checkYear = y;
+  if (m < 2 || (m === 2 && d < 5)) { checkYear = y - 1; } // ถ้าเกิดก่อน 5 กุมภาพันธ์ ถือเป็นพลังงานปีเก่า
+  let remainder = (checkYear - 4) % 12;
+  if (remainder < 0) remainder += 12;
+  return remainder; // 0=ชวด, 1=ฉลู ... 11=กุน
+}
+
+window.startZodiacReading = async function() {
+  var btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังเปิดตำราจักรราศีจีน...';
+
+  var day   = parseInt(document.getElementById('inDay').value);
+  var month = parseInt(document.getElementById('inMonth').value);
+  var year  = parseInt(document.getElementById('inYear').value);
+
+  var idx = getZodiacIndex(day, month, year);
+  var data = ZODIAC_DATA[idx];
+
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('zodiacSignBadge').textContent = "ปีนักษัตรของคุณ: " + data.name;
+  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
+
+  // 🌟 เริ่มกระบวนการสตรีมคำทำนายหน้าบ้าน
+  await streamText(document.getElementById('textTrait'), data.trait, 10);
+  await sleep(300);
+  await streamText(document.getElementById('textLove'), data.love, 10);
+  await sleep(300);
+  await streamText(document.getElementById('textTip'), data.tip, 10);
+
+  // 📝 บันทึกประวัติลงฐานข้อมูลแบบเงียบๆ (ถ้าเข้าสู่ระบบไว้)
+  if (window._currentUser) {
+    try {
+      await addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+        type: 'Chinese Zodiac (ฟรี)',
+        question: day+'/'+month+'/'+(year+543),
+        result: 'วิเคราะห์ผลปีเกิด: ' + data.name,
+        createdAt: serverTimestamp()
+      });
+    } catch(e){ console.error('save error:',e); }
+  }
+
+  btn.disabled=false; btn.textContent='🐉 ดูดวงนักษัตรฟรี';
+};
+</script>
+</body>
+</html>
