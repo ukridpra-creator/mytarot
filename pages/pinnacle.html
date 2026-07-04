@@ -37,68 +37,35 @@
 
     .dob-tag { text-align:center; font-size:12px; color:rgba(255,255,255,0.3); letter-spacing:2px; margin-bottom:8px; }
 
-    /* Life Path */
     .lp-box { text-align:center; margin-bottom:28px; }
     .lp-num { font-size:52px; font-weight:900; font-family:'Cinzel',serif; background:linear-gradient(135deg,#fde68a,#d4af37); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
     .lp-label { font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:2px; margin-top:4px; }
 
-    /* PINNACLE CARDS */
-    .pin-card {
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:20px; padding:20px;
-      margin-bottom:16px;
-      opacity:0; transform:translateY(16px);
-      transition:opacity 0.4s ease, transform 0.4s ease;
-    }
+    .pin-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:20px; margin-bottom:16px; opacity:0; transform:translateY(16px); transition:opacity 0.4s ease, transform 0.4s ease; }
     .pin-card.visible { opacity:1; transform:translateY(0); }
     .pin-card.current { border-color:rgba(212,175,55,0.4); background:rgba(212,175,55,0.06); }
 
-    /* formula row */
-    .formula-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:16px; }
-    .formula-box {
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:14px; padding:10px 14px;
-      text-align:center; min-width:64px;
-    }
+    .formula-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px; }
+    .formula-box { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:10px 14px; text-align:center; min-width:64px; }
     .formula-box.filled { border-color:rgba(212,175,55,0.4); background:rgba(212,175,55,0.08); }
     .formula-val { font-size:22px; font-weight:900; font-family:'Cinzel',serif; color:white; line-height:1; min-height:28px; display:flex; align-items:center; justify-content:center; }
     .formula-val.counting { color:#d4af37; }
     .formula-lbl { font-size:9px; color:rgba(255,255,255,0.3); margin-top:4px; letter-spacing:0.5px; }
     .formula-op { font-size:20px; color:rgba(212,175,55,0.6); font-weight:700; }
-    .formula-result {
-      width:52px; height:52px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:22px; font-weight:900; font-family:'Cinzel',serif;
-      color:white; flex-shrink:0;
-      background:rgba(255,255,255,0.1);
-      border:2px solid rgba(255,255,255,0.15);
-      transition:all 0.4s;
-    }
+    .formula-result { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; font-family:'Cinzel',serif; color:white; flex-shrink:0; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.15); transition:all 0.4s; }
     .formula-result.filled { border-width:2px; }
 
-    .pin-badge {
-      display:inline-block; padding:4px 14px; border-radius:20px;
-      font-size:12px; font-weight:800; color:white;
-      margin-bottom:12px; letter-spacing:1px;
-    }
+    /* ✅ raw sum แสดง เช่น 13 → 4 */
+    .formula-raw { text-align:center; font-size:11px; color:rgba(212,175,55,0.5); margin-top:0; margin-bottom:14px; letter-spacing:1px; min-height:16px; }
+
+    .pin-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:800; color:white; margin-bottom:12px; letter-spacing:1px; }
     .pin-current-tag { font-size:10px; color:#4ade80; font-weight:700; margin-bottom:6px; }
     .pin-age { font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:12px; letter-spacing:1px; }
     .pin-meaning-title { font-size:14px; font-weight:700; color:white; margin-bottom:8px; }
-    .pin-meaning-text {
-      font-size:13px; color:rgba(255,255,255,0.6); line-height:1.9;
-      min-height:20px;
-    }
-    .pin-meaning-text .cursor {
-      display:inline-block; width:2px; height:14px;
-      background:#d4af37; margin-left:2px;
-      animation:blink 0.8s infinite;
-      vertical-align:middle;
-    }
+    .pin-meaning-text { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.9; min-height:20px; }
+    .pin-meaning-text .cursor { display:inline-block; width:2px; height:14px; background:#d4af37; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* Personal Year */
     .py-section { margin-bottom:24px; }
     .section-title { font-size:12px; color:#d4af37; font-weight:700; letter-spacing:1.5px; margin-bottom:12px; text-align:center; }
     .py-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -176,7 +143,6 @@
   <div id="resultBox">
     <div class="dob-tag" id="dobTag"></div>
 
-    <!-- Life Path -->
     <div class="lp-box">
       <div class="lp-num" id="lpNum">—</div>
       <div class="lp-label">LIFE PATH NUMBER</div>
@@ -187,18 +153,13 @@
       <div class="pin-badge" id="pinBadge0">Pinnacle 1</div>
       <div class="pin-age" id="pinAge0"></div>
       <div class="formula-row">
-        <div class="formula-box" id="fb0a">
-          <div class="formula-val" id="fv0a">?</div>
-          <div class="formula-lbl">Month</div>
-        </div>
+        <div class="formula-box" id="fb0a"><div class="formula-val" id="fv0a">?</div><div class="formula-lbl">Month</div></div>
         <div class="formula-op">+</div>
-        <div class="formula-box" id="fb0b">
-          <div class="formula-val" id="fv0b">?</div>
-          <div class="formula-lbl">Day</div>
-        </div>
+        <div class="formula-box" id="fb0b"><div class="formula-val" id="fv0b">?</div><div class="formula-lbl">Day</div></div>
         <div class="formula-op">=</div>
         <div class="formula-result" id="fr0">?</div>
       </div>
+      <div class="formula-raw" id="fraw0"></div>
       <div class="pin-meaning-title" id="pinTitle0"></div>
       <div class="pin-meaning-text" id="pinText0"></div>
     </div>
@@ -208,18 +169,13 @@
       <div class="pin-badge" id="pinBadge1">Pinnacle 2</div>
       <div class="pin-age" id="pinAge1"></div>
       <div class="formula-row">
-        <div class="formula-box" id="fb1a">
-          <div class="formula-val" id="fv1a">?</div>
-          <div class="formula-lbl">Day</div>
-        </div>
+        <div class="formula-box" id="fb1a"><div class="formula-val" id="fv1a">?</div><div class="formula-lbl">Day</div></div>
         <div class="formula-op">+</div>
-        <div class="formula-box" id="fb1b">
-          <div class="formula-val" id="fv1b">?</div>
-          <div class="formula-lbl">Year</div>
-        </div>
+        <div class="formula-box" id="fb1b"><div class="formula-val" id="fv1b">?</div><div class="formula-lbl">Year</div></div>
         <div class="formula-op">=</div>
         <div class="formula-result" id="fr1">?</div>
       </div>
+      <div class="formula-raw" id="fraw1"></div>
       <div class="pin-meaning-title" id="pinTitle1"></div>
       <div class="pin-meaning-text" id="pinText1"></div>
     </div>
@@ -229,18 +185,13 @@
       <div class="pin-badge" id="pinBadge2">Pinnacle 3</div>
       <div class="pin-age" id="pinAge2"></div>
       <div class="formula-row">
-        <div class="formula-box" id="fb2a">
-          <div class="formula-val" id="fv2a">?</div>
-          <div class="formula-lbl">Pinnacle 1</div>
-        </div>
+        <div class="formula-box" id="fb2a"><div class="formula-val" id="fv2a">?</div><div class="formula-lbl">Pinnacle 1</div></div>
         <div class="formula-op">+</div>
-        <div class="formula-box" id="fb2b">
-          <div class="formula-val" id="fv2b">?</div>
-          <div class="formula-lbl">Pinnacle 2</div>
-        </div>
+        <div class="formula-box" id="fb2b"><div class="formula-val" id="fv2b">?</div><div class="formula-lbl">Pinnacle 2</div></div>
         <div class="formula-op">=</div>
         <div class="formula-result" id="fr2">?</div>
       </div>
+      <div class="formula-raw" id="fraw2"></div>
       <div class="pin-meaning-title" id="pinTitle2"></div>
       <div class="pin-meaning-text" id="pinText2"></div>
     </div>
@@ -250,18 +201,13 @@
       <div class="pin-badge" id="pinBadge3">Pinnacle 4</div>
       <div class="pin-age" id="pinAge3"></div>
       <div class="formula-row">
-        <div class="formula-box" id="fb3a">
-          <div class="formula-val" id="fv3a">?</div>
-          <div class="formula-lbl">Month</div>
-        </div>
+        <div class="formula-box" id="fb3a"><div class="formula-val" id="fv3a">?</div><div class="formula-lbl">Month</div></div>
         <div class="formula-op">+</div>
-        <div class="formula-box" id="fb3b">
-          <div class="formula-val" id="fv3b">?</div>
-          <div class="formula-lbl">Year</div>
-        </div>
+        <div class="formula-box" id="fb3b"><div class="formula-val" id="fv3b">?</div><div class="formula-lbl">Year</div></div>
         <div class="formula-op">=</div>
         <div class="formula-result" id="fr3">?</div>
       </div>
+      <div class="formula-raw" id="fraw3"></div>
       <div class="pin-meaning-title" id="pinTitle3"></div>
       <div class="pin-meaning-text" id="pinText3"></div>
     </div>
@@ -271,18 +217,17 @@
       <div class="section-title">✦ Personal Year ✦</div>
       <div class="py-grid">
         <div class="py-card">
-          <div class="py-label">ปีนี้ (2026)</div>
+          <div class="py-label" id="pyLabelNow">ปีนี้</div>
           <div class="py-num" id="pyNow">—</div>
           <div class="py-text" id="pyNowText"></div>
         </div>
         <div class="py-card">
-          <div class="py-label">ปีหน้า (2027)</div>
+          <div class="py-label" id="pyLabelNext">ปีหน้า</div>
           <div class="py-num" id="pyNext">—</div>
           <div class="py-text" id="pyNextText"></div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -311,7 +256,6 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
 const db = getFirestore(app);
-
 window._currentUser = null;
 
 window.updateCoinUI = function(c) {
@@ -340,7 +284,6 @@ onAuthStateChanged(auth, async user => {
   } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-// ── DROPDOWNS ──
 document.addEventListener('DOMContentLoaded', function() {
   var dayEl = document.getElementById('inDay');
   for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
@@ -350,57 +293,45 @@ document.addEventListener('DOMContentLoaded', function() {
   var yearEl=document.getElementById('inYear');
   var curY=new Date().getFullYear();
   for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+
+  // ปีปัจจุบันและปีหน้า dynamic
+  document.getElementById('pyLabelNow').textContent  = 'ปีนี้ (' + curY + ')';
+  document.getElementById('pyLabelNext').textContent = 'ปีหน้า (' + (curY+1) + ')';
 });
 
-// ── HELPERS ──
 function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function getPinnKey(i) { return i===0?'p1': i===1?'p2': i===2?'p3':'p4'; }
+function getPinnColor(num) { var m=PINNACLE_MEANINGS[num]; return m?m.color:'#d4af37'; }
 
-function getPinnKey(i) {
-  return i===0?'p1': i===1?'p2': i===2?'p3':'p4';
-}
-function getPinnColor(num) {
-  var m = PINNACLE_MEANINGS[num];
-  return m ? m.color : '#d4af37';
-}
-
-// count-up animation
 async function countUp(el, target, duration) {
   el.classList.add('counting');
-  var steps = 18;
-  var delay = duration / steps;
+  var steps=18, delay=duration/steps;
   for(var i=0;i<=steps;i++){
-    var val = Math.round((i/steps)*target);
-    el.textContent = val;
+    el.textContent=Math.round((i/steps)*target);
     await sleep(delay);
   }
-  el.textContent = target;
+  el.textContent=target;
   el.classList.remove('counting');
 }
 
-// fake stream text
 async function streamText(el, text, speed) {
-  el.innerHTML = '<span class="cursor"></span>';
+  el.innerHTML='<span class="cursor"></span>';
   for(var i=0;i<text.length;i++){
-    el.innerHTML = text.substring(0,i+1)+'<span class="cursor"></span>';
+    el.innerHTML=text.substring(0,i+1)+'<span class="cursor"></span>';
     await sleep(speed);
   }
-  el.innerHTML = text;
+  el.innerHTML=text;
 }
 
-// ── MAIN ──
 window.startReading = async function() {
-  if (!window._currentUser) {
-    document.getElementById('loginRequiredOverlay').style.display='flex';
-    return;
-  }
-  var btn = document.getElementById('readBtn');
+  if (!window._currentUser) { document.getElementById('loginRequiredOverlay').style.display='flex'; return; }
+  var btn=document.getElementById('readBtn');
   btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
 
   var day   = parseInt(document.getElementById('inDay').value);
   var month = parseInt(document.getElementById('inMonth').value);
   var year  = parseInt(document.getElementById('inYear').value);
 
-  // หักเหรียญ
   try {
     var idToken = await window._currentUser.getIdToken();
     var res = await fetch('/api/claude',{
@@ -408,7 +339,7 @@ window.startReading = async function() {
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
       body:JSON.stringify({service:'pinnacle',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'pinnacle'}]})
     });
-    var newBal = res.headers.get('X-New-Coin-Balance');
+    var newBal=res.headers.get('X-New-Coin-Balance');
     if(newBal!=null) updateCoinUI(parseInt(newBal));
     if(!res.ok){
       var err=await res.json().catch(()=>({}));
@@ -416,92 +347,86 @@ window.startReading = async function() {
       else alert('เกิดข้อผิดพลาดค่ะ');
       btn.disabled=false; btn.textContent='🔺 วิเคราะห์ Pinnacle'; return;
     }
-  } catch(e) {
-    console.error(e);
-    btn.disabled=false; btn.textContent='🔺 วิเคราะห์ Pinnacle'; return;
-  }
+  } catch(e){ console.error(e); btn.disabled=false; btn.textContent='🔺 วิเคราะห์ Pinnacle'; return; }
 
-  // คำนวณ
   var calc = calcAllPinnacle(day, month, year);
   var pins = calc.pinnacles;
   var lp   = calc.lifePath;
 
-  // แสดง result box
   document.getElementById('resultBox').style.display='block';
   document.getElementById('dobTag').textContent = day+' / '+month+' / '+year;
   document.getElementById('lpNum').textContent = lp;
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
 
-  // formula inputs (M, D, Y)
   var formulaA = [calc.month, calc.day,   pins[0], calc.month];
-  var formulaB = [calc.day,   calc.year,  pins[1], calc.year ];
-  var formulaLabelA = ['Month','Day','Pinnacle 1','Month'];
-  var formulaLabelB = ['Day','Year','Pinnacle 2','Year'];
+  var formulaB = [calc.day,   calc.year,  pins[1], calc.year];
 
-  // วน 4 pinnacles
   for(var i=0;i<4;i++){
-    var card  = document.getElementById('pinCard'+i);
-    var badge = document.getElementById('pinBadge'+i);
-    var age   = document.getElementById('pinAge'+i);
-    var fva   = document.getElementById('fv'+i+'a');
-    var fvb   = document.getElementById('fv'+i+'b');
-    var fr    = document.getElementById('fr'+i);
-    var fba   = document.getElementById('fb'+i+'a');
-    var fbb   = document.getElementById('fb'+i+'b');
+    var card    = document.getElementById('pinCard'+i);
+    var badge   = document.getElementById('pinBadge'+i);
+    var age     = document.getElementById('pinAge'+i);
+    var fva     = document.getElementById('fv'+i+'a');
+    var fvb     = document.getElementById('fv'+i+'b');
+    var fr      = document.getElementById('fr'+i);
+    var fba     = document.getElementById('fb'+i+'a');
+    var fbb     = document.getElementById('fb'+i+'b');
+    var rawEl   = document.getElementById('fraw'+i);
     var titleEl = document.getElementById('pinTitle'+i);
     var textEl  = document.getElementById('pinText'+i);
 
     var isCurrent = (i+1) === calc.currentPin;
-    var m = PINNACLE_MEANINGS[pins[i]];
+    var m    = PINNACLE_MEANINGS[pins[i]];
     var pKey = getPinnKey(i);
     var color = getPinnColor(pins[i]);
     var range = calc.ranges[i];
 
-    // set badge
     badge.style.background = color;
     badge.textContent = 'Pinnacle '+(i+1);
     age.textContent = range.label;
-    if(isCurrent) {
+
+    if(isCurrent){
       card.classList.add('current');
-      var tag = document.createElement('div');
+      var tag=document.createElement('div');
       tag.className='pin-current-tag';
       tag.textContent='⭐ ช่วงชีวิตปัจจุบันของคุณ';
       badge.after(tag);
     }
 
-    // โชว์ card
     card.classList.add('visible');
     await sleep(200);
 
-    // count-up formula A
     fva.textContent='?';
     await sleep(300);
     await countUp(fva, formulaA[i], 600);
     fba.classList.add('filled');
     await sleep(200);
 
-    // count-up formula B
     fvb.textContent='?';
     await sleep(100);
     await countUp(fvb, formulaB[i], 600);
     fbb.classList.add('filled');
     await sleep(200);
 
-    // count-up result
     fr.textContent='?';
     await sleep(200);
     await countUp(fr, pins[i], 500);
     fr.style.background = color;
     fr.style.border = '2px solid '+color;
     fr.classList.add('filled');
-    await sleep(300);
 
-    // stream ความหมาย
+    // ✅ แสดง raw sum เช่น "13 → 4" ถ้าต้อง reduce
+    var raw = calc.rawSums[i];
+    if(raw !== pins[i]){
+      rawEl.textContent = raw + ' → ' + pins[i];
+    } else {
+      rawEl.textContent = '';
+    }
+
+    await sleep(300);
     titleEl.textContent = m ? m[pKey].title : '';
     await sleep(100);
     var text = m ? m[pKey].text : '';
     await streamText(textEl, text, 8);
-
     await sleep(500);
   }
 
@@ -512,19 +437,17 @@ window.startReading = async function() {
   document.getElementById('pyNowText').textContent  = PERSONAL_YEAR_MEANINGS[calc.personalYearNow]  || '';
   document.getElementById('pyNextText').textContent = PERSONAL_YEAR_MEANINGS[calc.personalYearNext] || '';
 
-  // save
-try {
-  await addDoc(collection(db, 'users', window._currentUser.uid, 'readings'), {
-    type: 'Pinnacle Numbers',
-    question: day + '/' + month + '/' + year,
-    result: 'Life Path: ' + lp + ' | P1:' + pins[0] + ' P2:' + pins[1] + ' P3:' + pins[2] + ' P4:' + pins[3] + ' | ช่วงปัจจุบัน: Pinnacle ' + calc.currentPin + ' (เลข ' + pins[calc.currentPin-1] + ')',
-    createdAt: serverTimestamp()
-  });
-} catch(e){ console.error('save error:', e); }
+  try {
+    await addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
+      type: 'Pinnacle Numbers',
+      question: day+'/'+month+'/'+year,
+      result: 'Life Path: '+lp+' | P1:'+pins[0]+' P2:'+pins[1]+' P3:'+pins[2]+' P4:'+pins[3]+' | ช่วงปัจจุบัน: Pinnacle '+calc.currentPin+' (เลข '+pins[calc.currentPin-1]+')',
+      createdAt: serverTimestamp()
+    });
+  } catch(e){ console.error('save error:',e); }
 
   btn.disabled=false; btn.textContent='🔺 วิเคราะห์ Pinnacle';
 };
-
 </script>
 </body>
 </html>
