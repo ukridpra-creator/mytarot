@@ -1,403 +1,451 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เติมเหรียญ | MyTarot</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เติมเหรียญ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
 
-  :root {
-    --bg: #0f0a1a;
-    --card: #1a1330;
-    --purple: #7c3aed;
-    --purple-light: #a855f7;
-    --gold: #f59e0b;
-    --gold-light: #fbbf24;
-    --text: #e2d9f3;
-    --text-mid: #9d87c0;
-    --text-dim: #6b5a8a;
-  }
+    /* BALANCE CARD */
+    .balance-card { background:linear-gradient(135deg,#1a0e2e,#2d1b4e); border:1px solid rgba(212,175,55,0.3); border-radius:24px; padding:24px; margin-bottom:24px; text-align:center; position:relative; overflow:hidden; }
+    .balance-card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle,rgba(212,175,55,0.15),transparent); }
+    .balance-label { font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:8px; }
+    .balance-amount { font-size:48px; font-weight:800; color:#d4af37; line-height:1; margin-bottom:4px; text-shadow:0 0 20px rgba(212,175,55,0.4); }
+    .balance-unit { font-size:14px; color:rgba(212,175,55,0.6); margin-bottom:16px; }
+    .balance-sub { font-size:12px; color:rgba(255,255,255,0.3); }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* SECTION TITLE */
+    .section-label { font-size:13px; color:var(--gold); font-weight:700; letter-spacing:1px; margin-bottom:12px; }
 
-  body {
-    background: var(--bg);
-    min-height: 100vh;
-    font-family: 'Noto Sans Thai', sans-serif;
-    color: var(--text);
-  }
+    /* PACKAGES GRID */
+    .packages-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
+    .pkg-card { border-radius:18px; padding:16px 12px; text-align:center; border:2px solid var(--border); background:rgba(255,255,255,0.03); cursor:pointer; transition:all 0.2s; position:relative; }
+    .pkg-card:hover { transform:translateY(-2px); }
+    .pkg-card.selected { border-color:#d4af37; background:rgba(212,175,55,0.1); box-shadow:0 4px 20px rgba(212,175,55,0.2); }
+    .pkg-card.popular { border-color:rgba(168,85,247,0.5); }
+    .popular-tag { position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; font-size:10px; font-weight:700; padding:3px 12px; border-radius:20px; white-space:nowrap; }
+    .pkg-coins { font-size:24px; font-weight:800; color:#d4af37; margin-bottom:2px; }
+    .pkg-bonus { font-size:11px; color:#10b981; font-weight:700; margin-bottom:4px; min-height:16px; }
+    .pkg-total { font-size:13px; color:white; font-weight:700; margin-bottom:6px; }
+    .pkg-price { font-size:15px; font-weight:800; color:white; background:rgba(255,255,255,0.08); border-radius:10px; padding:6px 12px; display:inline-block; }
+    .pkg-card.selected .pkg-price { background:rgba(212,175,55,0.2); color:#d4af37; }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 100%, rgba(245,158,11,0.08) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
-  }
+    /* CUSTOM INPUT */
+    .custom-card { border-radius:18px; padding:16px; border:2px solid var(--border); background:rgba(255,255,255,0.03); margin-bottom:20px; cursor:pointer; transition:all 0.2s; }
+    .custom-card.selected { border-color:#d4af37; background:rgba(212,175,55,0.05); }
+    .custom-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; }
+    .custom-input-wrap { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:10px 14px; }
+    .custom-input-wrap span { font-size:20px; }
+    .custom-input { flex:1; background:none; border:none; color:white; font-size:18px; font-weight:700; font-family:'Sarabun',sans-serif; outline:none; }
+    .custom-input::placeholder { color:rgba(255,255,255,0.2); font-size:15px; font-weight:400; }
+    .custom-result { margin-top:10px; display:flex; justify-content:space-between; align-items:center; }
+    .custom-result-label { font-size:12px; color:var(--dim); }
+    .custom-result-price { font-size:16px; font-weight:800; color:#d4af37; }
 
-  .page-wrap { position: relative; z-index: 1; padding-bottom: 100px; }
+    /* SUMMARY */
+    .summary-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; display:none; }
+    .summary-card.show { display:block; }
+    .summary-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .summary-row:last-child { margin-bottom:0; padding-top:10px; border-top:1px solid var(--border); }
+    .summary-key { font-size:13px; color:var(--dim); }
+    .summary-val { font-size:14px; font-weight:700; color:white; }
+    .summary-total-key { font-size:14px; font-weight:700; color:white; }
+    .summary-total-val { font-size:20px; font-weight:800; color:#d4af37; }
 
-  /* ─── HEADER ─── */
-  .header {
-    display: flex; align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(124,58,237,0.2);
-  }
+    /* BTN PAY */
+    .btn-pay { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:16px; padding:16px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s; margin-bottom:12px; display:none; }
+    .btn-pay.show { display:block; }
+    .btn-pay:active { transform:scale(0.98); }
+    .secure-note { text-align:center; font-size:11px; color:var(--dim); margin-bottom:20px; display:none; }
+    .secure-note.show { display:block; }
 
-  .back-btn {
-    background: none; border: none;
-    color: var(--text); font-size: 20px;
-    cursor: pointer; padding: 4px 8px 4px 0;
-  }
+    /* PAYMENT METHOD */
+    .payment-overlay { position:fixed; inset:0; z-index:400; background:rgba(0,0,0,0.7); display:none; align-items:flex-end; }
+    .payment-overlay.show { display:flex; }
+    .payment-sheet { width:100%; background:linear-gradient(180deg,#1a0e2e,#0d0820); border:1px solid rgba(212,175,55,0.2); border-radius:24px 24px 0 0; padding:24px 20px 40px; }
+    .sheet-handle { width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin:0 auto 20px; }
+    .sheet-title { font-size:16px; font-weight:800; color:white; margin-bottom:4px; }
+    .sheet-sub { font-size:13px; color:var(--dim); margin-bottom:20px; }
+    .payment-methods { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+    .payment-method { display:flex; align-items:center; gap:14px; padding:16px; border-radius:16px; border:1.5px solid var(--border); background:rgba(255,255,255,0.03); cursor:pointer; transition:all 0.2s; }
+    .payment-method.selected { border-color:#d4af37; background:rgba(212,175,55,0.08); }
+    .payment-method-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+    .payment-method-name { font-size:15px; font-weight:700; color:white; }
+    .payment-method-desc { font-size:11px; color:var(--dim); margin-top:2px; }
+    .payment-radio { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); margin-left:auto; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .payment-method.selected .payment-radio { border-color:#d4af37; background:#d4af37; }
+    .payment-method.selected .payment-radio::after { content:''; width:8px; height:8px; border-radius:50%; background:#1a1000; }
+    .btn-confirm-pay { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:16px; padding:16px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .btn-confirm-pay:disabled { opacity:0.5; cursor:not-allowed; }
+    .sheet-cancel { width:100%; padding:12px; margin-top:10px; border:none; border-radius:12px; background:rgba(255,255,255,0.05); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
 
-  .header h1 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 18px; font-weight: 600;
-    flex: 1; text-align: center;
-    margin-right: 32px;
-  }
+    /* QR OVERLAY */
+    .qr-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+    .qr-overlay.show { display:flex; }
+    .qr-card { background:white; border-radius:24px; padding:28px 24px; width:100%; max-width:320px; text-align:center; }
+    .qr-logo { font-size:32px; margin-bottom:4px; }
+    .qr-title { font-size:16px; font-weight:800; color:#1a1a1a; margin-bottom:4px; }
+    .qr-amount { font-size:24px; font-weight:800; color:#d4af37; margin-bottom:16px; }
+    .qr-box { width:200px; height:200px; margin:0 auto 16px; background:#f5f5f5; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:13px; color:#999; border:2px dashed #ddd; }
+    .qr-expire { font-size:12px; color:#999; margin-bottom:16px; }
+    .qr-steps { text-align:left; background:#f9f9f9; border-radius:12px; padding:12px 16px; margin-bottom:16px; }
+    .qr-step { font-size:12px; color:#555; margin-bottom:6px; display:flex; gap:8px; }
+    .qr-step:last-child { margin-bottom:0; }
+    .qr-step-num { font-weight:700; color:#d4af37; flex-shrink:0; }
+    .btn-cancel-qr { width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:16px; }
 
-  /* ─── COIN BALANCE ─── */
-  .balance-wrap {
-    text-align: center;
-    padding: 28px 20px 20px;
-  }
-
-  .balance-label {
-    font-size: 12px; color: var(--text-dim);
-    letter-spacing: 1px; margin-bottom: 8px;
-  }
-
-  .balance-amount {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 42px; font-weight: 700;
-    color: var(--gold-light);
-    text-shadow: 0 0 20px rgba(251,191,36,0.4);
-  }
-
-  .balance-unit {
-    font-size: 14px; color: var(--text-mid);
-    margin-top: 4px;
-  }
-
-  /* ─── DIVIDER ─── */
-  .divider {
-    display: flex; align-items: center; gap: 10px;
-    padding: 0 24px; margin: 4px 0 16px;
-  }
-  .divider::before, .divider::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent);
-  }
-  .divider span { font-size: 14px; color: var(--text-dim); }
-
-  /* ─── PACKAGES ─── */
-  .packages-label {
-    padding: 0 20px;
-    font-size: 12px; color: var(--text-dim);
-    letter-spacing: 1px; margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .packages-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 0 20px;
-    margin-bottom: 24px;
-  }
-
-  .pkg-card {
-    background: var(--card);
-    border: 1px solid rgba(124,58,237,0.3);
-    border-radius: 16px;
-    padding: 16px 12px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    opacity: 0.6;
-  }
-
-  .pkg-card.popular {
-    border-color: var(--gold);
-    opacity: 0.7;
-  }
-
-  .popular-badge {
-    position: absolute; top: 8px; right: 8px;
-    background: var(--gold);
-    color: #000;
-    font-size: 9px; font-weight: 700;
-    padding: 2px 6px; border-radius: 20px;
-  }
-
-  .pkg-coin { font-size: 28px; margin-bottom: 6px; }
-
-  .pkg-amount {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 20px; font-weight: 700;
-    color: var(--gold-light); margin-bottom: 2px;
-  }
-
-  .pkg-unit { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
-
-  .pkg-price {
-    font-size: 16px; font-weight: 600;
-    color: var(--text);
-  }
-
-  .pkg-per {
-    font-size: 10px; color: var(--text-dim); margin-top: 2px;
-  }
-
-  /* ─── COMING SOON ─── */
-  .coming-wrap {
-    margin: 0 20px 24px;
-    background: rgba(124,58,237,0.08);
-    border: 1px solid rgba(124,58,237,0.25);
-    border-radius: 20px;
-    padding: 28px 20px;
-    text-align: center;
-  }
-
-  .coming-icon { font-size: 48px; margin-bottom: 12px; }
-
-  .coming-title {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 18px; font-weight: 600;
-    color: var(--text); margin-bottom: 8px;
-  }
-
-  .coming-desc {
-    font-size: 13px; color: var(--text-mid);
-    line-height: 1.8; margin-bottom: 20px;
-  }
-
-  .tiktok-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: linear-gradient(135deg, #010101, #1a1a1a);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50px;
-    padding: 12px 24px;
-    color: white;
-    font-family: 'Noto Sans Thai', sans-serif;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  /* ─── PAYMENT METHODS ─── */
-  .methods-wrap {
-    margin: 0 20px 24px;
-  }
-
-  .methods-label {
-    font-size: 12px; color: var(--text-dim);
-    letter-spacing: 1px; margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .methods-grid {
-    display: flex; gap: 10px; justify-content: center;
-  }
-
-  .method-item {
-    background: var(--card);
-    border: 1px solid rgba(124,58,237,0.2);
-    border-radius: 12px;
-    padding: 10px 16px;
-    text-align: center;
-    opacity: 0.5;
-  }
-
-  .method-icon { font-size: 22px; display: block; margin-bottom: 4px; }
-  .method-name { font-size: 10px; color: var(--text-dim); }
-
-  /* ─── CONTACT ─── */
-  .contact-wrap {
-    margin: 0 20px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-dim);
-    line-height: 2;
-  }
-
-  .contact-wrap a {
-    color: var(--purple-light);
-    text-decoration: none;
-  }
-
-  /* ─── BOTTOM NAV (เหมือน index) ─── */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: #0d0920;
-    border-top: 1px solid rgba(124,58,237,0.2);
-    display: flex;
-    padding: 8px 0 16px;
-    z-index: 50;
-  }
-
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; gap: 4px;
-    cursor: pointer; text-decoration: none;
-    color: var(--text-dim); font-size: 11px;
-  }
-
-  .nav-item .nav-icon { font-size: 22px; }
-  .nav-item.active { color: var(--gold-light); }
-</style>
+    /* HOW TO */
+    .howto-card { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:16px 20px; margin-bottom:16px; }
+    .howto-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; }
+    .howto-row { display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; font-size:12px; color:var(--dim); line-height:1.6; }
+    .howto-row:last-child { margin-bottom:0; }
+    .howto-num { width:20px; height:20px; border-radius:50%; background:rgba(212,175,55,0.15); color:#d4af37; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  </style>
 </head>
 <body>
-<div class="page-wrap">
+
+<!-- PAYMENT METHOD SHEET -->
+<div class="payment-overlay" id="paymentOverlay" onclick="if(event.target===this)closePayment()">
+  <div class="payment-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">เลือกวิธีชำระเงินค่ะ</div>
+    <div class="sheet-sub" id="sheetSub"></div>
+    <div class="payment-methods">
+      <div class="payment-method" id="pm_promptpay" onclick="selectPayment('promptpay')">
+        <div class="payment-method-icon">🏦</div>
+        <div>
+          <div class="payment-method-name">PromptPay</div>
+          <div class="payment-method-desc">สแกน QR Code ผ่านแอปธนาคารค่ะ</div>
+        </div>
+        <div class="payment-radio" id="radio_promptpay"></div>
+      </div>
+      <div class="payment-method" id="pm_truemoney" onclick="selectPayment('truemoney')">
+        <div class="payment-method-icon">🟡</div>
+        <div>
+          <div class="payment-method-name">TrueMoney Wallet</div>
+          <div class="payment-method-desc">ชำระผ่าน TrueMoney Walletค่ะ</div>
+        </div>
+        <div class="payment-radio" id="radio_truemoney"></div>
+      </div>
+    </div>
+    <button class="btn-confirm-pay" id="btnConfirmPay" onclick="confirmPayment()" disabled>ชำระเงินเลยค่ะ</button>
+    <button class="sheet-cancel" onclick="closePayment()">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- QR OVERLAY -->
+<div class="qr-overlay" id="qrOverlay">
+  <div class="qr-card">
+    <div class="qr-logo">🔮</div>
+    <div class="qr-title">My Tarot</div>
+    <div class="qr-amount" id="qrAmount"></div>
+    <div class="qr-box" id="qrBox">
+      <div style="text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">⏳</div>
+        <div>กำลังเชื่อมต่อระบบชำระเงิน</div>
+        <div style="margin-top:4px;font-size:11px">(เปิดหลัง Omise พร้อมค่ะ)</div>
+      </div>
+    </div>
+    <div class="qr-expire" id="qrExpire">QR Code หมดอายุใน 10 นาทีค่ะ</div>
+    <div class="qr-steps">
+      <div class="qr-step"><span class="qr-step-num">1</span>บันทึก QR Code ลงในอัลบั้ม</div>
+      <div class="qr-step"><span class="qr-step-num">2</span>เปิดแอปธนาคารแล้วสแกน QR</div>
+      <div class="qr-step"><span class="qr-step-num">3</span>ตรวจสอบยอดแล้วกดชำระ</div>
+      <div class="qr-step"><span class="qr-step-num">4</span>เหรียญจะเข้าบัญชีอัตโนมัติค่ะ</div>
+    </div>
+  </div>
+  <button class="btn-cancel-qr" onclick="closeQR()">← กลับไปเลือกแพ็กเกจ</button>
+</div>
 
 <!-- HEADER -->
-<div class="header">
-  <button class="back-btn" onclick="history.back()">←</button>
-  <h1>🪙 เติมเหรียญ</h1>
-</div>
-
-<!-- BALANCE -->
-<div class="balance-wrap">
-  <div class="balance-label">เหรียญของคุณ</div>
-  <div class="balance-amount" id="coinCount">—</div>
-  <div class="balance-unit">เหรียญ</div>
-</div>
-
-<div class="divider"><span>✨</span></div>
-
-<!-- PACKAGES -->
-<div class="packages-label">— แพ็คเกจเหรียญ —</div>
-
-<div class="packages-grid">
-  <div class="pkg-card">
-    <div class="pkg-coin">🪙</div>
-    <div class="pkg-amount">40</div>
-    <div class="pkg-unit">เหรียญ</div>
-    <div class="pkg-price">฿19</div>
-    <div class="pkg-per">0.47 บ./เหรียญ</div>
-  </div>
-
-  <div class="pkg-card popular">
-    <div class="popular-badge">ยอดนิยม</div>
-    <div class="pkg-coin">🪙</div>
-    <div class="pkg-amount">100</div>
-    <div class="pkg-unit">เหรียญ</div>
-    <div class="pkg-price">฿49</div>
-    <div class="pkg-per">0.49 บ./เหรียญ</div>
-  </div>
-
-  <div class="pkg-card">
-    <div class="pkg-coin">🪙</div>
-    <div class="pkg-amount">250</div>
-    <div class="pkg-unit">เหรียญ</div>
-    <div class="pkg-price">฿99</div>
-    <div class="pkg-per">0.39 บ./เหรียญ</div>
-  </div>
-
-  <div class="pkg-card">
-    <div class="pkg-coin">🪙</div>
-    <div class="pkg-amount">600</div>
-    <div class="pkg-unit">เหรียญ</div>
-    <div class="pkg-price">฿199</div>
-    <div class="pkg-per">0.33 บ./เหรียญ</div>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🪙 เติมเหรียญ</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
   </div>
 </div>
 
-<!-- COMING SOON -->
-<div class="coming-wrap">
-  <div class="coming-icon">🔮</div>
-  <div class="coming-title">กำลังเปิดให้บริการเร็วๆ นี้</div>
-  <div class="coming-desc">
-    ระบบเติมเหรียญกำลังพัฒนาอยู่นะคะ<br>
-    รองรับ PromptPay และบัตรเครดิต<br>
-    ติดตามความคืบหน้าได้ที่ TikTok ค่ะ
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อเติมเหรียญค่ะ</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
-  <a href="https://tiktok.com/@MyTarot" target="_blank" class="tiktok-btn">
-    <span>🎵</span> TikTok @MyTarot
-  </a>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
 </div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- PAYMENT METHODS -->
-<div class="methods-wrap">
-  <div class="methods-label">— ช่องทางชำระเงินที่จะรองรับ —</div>
-  <div class="methods-grid">
-    <div class="method-item">
-      <span class="method-icon">💳</span>
-      <span class="method-name">บัตรเครดิต</span>
+<div class="page-content">
+
+  <!-- BALANCE -->
+  <div class="balance-card">
+    <div class="balance-label">เหรียญคงเหลือของคุณค่ะ</div>
+    <div class="balance-amount" id="balanceAmount">—</div>
+    <div class="balance-unit">🪙 เหรียญ</div>
+    <div class="balance-sub">1 เหรียญ = 0.50 บาท ค่ะ</div>
+  </div>
+
+  <!-- PACKAGES -->
+  <div class="section-label">✦ เลือกแพ็กเกจค่ะ</div>
+  <div class="packages-grid">
+
+    <div class="pkg-card" id="pkg_50" onclick="selectPackage(50,0,25)">
+      <div class="pkg-coins">50</div>
+      <div class="pkg-bonus"> </div>
+      <div class="pkg-total">🪙 50 เหรียญ</div>
+      <div class="pkg-price">25 บาท</div>
     </div>
-    <div class="method-item">
-      <span class="method-icon">📱</span>
-      <span class="method-name">PromptPay</span>
+
+    <div class="pkg-card" id="pkg_100" onclick="selectPackage(100,0,50)">
+      <div class="pkg-coins">100</div>
+      <div class="pkg-bonus"> </div>
+      <div class="pkg-total">🪙 100 เหรียญ</div>
+      <div class="pkg-price">50 บาท</div>
     </div>
-    <div class="method-item">
-      <span class="method-icon">🏦</span>
-      <span class="method-name">โอนธนาคาร</span>
+
+    <div class="pkg-card popular" id="pkg_300" onclick="selectPackage(300,30,150)">
+      <div class="popular-tag">⭐ ยอดนิยม</div>
+      <div class="pkg-coins">300</div>
+      <div class="pkg-bonus">+30 โบนัส</div>
+      <div class="pkg-total">🪙 330 เหรียญ</div>
+      <div class="pkg-price">150 บาท</div>
+    </div>
+
+    <div class="pkg-card" id="pkg_500" onclick="selectPackage(500,75,250)">
+      <div class="pkg-coins">500</div>
+      <div class="pkg-bonus">+75 โบนัส</div>
+      <div class="pkg-total">🪙 575 เหรียญ</div>
+      <div class="pkg-price">250 บาท</div>
+    </div>
+
+    <div class="pkg-card" id="pkg_1000" onclick="selectPackage(1000,200,500)" style="grid-column:span 2;">
+      <div class="pkg-coins">1,000</div>
+      <div class="pkg-bonus">+200 โบนัส 🎉</div>
+      <div class="pkg-total">🪙 1,200 เหรียญ</div>
+      <div class="pkg-price">500 บาท</div>
+    </div>
+
+  </div>
+
+  <!-- CUSTOM -->
+  <div class="section-label">✦ กำหนดเองค่ะ</div>
+  <div class="custom-card" id="pkg_custom">
+    <div class="custom-label">🪙 กรอกจำนวนเหรียญที่ต้องการ</div>
+    <div class="custom-input-wrap">
+      <span>🪙</span>
+      <input class="custom-input" id="customInput" type="number" placeholder="ขั้นต่ำ 10 เหรียญ" min="10" oninput="onCustomInput()">
+    </div>
+    <div class="custom-result" id="customResult" style="display:none">
+      <div class="custom-result-label">ราคาที่ต้องชำระ</div>
+      <div class="custom-result-price" id="customPrice">0 บาท</div>
     </div>
   </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-card" id="summaryCard">
+    <div class="summary-row">
+      <div class="summary-key">เหรียญที่ซื้อ</div>
+      <div class="summary-val" id="sumCoins">—</div>
+    </div>
+    <div class="summary-row" id="sumBonusRow">
+      <div class="summary-key">โบนัส</div>
+      <div class="summary-val" style="color:#10b981" id="sumBonus">—</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-key">เหรียญที่จะได้รับ</div>
+      <div class="summary-val" id="sumTotal">—</div>
+    </div>
+    <div class="summary-row">
+      <div class="summary-total-key">💰 ยอดชำระ</div>
+      <div class="summary-total-val" id="sumPrice">—</div>
+    </div>
+  </div>
+
+  <!-- BTN PAY -->
+  <button class="btn-pay" id="btnPay" onclick="openPayment()">🪙 ชำระเงินเลยค่ะ</button>
+  <div class="secure-note" id="secureNote">🔒 การชำระเงินปลอดภัย 100% ค่ะ</div>
+
+  <!-- HOW TO -->
+  <div class="howto-card">
+    <div class="howto-title">📖 วิธีใช้เหรียญค่ะ</div>
+    <div class="howto-row"><div class="howto-num">1</div>เลือกแพ็กเกจที่ต้องการแล้วกดชำระเงินค่ะ</div>
+    <div class="howto-row"><div class="howto-num">2</div>สแกน QR Code ผ่านแอปธนาคารหรือ TrueMoney ค่ะ</div>
+    <div class="howto-row"><div class="howto-num">3</div>เหรียญจะเข้าบัญชีอัตโนมัติภายใน 1-2 นาทีค่ะ</div>
+    <div class="howto-row"><div class="howto-num">4</div>ใช้เหรียญดูดวงได้ทันทีทุกฟีเจอร์ค่ะ</div>
+  </div>
+
 </div>
 
-<!-- CONTACT -->
-<div class="contact-wrap">
-  มีปัญหาหรือสอบถาม<br>
-  <a href="https://tiktok.com/@MyTarot">DM ที่ TikTok @MyTarot</a> ได้เลยค่ะ
-</div>
-
-</div>
-
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a href="/index.html" class="nav-item">
-    <span class="nav-icon">🔮</span>ดูดวง
-  </a>
-  <a href="/pages/history.html" class="nav-item">
-    <span class="nav-icon">📋</span>ประวัติ
-  </a>
-  <a href="/index.html" class="nav-item">
-    <span class="nav-icon">🎁</span>เช็คอิน
-  </a>
-  <a href="/pages/coins.html" class="nav-item active">
-    <span class="nav-icon">🪙</span>เหรียญ
-  </a>
-  <a href="/pages/profile.html" class="nav-item">
-    <span class="nav-icon">👤</span>โปรไฟล์
-  </a>
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item active"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain: "my-tarot67.firebaseapp.com",
-  projectId: "my-tarot67",
-  storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162829",
-  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  document.getElementById('balanceAmount').textContent = c;
+};
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e){console.error(e);} };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+// ── STATE ──
+let selectedCoins = 0;
+let selectedBonus = 0;
+let selectedPrice = 0;
+let selectedPayment = null;
+
+window.selectPackage = function(coins, bonus, price) {
+  selectedCoins = coins; selectedBonus = bonus; selectedPrice = price;
+
+  // clear custom
+  document.getElementById('customInput').value = '';
+  document.getElementById('customResult').style.display = 'none';
+  document.getElementById('pkg_custom').classList.remove('selected');
+
+  // highlight
+  ['50','100','300','500','1000'].forEach(k => document.getElementById('pkg_'+k).classList.remove('selected'));
+  document.getElementById('pkg_'+coins).classList.add('selected');
+
+  updateSummary();
 };
 
-var app = initializeApp(firebaseConfig);
-var auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(function() {
-  setPersistence(auth, browserLocalPersistence);
-});
-var db = getFirestore(app);
+window.onCustomInput = function() {
+  const val = parseInt(document.getElementById('customInput').value) || 0;
+  ['50','100','300','500','1000'].forEach(k => document.getElementById('pkg_'+k).classList.remove('selected'));
+  document.getElementById('pkg_custom').classList.add('selected');
 
-onAuthStateChanged(auth, async function(user) {
-  if (user) {
-    var snap = await getDoc(doc(db, "users", user.uid));
-    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
-    document.getElementById("coinCount").textContent = coins;
+  if (val >= 10) {
+    selectedCoins = val; selectedBonus = 0; selectedPrice = val * 0.5;
+    document.getElementById('customPrice').textContent = selectedPrice.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';
+    document.getElementById('customResult').style.display = 'flex';
+    updateSummary();
   } else {
-    document.getElementById("coinCount").textContent = "0";
+    selectedCoins = 0; selectedBonus = 0; selectedPrice = 0;
+    document.getElementById('customResult').style.display = 'none';
+    hideSummary();
   }
-});
+};
+
+function updateSummary() {
+  const total = selectedCoins + selectedBonus;
+  document.getElementById('sumCoins').textContent = selectedCoins.toLocaleString() + ' 🪙';
+
+  const bonusRow = document.getElementById('sumBonusRow');
+  if (selectedBonus > 0) {
+    bonusRow.style.display = 'flex';
+    document.getElementById('sumBonus').textContent = '+' + selectedBonus + ' 🪙';
+  } else {
+    bonusRow.style.display = 'none';
+  }
+
+  document.getElementById('sumTotal').textContent = total.toLocaleString() + ' 🪙';
+  document.getElementById('sumPrice').textContent = selectedPrice.toLocaleString('th-TH', {minimumFractionDigits:2}) + ' บาท';
+
+  document.getElementById('summaryCard').classList.add('show');
+  document.getElementById('btnPay').classList.add('show');
+  document.getElementById('secureNote').classList.add('show');
+}
+
+function hideSummary() {
+  document.getElementById('summaryCard').classList.remove('show');
+  document.getElementById('btnPay').classList.remove('show');
+  document.getElementById('secureNote').classList.remove('show');
+}
+
+// ── PAYMENT ──
+window.openPayment = function() {
+  if (!currentUser) { alert('กรุณาเข้าสู่ระบบก่อนนะคะ 🙏'); return; }
+  if (selectedCoins < 10) return;
+  const total = selectedCoins + selectedBonus;
+  document.getElementById('sheetSub').textContent = `🪙 ${total.toLocaleString()} เหรียญ — ${selectedPrice.toLocaleString('th-TH',{minimumFractionDigits:2})} บาทค่ะ`;
+  selectedPayment = null;
+  ['promptpay','truemoney'].forEach(k => {
+    document.getElementById('pm_'+k).classList.remove('selected');
+    document.getElementById('radio_'+k).classList.remove('selected');
+  });
+  document.getElementById('btnConfirmPay').disabled = true;
+  document.getElementById('paymentOverlay').classList.add('show');
+};
+
+window.closePayment = function() {
+  document.getElementById('paymentOverlay').classList.remove('show');
+};
+
+window.selectPayment = function(method) {
+  selectedPayment = method;
+  ['promptpay','truemoney'].forEach(k => {
+    document.getElementById('pm_'+k).classList.toggle('selected', k===method);
+  });
+  document.getElementById('btnConfirmPay').disabled = false;
+};
+
+window.confirmPayment = function() {
+  closePayment();
+  const total = selectedCoins + selectedBonus;
+  document.getElementById('qrAmount').textContent = `🪙 ${total.toLocaleString()} เหรียญ — ${selectedPrice.toLocaleString('th-TH',{minimumFractionDigits:2})} บาท`;
+  document.getElementById('qrOverlay').classList.add('show');
+  // TODO: เชื่อม Omise API ตรงนี้ค่ะ
+};
+
+window.closeQR = function() {
+  document.getElementById('qrOverlay').classList.remove('show');
+};
 </script>
 </body>
 </html>
