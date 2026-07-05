@@ -51,10 +51,10 @@
     .palace-cell.active { background:#1a0d30; border:1px solid rgba(168,85,247,0.5); }
     .palace-cell.center-cell { background:rgba(168,85,247,0.04); cursor:default; align-items:center; justify-content:center; }
 
-    .cell-palace-name { font-size:9px; color:rgba(168,85,247,0.6); font-weight:700; letter-spacing:0.5px; margin-bottom:4px; }
+    .cell-palace-name { font-size:11px; color:#e879f9; font-weight:800; letter-spacing:0.5px; margin-bottom:4px; text-shadow:0 0 8px rgba(232,121,249,0.5); }
     .cell-stars { display:flex; flex-wrap:wrap; gap:2px; flex:1; }
-    .cell-star { font-size:8px; padding:2px 5px; border-radius:8px; font-weight:700; white-space:nowrap; }
-    .star-main { background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.3); }
+    .cell-star { font-size:9px; padding:3px 6px; border-radius:8px; font-weight:700; white-space:nowrap; }
+    .star-main { background:rgba(168,85,247,0.35); color:#e879f9; border:1px solid rgba(232,121,249,0.5); font-weight:800; }
     .star-main.power5 { background:rgba(232,121,249,0.2); color:#e879f9; border-color:rgba(232,121,249,0.4); }
     .star-supp { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.4); font-size:7px; }
     .cell-empty { font-size:8px; color:rgba(255,255,255,0.1); align-self:center; margin:auto; }
@@ -102,7 +102,15 @@
 
     .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.2); color:rgba(168,85,247,0.6); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
 
-    .login-required-overlay.show { display:flex !important; }
+    .followup-box { margin-top:16px; padding:16px; background:rgba(168,85,247,0.06); border:1px solid rgba(168,85,247,0.2); border-radius:16px; display:none; }
+    .followup-title { font-size:13px; color:#a855f7; font-weight:700; margin-bottom:10px; }
+    .followup-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(168,85,247,0.2); border-radius:12px; padding:12px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; resize:none; margin-bottom:10px; box-sizing:border-box; }
+    .followup-input::placeholder { color:rgba(255,255,255,0.2); }
+    .followup-btn { width:100%; background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); border-radius:12px; padding:12px; color:#a855f7; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .followup-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .followup-result { font-size:14px; line-height:1.9; color:rgba(255,255,255,0.8); word-break:break-word; margin-bottom:12px; }
+    .followup-divider { border:none; border-top:1px solid rgba(168,85,247,0.15); margin:12px 0; }
+    .followup-q { color:#a855f7; font-size:13px; margin-bottom:6px; font-weight:700; }
 
     /* ELEMENT COLORS */
     .el-fire  { color:#f97316; }
@@ -183,7 +191,7 @@
 
     <!-- CHART HEADER -->
     <div class="chart-header">
-      <div class="chart-name">⭐ แผนภูมิดาวม่วง ⭐</div>
+      <div class="chart-name">⭐ แผนผังพระราชวัง ⭐</div>
       <div class="chart-info" id="chartInfo"></div>
     </div>
 
@@ -191,8 +199,8 @@
     <!-- Layout: แถวบน 3, กลางซ้าย center กลางขวา, แถวล่าง 3 = 11+center = 12 palace -->
     <div class="palace-grid" id="palaceGrid"></div>
 
-    <div style="font-size:11px;color:rgba(168,85,247,0.5);text-align:center;margin-bottom:16px;">
-      ✦ กดที่พระราชวังเพื่อดูรายละเอียดค่ะ ✦
+    <div style="font-size:14px;color:#e879f9;font-weight:700;text-align:center;margin-bottom:16px;">
+      ✦ แตะที่พระราชวังเพื่อดูรายละเอียดค่ะ ✦
     </div>
 
     <!-- PALACE DETAIL -->
@@ -224,7 +232,19 @@
     </div>
 
     <button class="btn-reset" onclick="resetResult()">🔄 วิเคราะห์ใหม่อีกครั้ง</button>
+
+    <!-- FOLLOWUP -->
+    <div class="followup-box" id="followupBox">
+      <div class="followup-result" id="followupResult"></div>
+      <div class="followup-title">💬 ถามเพิ่มเติมเกี่ยวกับดวงชะตาของคุณได้เลยค่ะ</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="เช่น ดวงรักปีนี้เป็นยังไงคะ?"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">⭐ ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
   </div>
+      <div class="followup-title">💬 ถามเพิ่มเติมเกี่ยวกับดวงชะตาของคุณได้เลยค่ะ</div>
+      <textarea class="followup-input" id="followupInput" rows="2" placeholder="เช่น ดวงรักปีนี้เป็นยังไงคะ?"></textarea>
+      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">⭐ ถามต่อ 🪙 5 เหรียญ</button>
+    </div>
 </div>
 
 <nav class="bottom-nav">
@@ -285,7 +305,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var oh=document.createElement('option');oh.value=12;oh.textContent='ไม่ทราบ';hourEl.appendChild(oh);
   for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
   var minEl=document.getElementById('inMinute');
-  for(var m2=0;m2<=59;m2+=5){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+  for(var m2=0;m2<=59;m2++){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
 });
 
 // ── ELEMENT CLASS ──
@@ -570,15 +590,18 @@ ${calc.palaces.map((p,i)=>`${p.nameTH}: ${p.mainStarData.map(s=>s.nameTH+'('+s.n
       const parsed=parseByTag(text,keys);
       Object.keys(parsed).forEach(function(k){
         const el=document.getElementById(elMap[k]);
-        if(el && parsed[k]) el.textContent=parsed[k];
+        if(el && parsed[k]) el.textContent=parsed[k].replace(/\[\/[A-Z]+\]/g,'').trim();
       });
     }
 
-    // final parse
+    // final parse + ลบ tag ที่หลุดออกมา
     const final=parseByTag(text,keys);
     Object.keys(final).forEach(function(k){
       const el=document.getElementById(elMap[k]);
-      if(el && final[k]) el.textContent=final[k];
+      if(el && final[k]){
+        // ลบ tag ที่หลุดออกมาเช่น [/LIFE]
+        el.textContent=final[k].replace(/\[\/[A-Z]+\]/g,'').trim();
+      }
     });
 
     // save
@@ -589,9 +612,47 @@ ${calc.palaces.map((p,i)=>`${p.nameTH}: ${p.mainStarData.map(s=>s.nameTH+'('+s.n
       createdAt:serverTimestamp()
     });
 
+    document.getElementById('followupBox').style.display='block';
+    document.getElementById('followupBox').scrollIntoView({behavior:'smooth'});
+
   } catch(e){console.error(e);}
 
   btn.disabled=false; btn.textContent='⭐ เปิดแผนที่ดาวอีกครั้ง';
+};
+
+window.askFollowup = async function(){
+  if(!currentUser) return;
+  const input=document.getElementById('followupInput');
+  const question=input.value.trim();
+  if(!question){alert('กรุณาพิมพ์คำถามก่อนค่ะ');return;}
+  const btn=document.getElementById('followupBtn');
+  const resultDiv=document.getElementById('followupResult');
+  btn.disabled=true;
+  const time=Date.now();
+  resultDiv.innerHTML+=`<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const ansDiv=document.getElementById('ans_'+time);
+  try{
+    const calc=window._lastCalc;
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({
+        service:'tarot_followup',model:'claude-sonnet-4-6',max_tokens:600,
+        messages:[{role:'user',content:`ผลวิเคราะห์ Purple Star: ดาวชีวิต ${calc.lifeStars.map(s=>s.nameTH).join('+')||'ว่าง'} ดาวการงาน ${calc.careerStars.map(s=>s.nameTH).join('+')||'ว่าง'}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown`}]
+      })
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){ansDiv.textContent='เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ';btn.disabled=false;return;}
+    const reader=res.body.getReader(),decoder=new TextDecoder();
+    let text='';
+    const cursor=document.createElement('span');cursor.className='cursor-blink';ansDiv.appendChild(cursor);
+    while(true){const{done,value}=await reader.read();if(done)break;text+=decoder.decode(value);ansDiv.textContent=text;ansDiv.appendChild(cursor);}
+    cursor.remove();ansDiv.textContent=text;
+    ansDiv.scrollIntoView({behavior:'smooth'});
+  }catch(e){ansDiv.textContent='เกิดข้อผิดพลาดค่ะ';}
+  input.value='';btn.disabled=false;
 };
 
 window.resetResult = function(){
