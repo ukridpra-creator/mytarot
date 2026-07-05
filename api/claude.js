@@ -35,7 +35,7 @@ const TIER = {
 };
 
 const SERVICE_COSTS = {
-  bazi:             40,
+  bazi:             59,
   tarot:            20,
   tarot_followup:    5,
   "han-oracle-1":   10,
@@ -51,7 +51,7 @@ const SERVICE_COSTS = {
   "love-code":      10,
   "saju":           59,
   "saju-read":       0,
-  "loshu":          20,
+  "loshu":          10,
   "pinnacle":       20,
   "thai-astro":     99,
   "thai-astro-read": 0,
