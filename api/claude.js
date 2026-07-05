@@ -76,6 +76,7 @@ const SERVICE_COSTS = {
   "purple_star": TIER.T79,
   "kuigao": TIER.T19,
   "graphology": TIER.T39,
+  "cartomancy": TIER.T19,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
