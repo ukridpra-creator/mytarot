@@ -75,6 +75,7 @@ const SERVICE_COSTS = {
   "destiny-2": TIER.T79,
   "purple_star": TIER.T79,
   "kuigao": TIER.T19,
+  "graphology": TIER.T39,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
