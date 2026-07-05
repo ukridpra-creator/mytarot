@@ -78,6 +78,7 @@ const SERVICE_COSTS = {
   "graphology": TIER.T39,
   "cartomancy": TIER.T19,
   "synastry_read": TIER.FREE,
+  "western": TIER.T49,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
