@@ -1,841 +1,420 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เจาะดวงชะตา | MyTarot</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เจาะดวงชะตา — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/planet-transits-data.js"></script>
+  <script src="../js/destiny-data.js"></script>
+  <script src="../js/destiny-engine.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
 
-  :root {
-    --bg: #0d0820;
-    --card: #1a1330;
-    --purple: #7c3aed;
-    --purple-light: #a855f7;
-    --gold: #f59e0b;
-    --gold-light: #fbbf24;
-    --text: #e9d5ff;
-    --text-mid: #9ca3af;
-    --text-dim: #6b7280;
-    --border: rgba(124,58,237,0.3);
-  }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:24px; font-weight:800; color:white; margin-bottom:4px; text-shadow:0 0 20px rgba(212,175,55,0.4); }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:12px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .form-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 16px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; box-sizing:border-box; }
+    .form-input::placeholder { color:rgba(255,255,255,0.25); }
+    .form-input:focus { border-color:var(--purple-light); }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#1a1535; }
+    .sel:focus { border-color:var(--purple-light); }
 
-  body {
-    background: var(--bg);
-    min-height: 100vh;
-    font-family: 'Noto Sans Thai', sans-serif;
-    color: var(--text);
-    padding-bottom: 40px;
-  }
+    .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
 
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.15) 0%, transparent 60%);
-    pointer-events: none; z-index: 0;
-  }
+    .btn-read { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#7c3aed,#d4af37); box-shadow:0 4px 20px rgba(124,58,237,0.4); }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
 
-  .page-wrap { position: relative; z-index: 1; }
+    /* PROFILE TAGS */
+    .profile-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .profile-tag { background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:4px 12px; font-size:11px; color:rgba(255,255,255,0.7); }
+    .profile-tag.gold { background:rgba(212,175,55,0.15); border-color:rgba(212,175,55,0.3); color:#d4af37; }
 
-  /* ─── HEADER ─── */
-  .header {
-    display: flex; align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-  }
+    /* SECTION CARDS */
+    .section-card { border-radius:16px; padding:18px 16px; margin-bottom:12px; border:1px solid; opacity:0; transform:translateY(12px); transition:all 0.4s; }
+    .section-card.visible { opacity:1; transform:translateY(0); }
+    .section-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .section-icon { font-size:20px; }
+    .section-title { font-size:15px; font-weight:700; }
+    .section-text { font-size:13px; line-height:2.1; color:rgba(255,255,255,0.8); white-space:pre-wrap; min-height:20px; }
 
-  .back-btn {
-    background: none; border: none;
-    color: var(--text); font-size: 20px;
-    cursor: pointer; padding: 4px 8px 4px 0;
-  }
+    .sec-personality { background:rgba(124,58,237,0.1); border-color:rgba(124,58,237,0.3); }
+    .sec-personality .section-title { color:#c084fc; }
+    .sec-childhood   { background:rgba(59,130,246,0.1); border-color:rgba(59,130,246,0.3); }
+    .sec-childhood .section-title   { color:#93c5fd; }
+    .sec-mission     { background:rgba(245,158,11,0.1); border-color:rgba(245,158,11,0.3); }
+    .sec-mission .section-title     { color:#fbbf24; }
+    .sec-love        { background:rgba(236,72,153,0.1); border-color:rgba(236,72,153,0.3); }
+    .sec-love .section-title        { color:#f9a8d4; }
+    .sec-career      { background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.3); }
+    .sec-career .section-title      { color:#6ee7b7; }
+    .sec-money       { background:rgba(234,179,8,0.1); border-color:rgba(234,179,8,0.3); }
+    .sec-money .section-title       { color:#fde047; }
+    .sec-health      { background:rgba(132,204,22,0.1); border-color:rgba(132,204,22,0.3); }
+    .sec-health .section-title      { color:#bef264; }
+    .sec-lucky       { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.4); }
+    .sec-lucky .section-title       { color:#fbbf24; }
+    .sec-thisyear    { background:rgba(249,115,22,0.1); border-color:rgba(249,115,22,0.3); }
+    .sec-thisyear .section-title    { color:#fdba74; }
+    .sec-future      { background:rgba(139,92,246,0.12); border-color:rgba(139,92,246,0.4); }
+    .sec-future .section-title      { color:#a78bfa; }
 
-  .header h1 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 18px; font-weight: 600;
-    flex: 1; text-align: center;
-    margin-right: 32px;
-    color: var(--gold-light);
-  }
+    .loading-dots { color:rgba(255,255,255,0.3); font-size:12px; }
+    .loading-dots span { animation:blink 1.2s infinite; display:inline-block; }
+    .loading-dots span:nth-child(2){animation-delay:.2s}
+    .loading-dots span:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
-  /* ─── MASCOT ─── */
-  .mascot-wrap {
-    text-align: center;
-    padding: 24px 20px 8px;
-  }
+    .result-box { display:none; }
+    .result-box.show { display:block; }
 
-  .mascot-wrap img {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    object-fit: cover;
-  }
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
 
-  .mascot-placeholder {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    border: 2px solid var(--gold);
-    background: var(--card);
-    display: inline-flex;
-    align-items: center; justify-content: center;
-    font-size: 40px;
-  }
-
-  .page-title {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 24px; font-weight: 700;
-    color: var(--gold-light);
-    text-align: center;
-    margin-top: 10px;
-    text-shadow: 0 0 20px rgba(251,191,36,0.4);
-  }
-
-  .page-desc {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-mid);
-    margin: 6px 20px 0;
-    line-height: 1.8;
-  }
-
-  /* ─── COIN ─── */
-  .coin-bar {
-    display: flex; justify-content: center; align-items: center;
-    gap: 6px; margin: 12px 0;
-    font-size: 13px; color: var(--text-dim);
-  }
-  .coin-count { font-weight: 600; color: var(--gold-light); font-size: 15px; }
-
-  /* ─── PRICE BADGE ─── */
-  .price-badge {
-    display: flex; justify-content: center; margin-bottom: 16px;
-  }
-
-  .price-tag {
-    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(245,158,11,0.2));
-    border: 1px solid var(--gold);
-    border-radius: 50px;
-    padding: 6px 20px;
-    font-size: 13px;
-    color: var(--gold-light);
-  }
-
-  /* ─── DIVIDER ─── */
-  .divider {
-    display: flex; align-items: center; gap: 10px;
-    padding: 0 24px; margin: 12px 0;
-  }
-  .divider::before, .divider::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-  }
-  .divider span { font-size: 14px; color: var(--text-dim); }
-
-  /* ─── FORM ─── */
-  .form-wrap { padding: 0 20px; }
-
-  .form-group { margin-bottom: 14px; }
-
-  .form-label {
-    display: block;
-    font-size: 12px; color: var(--text-mid);
-    margin-bottom: 6px; letter-spacing: 0.5px;
-  }
-
-  .form-input {
-    width: 100%;
-    padding: 12px 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text);
-    font-family: 'Noto Sans Thai', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .form-input:focus { border-color: var(--purple-light); }
-  .form-input::placeholder { color: var(--text-dim); }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-
-  .form-row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  /* ─── SUBMIT BTN ─── */
-  .submit-wrap { padding: 0 20px; margin: 20px 0; }
-
-  .submit-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--purple), var(--gold));
-    border: none; border-radius: 50px;
-    color: white;
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 16px; font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(124,58,237,0.4);
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-  }
-
-  .submit-btn:active { transform: scale(0.97); }
-  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* ─── RESULT ─── */
-  .result-wrap { padding: 0 20px; display: none; }
-  .result-wrap.show { display: block; }
-
-  .result-profile {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .profile-tag {
-    background: rgba(124,58,237,0.2);
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    padding: 4px 12px;
-    font-size: 11px;
-    color: var(--text-mid);
-  }
-
-  /* ─── SECTION CARDS ─── */
-  .section-card {
-    border-radius: 16px;
-    padding: 18px 16px;
-    margin-bottom: 12px;
-    border: 1px solid;
-  }
-
-  .section-header {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .section-icon { font-size: 20px; }
-
-  .section-title {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 15px; font-weight: 600;
-  }
-
-  .section-text {
-    font-size: 13px; line-height: 2.1;
-    font-family: 'Noto Sans Thai', sans-serif;
-    font-weight: 300;
-    white-space: pre-wrap;
-    min-height: 20px;
-  }
-
-  /* section colors */
-  .sec-personality { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.3); }
-  .sec-personality .section-title { color: #c084fc; }
-
-  .sec-childhood { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); }
-  .sec-childhood .section-title { color: #93c5fd; }
-
-  .sec-mission { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); }
-  .sec-mission .section-title { color: var(--gold-light); }
-
-  .sec-love { background: rgba(236,72,153,0.1); border-color: rgba(236,72,153,0.3); }
-  .sec-love .section-title { color: #f9a8d4; }
-
-  .sec-career { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); }
-  .sec-career .section-title { color: #6ee7b7; }
-
-  .sec-money { background: rgba(234,179,8,0.1); border-color: rgba(234,179,8,0.3); }
-  .sec-money .section-title { color: #fde047; }
-
-  .sec-health { background: rgba(132,204,22,0.1); border-color: rgba(132,204,22,0.3); }
-  .sec-health .section-title { color: #bef264; }
-
-  .sec-lucky { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.4); }
-  .sec-lucky .section-title { color: var(--gold-light); }
-
-  .sec-thisyear { background: rgba(249,115,22,0.1); border-color: rgba(249,115,22,0.3); }
-  .sec-thisyear .section-title { color: #fdba74; }
-
-  .sec-future { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.4); }
-  .sec-future .section-title { color: #a78bfa; }
-
-  /* loading dots */
-  .loading-dots { color: var(--text-dim); font-size: 12px; }
-  .loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes blink {
-    0%,80%,100% { opacity: 0.2; }
-    40% { opacity: 1; }
-  }
-
-  /* ─── MODAL ─── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.8); z-index: 100;
-    align-items: center; justify-content: center;
-  }
-  .modal-overlay.show { display: flex; }
-
-  .modal-box {
-    background: var(--card);
-    border: 1px solid var(--gold);
-    border-radius: 24px;
-    padding: 32px 24px; text-align: center;
-    width: 85%; max-width: 320px;
-  }
-
-  .modal-box h3 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 17px; margin-bottom: 8px; color: var(--text);
-  }
-
-  .modal-box p {
-    font-size: 13px; color: var(--text-mid);
-    margin-bottom: 20px; line-height: 1.8;
-  }
-
-  .btn-google {
-    width: 100%; padding: 12px;
-    background: white; border: none; border-radius: 50px;
-    font-family: 'Noto Sans Thai', sans-serif;
-    font-size: 14px; font-weight: 500; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    color: #333;
-  }
-
-  .btn-close-modal {
-    margin-top: 12px; background: none; border: none;
-    color: var(--text-dim); font-size: 13px; cursor: pointer;
-    font-family: 'Noto Sans Thai', sans-serif;
-  }
-</style>
+    .login-required-overlay.show { display:flex !important; }
+  </style>
 </head>
 <body>
-<div class="page-wrap">
 
-<!-- HEADER -->
-<div class="header">
-  <button class="back-btn" onclick="history.back()">←</button>
-  <h1>🔮 เจาะดวงชะตา</h1>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🔮 เจาะดวงชะตา</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
 </div>
 
-<!-- MASCOT -->
-<div class="mascot-wrap">
-  <img src="../images/mascot.png" alt="mascot"
-       onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex'">
-  <div class="mascot-placeholder" style="display:none">🔮</div>
-  <div class="page-title">เจาะดวงชะตา</div>
-  <div class="page-desc">โหราศาสตร์ประยุกต์ ฉบับ MyTarot<br>วิเคราะห์ครบทุกมิติชีวิต นิสัย ความรัก การงาน การเงิน สุขภาพ และอนาคต</div>
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
 </div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- COIN -->
-<div class="coin-bar">
-  🪙 <span id="coinCount">—</span>
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔮</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
 </div>
+<style>.login-required-overlay.show{display:flex!important}</style>
 
-<div class="price-badge">
-  <div class="price-tag">✨ ใช้ 49 เหรียญ</div>
-</div>
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot.png" alt="" style="width:100px;height:100px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🔮 เจาะดวงชะตา</div>
+    <div class="hero-desc">โหราศาสตร์ประยุกต์ 5 ศาสตร์ + ดาวจรปีนี้<br>วิเคราะห์ครบทุกมิติชีวิตค่ะ</div>
+  </div>
 
-<div class="divider"><span>🔮</span></div>
-
-<!-- FORM -->
-<div class="form-wrap">
-  <div class="form-group">
-    <label class="form-label">ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
+  <div class="input-card">
+    <label class="input-label">👤 ชื่อ-นามสกุล (ภาษาอังกฤษ)</label>
     <input class="form-input" id="inputName" type="text" placeholder="เช่น Somchai Jaidee">
   </div>
 
-  <div class="form-group">
-    <label class="form-label">วันเกิด</label>
-    <div class="form-row">
-      <select class="form-input" id="inputDay"></select>
-      <select class="form-input" id="inputMonth"></select>
-      <select class="form-input" id="inputYear"></select>
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="form-label">เวลาเกิด</label>
-    <div class="form-row-2">
-      <select class="form-input" id="inputHour"></select>
-      <select class="form-input" id="inputMinute"></select>
-    </div>
-  </div>
-</div>
-
-<script>
-// สร้าง dropdown options
-(function() {
-  // วัน
-  var dayEl = document.getElementById("inputDay");
-  for (var d = 1; d <= 31; d++) {
-    var o = document.createElement("option");
-    o.value = d; o.textContent = d + " วัน";
-    dayEl.appendChild(o);
-  }
-
-  // เดือน
-  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน",
-                "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-  var monthEl = document.getElementById("inputMonth");
-  months.forEach(function(m, i) {
-    var o = document.createElement("option");
-    o.value = i + 1; o.textContent = m;
-    monthEl.appendChild(o);
-  });
-
-  // ปี เริ่มที่ 2000
-  var yearEl = document.getElementById("inputYear");
-  for (var y = 2000; y >= 1940; y--) {
-    var o = document.createElement("option");
-    o.value = y; o.textContent = "ค.ศ. " + y + " (พ.ศ. " + (y + 543) + ")";
-    yearEl.appendChild(o);
-  }
-
-  // ชั่วโมง
-  var hourEl = document.getElementById("inputHour");
-  for (var h = 0; h <= 23; h++) {
-    var o = document.createElement("option");
-    o.value = h; o.textContent = (h < 10 ? "0" + h : h) + ":00 น.";
-    hourEl.appendChild(o);
-  }
-
-  // นาที
-  var minEl = document.getElementById("inputMinute");
-  for (var m = 0; m <= 59; m++) {
-    var o = document.createElement("option");
-    o.value = m; o.textContent = (m < 10 ? "0" + m : m) + " นาที";
-    minEl.appendChild(o);
-  }
-})();
-</script>
-
-<!-- SUBMIT -->
-<div class="submit-wrap">
-  <button class="submit-btn" id="submitBtn" onclick="startReading()">
-    🔮 เจาะดวงชะตาเลย
-  </button>
-</div>
-
-<!-- RESULT -->
-<div class="result-wrap" id="resultWrap">
-
-  <!-- Profile tags -->
-  <div class="result-profile" id="profileTags"></div>
-
-  <!-- Section 1: นิสัย -->
-  <div class="section-card sec-personality">
-    <div class="section-header">
-      <span class="section-icon">🌟</span>
-      <span class="section-title">นิสัยและบุคลิกที่แท้จริง</span>
-    </div>
-    <div class="section-text" id="sec-personality">
-      <div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div>
+  <div class="input-card">
+    <label class="input-label">⏰ เวลาเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inHour"></select>
+      <select class="sel" id="inMinute"></select>
     </div>
   </div>
 
-  <!-- Section 2: วัยเด็ก -->
-  <div class="section-card sec-childhood">
-    <div class="section-header">
-      <span class="section-icon">👶</span>
-      <span class="section-title">มาจากไหน — ดวงวัยเด็กถึงวัยรุ่น</span>
-    </div>
-    <div class="section-text" id="sec-childhood"></div>
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 79 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
-  <!-- Section 3: ภารกิจ -->
-  <div class="section-card sec-mission">
-    <div class="section-header">
-      <span class="section-icon">🎯</span>
-      <span class="section-title">ภารกิจชีวิต — เกิดมาเพื่ออะไร</span>
+  <button class="btn-read" id="readBtn" onclick="startReading()">🔮 เจาะดวงชะตาเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="profile-tags" id="profileTags"></div>
+
+    <div class="section-card sec-personality" id="card-personality">
+      <div class="section-header"><span class="section-icon">🌟</span><span class="section-title">นิสัยและบุคลิกที่แท้จริง</span></div>
+      <div class="section-text" id="sec-personality"><div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div></div>
     </div>
-    <div class="section-text" id="sec-mission"></div>
-  </div>
-
-  <!-- Section 4: ความรัก -->
-  <div class="section-card sec-love">
-    <div class="section-header">
-      <span class="section-icon">💕</span>
-      <span class="section-title">ความรัก</span>
+    <div class="section-card sec-childhood" id="card-childhood">
+      <div class="section-header"><span class="section-icon">👶</span><span class="section-title">มาจากไหน — ดวงวัยเด็กถึงวัยรุ่น</span></div>
+      <div class="section-text" id="sec-childhood"></div>
     </div>
-    <div class="section-text" id="sec-love"></div>
-  </div>
-
-  <!-- Section 5: การงาน -->
-  <div class="section-card sec-career">
-    <div class="section-header">
-      <span class="section-icon">💼</span>
-      <span class="section-title">การงาน</span>
+    <div class="section-card sec-mission" id="card-mission">
+      <div class="section-header"><span class="section-icon">🎯</span><span class="section-title">ภารกิจชีวิต — เกิดมาเพื่ออะไร</span></div>
+      <div class="section-text" id="sec-mission"></div>
     </div>
-    <div class="section-text" id="sec-career"></div>
-  </div>
-
-  <!-- Section 6: การเงิน -->
-  <div class="section-card sec-money">
-    <div class="section-header">
-      <span class="section-icon">💰</span>
-      <span class="section-title">การเงิน</span>
+    <div class="section-card sec-love" id="card-love">
+      <div class="section-header"><span class="section-icon">💕</span><span class="section-title">ความรัก</span></div>
+      <div class="section-text" id="sec-love"></div>
     </div>
-    <div class="section-text" id="sec-money"></div>
-  </div>
-
-  <!-- Section 7: สุขภาพ -->
-  <div class="section-card sec-health">
-    <div class="section-header">
-      <span class="section-icon">🌿</span>
-      <span class="section-title">สุขภาพ</span>
+    <div class="section-card sec-career" id="card-career">
+      <div class="section-header"><span class="section-icon">💼</span><span class="section-title">การงาน</span></div>
+      <div class="section-text" id="sec-career"></div>
     </div>
-    <div class="section-text" id="sec-health"></div>
-  </div>
-
-  <!-- Section 8: โชคดี -->
-  <div class="section-card sec-lucky">
-    <div class="section-header">
-      <span class="section-icon">✨</span>
-      <span class="section-title">โชคดีประจำชะตา</span>
+    <div class="section-card sec-money" id="card-money">
+      <div class="section-header"><span class="section-icon">💰</span><span class="section-title">การเงิน</span></div>
+      <div class="section-text" id="sec-money"><div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div></div>
     </div>
-    <div class="section-text" id="sec-lucky"></div>
-  </div>
-
-  <!-- Section 9: ดวงปีนี้ -->
-  <div class="section-card sec-thisyear">
-    <div class="section-header">
-      <span class="section-icon">⚡</span>
-      <span class="section-title">ดวงปีนี้ 2568</span>
+    <div class="section-card sec-health" id="card-health">
+      <div class="section-header"><span class="section-icon">🌿</span><span class="section-title">สุขภาพ</span></div>
+      <div class="section-text" id="sec-health"></div>
     </div>
-    <div class="section-text" id="sec-thisyear"></div>
-  </div>
-
-  <!-- Section 10: อนาคต -->
-  <div class="section-card sec-future">
-    <div class="section-header">
-      <span class="section-icon">🔮</span>
-      <span class="section-title">อนาคต</span>
+    <div class="section-card sec-lucky" id="card-lucky">
+      <div class="section-header"><span class="section-icon">✨</span><span class="section-title">โชคดีประจำชะตา</span></div>
+      <div class="section-text" id="sec-lucky"></div>
     </div>
-    <div class="section-text" id="sec-future"></div>
-  </div>
+    <div class="section-card sec-thisyear" id="card-thisyear">
+      <div class="section-header"><span class="section-icon">⚡</span><span class="section-title" id="thisyearTitle">ดวงปีนี้</span></div>
+      <div class="section-text" id="sec-thisyear"></div>
+    </div>
+    <div class="section-card sec-future" id="card-future">
+      <div class="section-header"><span class="section-icon">🔮</span><span class="section-title">อนาคต</span></div>
+      <div class="section-text" id="sec-future"></div>
+    </div>
 
-</div>
-</div>
-
-<!-- LOGIN MODAL -->
-<div class="modal-overlay" id="loginModal">
-  <div class="modal-box">
-    <h3>🔮 เข้าสู่ระบบก่อนนะคะ</h3>
-    <p>ต้องล็อกอินเพื่อเจาะดวงชะตา<br>และบันทึกผลการทำนาย</p>
-    <button class="btn-google" onclick="loginGoogle()">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
-    </button>
-    <button class="btn-close-modal" onclick="closeModal()">ยกเลิก</button>
+    <button class="btn-reset" onclick="resetResult()">🔄 เจาะดวงใหม่อีกครั้ง</button>
   </div>
 </div>
 
-<!-- SCRIPTS -->
-<script src="../js/destiny-data.js"></script>
-<script src="../js/destiny-engine.js"></script>
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain: "my-tarot67.firebaseapp.com",
-  projectId: "my-tarot67",
-  storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162829",
-  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
 
-var app = initializeApp(firebaseConfig);
-var auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(function() {
-  setPersistence(auth, browserLocalPersistence);
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;document.getElementById('coinDisplay').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
 });
-var db = getFirestore(app);
-var currentUser = null;
 
-onAuthStateChanged(auth, async function(user) {
-  currentUser = user;
-  if (user) {
-    var snap = await getDoc(doc(db, "users", user.uid));
-    var coins = snap.exists() ? (snap.data().coins || 0) : 0;
-    updateCoinUI(coins);
-  } else {
-    updateCoinUI(null);
-  }
+// DROPDOWNS
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+  var hourEl=document.getElementById('inHour');
+  var oh=document.createElement('option');oh.value=12;oh.textContent='ไม่ทราบ';hourEl.appendChild(oh);
+  for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
+  var minEl=document.getElementById('inMinute');
+  var om=document.createElement('option');om.value=0;om.textContent='00 นาที';minEl.appendChild(om);
+  for(var m2=1;m2<=59;m2++){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+
+  // dynamic year label
+  const curYearBE = curY + 543;
+  document.getElementById('thisyearTitle').textContent = 'ดวงปี '+curYearBE+' — '+(curYearBE+1);
 });
 
-window.updateCoinUI = function(coins) {
-  var el = document.getElementById("coinCount");
-  if (coins === null) {
-    el.textContent = "กรุณาล็อกอิน";
-    el.style.color = "#6b7280";
-  } else {
-    el.textContent = coins + " เหรียญ";
-    el.style.color = "var(--gold-light)";
-  }
-};
-
-window.loginGoogle = async function() {
-  var provider = new GoogleAuthProvider();
-  try { await signInWithPopup(auth, provider); closeModal(); } catch(e) {}
-};
-
-window.loginNow = function() {
-  document.getElementById("loginModal").classList.add("show");
-};
-
-window.closeModal = function() {
-  document.getElementById("loginModal").classList.remove("show");
-};
-
-// ─── PARSE DELIMITER ───
+// PARSE TAGS
 function parseDelimiter(text, keys) {
-  var upperText = text.toUpperCase();
+  var upper = text.toUpperCase();
   var result = {};
-  keys.forEach(function(key, i) {
-    var tag = "[" + key.toUpperCase() + "]";
-    var start = upperText.indexOf(tag);
-    if (start === -1) return;
-    start += tag.length;
-    var nextKey = keys[i + 1];
-    var end = nextKey ? upperText.indexOf("[" + nextKey.toUpperCase() + "]") : text.length;
-    if (end === -1) end = text.length;
-    result[key.toLowerCase()] = text.slice(start, end).trim();
+  keys.forEach(function(key,i){
+    var tag='['+key.toUpperCase()+']';
+    var start=upper.indexOf(tag);
+    if(start===-1) return;
+    start+=tag.length;
+    var nextKey=keys[i+1];
+    var end=nextKey?upper.indexOf('['+nextKey.toUpperCase()+']'):text.length;
+    if(end===-1) end=text.length;
+    result[key.toLowerCase()]=text.slice(start,end).trim();
   });
   return result;
 }
 
-function updateSection(id, text) {
-  var el = document.getElementById("sec-" + id);
-  if (el) el.textContent = text.trim();
+function updateSection(id,text){
+  var el=document.getElementById('sec-'+id);
+  if(el) el.textContent=text.trim();
+  var card=document.getElementById('card-'+id);
+  if(card) card.classList.add('visible');
 }
 
-// ─── STREAM API ───
-async function streamAPI(prompt, service, onChunk) {
-  var idToken = await currentUser.getIdToken();
-  var res = await fetch("/api/claude", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + idToken
-    },
-    body: JSON.stringify({
-      service: service,
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }]
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function callAPI(prompt, service) {
+  const idToken=await currentUser.getIdToken();
+  const res=await fetch('/api/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+    body:JSON.stringify({
+      service:service,
+      model:'claude-sonnet-4-6',
+      max_tokens:6000,
+      messages:[{role:'user',content:prompt}]
     })
   });
-
-  var newCoins = res.headers.get("X-New-Coin-Balance");
-  if (newCoins !== null) updateCoinUI(parseInt(newCoins));
-
-  if (!res.ok) {
-    var err = await res.json();
-    throw new Error(err.error || "api_error");
+  const nb=res.headers.get('X-New-Coin-Balance');
+  if(nb!=null) updateCoinUI(parseInt(nb));
+  if(!res.ok){
+    const err=await res.json().catch(()=>({}));
+    throw new Error(err.error||'api_error');
   }
-
-  var reader = res.body.getReader();
-  var decoder = new TextDecoder();
-  var fullText = "";
-
-  while (true) {
-    var chunk = await reader.read();
-    if (chunk.done) break;
-    var text = decoder.decode(chunk.value, { stream: true });
-    fullText += text;
-    if (onChunk) onChunk(fullText);
-  }
-
-  return fullText;
+  return res;
 }
 
-// ─── MAIN ───
-window.startReading = async function() {
-  if (!currentUser) { loginNow(); return; }
+window.startReading=async function(){
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
 
-  var name   = document.getElementById("inputName").value.trim();
-  var day    = parseInt(document.getElementById("inputDay").value);
-  var month  = parseInt(document.getElementById("inputMonth").value);
-  var year   = parseInt(document.getElementById("inputYear").value);
-  var hour   = parseInt(document.getElementById("inputHour").value) || 0;
-  var minute = parseInt(document.getElementById("inputMinute").value) || 0;
+  const name=document.getElementById('inputName').value.trim();
+  const day=parseInt(document.getElementById('inDay').value);
+  const month=parseInt(document.getElementById('inMonth').value);
+  const year=parseInt(document.getElementById('inYear').value);
+  const hour=parseInt(document.getElementById('inHour').value)||12;
+  const minute=parseInt(document.getElementById('inMinute').value)||0;
 
-  if (!name || !day || !month || !year) {
-    alert("กรุณากรอกข้อมูลให้ครบนะคะ 🙏"); return;
-  }
+  if(!name){alert('กรุณากรอกชื่อก่อนนะคะ 🙏');return;}
 
-  var btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-  btn.textContent = "🔮 กำลังเจาะดวง...";
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='🔮 กำลังเจาะดวง...';
 
-  // แสดง result section
-  var resultWrap = document.getElementById("resultWrap");
-  resultWrap.classList.add("show");
-
-  // reset sections
-  ["personality","childhood","mission","love","career","money","health","lucky","thisyear","future"].forEach(function(id) {
-    var el = document.getElementById("sec-" + id);
-    if (el) el.innerHTML = '<div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div>';
+  // reset
+  ['personality','childhood','mission','love','career','money','health','lucky','thisyear','future'].forEach(function(id){
+    const el=document.getElementById('sec-'+id);
+    if(el) el.innerHTML='<div class="loading-dots">กำลังอ่านดวง<span>.</span><span>.</span><span>.</span></div>';
+    const card=document.getElementById('card-'+id);
+    if(card) card.classList.remove('visible');
   });
 
-  // scroll to result
-  resultWrap.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
 
   try {
-    // คำนวณ 5 ศาสตร์ + แมทช์ keyword
-    var destiny = calculateDestiny(name, day, month, year, hour, minute);
-    var profile = destiny.profile;
-    var matched = destiny.matched;
+    const destiny=calculateDestiny(name,day,month,year,hour,minute);
+    const profile=destiny.profile;
 
-    // แสดง profile tags
-    var tagsHtml =
-      '<div class="profile-tag">♎ ' + profile.westernTh + '</div>' +
-      '<div class="profile-tag">🔢 เลขชีวิต ' + profile.lifeNumber + '</div>' +
-      '<div class="profile-tag">🐯 ' + profile.chineseTh + '</div>' +
-      '<div class="profile-tag">📅 วัน' + profile.thaiDay + '</div>' +
-      '<div class="profile-tag">🌊 ธาตุ' + profile.baziElements[0] + '</div>';
-    document.getElementById("profileTags").innerHTML = tagsHtml;
-
-    // build section keywords
-    function getKW(cats) {
-      var kws = [];
-      cats.forEach(function(cat) {
-        if (matched[cat]) {
-          matched[cat].forEach(function(m) { kws.push(m.keyword + "(" + m.score + ")"); });
-        }
-      });
-      return kws.join(", ") || "ไม่มี keyword พิเศษ";
-    }
+    // profile tags
+    const curYearBE=new Date().getFullYear()+543;
+    document.getElementById('profileTags').innerHTML=
+      '<div class="profile-tag">♎ ราศี'+profile.westernTh+'</div>'+
+      '<div class="profile-tag">🔢 เลขชีวิต '+profile.lifeNumber+'</div>'+
+      '<div class="profile-tag">🐯 ปี'+profile.chineseTh+'</div>'+
+      '<div class="profile-tag">📅 วัน'+profile.thaiDay+'</div>'+
+      '<div class="profile-tag">🌊 ธาตุ'+profile.baziElements[0]+'</div>'+
+      '<div class="profile-tag gold">⭐ Personal Year '+profile.personalYear+'</div>';
 
     // ─── CALL 1 ───
-    var keys1 = ["PERSONALITY","CHILDHOOD","MISSION","LOVE","CAREER"];
-    var prompt1 =
-      "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนาย 'เจาะดวงชะตา' ให้ " + name + "\n" +
-      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n" +
-      "ห้ามใช้ # * _ หรือ markdown ใดๆ ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
-      "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
-      " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
-      " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
-      "keyword: นิสัย=" + getKW(["personality"]) +
-      " ความรัก=" + getKW(["love_positive","love_warning"]) +
-      " การงาน=" + getKW(["career_positive","career_warning"]) + "\n\n" +
-      "เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น ห้ามเพิ่มข้อความอื่นก่อน tag:\n" +
-      "[PERSONALITY]\n[CHILDHOOD]\n[MISSION]\n[LOVE]\n[CAREER]\n\n" +
-      "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
-
-    keys1.forEach(function(id) {
-      var el = document.getElementById("sec-" + id.toLowerCase());
-      if (el) el.textContent = '';
-    });
-
-    var text1 = await streamAPI(prompt1, "destiny", function(partial) {
-      var parsed = parseDelimiter(partial, keys1);
-      Object.keys(parsed).forEach(function(id) {
-        if (parsed[id]) updateSection(id, parsed[id]);
-      });
-    });
-
-    var final1 = parseDelimiter(text1, keys1);
-    Object.keys(final1).forEach(function(id) {
-      if (final1[id]) updateSection(id, final1[id]);
-    });
-
-    ["money","health","lucky","thisyear","future"].forEach(function(id) {
-      var el = document.getElementById("sec-" + id);
-      if (el && el.querySelector('.loading-dots')) el.textContent = "";
-    });
+    const keys1=['PERSONALITY','CHILDHOOD','MISSION','LOVE','CAREER'];
+    const res1=await callAPI(destiny.prompt1,'destiny');
+    const reader1=res1.body.getReader();
+    const decoder=new TextDecoder();
+    let text1='';
+    while(true){
+      const{done,value}=await reader1.read();
+      if(done) break;
+      text1+=decoder.decode(value);
+      const parsed=parseDelimiter(text1,keys1);
+      Object.keys(parsed).forEach(function(id){if(parsed[id])updateSection(id,parsed[id]);});
+    }
+    const final1=parseDelimiter(text1,keys1);
+    Object.keys(final1).forEach(function(id){if(final1[id])updateSection(id,final1[id]);});
 
     // ─── CALL 2 ───
-    var keys2 = ["MONEY","HEALTH","LUCKY","THISYEAR","FUTURE"];
-    var prompt2 =
-      "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนายต่อให้ " + name + "\n" +
-      "ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n" +
-      "ห้ามใช้ # * _ หรือ markdown ใดๆ ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
-      "ข้อมูล: ราศี" + profile.westernTh + " เลขชีวิต" + profile.lifeNumber +
-      " ปี" + profile.chineseTh + " วัน" + profile.thaiDay +
-      " ธาตุเด่น" + profile.baziElements.slice(0,2).join("+") + "\n\n" +
-      "keyword: การเงิน=" + getKW(["money_positive","money_warning"]) +
-      " สุขภาพ=" + getKW(["health_positive","health_warning"]) +
-      " โชคดี=" + getKW(["lucky"]) +
-      " อนาคต=" + getKW(["future_positive","future_warning"]) + "\n\n" +
-      "เขียน 5 หัวข้อ ขึ้นต้นแต่ละหัวข้อด้วย tag นี้เท่านั้น:\n" +
-      "[MONEY]\n[HEALTH]\n[LUCKY]\n[THISYEAR]\n[FUTURE]\n\n" +
-      "keyword warning ให้เตือนตรงๆ แต่สุภาพ ไม่ต้องมีหัวข้อย่อย";
-
-    keys2.forEach(function(id) {
-      var el = document.getElementById("sec-" + id.toLowerCase());
-      if (el) el.textContent = '';
-    });
-
-    var text2 = await streamAPI(prompt2, "destiny-2", function(partial) {
-      var parsed = parseDelimiter(partial, keys2);
-      Object.keys(parsed).forEach(function(id) {
-        if (parsed[id]) updateSection(id, parsed[id]);
-      });
-    });
-
-    var final2 = parseDelimiter(text2, keys2);
-    Object.keys(final2).forEach(function(id) {
-      if (final2[id]) updateSection(id, final2[id]);
-    });
-
-    // บันทึก Firestore
-    await addDoc(collection(db, "users", currentUser.uid, "readings"), {
-      type: "destiny",
-      name: name,
-      birthday: day + "/" + month + "/" + year,
-      time: hour + ":" + (minute < 10 ? "0" + minute : minute),
-      profile: {
-        western: profile.westernTh,
-        lifeNumber: profile.lifeNumber,
-        chinese: profile.chineseTh,
-        thaiDay: profile.thaiDay,
-        baziElements: profile.baziElements.slice(0,2)
-      },
-      reading: text1 + "\n\n" + text2,
-      createdAt: serverTimestamp()
-    });
-
-  } catch(e) {
-    if (e.message === "insufficient_coins") {
-      alert("เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนค่ะ");
-    } else {
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏");
+    const keys2=['MONEY','HEALTH','LUCKY','THISYEAR','FUTURE'];
+    const res2=await callAPI(destiny.prompt2,'destiny-2');
+    const reader2=res2.body.getReader();
+    let text2='';
+    while(true){
+      const{done,value}=await reader2.read();
+      if(done) break;
+      text2+=decoder.decode(value);
+      const parsed=parseDelimiter(text2,keys2);
+      Object.keys(parsed).forEach(function(id){if(parsed[id])updateSection(id,parsed[id]);});
     }
+    const final2=parseDelimiter(text2,keys2);
+    Object.keys(final2).forEach(function(id){if(final2[id])updateSection(id,final2[id]);});
+
+    // save
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'เจาะดวงชะตา',
+      question:name+' '+day+'/'+month+'/'+year,
+      result:'ราศี'+profile.westernTh+' เลข'+profile.lifeNumber+' ปี'+profile.chineseTh+' วัน'+profile.thaiDay,
+      createdAt:serverTimestamp()
+    });
+
+  } catch(e){
+    if(e.message==='insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+    else alert('เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่นะคะ 🙏');
     console.error(e);
   }
 
-  btn.disabled = false;
-  btn.textContent = "🔮 เจาะดวงชะตาใหม่";
+  btn.disabled=false; btn.textContent='🔮 เจาะดวงชะตาใหม่';
 };
 
+window.resetResult=function(){
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 </script>
 </body>
 </html>
