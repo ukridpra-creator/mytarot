@@ -1,229 +1,331 @@
-// destiny-engine.js
-// คำนวณ 5 ศาสตร์ + แมทช์ keyword สำหรับ "เจาะดวงชะตา" ฉบับ MyTarot
+// destiny-engine.js v2
+// เพิ่ม Personal Year + ดาวจรปีนี้ + ปรับ score system
 
 // ─── 1. ราศีตะวันตก ───
 function getWesternSign(day, month) {
-  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "aries";
-  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "taurus";
-  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "gemini";
-  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "cancer";
-  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "leo";
-  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "virgo";
-  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "libra";
-  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "scorpio";
-  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return "sagittarius";
-  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return "capricorn";
-  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "aquarius";
+  if ((month===3&&day>=21)||(month===4&&day<=19)) return "aries";
+  if ((month===4&&day>=20)||(month===5&&day<=20)) return "taurus";
+  if ((month===5&&day>=21)||(month===6&&day<=20)) return "gemini";
+  if ((month===6&&day>=21)||(month===7&&day<=22)) return "cancer";
+  if ((month===7&&day>=23)||(month===8&&day<=22)) return "leo";
+  if ((month===8&&day>=23)||(month===9&&day<=22)) return "virgo";
+  if ((month===9&&day>=23)||(month===10&&day<=22)) return "libra";
+  if ((month===10&&day>=23)||(month===11&&day<=21)) return "scorpio";
+  if ((month===11&&day>=22)||(month===12&&day<=21)) return "sagittarius";
+  if ((month===12&&day>=22)||(month===1&&day<=19)) return "capricorn";
+  if ((month===1&&day>=20)||(month===2&&day<=18)) return "aquarius";
   return "pisces";
 }
 
-// ─── 2. เลขชีวิต Numerology ───
-function getLifeNumber(day, month, year) {
-  var sum = String(day).split('').concat(String(month).split('')).concat(String(year).split(''))
-    .reduce(function(a, b) { return a + parseInt(b); }, 0);
-  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    sum = String(sum).split('').reduce(function(a, b) { return a + parseInt(b); }, 0);
+// ─── 2. เลขชีวิต ───
+function reduceNum(n) {
+  while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
+    n = String(n).split('').reduce(function(a,b){return a+parseInt(b);},0);
   }
-  return sum;
+  return n;
 }
 
-// เลขชื่อ
-function getNameNumber(name) {
-  var map = {
-    a:1,b:2,c:3,d:4,e:5,f:6,g:7,h:8,i:9,
-    j:1,k:2,l:3,m:4,n:5,o:6,p:7,q:8,r:9,
-    s:1,t:2,u:3,v:4,w:5,x:6,y:7,z:8
-  };
-  var clean = name.toLowerCase().replace(/[^a-z]/g, '');
-  var sum = clean.split('').reduce(function(a, b) { return a + (map[b] || 0); }, 0);
-  while (sum > 9) {
-    sum = String(sum).split('').reduce(function(a, b) { return a + parseInt(b); }, 0);
-  }
-  return sum;
+function getLifeNumber(day, month, year) {
+  var sum = String(day).split('').concat(String(month).split('')).concat(String(year).split(''))
+    .reduce(function(a,b){return a+parseInt(b);},0);
+  return reduceNum(sum);
+}
+
+function getPersonalYear(day, month, currentYear) {
+  var sum = String(day).split('').concat(String(month).split('')).concat(String(currentYear).split(''))
+    .reduce(function(a,b){return a+parseInt(b);},0);
+  return reduceNum(sum);
 }
 
 // ─── 3. นักษัตรจีน ───
 function getChineseZodiac(year) {
   var animals = ["monkey","rooster","dog","pig","rat","ox","tiger","rabbit","dragon","snake","horse","goat"];
-  return animals[year % 12];
+  return animals[((year%12)+12)%12];
 }
 
 function getChineseElement(year) {
   var elements = ["metal","metal","water","water","wood","wood","fire","fire","earth","earth"];
-  return elements[year % 10];
+  return elements[((year%10)+10)%10];
 }
 
 // ─── 4. วันเกิดไทย ───
 function getThaiDay(year, month, day) {
-  var date = new Date(year, month - 1, day);
-  var days = ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
-  return days[date.getDay()];
+  var d = new Date(year, month-1, day);
+  return ["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"][d.getDay()];
 }
 
 // ─── 5. ธาตุบาจื้อ ───
 function getBaziElements(year, month, day, hour) {
-  // Heavenly Stems elements (simplified)
-  var stemElements = ["metal","metal","water","water","wood","wood","fire","fire","earth","earth"];
-  // Branch elements
-  var branchElements = {
-    rat:"water", ox:"earth", tiger:"wood", rabbit:"wood",
-    dragon:"earth", snake:"fire", horse:"fire", goat:"earth",
-    monkey:"metal", rooster:"metal", dog:"earth", pig:"water"
+  var stemEl = ["metal","metal","water","water","wood","wood","fire","fire","earth","earth"];
+  var branchEl = {
+    rat:"water",ox:"earth",tiger:"wood",rabbit:"wood",dragon:"earth",snake:"fire",
+    horse:"fire",goat:"earth",monkey:"metal",rooster:"metal",dog:"earth",pig:"water"
   };
-
-  var yearStem = stemElements[year % 10];
-  var yearBranch = branchElements[getChineseZodiac(year)];
-
-  // Month branch (simplified)
   var monthBranches = ["ox","tiger","rabbit","dragon","snake","horse","goat","monkey","rooster","dog","pig","rat"];
-  var monthBranch = monthBranches[month - 1];
-  var monthElement = branchElements[monthBranch];
+  var hourBranches  = ["rat","ox","tiger","rabbit","dragon","snake","horse","goat","monkey","rooster","dog","pig"];
 
-  // Day stem (simplified cycle)
-  var dayNum = Math.floor(new Date(year, month-1, day).getTime() / 86400000);
-  var dayStem = stemElements[dayNum % 10];
+  var zodiac = getChineseZodiac(year);
+  var elements = [
+    stemEl[((year%10)+10)%10],
+    branchEl[zodiac],
+    branchEl[monthBranches[month-1]],
+    stemEl[Math.floor(new Date(year,month-1,day).getTime()/86400000)%10],
+    branchEl[hourBranches[Math.floor(hour/2)%12]]
+  ];
 
-  // Hour branch
-  var hourBranches = ["rat","ox","tiger","rabbit","dragon","snake","horse","goat","monkey","rooster","dog","pig"];
-  var hourIdx = Math.floor(hour / 2) % 12;
-  var hourElement = branchElements[hourBranches[hourIdx]];
-
-  // นับธาตุที่เด่น
   var count = {};
-  [yearStem, yearBranch, monthElement, dayStem, hourElement].forEach(function(e) {
-    count[e] = (count[e] || 0) + 1;
-  });
-
-  // sort by count
-  var sorted = Object.keys(count).sort(function(a, b) { return count[b] - count[a]; });
-  return sorted; // ธาตุเด่น เรียงจากมากไปน้อย
+  elements.forEach(function(e){ count[e]=(count[e]||0)+1; });
+  return Object.keys(count).sort(function(a,b){return count[b]-count[a];});
 }
 
-// ─── MATCH ENGINE ───
+// ─── 6. Personal Year Meaning ───
+var PERSONAL_YEAR_MEANING = {
+  1: "ปีแห่งการเริ่มต้นใหม่ เหมาะเปิดโปรเจกต์หรือธุรกิจใหม่ค่ะ",
+  2: "ปีแห่งความสัมพันธ์ ความร่วมมือ เหมาะหาคู่หรือสร้างทีมค่ะ",
+  3: "ปีแห่งความสร้างสรรค์ โชคดี เหมาะแสดงความสามารถค่ะ",
+  4: "ปีแห่งการสร้างรากฐาน ต้องทำงานหนักแต่มั่นคงค่ะ",
+  5: "ปีแห่งการเปลี่ยนแปลง อิสรภาพ มีโอกาสใหม่มากมายค่ะ",
+  6: "ปีแห่งครอบครัวและความรับผิดชอบ เหมาะแต่งงานหรือซื้อบ้านค่ะ",
+  7: "ปีแห่งการพัฒนาตัวเอง ควรเรียนรู้และพักผ่อนค่ะ",
+  8: "ปีแห่งความสำเร็จและการเงิน ดวงธุรกิจแรงมากค่ะ",
+  9: "ปีแห่งการสรุปและปล่อยวาง เตรียมตัวสู่รอบใหม่ค่ะ",
+  11:"ปีแห่งแรงบันดาลใจสูง มีพลังงานพิเศษจากจักรวาลค่ะ",
+  22:"ปีแห่งการสร้างสิ่งยิ่งใหญ่ โอกาสทองในชีวิตค่ะ",
+};
+
+// ─── 7. ดาวจรปีนี้ (จาก PLANET_TRANSITS) ───
+// sign index: 0=เมษ 1=พฤษภ 2=เมถุน 3=กรกฎ 4=สิงห์ 5=กันย์
+//             6=ตุลย์ 7=พิจิก 8=ธนู 9=มังกร 10=กุมภ์ 11=มีน
+var SIGN_NAMES = ["เมษ","พฤษภ","เมถุน","กรกฎ","สิงห์","กันย์","ตุลย์","พิจิก","ธนู","มังกร","กุมภ์","มีน"];
+
+function getPlanetTransitThisYear(currentYear) {
+  if (typeof PLANET_TRANSITS === 'undefined') return null;
+  var data = PLANET_TRANSITS[currentYear];
+  if (!data) return null;
+
+  var today = new Date();
+  var todayStr = today.toISOString().slice(0,10);
+
+  function getCurrentSign(entries) {
+    if (!entries || !entries.length) return null;
+    var sign = entries[0].s;
+    for (var i=0; i<entries.length; i++) {
+      if (entries[i].d <= todayStr) sign = entries[i].s;
+      else break;
+    }
+    return sign;
+  }
+
+  return {
+    sat:  getCurrentSign(data.sat),
+    jup:  getCurrentSign(data.jup),
+    rahu: getCurrentSign(data.rahu),
+    ketu: getCurrentSign(data.ketu),
+    mars: getCurrentSign(data.mars),
+  };
+}
+
+// ─── 8. คำทำนายดาวจร × ราศีเจ้าชะตา ───
+// เช็คว่าดาวจรอยู่ใน house ไหนของราศีเจ้าชะตา
+function getTransitHouse(natalSignIdx, transitSignIdx) {
+  if (transitSignIdx === null || transitSignIdx === undefined) return null;
+  return ((transitSignIdx - natalSignIdx + 12) % 12) + 1;
+}
+
+var TRANSIT_MEANINGS = {
+  sat: {
+    1:  "เสาร์ผ่านลัคนา — ช่วงทดสอบความอดทน ต้องทำงานหนักขึ้นค่ะ",
+    4:  "เสาร์ผ่านบ้าน — ระวังปัญหาครอบครัวและที่อยู่อาศัยค่ะ",
+    7:  "เสาร์ผ่านคู่ครอง — ความสัมพันธ์ต้องการความใส่ใจมากขึ้นค่ะ",
+    10: "เสาร์ผ่านการงาน — โอกาสก้าวหน้าแต่ต้องพิสูจน์ตัวเองค่ะ",
+  },
+  jup: {
+    1:  "พฤหัสผ่านลัคนา — ปีมหามงคล โชคดีทุกด้านค่ะ",
+    2:  "พฤหัสผ่านการเงิน — รายได้เพิ่ม โชคลาภมาค่ะ",
+    5:  "พฤหัสผ่านความรัก — ดวงรักและบุตรดีมากค่ะ",
+    7:  "พฤหัสผ่านคู่ครอง — โอกาสพบรักหรือชีวิตคู่ดีขึ้นค่ะ",
+    10: "พฤหัสผ่านการงาน — เลื่อนขั้น ขยายธุรกิจ รุ่งเรืองค่ะ",
+    11: "พฤหัสผ่านมิตร — เครือข่ายดีขึ้น มีผู้ช่วยเหลือค่ะ",
+  },
+  rahu: {
+    1:  "ราหูผ่านลัคนา — ปีแห่งการเปลี่ยนแปลงใหญ่ ระวังสุขภาพค่ะ",
+    4:  "ราหูผ่านบ้าน — ระวังปัญหาที่ดินและครอบครัวค่ะ",
+    7:  "ราหูผ่านคู่ครอง — ความสัมพันธ์ซับซ้อน ระวังคนสามค่ะ",
+    10: "ราหูผ่านการงาน — โอกาสใหม่แต่ต้องระวังกับดักค่ะ",
+  },
+};
+
+function getTransitKeywords(westernSign, transitData) {
+  if (!transitData) return [];
+  var signIdx = Object.keys(WESTERN_SIGNS).indexOf(westernSign);
+  if (signIdx < 0) return [];
+
+  var keywords = [];
+  ["sat","jup","rahu"].forEach(function(planet) {
+    var tSign = transitData[planet];
+    if (tSign === null || tSign === undefined) return;
+    var house = getTransitHouse(signIdx, tSign);
+    if (TRANSIT_MEANINGS[planet] && TRANSIT_MEANINGS[planet][house]) {
+      keywords.push(TRANSIT_MEANINGS[planet][house]);
+    }
+  });
+  return keywords;
+}
+
+// ─── 9. MATCH ENGINE ───
 function matchKeywords(profile, minMatch) {
   minMatch = minMatch || 2;
   var matched = {};
 
   Object.keys(KEYWORDS).forEach(function(category) {
-    matched[category] = [];
+    matched[category] = { high: [], medium: [] };
 
     Object.keys(KEYWORDS[category]).forEach(function(keyword) {
       var kw = KEYWORDS[category][keyword];
       var score = 0;
 
-      // เช็ค western
-      if (kw.western && kw.western.indexOf(profile.western) !== -1) score++;
-
-      // เช็ค lifeNumber
-      if (kw.lifeNumber && kw.lifeNumber.indexOf(profile.lifeNumber) !== -1) score++;
-
-      // เช็ค chinese
-      if (kw.chinese && kw.chinese.indexOf(profile.chinese) !== -1) score++;
-
-      // เช็ค thaiDay
-      if (kw.thaiDay && kw.thaiDay.indexOf(profile.thaiDay) !== -1) score++;
-
-      // เช็ค baziElement (เช็คธาตุเด่น 2 อันแรก)
+      if (kw.western     && kw.western.indexOf(profile.western) !== -1)       score++;
+      if (kw.lifeNumber  && kw.lifeNumber.indexOf(profile.lifeNumber) !== -1)  score++;
+      if (kw.chinese     && kw.chinese.indexOf(profile.chinese) !== -1)        score++;
+      if (kw.thaiDay     && kw.thaiDay.indexOf(profile.thaiDay) !== -1)        score++;
       if (kw.baziElement) {
-        var topElements = profile.baziElements.slice(0, 2);
-        var hit = topElements.some(function(e) { return kw.baziElement.indexOf(e) !== -1; });
-        if (hit) score++;
+        var top2 = profile.baziElements.slice(0,2);
+        if (top2.some(function(e){ return kw.baziElement.indexOf(e) !== -1; })) score++;
       }
 
-      if (score >= minMatch) {
-        matched[category].push({ keyword: keyword, score: score });
-      }
+      if (score >= 3)        matched[category].high.push({ keyword:keyword, score:score });
+      else if (score === 2)  matched[category].medium.push({ keyword:keyword, score:score });
     });
 
-    // sort by score
-    matched[category].sort(function(a, b) { return b.score - a.score; });
+    matched[category].high.sort(function(a,b){return b.score-a.score;});
+    matched[category].medium.sort(function(a,b){return b.score-a.score;});
   });
 
   return matched;
 }
 
-// ─── MAIN FUNCTION ───
+// ─── 10. BUILD PROMPT ───
+function buildPromptPart1(name, profile, matched, transitKeywords, personalYear) {
+  function kwText(cats, maxH, maxM) {
+    var h=[], m=[];
+    cats.forEach(function(cat){
+      if(!matched[cat]) return;
+      matched[cat].high.slice(0,maxH||3).forEach(function(k){ h.push(k.keyword+"("+k.score+")"); });
+      matched[cat].medium.slice(0,maxM||2).forEach(function(k){ m.push(k.keyword); });
+    });
+    var out = "";
+    if (h.length) out += "หลัก: "+h.join(", ");
+    if (m.length) out += " | เสริม: "+m.join(", ");
+    return out || "ทั่วไป";
+  }
+
+  var currentYear = new Date().getFullYear();
+  var currentYearBE = currentYear + 543;
+
+  var transitText = transitKeywords.length
+    ? "\nดาวจรปีนี้: "+transitKeywords.join(" | ")
+    : "";
+
+  return "คุณคือนักพยากรณ์ของ MyTarot เชี่ยวชาญโหราศาสตร์ประยุกต์\n" +
+    "เขียนคำทำนายเจาะดวงชะตาให้ '"+name+"' ภาษาไทย อบอุ่น ลึกซึ้ง ตรงไปตรงมา\n" +
+    "ห้ามใช้ # * _ หรือ markdown ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
+    "ข้อมูลดวงชะตา:\n" +
+    "- ราศี: "+profile.westernTh+"\n" +
+    "- เลขชีวิต: "+profile.lifeNumber+"\n" +
+    "- ปีนักษัตร: "+profile.chineseTh+"\n" +
+    "- วันเกิด: "+profile.thaiDay+"\n" +
+    "- ธาตุเด่น: "+profile.baziElements.slice(0,2).join("+")+"\n" +
+    "- Personal Year "+currentYearBE+": "+personalYear+" ("+( PERSONAL_YEAR_MEANING[personalYear]||"ปีทั่วไปค่ะ")+")\n" +
+    transitText + "\n\n" +
+    "keyword ดวงชะตา:\n" +
+    "- นิสัย: "+kwText(["personality"])+"\n" +
+    "- ความรัก: "+kwText(["love_positive","love_warning"])+"\n" +
+    "- การงาน: "+kwText(["career_positive","career_warning"])+"\n\n" +
+    "เขียน 5 หัวข้อ ขึ้นต้นด้วย tag เหล่านี้เท่านั้น:\n" +
+    "[PERSONALITY]\n[CHILDHOOD]\n[MISSION]\n[LOVE]\n[CAREER]\n\n" +
+    "แต่ละหัวข้อ 3-4 ย่อหน้า ละเอียด ลึกซึ้ง ไม่สั้นเกินไป\n" +
+    "keyword หลัก(3+)ใช้เป็นแกนหลัก keyword เสริมใช้สนับสนุน keyword warning เตือนตรงๆ สุภาพ";
+}
+
+function buildPromptPart2(name, profile, matched, transitKeywords, personalYear) {
+  function kwText(cats, maxH, maxM) {
+    var h=[], m=[];
+    cats.forEach(function(cat){
+      if(!matched[cat]) return;
+      matched[cat].high.slice(0,maxH||3).forEach(function(k){ h.push(k.keyword+"("+k.score+")"); });
+      matched[cat].medium.slice(0,maxM||2).forEach(function(k){ m.push(k.keyword); });
+    });
+    var out = "";
+    if (h.length) out += "หลัก: "+h.join(", ");
+    if (m.length) out += " | เสริม: "+m.join(", ");
+    return out || "ทั่วไป";
+  }
+
+  var currentYear = new Date().getFullYear();
+  var currentYearBE = currentYear + 543;
+  var nextYearBE = currentYearBE + 1;
+
+  var transitText = transitKeywords.length
+    ? "\nดาวจรปีนี้: "+transitKeywords.join(" | ")
+    : "";
+
+  return "คุณคือนักพยากรณ์ของ MyTarot เขียนคำทำนายต่อให้ '"+name+"'\n" +
+    "ห้ามใช้ # * _ หรือ markdown ทั้งสิ้น เขียนเป็นย่อหน้าธรรมดาเท่านั้น\n\n" +
+    "ข้อมูลดวงชะตา: ราศี"+profile.westernTh+" เลขชีวิต"+profile.lifeNumber+
+    " ปี"+profile.chineseTh+" วัน"+profile.thaiDay+
+    " ธาตุ"+profile.baziElements.slice(0,2).join("+")+"\n" +
+    "Personal Year "+currentYearBE+": "+personalYear+"\n" +
+    transitText + "\n\n" +
+    "keyword:\n" +
+    "- การเงิน: "+kwText(["money_positive","money_warning"])+"\n" +
+    "- สุขภาพ: "+kwText(["health_positive","health_warning"])+"\n" +
+    "- โชคดี: "+kwText(["lucky"])+"\n" +
+    "- ครอบครัว: "+kwText(["family"])+"\n" +
+    "- จิตวิญญาณ: "+kwText(["spiritual"])+"\n" +
+    "- อนาคต: "+kwText(["future_positive","future_warning"])+"\n\n" +
+    "เขียน 5 หัวข้อ ขึ้นต้นด้วย tag เหล่านี้เท่านั้น:\n" +
+    "[MONEY]\n[HEALTH]\n[LUCKY]\n[THISYEAR]\n[FUTURE]\n\n" +
+    "[THISYEAR] ให้พูดถึงดวงปี "+currentYearBE+" และ "+nextYearBE+" โดยอ้างอิง Personal Year "+personalYear+" และดาวจรค่ะ\n" +
+    "แต่ละหัวข้อ 3-4 ย่อหน้า ละเอียด ไม่สั้นเกินไป";
+}
+
+// ─── 11. MAIN ───
 function calculateDestiny(name, day, month, year, hour, minute) {
-  // คำนวณ 5 ศาสตร์
+  var currentYear = new Date().getFullYear();
+
   var profile = {
-    name: name,
-    birthday: day + "/" + month + "/" + year,
-    time: hour + ":" + (minute < 10 ? "0" + minute : minute),
+    name:         name,
+    birthday:     day+"/"+month+"/"+year,
+    time:         hour+":"+(minute<10?"0"+minute:minute),
     western:      getWesternSign(day, month),
-    westernTh:    WESTERN_SIGNS[getWesternSign(day, month)].th,
+    westernTh:    WESTERN_SIGNS[getWesternSign(day,month)].th,
     lifeNumber:   getLifeNumber(day, month, year),
-    nameNumber:   getNameNumber(name),
     chinese:      getChineseZodiac(year),
     chineseTh:    CHINESE_ZODIAC[getChineseZodiac(year)].th,
     chineseElem:  getChineseElement(year),
     thaiDay:      getThaiDay(year, month, day),
     baziElements: getBaziElements(year, month, day, hour),
+    personalYear: getPersonalYear(day, month, currentYear),
   };
 
-  // แมทช์ keyword
+  var transitData     = getPlanetTransitThisYear(currentYear);
+  var transitKeywords = getTransitKeywords(profile.western, transitData);
+
   var matched = matchKeywords(profile, 2);
 
-  // สร้าง prompt สำหรับ Claude
-  var prompt = buildPrompt(name, profile, matched);
+  var prompt1 = buildPromptPart1(name, profile, matched, transitKeywords, profile.personalYear);
+  var prompt2 = buildPromptPart2(name, profile, matched, transitKeywords, profile.personalYear);
 
-  return { profile: profile, matched: matched, prompt: prompt };
-}
-
-// ─── BUILD PROMPT ───
-function buildPrompt(name, profile, matched) {
-  var sections = {
-    personality:      "นิสัยและบุคลิก",
-    love_positive:    "ความรัก (เชิงบวก)",
-    love_warning:     "ความรัก (สิ่งที่ต้องระวัง)",
-    career_positive:  "การงาน (เชิงบวก)",
-    career_warning:   "การงาน (สิ่งที่ต้องระวัง)",
-    money_positive:   "การเงิน (เชิงบวก)",
-    money_warning:    "การเงิน (สิ่งที่ต้องระวัง)",
-    health_positive:  "สุขภาพ (เชิงบวก)",
-    health_warning:   "สุขภาพ (สิ่งที่ต้องระวัง)",
-    lucky:            "โชคดีประจำชะตา",
-    future_positive:  "อนาคต (เชิงบวก)",
-    future_warning:   "อนาคต (สิ่งที่ต้องระวัง)",
+  return {
+    profile:         profile,
+    matched:         matched,
+    transitData:     transitData,
+    transitKeywords: transitKeywords,
+    prompt1:         prompt1,
+    prompt2:         prompt2,
   };
-
-  var kwText = "";
-  Object.keys(sections).forEach(function(cat) {
-    if (matched[cat] && matched[cat].length > 0) {
-      kwText += "\n" + sections[cat] + ": ";
-      kwText += matched[cat].map(function(m) { return m.keyword + "("+m.score+")"; }).join(", ");
-    }
-  });
-
-  var prompt =
-    "คุณคือนักพยากรณ์ของ MyTarot ผู้เชี่ยวชาญโหราศาสตร์ประยุกต์\n" +
-    "เขียนคำทำนาย 'เจาะดวงชะตา' ให้ " + name + " ในภาษาไทย\n" +
-    "อบอุ่น ลึกซึ้ง ตรงไปตรงมา ไม่บอกว่าใช้ศาสตร์อะไร\n\n" +
-    "ข้อมูลดวงชะตา:\n" +
-    "- วันเกิด: " + profile.birthday + " เวลา " + profile.time + "\n" +
-    "- ราศี: " + profile.westernTh + "\n" +
-    "- เลขชีวิต: " + profile.lifeNumber + "\n" +
-    "- ปีนักษัตร: " + profile.chineseTh + "\n" +
-    "- วันเกิด: " + profile.thaiDay + "\n" +
-    "- ธาตุเด่น: " + profile.baziElements.slice(0,2).join(", ") + "\n\n" +
-    "keyword ที่ดวงชะตาบ่งบอก (ตัวเลขคือความเชื่อมั่น 2-5):\n" + kwText + "\n\n" +
-    "กรุณาเขียนคำทำนายให้ครบ 7 หัวข้อ:\n" +
-    "1. 🌟 นิสัยและบุคลิกที่แท้จริง (รวมจุดแข็ง จุดอ่อน)\n" +
-    "2. 👶 มาจากไหน — ดวงวัยเด็กถึงวัยรุ่น\n" +
-    "3. 🎯 ภารกิจชีวิต — เกิดมาเพื่ออะไร\n" +
-    "4. 💕 ความรัก (ตอนนี้ / คู่ที่เหมาะ / ช่วงเวลาดี / ระวัง)\n" +
-    "5. 💼 การงาน (อาชีพที่เหมาะ / จุดแข็ง / ช่วงก้าวหน้า / ระวัง)\n" +
-    "6. 💰 การเงิน (นิสัยการเงิน / ช่วงรุ่ง / ระวัง)\n" +
-    "7. 🌿 สุขภาพ (จุดอ่อน / ระวัง / คำแนะนำ)\n" +
-    "8. ✨ โชคดีประจำชะตา (สี / เลข / ทิศ / วัน)\n" +
-    "9. ⚡ ดวงปีนี้ 2568\n" +
-    "10. 🔮 อนาคต\n\n" +
-    "ให้ใช้ keyword ที่มีความเชื่อมั่นสูง (3+) เป็นหลัก\n" +
-    "keyword ที่มี (2) ใช้เสริม keyword ที่มี (warning) ให้เตือนอย่างตรงไปตรงมาแต่สุภาพ";
-
-  return prompt;
 }
 
-// ─── Export / Global ───
 if (typeof module !== 'undefined') {
   module.exports = { calculateDestiny, getWesternSign, getLifeNumber, getChineseZodiac, matchKeywords };
 }
