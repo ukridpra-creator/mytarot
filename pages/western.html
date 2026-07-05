@@ -31,8 +31,6 @@
     .coin-hint { font-size: 11px; color: var(--dim); }
     .btn-read { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
     .btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* PLANETS */
     .planets-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; display: none; }
     .planets-card.show { display: block; }
     .planets-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 14px; }
@@ -48,12 +46,8 @@
     .asc-item { flex: 1; text-align: center; background: rgba(124,58,237,0.08); border-radius: 12px; padding: 10px; }
     .asc-label { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
     .asc-value { font-size: 14px; font-weight: 700; color: var(--purple-light); }
-
-    /* GREETING */
     .greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(124,58,237,0.06); border-radius: 16px; border-left: 3px solid var(--purple-light); display: none; }
     .greeting-box.show { display: block; }
-
-    /* RESULT */
     #resultBox { display: none; }
     #resultBox.show { display: block; }
     .result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
@@ -75,7 +69,6 @@
     .sec-challenge h3 { color: #ef4444; }
     .sec-future    { background: rgba(6,182,212,0.08);   border-color: #06b6d4; }
     .sec-future h3 { color: #06b6d4; }
-
     .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
     .loading-dots { display: flex; gap: 8px; }
     .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--purple-light); animation: bounce 1.2s ease-in-out infinite; }
@@ -83,7 +76,6 @@
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
     .loading-text { font-size: 14px; color: var(--dim); }
-
     .followup-box { margin-top: 16px; padding: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 16px; }
     .followup-title { font-size: 13px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
     .followup-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-family: 'Sarabun', sans-serif; outline: none; resize: none; margin-bottom: 10px; box-sizing: border-box; }
@@ -98,19 +90,15 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
+  <a href="western-hub.html" class="back-btn">←</a>
   <div class="page-title">🌟 โหราศาสตร์ตะวันตก</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
-    <div class="user-btn" onclick="toggleUserMenu()">
-      <div class="avatar" id="avatarEl">👤</div>
-    </div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
   </div>
 </div>
 
-<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
@@ -118,13 +106,7 @@
     <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
-    <div class="menu-user-info">
-      <div class="menu-avatar">👤</div>
-      <div>
-        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
-        <div class="menu-email" id="menuEmail">email@gmail.com</div>
-      </div>
-    </div>
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName">ชื่อผู้ใช้</div><div class="menu-email" id="menuEmail">email@gmail.com</div></div></div>
     <div class="menu-divider"></div>
     <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
     <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
@@ -132,12 +114,10 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- LOGIN MODAL -->
 <div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
   <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
     <div style="font-size:48px;margin-bottom:12px;">🌟</div>
     <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
     <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
       <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
     </button>
@@ -174,7 +154,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-text">🪙 ใช้ 49 เหรียญต่อการวิเคราะห์</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
@@ -186,10 +166,8 @@
     <div class="asc-row" id="ascRow"></div>
   </div>
 
-  <!-- GREETING -->
   <div class="greeting-box" id="greetingBox"></div>
 
-  <!-- RESULT -->
   <div id="resultBox">
     <div class="result-section sec-identity"><h3>✦ ตัวตนและบุคลิกภาพ</h3><p id="secIdentity"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div></p></div>
     <div class="result-section sec-mind"><h3>✦ จิตใจและอารมณ์</h3><p id="secMind"></p></div>
@@ -199,7 +177,6 @@
     <div class="result-section sec-luck"><h3>✦ โชคและการเติบโต</h3><p id="secLuck"></p></div>
     <div class="result-section sec-challenge"><h3>✦ ความท้าทายและบทเรียน</h3><p id="secChallenge"></p></div>
     <div class="result-section sec-future"><h3>✦ อนาคต คุณจะต้องเจอ...</h3><p id="secFuture"></p></div>
-
     <div class="followup-box" id="followupBox" style="display:none">
       <div class="followup-result" id="followupResult"></div>
       <div class="followup-title">💬 มีคำถามเพิ่มเติมไหมคะ?</div>
@@ -209,7 +186,6 @@
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -226,97 +202,67 @@ import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain: "my-tarot67.firebaseapp.com",
-  projectId: "my-tarot67",
-  storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162829",
-  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null, lastFullText='';
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(() => {
-  setPersistence(auth, browserLocalPersistence);
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;document.getElementById('coinDisplay').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
 });
-const db = getFirestore(app);
-let currentUser = null;
-let lastFullText = '';
 
-window.updateCoinUI = function(coins) {
-  document.getElementById('coinCount').textContent = coins;
-  document.getElementById('coinDisplay').textContent = coins;
-};
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+  var hourEl=document.getElementById('inHour');
+  var oh=document.createElement('option');oh.value='';oh.textContent='--';hourEl.appendChild(oh);
+  for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
+  var minEl=document.getElementById('inMinute');
+  var om=document.createElement('option');om.value='';om.textContent='--';minEl.appendChild(om);
+  for(var m2=0;m2<=59;m2+=5){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+});
 
-function setAvatarDisplay(avatar) {
-  var el = document.getElementById('avatarEl');
-  if (!el) return;
-  if (avatar && avatar.includes('.png')) {
-    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-  } else { el.textContent = avatar || '👤'; }
+const PLANET_SYMBOLS={sun:'☀️',moon:'🌙',mercury:'☿',venus:'♀️',mars:'♂️',jupiter:'♃',saturn:'♄',uranus:'⛢',neptune:'♆',pluto:'♇'};
+const PLANET_NAMES_TH={sun:'ดวงอาทิตย์',moon:'ดวงจันทร์',mercury:'ดาวพุธ',venus:'ดาวศุกร์',mars:'ดาวอังคาร',jupiter:'ดาวพฤหัส',saturn:'ดาวเสาร์',uranus:'ดาวยูเรนัส',neptune:'ดาวเนปจูน',pluto:'ดาวพลูโต'};
+const SIGN_TH={aries:'Aries',taurus:'Taurus',gemini:'Gemini',cancer:'Cancer',leo:'Leo',virgo:'Virgo',libra:'Libra',scorpio:'Scorpio',sagittarius:'Sagittarius',capricorn:'Capricorn',aquarius:'Aquarius',pisces:'Pisces'};
+const CITY_COORDS={'กรุงเทพ':{lat:13.7563,lng:100.5018},'กรุงเทพมหานคร':{lat:13.7563,lng:100.5018},'เชียงใหม่':{lat:18.7883,lng:98.9853},'ภูเก็ต':{lat:7.8804,lng:98.3923},'ขอนแก่น':{lat:16.4419,lng:102.8360},'london':{lat:51.5074,lng:-0.1278},'tokyo':{lat:35.6762,lng:139.6503}};
+
+function getCityCoords(city){
+  if(!city) return {lat:13.7563,lng:100.5018};
+  const key=city.toLowerCase().trim();
+  for(const [name,coords] of Object.entries(CITY_COORDS)){if(key.includes(name.toLowerCase())) return coords;}
+  return {lat:13.7563,lng:100.5018};
 }
 
-window.loginNow = async function() {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
-};
-window.logoutNow = async function() {
-  await signOut(auth); window.location.href = '../index.html';
-};
-
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  if (user) {
-    var snap = await getDoc(doc(db, 'users', user.uid));
-    var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0);
-    setAvatarDisplay(data.avatar || '');
-    document.getElementById('guestView').style.display = 'none';
-    document.getElementById('loggedView').style.display = 'block';
-    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
-    document.getElementById('menuEmail').textContent = user.email;
-    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
-  } else {
-    updateCoinUI('—'); setAvatarDisplay('');
-  }
-});
-
-// DROPDOWNS
-document.addEventListener('DOMContentLoaded', function() {
-  var dayEl = document.getElementById('inDay');
-  for (var d = 1; d <= 31; d++) { var o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o); }
-  var months = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
-  var monthEl = document.getElementById('inMonth');
-  months.forEach(function(m, i) { var o = document.createElement('option'); o.value = i+1; o.textContent = m; monthEl.appendChild(o); });
-  var yearEl = document.getElementById('inYear');
-  var curY = new Date().getFullYear();
-  for (var y = curY; y >= curY-100; y--) { var o = document.createElement('option'); o.value = y; o.textContent = y; if (y === 1990) o.selected = true; yearEl.appendChild(o); }
-  // เวลา --
-  var hourEl = document.getElementById('inHour');
-  var oh = document.createElement('option'); oh.value = ''; oh.textContent = '--'; hourEl.appendChild(oh);
-  for (var h = 0; h <= 23; h++) { var o = document.createElement('option'); o.value = h; o.textContent = (h<10?'0'+h:h)+' น.'; hourEl.appendChild(o); }
-  var minEl = document.getElementById('inMinute');
-  var om = document.createElement('option'); om.value = ''; om.textContent = '--'; minEl.appendChild(om);
-  for (var m2 = 0; m2 <= 59; m2 += 5) { var o = document.createElement('option'); o.value = m2; o.textContent = (m2<10?'0'+m2:m2)+' นาที'; minEl.appendChild(o); }
-});
-
-// PLANET DATA
-const PLANET_SYMBOLS = { sun:'☀️', moon:'🌙', mercury:'☿', venus:'♀️', mars:'♂️', jupiter:'♃', saturn:'♄', uranus:'⛢', neptune:'♆', pluto:'♇' };
-const PLANET_NAMES_TH = { sun:'ดวงอาทิตย์', moon:'ดวงจันทร์', mercury:'ดาวพุธ', venus:'ดาวศุกร์', mars:'ดาวอังคาร', jupiter:'ดาวพฤหัส', saturn:'ดาวเสาร์', uranus:'ดาวยูเรนัส', neptune:'ดาวเนปจูน', pluto:'ดาวพลูโต' };
-const SIGN_TH = { aries:'เมษ', taurus:'พฤษภ', gemini:'เมถุน', cancer:'กรกฎ', leo:'สิงห์', virgo:'กันย์', libra:'ตุลย์', scorpio:'พิจิก', sagittarius:'ธนู', capricorn:'มังกร', aquarius:'กุมภ์', pisces:'มีน' };
-const CITY_COORDS = { 'กรุงเทพ':{lat:13.7563,lng:100.5018}, 'กรุงเทพมหานคร':{lat:13.7563,lng:100.5018}, 'เชียงใหม่':{lat:18.7883,lng:98.9853}, 'ภูเก็ต':{lat:7.8804,lng:98.3923}, 'ขอนแก่น':{lat:16.4419,lng:102.8360}, 'london':{lat:51.5074,lng:-0.1278}, 'tokyo':{lat:35.6762,lng:139.6503} };
-
-function getCityCoords(city) {
-  if (!city) return { lat:13.7563, lng:100.5018 };
-  const key = city.toLowerCase().trim();
-  for (const [name, coords] of Object.entries(CITY_COORDS)) {
-    if (key.includes(name.toLowerCase())) return coords;
-  }
-  return { lat:13.7563, lng:100.5018 };
-}
-
-function renderPlanets(planets, angles) {
-  const main = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
-  document.getElementById('planetsList').innerHTML = planets.filter(p => main.includes(p.id)).map(p => `
+function renderPlanets(planets,angles){
+  const main=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+  document.getElementById('planetsList').innerHTML=planets.filter(p=>main.includes(p.id)).map(p=>`
     <div class="planet-row">
       <div class="planet-symbol">${PLANET_SYMBOLS[p.id]||'⭐'}</div>
       <div class="planet-name">${PLANET_NAMES_TH[p.id]||p.name}</div>
@@ -324,212 +270,117 @@ function renderPlanets(planets, angles) {
       <div class="planet-deg">${p.pos.toFixed(1)}°</div>
       <div class="planet-house">เรือน ${p.house}</div>
     </div>`).join('');
-  if (angles) {
-    document.getElementById('ascRow').innerHTML = `
+  if(angles){
+    document.getElementById('ascRow').innerHTML=`
       <div class="asc-item"><div class="asc-label">↑ ราศีขึ้น (ASC)</div><div class="asc-value">${SIGN_TH[angles.asc?.sign_id]||''} ${angles.asc?.pos?.toFixed(1)||''}°</div></div>
       <div class="asc-item"><div class="asc-label">↑ จุดสูงสุด (MC)</div><div class="asc-value">${SIGN_TH[angles.mc?.sign_id]||''} ${angles.mc?.pos?.toFixed(1)||''}°</div></div>`;
   }
   document.getElementById('planetsCard').classList.add('show');
 }
 
-// PARSE DELIMITER
-const ASTRO_KEYS = ['GREETING','IDENTITY','MIND','LOVE','CAREER','MONEY','LUCK','CHALLENGE','FUTURE'];
-const ASTRO_IDS = { IDENTITY:'secIdentity', MIND:'secMind', LOVE:'secLove', CAREER:'secCareer', MONEY:'secMoney', LUCK:'secLuck', CHALLENGE:'secChallenge', FUTURE:'secFuture' };
+const ASTRO_KEYS=['GREETING','IDENTITY','MIND','LOVE','CAREER','MONEY','LUCK','CHALLENGE','FUTURE'];
+const ASTRO_IDS={IDENTITY:'secIdentity',MIND:'secMind',LOVE:'secLove',CAREER:'secCareer',MONEY:'secMoney',LUCK:'secLuck',CHALLENGE:'secChallenge',FUTURE:'secFuture'};
 
-function parseDelimiter(text, keys) {
-  const result = {};
-  keys.forEach((key, i) => {
-    const tag = '[' + key + ']';
-    const start = text.indexOf(tag);
-    if (start === -1) return;
-    const contentStart = start + tag.length;
-    const nextKey = keys[i+1];
-    const nextTag = nextKey ? '[' + nextKey + ']' : null;
-    const end = nextTag ? text.indexOf(nextTag) : text.length;
-    result[key] = text.slice(contentStart, end === -1 ? text.length : end).trim();
+function parseDelimiter(text,keys){
+  const result={};
+  keys.forEach((key,i)=>{
+    const tag='['+key+']';
+    const start=text.indexOf(tag);
+    if(start===-1) return;
+    const cs=start+tag.length;
+    const nextKey=keys[i+1];
+    const nextTag=nextKey?'['+nextKey+']':null;
+    const end=nextTag?text.indexOf(nextTag):text.length;
+    result[key]=text.slice(cs,end===-1?text.length:end).trim();
   });
   return result;
 }
 
-function updateSections(text) {
-  const parsed = parseDelimiter(text, ASTRO_KEYS);
-  if (parsed['GREETING']) {
-    const gb = document.getElementById('greetingBox');
-    gb.classList.add('show');
-    gb.textContent = parsed['GREETING'];
-  }
-  Object.entries(ASTRO_IDS).forEach(([key, id]) => {
-    if (parsed[key]) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = parsed[key];
-    }
-  });
+function updateSections(text){
+  const parsed=parseDelimiter(text,ASTRO_KEYS);
+  if(parsed['GREETING']){const gb=document.getElementById('greetingBox');gb.classList.add('show');gb.textContent=parsed['GREETING'];}
+  Object.entries(ASTRO_IDS).forEach(([key,id])=>{if(parsed[key]){const el=document.getElementById(id);if(el)el.textContent=parsed[key];}});
 }
 
-window.startReading = async function() {
-  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
-
-  const day   = parseInt(document.getElementById('inDay').value);
-  const month = parseInt(document.getElementById('inMonth').value);
-  const year  = parseInt(document.getElementById('inYear').value);
-  const hour  = document.getElementById('inHour').value !== '' ? parseInt(document.getElementById('inHour').value) : 12;
-  const minute = document.getElementById('inMinute').value !== '' ? parseInt(document.getElementById('inMinute').value) : 0;
-  const city  = document.getElementById('inCity').value.trim();
-  const { lat, lng } = getCityCoords(city);
-
-  const btn = document.getElementById('readBtn');
-  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
-
-  // reset
+window.startReading=async function(){
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const day=parseInt(document.getElementById('inDay').value);
+  const month=parseInt(document.getElementById('inMonth').value);
+  const year=parseInt(document.getElementById('inYear').value);
+  const hour=document.getElementById('inHour').value!==''?parseInt(document.getElementById('inHour').value):12;
+  const minute=document.getElementById('inMinute').value!==''?parseInt(document.getElementById('inMinute').value):0;
+  const city=document.getElementById('inCity').value.trim();
+  const {lat,lng}=getCityCoords(city);
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true;btn.textContent='⏳ กำลังวิเคราะห์...';
   document.getElementById('greetingBox').classList.remove('show');
-  document.getElementById('greetingBox').textContent = '';
-  Object.values(ASTRO_IDS).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div>';
-  });
-  const resultBox = document.getElementById('resultBox');
+  document.getElementById('greetingBox').textContent='';
+  Object.values(ASTRO_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div>';});
+  const resultBox=document.getElementById('resultBox');
   resultBox.classList.add('show');
-  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
+  setTimeout(()=>resultBox.scrollIntoView({behavior:'smooth'}),100);
 
-  // เรียก planet API
-  let planets = [], angles = null;
-  try {
-    const idToken = await currentUser.getIdToken();
-    const apiRes = await fetch('/api/western', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
-      body: JSON.stringify({ year, month, day, hour, minute, lat, lng })
-    });
-    const apiData = await apiRes.json();
-    if (apiData.data?.planets) { planets = apiData.data.planets; angles = apiData.data.angles_details; renderPlanets(planets, angles); }
-  } catch(e) { console.error(e); }
+  let planets=[],angles=null;
+  try{
+    const idToken=await currentUser.getIdToken();
+    const apiRes=await fetch('/api/western',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},body:JSON.stringify({year,month,day,hour,minute,lat,lng})});
+    const apiData=await apiRes.json();
+    if(apiData.data?.planets){planets=apiData.data.planets;angles=apiData.data.angles_details;renderPlanets(planets,angles);}
+  }catch(e){console.error(e);}
 
-  // planet desc
-  const main = ['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
-  const planetDesc = planets.filter(p => main.includes(p.id)).map(p =>
-    `${PLANET_NAMES_TH[p.id]}: ${SIGN_TH[p.sign_id]||p.sign} ${p.pos.toFixed(1)}° เรือน ${p.house}${p.retrograde?' (ถอยหลัง)':''}`
-  ).join('\n');
-  const ascDesc = angles ? `ราศีขึ้น: ${SIGN_TH[angles.asc?.sign_id]||''}\nMC: ${SIGN_TH[angles.mc?.sign_id]||''}` : '';
+  const main=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
+  const planetDesc=planets.filter(p=>main.includes(p.id)).map(p=>`${PLANET_NAMES_TH[p.id]}: ${SIGN_TH[p.sign_id]||p.sign} ${p.pos.toFixed(1)}° เรือน ${p.house}${p.retrograde?' (ถอยหลัง)':''}`).join('\n');
+  const ascDesc=angles?`Ascendant: ${SIGN_TH[angles.asc?.sign_id]||''}\nMC: ${SIGN_TH[angles.mc?.sign_id]||''}`:'';
 
-  try {
-    const idToken = await currentUser.getIdToken();
-    const res = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
-      body: JSON.stringify({
-        service: 'bazi',
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
-        system: `คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ วิเคราะห์ดวงชะตาเป็นภาษาไทย เรียกผู้ถามว่า "คุณ" ต้องใช้ tag [GREETING][IDENTITY][MIND][LOVE][CAREER][MONEY][LUCK][CHALLENGE][FUTURE] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
-        messages: [{ role:'user', content: `natal chart:
-${planetDesc}
-${ascDesc}
-
-ตอบโดยใช้ tag นำหน้าแต่ละส่วน:
-[GREETING]
-ทักทายคุณ 1-2 ประโยค
-[IDENTITY]
-ตัวตนและบุคลิกภาพ 3-4 ประโยค
-[MIND]
-จิตใจและอารมณ์ 3-4 ประโยค
-[LOVE]
-ความรักและความสัมพันธ์ 3-4 ประโยค
-[CAREER]
-การงานและเป้าหมายชีวิต 3-4 ประโยค
-[MONEY]
-การเงินและทรัพย์สิน 3-4 ประโยค
-[LUCK]
-โชคและการเติบโต 3-4 ประโยค
-[CHALLENGE]
-ความท้าทายและบทเรียน 3-4 ประโยค
-[FUTURE]
-อนาคต คุณจะต้องเจอ 3-4 ประโยค
-ห้ามมีข้อความนอก tag ห้ามใช้ markdown` }]
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({
+        service:'western',
+        model:'claude-sonnet-4-6',
+        max_tokens:4000,
+        system:'คุณคือนักโหราศาสตร์ตะวันตกผู้เชี่ยวชาญ วิเคราะห์ดวงชะตาเป็นภาษาไทย เรียกผู้ถามว่า "คุณ" ต้องใช้ tag [GREETING][IDENTITY][MIND][LOVE][CAREER][MONEY][LUCK][CHALLENGE][FUTURE] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย ชื่อราศีและดาวให้ใช้ภาษาอังกฤษ เขียนให้จบสมบูรณ์',
+        messages:[{role:'user',content:`natal chart:\n${planetDesc}\n${ascDesc}\n\nตอบโดยใช้ tag นำหน้าแต่ละส่วน:\n[GREETING]\nทักทายคุณ 1-2 ประโยค\n[IDENTITY]\nตัวตนและบุคลิกภาพ 3-4 ประโยค\n[MIND]\nจิตใจและอารมณ์ 3-4 ประโยค\n[LOVE]\nความรักและความสัมพันธ์ 3-4 ประโยค\n[CAREER]\nการงานและเป้าหมายชีวิต 3-4 ประโยค\n[MONEY]\nการเงินและทรัพย์สิน 3-4 ประโยค\n[LUCK]\nโชคและการเติบโต 3-4 ประโยค\n[CHALLENGE]\nความท้าทายและบทเรียน 3-4 ประโยค\n[FUTURE]\nอนาคต คุณจะต้องเจอ 3-4 ประโยค\nห้ามมีข้อความนอก tag ห้ามใช้ markdown`}]
       })
     });
-
-    const newBalance = res.headers.get('X-New-Coin-Balance');
-    if (newBalance != null) updateCoinUI(parseInt(newBalance));
-
-    if (!res.ok) {
-      const err = await res.json().catch(()=>({}));
-      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
-      else alert('เกิดข้อผิดพลาดค่ะ');
-      btn.disabled = false; btn.textContent = '🌟 วิเคราะห์ดวงชะตา'; return;
-    }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
-    Object.values(ASTRO_IDS).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      fullText += decoder.decode(value, { stream: true });
-      updateSections(fullText);
-    }
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){const err=await res.json().catch(()=>({}));if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');else alert('เกิดข้อผิดพลาดค่ะ');btn.disabled=false;btn.textContent='🌟 วิเคราะห์ดวงชะตา';return;}
+    const reader=res.body.getReader(),decoder=new TextDecoder();
+    let fullText='';
+    Object.values(ASTRO_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+    while(true){const{done,value}=await reader.read();if(done)break;fullText+=decoder.decode(value,{stream:true});updateSections(fullText);}
     updateSections(fullText);
-
-    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'โหราศาสตร์ตะวันตก', result: fullText, createdAt: serverTimestamp()
-    });
-
-    lastFullText = fullText;
-    document.getElementById('followupBox').style.display = 'block';
-
-  } catch(e) {
-    console.error(e);
-    document.getElementById('secFuture').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
-  }
-
-  btn.disabled = false; btn.textContent = '🌟 วิเคราะห์ดวงชะตา';
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{type:'โหราศาสตร์ตะวันตก',result:fullText,createdAt:serverTimestamp()});
+    lastFullText=fullText;
+    document.getElementById('followupBox').style.display='block';
+  }catch(e){console.error(e);document.getElementById('secFuture').textContent='เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';}
+  btn.disabled=false;btn.textContent='🌟 วิเคราะห์ดวงชะตา';
 };
 
-window.askFollowup = async function() {
-  if (!currentUser) return;
-  const input = document.getElementById('followupInput');
-  const question = input.value.trim();
-  if (!question) { alert('กรุณาพิมพ์คำถามก่อนค่ะ'); return; }
-
-  const followupBtn = document.getElementById('followupBtn');
-  const resultDiv = document.getElementById('followupResult');
-  followupBtn.disabled = true;
-
-  const time = Date.now();
-  resultDiv.innerHTML += `<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
-  const answerDiv = document.getElementById('ans_' + time);
-
-  try {
-    const idToken = await currentUser.getIdToken();
-    const res = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
-      body: JSON.stringify({
-        service: 'tarot_followup',
-        model: 'claude-sonnet-4-6',
-        max_tokens: 500,
-        messages: [{ role:'user', content:`ผลวิเคราะห์โหราศาสตร์ตะวันตก: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown` }]
-      })
-    });
-
-    const newBalance = res.headers.get('X-New-Coin-Balance');
-    if (newBalance != null) updateCoinUI(parseInt(newBalance));
-    if (!res.ok) { answerDiv.textContent = 'เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ'; followupBtn.disabled = false; return; }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let text = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      text += decoder.decode(value);
-      answerDiv.textContent = text;
-    }
-    answerDiv.scrollIntoView({ behavior:'smooth' });
-  } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
-
-  input.value = ''; followupBtn.disabled = false;
+window.askFollowup=async function(){
+  if(!currentUser)return;
+  const input=document.getElementById('followupInput');
+  const question=input.value.trim();
+  if(!question){alert('กรุณาพิมพ์คำถามก่อนค่ะ');return;}
+  const followupBtn=document.getElementById('followupBtn');
+  const resultDiv=document.getElementById('followupResult');
+  followupBtn.disabled=true;
+  const time=Date.now();
+  resultDiv.innerHTML+=`<hr class="followup-divider"><div class="followup-q">❓ ${question}</div><div id="ans_${time}"></div>`;
+  const answerDiv=document.getElementById('ans_'+time);
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},body:JSON.stringify({service:'tarot_followup',model:'claude-sonnet-4-6',max_tokens:500,messages:[{role:'user',content:'ผลวิเคราะห์โหราศาสตร์ตะวันตก: '+lastFullText+'\nคำถาม: '+question+'\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณ" ห้ามใช้ markdown'}]})});
+    const nb=res.headers.get('X-New-Coin-Balance');if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){answerDiv.textContent='เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ';followupBtn.disabled=false;return;}
+    const reader=res.body.getReader(),decoder=new TextDecoder();let text='';
+    while(true){const{done,value}=await reader.read();if(done)break;text+=decoder.decode(value);answerDiv.textContent=text;}
+    answerDiv.scrollIntoView({behavior:'smooth'});
+  }catch(e){answerDiv.textContent='เกิดข้อผิดพลาดค่ะ';}
+  input.value='';followupBtn.disabled=false;
 };
 </script>
 </body>
