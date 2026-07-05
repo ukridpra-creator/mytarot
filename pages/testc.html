@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .chest { cursor: pointer; transition: transform 0.3s; }
+        .chest:hover { transform: scale(1.05); }
+        .shake { animation: shake 0.5s infinite; }
+        @keyframes shake { 0%, 100% {transform: rotate(0deg);} 25% {transform: rotate(5deg);} 75% {transform: rotate(-5deg);} }
+    </style>
+</head>
+<body class="bg-[#0a0512] min-h-screen flex flex-col items-center justify-center text-white">
+
+    <h2 class="text-amber-400 text-sm tracking-widest uppercase mb-8">ไขหีบสมบัติชะตา</h2>
+
+    <!-- หีบสมบัติ -->
+    <div id="chest-container" class="chest text-8xl mb-8" onclick="openChest()">
+        <span id="chest-icon">🗃️</span>
+    </div>
+
+    <!-- ช่องกรอกตัวเลข -->
+    <div class="bg-white/5 p-4 rounded-xl border border-amber-500/30">
+        <input type="number" id="code" placeholder="ใส่รหัสปริศนา 4 หลัก" class="bg-transparent border-b border-amber-500 text-center outline-none w-40 text-amber-100">
+    </div>
+
+    <script>
+        function openChest() {
+            const chest = document.getElementById('chest-icon');
+            const code = document.getElementById('code').value;
+
+            if (code === "1986") { // รหัสสมมติ
+                chest.innerText = "✨💎✨";
+                chest.classList.add('shake');
+                setTimeout(() => alert("ยินดีด้วยค๊า! คุณพี่ได้รับเหรียญชะตา 50 เหรียญ!"), 500);
+            } else {
+                alert("รหัสไม่ถูกต้อง... ลองดูโจทย์ปริศนาอีกรอบนะค๊าพี่มิกกี้!");
+            }
+        }
+    </script>
+</body>
+</html>
