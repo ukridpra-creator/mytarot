@@ -77,6 +77,7 @@ const SERVICE_COSTS = {
   "kuigao": TIER.T19,
   "graphology": TIER.T39,
   "cartomancy": TIER.T19,
+  "synastry_read": TIER.FREE,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
