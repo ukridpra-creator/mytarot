@@ -71,6 +71,8 @@ const SERVICE_COSTS = {
   "soul_aura": TIER.T19,
   "biorhythm": TIER.T10,
   "kabbalah": TIER.T19,
+  "destiny":   TIER.T79,
+  "destiny-2": TIER.T79,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
