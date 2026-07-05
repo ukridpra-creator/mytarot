@@ -70,6 +70,7 @@ const SERVICE_COSTS = {
   "thaksa": TIER.T19,
   "soul_aura": TIER.T19,
   "biorhythm": TIER.T10,
+  "kabbalah": TIER.T19,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
