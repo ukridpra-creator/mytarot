@@ -13,93 +13,57 @@
     .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
     .page-title { font-size:18px; font-weight:700; color:white; }
     .page-content { padding:20px 20px 40px; }
-
     .hero { text-align:center; padding:8px 0 20px; }
     .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
     .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
-
     .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
     .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
     .date-row { display:flex; gap:8px; }
     .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
     .sel option { background:#1a1535; }
-
     .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
     .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
     .coin-hint { font-size:11px; color:var(--dim); }
-
     .btn-read { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#a855f7,#6366f1); }
     .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
-
-    /* ── AURA DISPLAY ── */
     .result-box { display:none; }
     .result-box.show { display:block; }
-
     .aura-stage { text-align:center; padding:32px 0 24px; position:relative; }
-
-    /* BG GLOW */
     .aura-bg { position:absolute; inset:-40px; border-radius:50%; filter:blur(60px); opacity:0; transition:opacity 1s; pointer-events:none; }
     .aura-bg.show { opacity:0.35; animation:aurapulse 4s ease-in-out infinite; }
-    @keyframes aurapulse {
-      0%,100%{transform:scale(1);opacity:0.3;}
-      50%{transform:scale(1.15);opacity:0.5;}
-    }
-
-    /* MAIN CIRCLE */
+    @keyframes aurapulse { 0%,100%{transform:scale(1);opacity:0.3;} 50%{transform:scale(1.15);opacity:0.5;} }
     .aura-circle-wrap { position:relative; width:200px; height:200px; margin:0 auto 20px; }
-
     .aura-ring { position:absolute; inset:0; border-radius:50%; opacity:0.25; }
     .aura-ring-1 { animation:spin1 8s linear infinite; }
     .aura-ring-2 { animation:spin2 6s linear infinite; inset:12px; opacity:0.2; }
     .aura-ring-3 { animation:spin1 10s linear infinite reverse; inset:24px; opacity:0.15; }
     @keyframes spin1 { to{transform:rotate(360deg);} }
     @keyframes spin2 { to{transform:rotate(-360deg);} }
-
-    /* SPIRAL */
     .aura-spiral { position:absolute; inset:0; border-radius:50%; overflow:hidden; }
     .aura-spiral canvas { width:100%; height:100%; }
-
-    /* CORE */
     .aura-core { position:absolute; inset:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:36px; backdrop-filter:blur(8px); animation:corepulse 2.5s ease-in-out infinite; }
-    @keyframes corepulse {
-      0%,100%{transform:scale(1);}
-      50%{transform:scale(1.08);}
-    }
-
-    /* PARTICLES */
+    @keyframes corepulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
     .particle { position:absolute; width:4px; height:4px; border-radius:50%; opacity:0; animation:particlefloat 3s ease-in-out infinite; }
-    @keyframes particlefloat {
-      0%{opacity:0;transform:translateY(0) scale(0.5);}
-      50%{opacity:0.8;transform:translateY(-30px) scale(1);}
-      100%{opacity:0;transform:translateY(-60px) scale(0.5);}
-    }
-
-    /* AURA NAME */
+    @keyframes particlefloat { 0%{opacity:0;transform:translateY(0) scale(0.5);} 50%{opacity:0.8;transform:translateY(-30px) scale(1);} 100%{opacity:0;transform:translateY(-60px) scale(0.5);} }
     .aura-name { font-size:18px; font-weight:800; color:white; margin-bottom:6px; }
     .aura-subtitle { font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:20px; }
-
-    /* SECTIONS */
     .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
     .result-section h3 { font-size:14px; font-weight:700; margin-bottom:8px; }
     .result-section p { font-size:13px; line-height:1.9; color:rgba(255,255,255,0.8); }
-
     .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
     .info-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; }
     .info-label { font-size:10px; color:var(--dim); margin-bottom:4px; }
     .info-value { font-size:13px; font-weight:700; color:white; }
-
     .cursor-blink { display:inline-block; width:2px; height:13px; margin-left:1px; animation:blink .7s infinite; vertical-align:middle; }
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
     .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
-
     .login-required-overlay.show { display:flex !important; }
   </style>
 </head>
 <body>
 
 <div class="page-header">
- <a href="other-astro.html" class="back-btn">←</a>
+  <a href="other-astro.html" class="back-btn">←</a>
   <div class="page-title">🔮 Soul Aura Color</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
@@ -137,7 +101,7 @@
 <div class="page-content">
   <div class="hero">
     <div style="margin-bottom:12px"><img src="../images/mascot-aura.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
-<div class="hero-title">🔮 Soul Aura Color</div>
+    <div class="hero-title">🔮 Soul Aura Color</div>
     <div class="hero-desc">ค้นพบสีออร่าดวงจิตของคุณ<br>ผ่านศาสตร์พลังงานจิตวิญญาณค่ะ</div>
   </div>
 
@@ -156,20 +120,15 @@
 
   <button class="btn-read" id="readBtn" onclick="startReading()">🔮 เปิดเผยออร่าของฉันเลยค่ะ</button>
 
-  <!-- RESULT -->
   <div class="result-box" id="resultBox">
     <div class="aura-stage" id="auraStage">
       <div class="aura-bg" id="auraBg"></div>
       <div class="aura-circle-wrap" id="auraCircleWrap">
-        <!-- rings -->
         <div class="aura-ring aura-ring-1" id="ring1"></div>
         <div class="aura-ring aura-ring-2" id="ring2"></div>
         <div class="aura-ring aura-ring-3" id="ring3"></div>
-        <!-- spiral canvas -->
         <div class="aura-spiral"><canvas id="spiralCanvas" width="200" height="200"></canvas></div>
-        <!-- core -->
         <div class="aura-core" id="auraCore"></div>
-        <!-- particles -->
         <div id="particles"></div>
       </div>
       <div class="aura-name" id="auraName"></div>
@@ -194,6 +153,14 @@
     <div class="result-section" id="secCareer" style="border-color:#60a5fa;background:rgba(96,165,250,0.08)">
       <h3 style="color:#60a5fa">✦ การงานและพลังงาน</h3>
       <p id="textCareer"></p>
+    </div>
+    <div class="result-section" id="secMoney" style="border-color:#10b981;background:rgba(16,185,129,0.08)">
+      <h3 style="color:#10b981">✦ การเงินและทรัพย์สิน</h3>
+      <p id="textMoney"></p>
+    </div>
+    <div class="result-section" id="secWarning" style="border-color:#ef4444;background:rgba(239,68,68,0.08)">
+      <h3 style="color:#ef4444">✦ สิ่งที่ต้องระวัง</h3>
+      <p id="textWarning"></p>
     </div>
     <div class="result-section" id="secAdvice" style="border-color:#f59e0b;background:rgba(245,158,11,0.08)">
       <h3 style="color:#f59e0b">✦ คำแนะนำจากจักรวาล</h3>
@@ -250,7 +217,6 @@ onAuthStateChanged(auth,async user=>{
   } else {updateCoinUI('—');setAvatarDisplay('');}
 });
 
-// DROPDOWNS
 document.addEventListener('DOMContentLoaded',function(){
   var dayEl=document.getElementById('inDay');
   for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
@@ -259,7 +225,6 @@ document.addEventListener('DOMContentLoaded',function(){
   months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
 });
 
-// ── AURA DATA ──
 const AURAS = [
   {
     name:'Ruby Red — ทับทิมเพลิง', subtitle:'FIRE SOUL', emoji:'🔴',
@@ -268,6 +233,8 @@ const AURAS = [
     personality:'คุณคือดวงจิตแห่งผู้นำที่เกิดมาพร้อมพลังงานไฟลุกโชนค่ะ มีความทะเยอทะยานสูง กล้าหาญ และตรงไปตรงมาเป็นที่หนึ่งค่ะ คนรอบข้างสัมผัสได้ถึงความน่าเกรงขามและไฟในตัวคุณอยู่เสมอค่ะ เมื่อมุ่งมั่นทำอะไรแล้วไม่มีอะไรหยุดคุณได้ค่ะ',
     love:'คุณรักลึกและเร่าร้อนมากค่ะ เมื่อรักใครรักจริงและไม่ยอมทนกับการทรยศหักหลังค่ะ ต้องการคู่ที่แข็งแกร่งและมีพลังงานเทียบเท่ากันค่ะ ความสัมพันธ์ที่ดีที่สุดของคุณคือที่ที่มีการต่อสู้และเติบโตด้วยกันค่ะ',
     career:'เหมาะกับงานที่มีความท้าทายและต้องการความเป็นผู้นำค่ะ ธุรกิจ การเมือง กีฬา หรืองานที่ต้องการความกล้าตัดสินใจค่ะ พลังงานไฟของคุณจะเผาทุกอุปสรรคให้กลายเป็นขี้เถ้าค่ะ',
+    money:'ออร่าแดงดึงดูดเงินและโอกาสได้ดีมากค่ะ แต่มักใช้จ่ายตามอารมณ์และกล้าเสี่ยงโดยไม่คิดให้รอบคอบค่ะ ควรวางแผนการเงินระยะยาวและมีเงินสำรองฉุกเฉินไว้เสมอค่ะ ลงทุนในสิ่งที่ตัวเองถนัดจะได้ผลดีที่สุดค่ะ',
+    warning:'ระวังอารมณ์ร้อนที่ทำให้ตัดสินใจผิดพลาดค่ะ โดยเฉพาะเรื่องงาน ความสัมพันธ์ และการเงินค่ะ ระวังการเผาผลาญพลังงานมากเกินไปจนหมดแรงกลางทางค่ะ และระวังคนที่ใช้ประโยชน์จากความเด็ดขาดและความเป็นผู้นำของคุณค่ะ',
     advice:'จงใช้ไฟในตัวคุณอย่างชาญฉลาดค่ะ ความโกรธและความหุนหันพลันแล่นอาจเผาทั้งตัวเองและคนที่รักได้ค่ะ ฝึกใจเย็นและฟังคนอื่นบ้างนะคะ'
   },
   {
@@ -277,6 +244,8 @@ const AURAS = [
     personality:'ดวงจิตของคุณเต็มไปด้วยความสร้างสรรค์และพลังงานบวกที่แผ่ออกมาสู่คนรอบข้างค่ะ คุณมีเสน่ห์ทางสังคม ปรับตัวเข้ากับสิ่งใหม่ได้ดีมากค่ะ รักอิสระและมีความสุขง่ายค่ะ แต่แอบเบื่อง่ายถ้าต้องอยู่กับสิ่งซ้ำซากค่ะ',
     love:'คุณรักสนุกและมีชีวิตชีวาในความสัมพันธ์ค่ะ ต้องการคู่ที่ตามทันความคิดสร้างสรรค์และไม่จำกัดอิสรภาพค่ะ เมื่อรักแล้วจะทุ่มเทสร้างช่วงเวลาประทับใจได้อย่างไม่มีใครเทียมค่ะ',
     career:'เหมาะกับงานออกแบบ ศิลปะ การตลาด การสื่อสาร หรืองาน startup ค่ะ ความคิดสร้างสรรค์คือทรัพย์สินที่ยิ่งใหญ่ที่สุดของคุณค่ะ',
+    money:'คุณมีพรสวรรค์ในการหาเงินจากช่องทางใหม่ๆ และงานสร้างสรรค์ค่ะ แต่รายได้มักไม่สม่ำเสมอเพราะชอบเปลี่ยนแนวทางบ่อยค่ะ ควรสร้างรายได้ passive income ควบคู่ไปด้วยค่ะ และวางแผนเก็บเงินในช่วงที่รายได้ดีค่ะ',
+    warning:'ระวังการเริ่มต้นสิ่งใหม่โดยไม่จบสิ่งเก่าค่ะ ความไม่อดทนอาจทำให้พลาดโอกาสดีที่ต้องการเวลาบ่มเพาะค่ะ ระวังการตัดสินใจใหญ่ตามอารมณ์ชั่วครู่ โดยเฉพาะเรื่องการงานและการลงทุนค่ะ',
     advice:'จงเรียนรู้ที่จะอดทนกับสิ่งที่ต้องใช้เวลาค่ะ ไม่ใช่ทุกอย่างจะสำเร็จในชั่วข้ามคืน ความสม่ำเสมอจะพาคุณไปถึงฝันได้ค่ะ'
   },
   {
@@ -286,6 +255,8 @@ const AURAS = [
     personality:'คุณคือดวงจิตแห่งปัญญาและไหวพริบปฏิภาณค่ะ มีตรรกะเฉียบคม ชอบเรียนรู้ไม่หยุดค่ะ มีอารมณ์ขันและเป็นศูนย์รวมเสียงหัวเราะให้คนรอบข้างค่ะ เป็นที่ปรึกษาที่คนเชื่อถือมากค่ะ',
     love:'คุณต้องการคู่ที่คุยกันรู้เรื่องและท้าทายสติปัญญากันได้ค่ะ ความสัมพันธ์ที่ดีสำหรับคุณต้องมีทั้งความสนุกและความลึกค่ะ อย่าละเลยความรู้สึกเพื่อเหตุผลมากเกินไปนะคะ',
     career:'เหมาะกับงานวิชาการ การสอน การเขียน นักข่าว หรืองานที่ต้องการการวิเคราะห์ค่ะ ปัญญาของคุณจะเปิดประตูที่คนอื่นเข้าไม่ถึงค่ะ',
+    money:'คุณเก่งในการวิเคราะห์และวางแผนการเงินอย่างชาญฉลาดค่ะ มีแนวโน้มที่ดีในการลงทุนเพราะคิดรอบคอบค่ะ แต่ระวังการวิเคราะห์มากเกินไปจนไม่กล้าลงมือทำค่ะ บางครั้งต้องกล้าตัดสินใจแม้ข้อมูลยังไม่ครบค่ะ',
+    warning:'ระวังการคิดมากและวิตกกังวลจนนอนไม่หลับค่ะ สมองที่ทำงานตลอดเวลาอาจทำให้เครียดสะสมโดยไม่รู้ตัวค่ะ ระวังการพูดตรงเกินไปจนทำร้ายความรู้สึกคนอื่นโดยไม่ตั้งใจค่ะ',
     advice:'จงเชื่อมั่นในสัญชาตญาณของตัวเองบ้างนะคะ ไม่ใช่ทุกอย่างต้องมีเหตุผลรองรับค่ะ บางครั้งหัวใจรู้ดีกว่าสมองค่ะ'
   },
   {
@@ -295,6 +266,8 @@ const AURAS = [
     personality:'ดวงจิตของคุณคือผู้เยียวยาค่ะ มีพลังงานสงบนิ่งที่ทำให้คนรอบข้างรู้สึกปลอดภัยและผ่อนคลายค่ะ รักธรรมชาติ อ่อนโยน มีเมตตาสูงมากค่ะ เก็บความลับเก่งและเป็นเพื่อนที่ไว้วางใจได้ค่ะ',
     love:'คุณรักอย่างจริงใจและลึกซึ้งค่ะ ดูแลคนที่รักได้อย่างดีเยี่ยมค่ะ แต่ต้องระวังการเสียสละจนลืมดูแลตัวเองนะคะ คู่ที่เหมาะสมคือคนที่เข้าใจและรู้คุณค่าของความอ่อนโยนของคุณค่ะ',
     career:'เหมาะกับงานแพทย์ พยาบาล นักจิตวิทยา งานสังคมสงเคราะห์ หรืองานที่เกี่ยวกับธรรมชาติค่ะ การได้ช่วยเหลือผู้อื่นคือพลังงานที่เติมเต็มดวงจิตคุณค่ะ',
+    money:'คุณไม่ได้ให้ความสำคัญกับเงินเป็นอันดับแรกค่ะ แต่เงินมักไหลมาหาคุณผ่านการทำดีและช่วยเหลือผู้อื่นค่ะ ระวังการให้ยืมเงินหรือช่วยเหลือทางการเงินจนตัวเองเดือดร้อนค่ะ ควรเรียนรู้การบอกปฏิเสธเป็นค่ะ',
+    warning:'ระวังการแบกรับปัญหาของคนอื่นมากเกินไปจนตัวเองหมดแรงค่ะ พลังงานผู้เยียวยาอาจถูกดูดซับโดยคนที่มีพลังงานลบค่ะ ระวังการถูกเอาเปรียบเพราะความใจดีและการช่วยเหลือโดยไม่มีขีดจำกัดค่ะ',
     advice:'จงเรียนรู้ที่จะปฏิเสธบ้างนะคะ คุณไม่สามารถดูแลคนอื่นได้ถ้าตัวเองหมดแรงค่ะ รักตัวเองก่อนแล้วค่อยให้คนอื่นค่ะ'
   },
   {
@@ -304,6 +277,8 @@ const AURAS = [
     personality:'ดวงจิตของคุณคือสัญลักษณ์แห่งความสงบและการสื่อสารค่ะ มีความประนีประนอมสูง พูดจาโน้มน้าวใจเก่งค่ะ ไม่ชอบความขัดแย้งและมีความซื่อสัตย์ต่อความรู้สึกของผู้อื่นสูงมากค่ะ',
     love:'คุณรักอย่างสุขุมและมั่นคงค่ะ ต้องการความสัมพันธ์ที่มีความสงบและการสื่อสารที่ดีค่ะ เป็นคู่ที่รับฟังและเข้าใจได้ดีเยี่ยมค่ะ แต่ต้องกล้าบอกความต้องการของตัวเองบ้างนะคะ',
     career:'เหมาะกับงานการทูต นักพูด ครู นักแนะแนว หรืองาน HR ค่ะ ความสามารถในการสื่อสารของคุณคือพลังงานพิเศษที่หาได้ยากมากค่ะ',
+    money:'คุณมีความสามารถในการเจรจาต่อรองที่ดีมากซึ่งช่วยเรื่องการเงินได้ค่ะ แต่มักยอมเสียประโยชน์ตัวเองเพื่อรักษาความสัมพันธ์ค่ะ ควรเรียนรู้ที่จะยืนหยัดในสิทธิ์ทางการเงินของตัวเองมากขึ้นค่ะ',
+    warning:'ระวังการเก็บกดความรู้สึกนานเกินไปจนระเบิดออกมาในที่ไม่เหมาะสมค่ะ การหลีกเลี่ยงความขัดแย้งทุกครั้งอาจทำให้ปัญหาบานปลายค่ะ ระวังการถูกมองว่าไม่มีจุดยืนเพราะประนีประนอมมากเกินไปค่ะ',
     advice:'จงกล้าแสดงออกถึงความต้องการของตัวเองมากขึ้นนะคะ การประนีประนอมเกินไปอาจทำให้คุณเสียโอกาสดีๆ ในชีวิตได้ค่ะ'
   },
   {
@@ -313,6 +288,8 @@ const AURAS = [
     personality:'คุณมีดวงจิตที่มีพลังสัญชาตญาณสูงมากค่ะ มีซิกส์เซนส์เฉียบคม อ่านใจคนเก่งและมองเห็นธาตุแท้ของผู้คนได้รวดเร็วค่ะ ลึกลับน่าค้นหา ชอบคิดทบทวนและมีความเป็นผู้ใหญ่เกินอายุค่ะ',
     love:'คุณต้องการความสัมพันธ์ที่ลึกซึ้งทางจิตวิญญาณค่ะ ไม่พอใจกับความรักที่ตื้นเขินค่ะ คู่ที่เหมาะสมต้องเข้าใจโลกภายในของคุณและไม่พยายามเปลี่ยนแปลงคุณค่ะ',
     career:'เหมาะกับงานวิจัย จิตวิทยา ปรัชญา ศิลปะลึกซึ้ง หรืองานที่ต้องการวิสัยทัศน์ค่ะ สัญชาตญาณของคุณคือเครื่องมือที่ทรงพลังที่สุดค่ะ',
+    money:'คุณมีสัญชาตญาณที่ดีในการจับทิศทางตลาดและโอกาสที่คนอื่นมองข้ามค่ะ แต่มักไม่ค่อยสนใจเรื่องเงินและปล่อยให้โอกาสผ่านไปค่ะ ควรหัดให้ความสำคัญกับการวางแผนการเงินมากขึ้นและเชื่อสัญชาตญาณในการลงทุนค่ะ',
+    warning:'ระวังการหมกมุ่นอยู่กับโลกภายในจนละเลยความเป็นจริงค่ะ การโดดเดี่ยวตัวเองมากเกินไปอาจทำให้เสียโอกาสสำคัญในชีวิตค่ะ ระวังการดูดซับพลังงานลบจากคนรอบข้างเพราะออร่าคุณรับพลังงานได้ง่ายมากค่ะ',
     advice:'จงเปิดใจให้คนอื่นเข้ามาในชีวิตบ้างนะคะ ความลึกลับที่มากเกินไปอาจทำให้คนที่รักคุณรู้สึกห่างเหินได้ค่ะ'
   },
   {
@@ -322,6 +299,8 @@ const AURAS = [
     personality:'ดวงจิตของคุณผูกพันกับจิตวิญญาณและโลกแห่งศิลปะขั้นสูงค่ะ มีความฝันยิ่งใหญ่ จินตนาการล้ำลึก แฝงไปด้วยเสน่ห์ชวนลุ่มหลงค่ะ คาดเดาใจได้ยากแต่มีพลังดึงดูดสิ่งศักดิ์สิทธิ์ให้คุ้มครองค่ะ',
     love:'คุณรักอย่างโรแมนติกและจิตวิญญาณค่ะ ต้องการความสัมพันธ์ที่มีการเชื่อมต่อลึกกว่าแค่ร่างกายค่ะ เมื่อรักแล้วจะทุ่มเทอย่างสมบูรณ์และสร้างโลกสวยงามให้คนที่รักค่ะ',
     career:'เหมาะกับงานศิลปะ ดนตรี การแสดง งานจิตวิญญาณ หรืองานที่ต้องการความคิดสร้างสรรค์สูงค่ะ พลังงานม่วงของคุณดึงดูดโอกาสพิเศษที่คนอื่นไม่ได้รับค่ะ',
+    money:'คุณมีพลังดึงดูดความมั่งคั่งผ่านพรสวรรค์และความคิดสร้างสรรค์ค่ะ แต่มักไม่ใส่ใจเรื่องการบริหารเงินและใช้จ่ายตามอารมณ์ค่ะ ควรมีคนช่วยดูแลด้านการเงินหรือเรียนรู้การวางแผนเงินให้มากขึ้นค่ะ',
+    warning:'ระวังการหลีกหนีความเป็นจริงและจมอยู่กับโลกแห่งจินตนาการค่ะ พลังงานม่วงดึงดูดทั้งสิ่งดีและสิ่งที่ไม่ดี ควรระวังการเข้าหาศาสตร์ลึกลับโดยไม่มีผู้นำทางที่เหมาะสมค่ะ',
     advice:'จงลงมาอยู่กับความเป็นจริงบ้างนะคะ ความฝันที่สวยงามต้องอาศัยการลงมือทำด้วยค่ะ ฝันให้ใหญ่แต่ก็ต้องเดินทีละก้าวค่ะ'
   },
   {
@@ -331,6 +310,8 @@ const AURAS = [
     personality:'คุณคือดวงจิตแห่งความรักบริสุทธิ์ค่ะ อ่อนหวาน โรแมนติก ใส่ใจรายละเอียดและดูแลผู้อื่นได้ดีเป็นที่หนึ่งค่ะ มีเสน่ห์เมตตามหานิยมสูงมากและได้รับความเอ็นดูจากผู้ใหญ่เสมอค่ะ',
     love:'คุณเป็นคนที่รักอย่างสุดหัวใจค่ะ ทุ่มเทและเสียสละเพื่อคนที่รักได้ไม่มีขีดจำกัดค่ะ แต่ต้องระวังการถูกเอาเปรียบจากคนที่ไม่ดีด้วยนะคะ คู่ที่เหมาะสมจะรู้คุณค่าของความรักของคุณค่ะ',
     career:'เหมาะกับงานที่เกี่ยวกับการดูแลและสร้างแรงบันดาลใจค่ะ ครู นักออกแบบ นักสื่อสาร หรืองานที่สร้างความสุขให้ผู้อื่นค่ะ',
+    money:'เสน่ห์มหานิยมของคุณช่วยดึงดูดโอกาสและความช่วยเหลือทางการเงินได้ดีค่ะ แต่ใจอ่อนและมักให้เงินคนอื่นโดยไม่คิดถึงตัวเองค่ะ ควรตั้งขอบเขตทางการเงินให้ชัดเจนและเรียนรู้ว่าการรักตัวเองไม่ใช่ความเห็นแก่ตัวค่ะ',
+    warning:'ระวังการถูกเอาเปรียบเพราะความใจดีและความรักที่ไม่มีเงื่อนไขค่ะ บางคนอาจใช้ประโยชน์จากเมตตาของคุณค่ะ ระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลสุขภาพกายและใจของตัวเองค่ะ',
     advice:'จงรู้จักรักตัวเองก่อนนะคะ ไม่ใช่ทุกคนที่รับความรักของคุณจะสมควรได้รับมันค่ะ เรียนรู้ที่จะเลือกให้รัก ไม่ใช่แค่รักทุกคนค่ะ'
   },
   {
@@ -340,6 +321,8 @@ const AURAS = [
     personality:'คุณคือดวงจิตระดับสูงที่มีบุญบารมีสะสมมามากค่ะ มีพลังดึงดูดความมั่งคั่งและโชคลาภค่ะ ดวงแข็งและอุปสรรคทำอะไรคุณไม่ได้นานค่ะ มักได้รับโชคลาภลอยแบบไม่คาดฝันเสมอค่ะ',
     love:'คุณดึงดูดความรักได้อย่างเป็นธรรมชาติค่ะ มีทางเลือกมากมายในชีวิตรักค่ะ แต่ต้องระวังการเลือกคนที่รักในคุณจริงๆ ไม่ใช่แค่รักในสิ่งที่คุณมีนะคะ',
     career:'เหมาะกับงานธุรกิจ การลงทุน ผู้บริหาร หรืองานที่สร้างความมั่งคั่งค่ะ พลังงานทองของคุณดึงดูดโอกาสทางธุรกิจที่ยอดเยี่ยมตลอดเวลาค่ะ',
+    money:'ออร่าทองเป็นออร่าที่ดึงดูดความมั่งคั่งได้ดีที่สุดค่ะ มีโชคเรื่องการเงินและมักได้รับโอกาสที่ดีกว่าคนอื่นค่ะ แต่ควรระวังการใช้จ่ายอย่างฟุ่มเฟือยและการให้เงินคนอื่นโดยไม่ระมัดระวังค่ะ ความมั่งคั่งจะยั่งยืนถ้าใช้อย่างชาญฉลาดค่ะ',
+    warning:'ระวังการอวดโอ้และแสดงความมั่งคั่งมากเกินไปจนดึงดูดคนที่มาหาผลประโยชน์ค่ะ ความสำเร็จที่มากเกินไปอาจทำให้หลงลืมรากเหง้าและคนที่รักได้ค่ะ ระวังการประมาทเพราะดวงดีจนลืมทำงานหนักค่ะ',
     advice:'จงแบ่งปันความมั่งคั่งและโชคดีของคุณกับผู้อื่นบ้างนะคะ ยิ่งให้ยิ่งได้รับกลับมามากกว่าเดิมเสมอค่ะ'
   },
   {
@@ -349,6 +332,8 @@ const AURAS = [
     personality:'คุณมีดวงจิตที่ผูกพันกับพระจันทร์และพลังงานกลางคืนค่ะ มีความอ่อนไหวสูง รับรู้พลังงานรอบข้างได้เป็นธรรมชาติค่ะ มีความฝันที่มีความหมายและสัญชาตญาณที่แม่นยำมากค่ะ',
     love:'คุณรักอย่างลึกซึ้งและเป็นห่วงเป็นใยค่ะ มีความสามารถในการรับรู้ความรู้สึกของคนที่รักได้อย่างน่าประหลาดค่ะ ต้องการคู่ที่เข้าใจความอ่อนไหวและไม่ตัดสินคุณค่ะ',
     career:'เหมาะกับงานที่ต้องใช้สัญชาตญาณและความคิดสร้างสรรค์ค่ะ นักเขียน ศิลปิน นักจิตวิทยา หรืองานที่เกี่ยวกับจิตวิญญาณค่ะ',
+    money:'คุณมีวงจรการเงินที่ขึ้นๆ ลงๆ ตามพลังงานดวงจันทร์ค่ะ ช่วงที่ดีจะดีมาก แต่ช่วงที่ไม่ดีต้องระวังค่ะ ควรเก็บเงินสำรองไว้มากๆ ในช่วงดีค่ะ และหลีกเลี่ยงการตัดสินใจทางการเงินใหญ่ในช่วงที่อารมณ์แปรปรวนค่ะ',
+    warning:'ระวังความอ่อนไหวทางอารมณ์ที่มากเกินไปจนรบกวนการใช้ชีวิตประจำวันค่ะ พลังจันทร์ทำให้อารมณ์แปรปรวนได้ง่ายค่ะ ระวังการดูดซับพลังงานลบจากคนรอบข้างเพราะคุณรับพลังงานได้ไวมากค่ะ',
     advice:'จงไว้ใจสัญชาตญาณของตัวเองมากขึ้นนะคะ พลังงานเงินของคุณนำทางได้แม่นยำกว่าที่คิดค่ะ อย่าปล่อยให้ความสงสัยบดบังความรู้สึกภายในค่ะ'
   },
   {
@@ -358,6 +343,8 @@ const AURAS = [
     personality:'คุณมีดวงจิตที่บริสุทธิ์และส่องสว่างค่ะ เป็นคนซื่อสัตย์จริงใจสูงสุดค่ะ มีความคิดที่โปร่งใสและเป็นกลางค่ะ คนรอบข้างรู้สึกได้ถึงความบริสุทธิ์ของพลังงานคุณค่ะ',
     love:'คุณรักอย่างบริสุทธิ์และจริงใจค่ะ ไม่มีเล่ห์เหลี่ยมในความรักค่ะ ต้องการความสัมพันธ์ที่โปร่งใสและไว้วางใจกันได้ค่ะ เมื่อรักแล้วรักตลอดไปค่ะ',
     career:'เหมาะกับงานที่ต้องการความซื่อสัตย์และความยุติธรรมค่ะ ผู้พิพากษา นักกฎหมาย ครู หรืองานที่ต้องการความโปร่งใสค่ะ',
+    money:'ความซื่อสัตย์ของคุณเป็นทรัพย์สินที่มีค่ามากในโลกธุรกิจค่ะ คนอื่นไว้ใจให้คุณดูแลและบริหารจัดการค่ะ แต่ระวังการถูกคนไม่ซื่อสัตย์เอาเปรียบความโปร่งใสของคุณค่ะ ควรเรียนรู้ที่จะตั้งคำถามและตรวจสอบมากขึ้นค่ะ',
+    warning:'ระวังความไร้เดียงสาที่อาจทำให้ถูกหลอกได้ง่ายค่ะ ไม่ใช่ทุกคนที่มีความบริสุทธิ์ใจเหมือนคุณค่ะ ระวังการเชื่อคนง่ายเกินไปโดยเฉพาะเรื่องเงินและธุรกิจค่ะ',
     advice:'จงปกป้องพลังงานบริสุทธิ์ของคุณไว้นะคะ ไม่ใช่ทุกคนที่สมควรได้รับแสงของคุณค่ะ เรียนรู้ที่จะแยกแยะคนที่ดีและไม่ดีออกจากกันค่ะ'
   },
   {
@@ -367,17 +354,17 @@ const AURAS = [
     personality:'คุณมีดวงจิตแห่งความลึกและความเข้มแข็งค่ะ เป็นคนที่มีพลังปกป้องสูงมากค่ะ ลึกลับน่าค้นหา แต่เมื่อเชื่อใจใครแล้วจะเป็นเพื่อนที่ดีที่สุดค่ะ มีพลังงานที่แข็งแกร่งและไม่ยอมแพ้ต่ออะไรค่ะ',
     love:'คุณรักอย่างลึกและซื่อสัตย์ค่ะ แต่ใช้เวลานานในการเปิดใจรับคนค่ะ เมื่อเลือกแล้วจะซื่อสัตย์ตลอดไปค่ะ ต้องการคู่ที่เข้าใจความลึกของคุณและอดทนรอให้คุณเปิดใจได้ค่ะ',
     career:'เหมาะกับงานที่ต้องการความเข้มแข็งและความลึกค่ะ นักวิจัย นักสืบ นักกลยุทธ์ หรืองานที่ต้องการการวิเคราะห์เชิงลึกค่ะ',
+    money:'คุณมีความอดทนและความสามารถในการสะสมความมั่งคั่งในระยะยาวค่ะ ไม่โลภและคิดรอบคอบก่อนใช้เงินค่ะ แต่อาจขาดความกล้าในการลงทุนที่ดีบ้างค่ะ ควรเปิดใจรับโอกาสที่ดีมากขึ้นแม้รู้สึกเสี่ยงค่ะ',
+    warning:'ระวังการเก็บกดอารมณ์และความรู้สึกจนกลายเป็นพลังงานลบสะสมในร่างกายค่ะ การโดดเดี่ยวตัวเองมากเกินไปอาจทำให้เสียสุขภาพจิตค่ะ ระวังการมองโลกในแง่ร้ายจนสร้างอุปสรรคให้ตัวเองโดยไม่รู้ตัวค่ะ',
     advice:'จงเปิดใจให้แสงสว่างเข้ามาบ้างนะคะ ความมืดช่วยให้มองเห็นดวงดาว แต่อย่าลืมว่าแสงอาทิตย์ก็จำเป็นสำหรับการเติบโตค่ะ'
   },
 ];
 
-// ── SPIRAL ANIMATION ──
 let spiralAnim = null;
 function drawSpiral(canvas, colors) {
   const ctx = canvas.getContext('2d');
   const cx = 100, cy = 100;
   let angle = 0;
-
   function frame() {
     ctx.clearRect(0,0,200,200);
     for(let i=0; i<3; i++){
@@ -394,13 +381,11 @@ function drawSpiral(canvas, colors) {
         ctx.fill();
       }
     }
-    // outer glow ring
     const grad = ctx.createRadialGradient(cx,cy,60,cx,cy,100);
     grad.addColorStop(0, colors[0]+'40');
     grad.addColorStop(1, colors[0]+'00');
     ctx.beginPath(); ctx.arc(cx,cy,90,0,Math.PI*2);
     ctx.fillStyle = grad; ctx.fill();
-
     angle += 0.04;
     spiralAnim = requestAnimationFrame(frame);
   }
@@ -425,10 +410,8 @@ async function streamText(el, text, speed) {
 
 window.startReading = async function() {
   if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
-
   const day = parseInt(document.getElementById('inDay').value);
   const month = parseInt(document.getElementById('inMonth').value);
-
   const btn = document.getElementById('readBtn');
   btn.disabled = true; btn.textContent = '⏳ กำลังอ่านออร่า...';
 
@@ -453,27 +436,22 @@ window.startReading = async function() {
   const idx = (day + month) % AURAS.length;
   const aura = AURAS[idx];
 
-  // show result
   document.getElementById('resultBox').classList.add('show');
   setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
 
-  // BG glow
   const bg = document.getElementById('auraBg');
   bg.style.background = `radial-gradient(circle, ${aura.colors[0]}, ${aura.colors[1]})`;
   bg.classList.add('show');
 
-  // rings
   document.getElementById('ring1').style.border = `3px solid ${aura.colors[0]}60`;
   document.getElementById('ring2').style.border = `2px solid ${aura.colors[2]}40`;
   document.getElementById('ring3').style.border = `2px solid ${aura.colors[0]}30`;
 
-  // core
   const core = document.getElementById('auraCore');
   core.style.background = `radial-gradient(circle, ${aura.colors[0]}80, ${aura.colors[1]}60)`;
   core.style.boxShadow = `0 0 30px ${aura.colors[0]}80`;
   core.textContent = aura.emoji;
 
-  // particles
   const pWrap = document.getElementById('particles');
   pWrap.innerHTML = '';
   for(let i=0;i<8;i++){
@@ -487,26 +465,22 @@ window.startReading = async function() {
     pWrap.appendChild(p);
   }
 
-  // spiral
   drawSpiral(document.getElementById('spiralCanvas'), aura.colors);
 
-  // name
   document.getElementById('auraName').textContent = aura.name;
   document.getElementById('auraSubtitle').textContent = aura.subtitle;
-
-  // info grid
   document.getElementById('infoStrength').textContent = aura.strength;
   document.getElementById('infoMatch').textContent = aura.match;
   document.getElementById('infoElement').textContent = aura.element;
   document.getElementById('infoGem').textContent = aura.gem;
 
-  // stream texts
   await streamText(document.getElementById('textPersonality'), aura.personality, 18);
   await streamText(document.getElementById('textLove'), aura.love, 16);
   await streamText(document.getElementById('textCareer'), aura.career, 16);
+  await streamText(document.getElementById('textMoney'), aura.money, 16);
+  await streamText(document.getElementById('textWarning'), aura.warning, 16);
   await streamText(document.getElementById('textAdvice'), aura.advice, 16);
 
-  // save
   try {
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Soul Aura Color',
