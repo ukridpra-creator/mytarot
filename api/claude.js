@@ -19,6 +19,7 @@ const db = getFirestore();
 // ราคากลาง — ใช้แทนตัวเลขตรงๆ ได้เลยค่ะ
 const TIER = {
   FREE: 0,
+  T9:  9,
   T10:  10,
   T19:  19,
   T20:  20,
