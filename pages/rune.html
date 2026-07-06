@@ -25,10 +25,9 @@
     .slot-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.7s ease; }
     .slot-card-inner.flipped { transform: rotateY(180deg); }
     .slot-card-front, .slot-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
-    .slot-card-back { transform: rotateY(0deg); background: rgba(124,58,237,0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; color: rgba(168,85,247,0.3); }
+    .slot-card-back { transform: rotateY(0deg); background: rgba(124,58,237,0.1); display: flex; align-items: center; justify-content: center; }
     .slot-card-front { transform: rotateY(180deg); }
-    .slot-card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .slot-card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slot-card-front img, .slot-card-back img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .slot-label { font-size: 11px; color: var(--purple-light); font-weight: 700; }
     .slot-name { font-size: 10px; color: var(--gold); }
 
@@ -190,7 +189,11 @@
     <div class="slot">
       <div class="slot-card" id="slot0">
         <div class="slot-card-inner" id="slotInner0">
-          <div class="slot-card-back">ᚠ</div>
+          <!-- back: รูปหลังไพ่ -->
+          <div class="slot-card-back">
+            <img src="../images/rune/back.png" alt="rune back">
+          </div>
+          <!-- front: รูปหน้าไพ่ (เปิดตอน acceptReading) -->
           <div class="slot-card-front"><img id="slotImg0" src=""></div>
         </div>
       </div>
@@ -200,7 +203,9 @@
     <div class="slot">
       <div class="slot-card" id="slot1">
         <div class="slot-card-inner" id="slotInner1">
-          <div class="slot-card-back">ᚢ</div>
+          <div class="slot-card-back">
+            <img src="../images/rune/back.png" alt="rune back">
+          </div>
           <div class="slot-card-front"><img id="slotImg1" src=""></div>
         </div>
       </div>
@@ -210,7 +215,9 @@
     <div class="slot">
       <div class="slot-card" id="slot2">
         <div class="slot-card-inner" id="slotInner2">
-          <div class="slot-card-back">ᚦ</div>
+          <div class="slot-card-back">
+            <img src="../images/rune/back.png" alt="rune back">
+          </div>
           <div class="slot-card-front"><img id="slotImg2" src=""></div>
         </div>
       </div>
@@ -331,7 +338,6 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-const BACK = '../images/rune/back.png';
 const RUNES = [
   {id:1, symbol:'ᚠ', name:'Fehu',     nameTh:'เฟฮู',     meaning:'ความมั่งคั่ง ทรัพย์สิน พลังงานใหม่'},
   {id:2, symbol:'ᚢ', name:'Uruz',     nameTh:'อูรุซ',     meaning:'พละกำลัง สุขภาพ ความกล้าหาญ'},
@@ -360,7 +366,7 @@ const RUNES = [
 ];
 
 let shuffled = [];
-let selected = []; // max 3
+let selected = [];
 
 function shuffle() {
   shuffled = [...RUNES].sort(() => Math.random() - 0.5);
@@ -368,7 +374,6 @@ function shuffle() {
   renderCards();
   resetSlots();
   document.getElementById('readBtn').disabled = true;
-  // animate scroll hint
   setTimeout(() => {
     const s = document.getElementById('cardsScroll');
     s.scrollTo({ left: 200, behavior: 'smooth' });
@@ -379,7 +384,7 @@ function shuffle() {
 function renderCards() {
   document.getElementById('cardsScroll').innerHTML = shuffled.map((rune, i) => {
     const isSel = selected.find(s => s.id === rune.id);
-    return `<div class="rune-card ${isSel?'selected':''}" onclick="selectRune(${i})">
+    return `<div class="rune-card ${isSel ? 'selected' : ''}" onclick="selectRune(${i})">
       <img src="../images/rune/back.png" alt="${rune.name}">
     </div>`;
   }).join('');
@@ -387,9 +392,12 @@ function renderCards() {
 
 function resetSlots() {
   for (let i = 0; i < 3; i++) {
-    document.getElementById('slotInner' + i).classList.remove('flipped');
-    document.getElementById('slotImg' + i).src = '';
-    document.getElementById('slotName' + i).textContent = '—';
+    const inner = document.getElementById('slotInner' + i);
+    const img = document.getElementById('slotImg' + i);
+    const name = document.getElementById('slotName' + i);
+    inner.classList.remove('flipped');
+    img.src = '';
+    name.textContent = '—';
   }
 }
 
@@ -409,14 +417,16 @@ window.selectRune = function(idx) {
 };
 
 function updateSlots() {
-  const posNames = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
   for (let i = 0; i < 3; i++) {
     const rune = selected[i];
     const inner = document.getElementById('slotInner' + i);
     const img = document.getElementById('slotImg' + i);
     const name = document.getElementById('slotName' + i);
     if (rune) {
-      img.src = '../images/rune/back.png'; // ยังคว่ำอยู่
+      // แสดงหลังไพ่ (back face) — ยังไม่ flip
+      // back face มี img แล้วใน HTML ไม่ต้องทำอะไร
+      inner.classList.remove('flipped');
+      img.src = ''; // front ยังว่างอยู่ เปิดตอน acceptReading
       name.textContent = '?';
     } else {
       inner.classList.remove('flipped');
@@ -427,8 +437,8 @@ function updateSlots() {
 }
 
 // PARSE DELIMITER
-const RUNE_KEYS = ['GREETING','PAST','PRESENT','FUTURE','SUMMARY'];
-const RUNE_IDS = { PAST:'secPast', PRESENT:'secPresent', FUTURE:'secFuture', SUMMARY:'secSummary' };
+const RUNE_KEYS = ['GREETING', 'PAST', 'PRESENT', 'FUTURE', 'SUMMARY'];
+const RUNE_IDS = { PAST: 'secPast', PRESENT: 'secPresent', FUTURE: 'secFuture', SUMMARY: 'secSummary' };
 
 function parseDelimiter(text, keys) {
   const result = {};
@@ -437,7 +447,7 @@ function parseDelimiter(text, keys) {
     const start = text.indexOf(tag);
     if (start === -1) return;
     const cs = start + tag.length;
-    const nk = keys[i+1];
+    const nk = keys[i + 1];
     const nt = nk ? '[' + nk + ']' : null;
     const end = nt ? text.indexOf(nt) : text.length;
     result[key] = text.slice(cs, end === -1 ? text.length : end).trim();
@@ -449,10 +459,14 @@ function updateSections(text) {
   const parsed = parseDelimiter(text, RUNE_KEYS);
   if (parsed['GREETING']) {
     const gb = document.getElementById('greetingBox');
-    gb.classList.add('show'); gb.textContent = parsed['GREETING'];
+    gb.classList.add('show');
+    gb.textContent = parsed['GREETING'];
   }
   Object.entries(RUNE_IDS).forEach(([key, id]) => {
-    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+    if (parsed[key]) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = parsed[key];
+    }
   });
 }
 
@@ -460,7 +474,7 @@ window.startReading = function() {
   if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if (selected.length < 3) return;
 
-  const posNames = ['อดีต','ปัจจุบัน','อนาคต'];
+  const posNames = ['อดีต', 'ปัจจุบัน', 'อนาคต'];
   document.getElementById('revealRow').innerHTML = selected.map((rune, i) => `
     <div class="reveal-card">
       <div class="reveal-card-wrap">
@@ -498,7 +512,7 @@ window.startReading = function() {
 window.acceptReading = async function() {
   document.getElementById('revealOverlay').classList.remove('show');
 
-  // อัปเดต slot ให้เห็นหน้าไพ่
+  // flip slot ให้เห็นหน้าไพ่
   for (let i = 0; i < 3; i++) {
     const rune = selected[i];
     document.getElementById('slotImg' + i).src = '../images/rune/r' + rune.id + '.png';
@@ -507,14 +521,14 @@ window.acceptReading = async function() {
   }
 
   const btn = document.getElementById('readBtn');
-  btn.disabled = true; btn.textContent = '⏳ กำลังวิเคราะห์...';
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังวิเคราะห์...';
 
-  // แสดงผล cards row
   document.getElementById('resultCardsRow').innerHTML = selected.map((rune, i) => `
     <div class="result-card">
       <div class="result-card-img"><img src="../images/rune/r${rune.id}.png"></div>
       <div class="result-card-name">${rune.nameTh}</div>
-      <div class="result-card-pos">${['อดีต','ปัจจุบัน','อนาคต'][i]}</div>
+      <div class="result-card-pos">${['อดีต', 'ปัจจุบัน', 'อนาคต'][i]}</div>
     </div>`).join('');
 
   // reset sections
@@ -527,11 +541,11 @@ window.acceptReading = async function() {
 
   const resultBox = document.getElementById('resultBox');
   resultBox.classList.add('show');
-  setTimeout(() => resultBox.scrollIntoView({ behavior:'smooth' }), 100);
+  setTimeout(() => resultBox.scrollIntoView({ behavior: 'smooth' }), 100);
 
   const question = document.getElementById('question').value.trim() || 'ภาพรวมชีวิตตอนนี้';
   const runeInfo = selected.map((r, i) =>
-    `${['อดีต','ปัจจุบัน','อนาคต'][i]}: ${r.symbol} ${r.nameTh} (${r.name}) — ${r.meaning}`
+    `${['อดีต', 'ปัจจุบัน', 'อนาคต'][i]}: ${r.symbol} ${r.nameTh} (${r.name}) — ${r.meaning}`
   ).join('\n');
 
   try {
@@ -544,7 +558,7 @@ window.acceptReading = async function() {
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         system: `คุณคือหมอดูไพ่รูนระดับปรมาจารย์ อ้างอิง Elder Futhark ตอบเป็นภาษาไทย เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" Gen Z อบอุ่น ต้องใช้ tag [GREETING][PAST][PRESENT][FUTURE][SUMMARY] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
-        messages: [{ role:'user', content:`คำถาม: ${question}
+        messages: [{ role: 'user', content: `คำถาม: ${question}
 
 รูนที่จั่วได้:
 ${runeInfo}
@@ -568,10 +582,12 @@ ${runeInfo}
     if (newBalance != null) updateCoinUI(parseInt(newBalance));
 
     if (!res.ok) {
-      const err = await res.json().catch(()=>({}));
+      const err = await res.json().catch(() => ({}));
       if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
       else alert('เกิดข้อผิดพลาดค่ะ');
-      btn.disabled = false; btn.textContent = 'ᚱ วิเคราะห์ไพ่รูน'; return;
+      btn.disabled = false;
+      btn.textContent = 'ᚱ วิเคราะห์ไพ่รูน';
+      return;
     }
 
     const reader = res.body.getReader();
@@ -582,7 +598,7 @@ ${runeInfo}
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      fullText += decoder.decode(value, { stream:true });
+      fullText += decoder.decode(value, { stream: true });
       updateSections(fullText);
     }
     updateSections(fullText);
@@ -591,7 +607,8 @@ ${runeInfo}
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
       type: 'ไพ่รูน',
       runes: selected.map(r => r.nameTh).join(' + '),
-      result: fullText, createdAt: serverTimestamp()
+      result: fullText,
+      createdAt: serverTimestamp()
     });
 
     document.getElementById('followupBox').style.display = 'block';
@@ -601,7 +618,8 @@ ${runeInfo}
     document.getElementById('secSummary').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
 
-  btn.disabled = false; btn.textContent = 'ᚱ เปิดไพ่รูนอีกครั้ง';
+  btn.disabled = false;
+  btn.textContent = 'ᚱ เปิดไพ่รูนอีกครั้ง';
 };
 
 window.askFollowup = async function() {
@@ -621,8 +639,10 @@ window.askFollowup = async function() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({
-        service: 'tarot_followup', model: 'claude-sonnet-4-6', max_tokens: 500,
-        messages: [{ role:'user', content:`ผลทำนายไพ่รูน: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณพี่" ห้ามใช้ markdown` }]
+        service: 'tarot_followup',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: `ผลทำนายไพ่รูน: ${lastFullText}\nคำถาม: ${question}\nตอบสั้นๆ 3-5 บรรทัด เรียกว่า "คุณพี่" ห้ามใช้ markdown` }]
       })
     });
     const nb = res.headers.get('X-New-Coin-Balance');
@@ -637,9 +657,10 @@ window.askFollowup = async function() {
       text += decoder.decode(value);
       answerDiv.textContent = text;
     }
-    answerDiv.scrollIntoView({ behavior:'smooth' });
+    answerDiv.scrollIntoView({ behavior: 'smooth' });
   } catch(e) { answerDiv.textContent = 'เกิดข้อผิดพลาดค่ะ'; }
-  input.value = ''; followupBtn.disabled = false;
+  input.value = '';
+  followupBtn.disabled = false;
 };
 
 document.addEventListener('DOMContentLoaded', () => { shuffle(); });
