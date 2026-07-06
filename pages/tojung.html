@@ -17,29 +17,27 @@
     .hero { text-align:center; padding:12px 0 24px; }
     .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
     .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .year-badge { display:inline-block; background:rgba(168,85,247,0.15); color:#a855f7; border:1px solid rgba(168,85,247,0.3); border-radius:20px; padding:4px 14px; font-size:12px; font-weight:700; margin-top:8px; }
     .form-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
     .form-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px; display:block; }
-    .date-row { display:flex; gap:8px; }
-    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
     .sel:focus { border-color:var(--purple-light); }
-    .year-tabs { display:flex; gap:8px; margin-bottom:16px; }
-    .year-tab { flex:1; padding:12px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,0.03); color:var(--dim); font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; text-align:center; }
-    .year-tab.active { background:rgba(124,58,237,0.2); border-color:var(--purple-light); color:var(--purple-light); }
     .btn-check { width:100%; background:linear-gradient(135deg,var(--purple),var(--pink)); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
-    .free-badge { display:inline-block; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:3px 12px; font-size:12px; font-weight:700; margin-bottom:16px; }
+    .btn-check:disabled { opacity:0.5; cursor:not-allowed; }
     #resultBox { display:none; }
     .zodiac-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; text-align:center; }
     .zodiac-emoji { font-size:48px; margin-bottom:8px; }
     .zodiac-name { font-size:20px; font-weight:800; color:white; margin-bottom:4px; }
     .zodiac-year { font-size:13px; color:var(--dim); }
     .overview-box { background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.3); border-radius:16px; padding:16px 20px; margin-bottom:16px; }
+    .overview-box h3 { font-size:15px; font-weight:700; color:var(--purple-light); margin-bottom:10px; }
     .overview-box p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
     .section-box { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
     .section-box h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
-    .section-box p { font-size:14px; line-height:1.9; color:rgba(255,255,255,0.85); }
+    .section-box p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); }
     .sec-months { background:rgba(245,158,11,0.08); border-color:#f59e0b; }
     .sec-months h3 { color:#f59e0b; }
-    .month-item { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; line-height:1.7; color:rgba(255,255,255,0.8); }
+    .month-item { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; line-height:1.8; color:rgba(255,255,255,0.8); }
     .month-item:last-child { border-bottom:none; }
     .sec-career { background:rgba(96,165,250,0.08); border-color:#60a5fa; }
     .sec-career h3 { color:#60a5fa; }
@@ -53,6 +51,7 @@
     .lucky-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
     .lucky-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; color:rgba(255,255,255,0.8); }
     .lucky-label { color:var(--dim); min-width:80px; }
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.3); color:var(--purple-light); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
   </style>
 </head>
 <body>
@@ -85,31 +84,23 @@
   <div class="hero">
     <div style="margin-bottom:12px"><img src="../images/mascot-tojung.png" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
     <div class="hero-title">토정비결 โทจองบีกยอล</div>
-    <div class="hero-desc">ดูดวงรายปีตามตำราเกาหลีโบราณค่ะ<br>วิเคราะห์จากนักษัตรปีเกิดและปีปัจจุบันค่ะ</div>
+    <div class="hero-desc">ดูดวงรายปีตามตำราเกาหลีโบราณค่ะ<br>วิเคราะห์จากนักษัตรปีเกิดค่ะ</div>
+    <div class="year-badge">✦ พ.ศ. 2569 ✦</div>
   </div>
 
   <div style="text-align:center;margin-bottom:16px"><span style="display:inline-block;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;">🪙 29 เหรียญ</span></div>
 
   <div class="form-box">
     <label class="form-label">📅 ปีเกิด (ค.ศ.)</label>
-    <div class="date-row">
-      <select class="sel" id="birthYear"></select>
-    </div>
-  </div>
-
-  <div class="form-box">
-    <label class="form-label">📆 เลือกปีที่ต้องการดูดวง</label>
-    <div class="year-tabs">
-      <div class="year-tab active" id="tab2569" onclick="selectYear(2569)">พ.ศ.2569</div>
-      <div class="year-tab" id="tab2570" onclick="selectYear(2570)">พ.ศ.2570</div>
-    </div>
+    <select class="sel" id="birthYear"></select>
   </div>
 
   <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center;">
     <div style="font-size:13px;color:var(--gold);margin-bottom:4px;">🪙 ใช้ 29 เหรียญต่อครั้งค่ะ</div>
     <div style="font-size:11px;color:var(--dim);">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
-  <button class="btn-check" id="checkBtn" onclick="checkTojung()">🔮 ดูโทจองบีกยอล</button>
+
+  <button class="btn-check" id="checkBtn" onclick="checkTojung()">🔮 ดูโทจองบีกยอล พ.ศ.2569</button>
 
   <div id="resultBox">
     <div class="zodiac-card">
@@ -119,7 +110,7 @@
     </div>
 
     <div class="overview-box">
-      <h3 style="font-size:15px;font-weight:700;color:var(--purple-light);margin-bottom:10px;">✦ ภาพรวมปีนี้ค่ะ</h3>
+      <h3>✦ ภาพรวมปี 2569 ค่ะ</h3>
       <p id="overviewText"></p>
     </div>
 
@@ -155,6 +146,8 @@
       <div class="lucky-row"><span class="lucky-label">🔢 เลขมงคล</span><span id="luckyNum"></span></div>
       <div class="lucky-row"><span class="lucky-label">💎 สิ่งของ</span><span id="luckyItem"></span></div>
     </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 ดูดวงอีกครั้ง</button>
   </div>
 </div>
 
@@ -192,7 +185,6 @@ function setAvatarDisplay(a){
   else el.textContent=a||'👤';
 }
 window.loginNow  = async function(){ try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){} };
-window._currentUser = null;
 window.logoutNow = async function(){ await signOut(auth); window.location.href='../index.html'; };
 
 onAuthStateChanged(auth, async user => {
@@ -215,29 +207,20 @@ onAuthStateChanged(auth, async user => {
   var curY=new Date().getFullYear();
   for(var y=curY;y>=curY-90;y--){
     var o=document.createElement('option');
-    o.value=y; o.textContent='ค.ศ.'+y+(y===1995?' (แนะนำ)':'');
+    o.value=y; o.textContent='ค.ศ.'+y;
     if(y===1995) o.selected=true;
     yearEl.appendChild(o);
   }
 })();
 
-var selectedYear=2569;
-window.selectYear=function(y){
-  selectedYear=y;
-  document.getElementById('tab2569').className=y===2569?'year-tab active':'year-tab';
-  document.getElementById('tab2570').className=y===2570?'year-tab active':'year-tab';
-};
-
-window.checkTojung=async function(){
+window.checkTojung = async function(){
   if(!window._currentUser){ alert('กรุณาเข้าสู่ระบบก่อนค่ะ'); return; }
 
-  var birthYearCE=parseInt(document.getElementById('birthYear').value);
-  var zIdx=getZodiacIndex(birthYearCE);
-  alert('debug: year='+birthYearCE+' zIdx='+zIdx+' selectedYear='+selectedYear);
-  var data=getTojung(selectedYear, zIdx);
-  alert('debug: data='+(data?'found':'NOT FOUND'));
+  var birthYearCE = parseInt(document.getElementById('birthYear').value);
+  var zIdx = getZodiacIndex(birthYearCE);
+  var data = getTojung(2569, zIdx);
 
-  if(!data){ alert('ไม่พบข้อมูลดวงสำหรับปีนี้ค่ะ'); return; }
+  if(!data){ alert('ไม่พบข้อมูลดวงสำหรับนักษัตรนี้ค่ะ'); return; }
 
   var btn=document.getElementById('checkBtn');
   btn.disabled=true; btn.textContent='⏳ กำลังโหลด...';
@@ -254,43 +237,49 @@ window.checkTojung=async function(){
     if(!res.ok){
       var err=await res.json().catch(()=>({}));
       alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
-      btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return;
+      btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล พ.ศ.2569'; return;
     }
-  } catch(e){ console.error(e); alert('เกิดข้อผิดพลาดค่ะ'); btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล'; return; }
+    if(res.body){var r=res.body.getReader();while(true){var{done}=await r.read();if(done)break;}}
+  } catch(e){
+    console.error(e); alert('เกิดข้อผิดพลาดค่ะ');
+    btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอล พ.ศ.2569'; return;
+  }
 
-  document.getElementById('zodiacEmoji').textContent=ZODIAC_EMOJI[zIdx];
-  document.getElementById('zodiacName').textContent='ปีเกิด: '+ZODIAC_TH[zIdx]+' ค.ศ.'+birthYearCE;
-  document.getElementById('zodiacYear').textContent='โทจองบีกยอล พ.ศ.'+selectedYear;
-  document.getElementById('overviewText').textContent=data.overview;
+  document.getElementById('zodiacEmoji').textContent = ZODIAC_EMOJI[zIdx];
+  document.getElementById('zodiacName').textContent = 'ปีเกิด: '+ZODIAC_TH[zIdx]+' ค.ศ.'+birthYearCE;
+  document.getElementById('zodiacYear').textContent = 'โทจองบีกยอล พ.ศ.2569';
+  document.getElementById('overviewText').textContent = data.overview;
 
   var monthsHtml='';
-  data.months.forEach(function(m){
-    monthsHtml+='<div class="month-item">'+m+'</div>';
-  });
-  document.getElementById('monthsList').innerHTML=monthsHtml;
+  data.months.forEach(function(m){ monthsHtml+='<div class="month-item">'+m+'</div>'; });
+  document.getElementById('monthsList').innerHTML = monthsHtml;
 
-  document.getElementById('careerText').textContent=data.career;
-  document.getElementById('moneyText').textContent=data.money;
-  document.getElementById('loveText').textContent=data.love;
-  document.getElementById('healthText').textContent=data.health;
-  document.getElementById('luckyColor').textContent=data.lucky.colors;
-  document.getElementById('luckyDir').textContent=data.lucky.direction;
-  document.getElementById('luckyNum').textContent=data.lucky.numbers;
-  document.getElementById('luckyItem').textContent=data.lucky.item;
+  document.getElementById('careerText').textContent = data.career;
+  document.getElementById('moneyText').textContent = data.money;
+  document.getElementById('loveText').textContent = data.love;
+  document.getElementById('healthText').textContent = data.health;
+  document.getElementById('luckyColor').textContent = data.lucky.colors;
+  document.getElementById('luckyDir').textContent = data.lucky.direction;
+  document.getElementById('luckyNum').textContent = data.lucky.numbers;
+  document.getElementById('luckyItem').textContent = data.lucky.item;
 
   document.getElementById('resultBox').style.display='block';
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
 
-  // บันทึกประวัติ
   addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
     type:'โทจองบีกยอล',
     zodiac: ZODIAC_TH[zIdx],
-    year: selectedYear,
+    year: 2569,
     result: data.overview,
     createdAt: serverTimestamp()
   }).catch(function(){});
 
   btn.disabled=false; btn.textContent='🔮 ดูโทจองบีกยอลอีกครั้ง';
+};
+
+window.resetResult = function(){
+  document.getElementById('resultBox').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 </script>
 </body>
