@@ -49,8 +49,9 @@ export default async function handler(req, res) {
     const snap = await userRef.get();
     const data = snap.exists ? snap.data() : {};
 
-    const today = new Date().toDateString();
-    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    const now = new Date(Date.now() + 7 * 60 * 60 * 1000);
+const today = now.toISOString().slice(0, 10);
+const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOString().slice(0, 10);
 
     // เช็คอินแล้ววันนี้
     if ((data.lastCheckin || '') === today) {
