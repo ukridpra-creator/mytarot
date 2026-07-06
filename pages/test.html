@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ไข่แฟนตาซีทามะโกะ</title>
+  <link rel="stylesheet" href="stylegame.css" />
+</head>
+<body>
+  <main id="game" class="scene">
+    <header class="hud">
+      <div>💰 <span id="coins">50</span></div>
+      <div id="day">Day 1 / 3</div>
+    </header>
+
+    <section class="room">
+      <div id="pot" class="drop pot" aria-label="หม้อต้ม">🍲</div>
+      <div id="lamp" class="hotspot" aria-label="โคมไฟอุ่น">💡</div>
+      <div id="table" class="surface">โต๊ะ</div>
+      <div id="egg" class="draggable hidden" aria-label="ไข่">🥚</div>
+    </section>
+
+    <section class="shop">
+      <h3>ร้านค้า</h3>
+      <div class="items">
+        <div class="draggable item" data-id="moonleaf" data-price="5">🌿 Moonleaf</div>
+        <div class="draggable item" data-id="stardust" data-price="8">✨ Stardust</div>
+        <div class="draggable item" data-id="honey" data-price="3">🍯 Honey</div>
+      </div>
+      <button id="brew">ต้มสร้างไข่</button>
+    </section>
+
+    <footer class="panel">
+      <div class="bars">
+        <label>อุณหภูมิ <progress id="heat" max="100"></progress></label>
+        <label>ความสะอาด <progress id="clean" max="100"></progress></label>
+        <label>ความนิ่ง <progress id="calm" max="100"></progress></label>
+        <label>ห่วงใย <progress id="care" max="100"></progress></label>
+      </div>
+      <p id="log">ลากส่วนผสมใส่หม้อ แล้วกด “ต้มสร้างไข่”</p>
+    </footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
