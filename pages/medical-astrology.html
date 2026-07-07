@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Astrology เจาะลึกสุขภาพ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(16,185,129,0.2); border:1px solid rgba(16,185,129,0.3); display:flex; align-items:center; justify-content:center; color:#10b981; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#1a1535; }
+    .coin-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+    .coin-text { font-size:13px; color:var(--gold); margin-bottom:4px; }
+    .coin-hint { font-size:11px; color:var(--dim); }
+    .btn-read { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#10b981,#3b82f6,#a855f7); background-size:200%; animation:gradbtn 3s ease infinite; }
+    @keyframes gradbtn{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; animation:none; }
+
+    /* PROFILE TAGS */
+    .profile-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .profile-tag { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:4px 12px; font-size:11px; color:#10b981; }
+
+    /* RESULT SECTIONS */
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+    .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .result-section h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+    .result-section p { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); min-height:20px; }
+
+    .sec-sign     { background:rgba(16,185,129,0.08);  border-color:#10b981; }
+    .sec-sign h3  { color:#10b981; }
+    .sec-planet   { background:rgba(96,165,250,0.08);  border-color:#60a5fa; }
+    .sec-planet h3{ color:#60a5fa; }
+    .sec-weak     { background:rgba(239,68,68,0.08);   border-color:#ef4444; }
+    .sec-weak h3  { color:#ef4444; }
+    .sec-care     { background:rgba(168,85,247,0.08);  border-color:#a855f7; }
+    .sec-care h3  { color:#a855f7; }
+    .sec-period   { background:rgba(245,158,11,0.08);  border-color:#f59e0b; }
+    .sec-period h3{ color:#f59e0b; }
+
+    .loading-dots { color:rgba(255,255,255,0.3); font-size:12px; }
+    .loading-dots span { animation:blink 1.2s infinite; display:inline-block; }
+    .loading-dots span:nth-child(2){animation-delay:.2s}
+    .loading-dots span:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="other-astro.html" class="back-btn">←</a>
+  <div class="page-title">🌿 Medical Astrology</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(16,185,129,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🌿</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-medical.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🌿 Medical Astrology</div>
+    <div class="hero-desc">โหราศาสตร์การแพทย์โบราณ<br>วิเคราะห์สุขภาพจากราศีและดาวเคราะห์ในชาตาค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">📅 วันเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">⏰ เวลาเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inHour"></select>
+      <select class="sel" id="inMinute"></select>
+    </div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 29 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()">🌿 วิเคราะห์สุขภาพเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <div class="profile-tags" id="profileTags"></div>
+
+    <div class="result-section sec-sign">
+      <h3>✦ ราศีและอวัยวะประจำตัว</h3>
+      <p id="secSign"><div class="loading-dots">กำลังวิเคราะห์<span>.</span><span>.</span><span>.</span></div></p>
+    </div>
+    <div class="result-section sec-planet">
+      <h3>✦ ดาวเคราะห์และผลต่อสุขภาพ</h3>
+      <p id="secPlanet"></p>
+    </div>
+    <div class="result-section sec-weak">
+      <h3>✦ จุดอ่อนของร่างกายที่ต้องระวัง</h3>
+      <p id="secWeak"></p>
+    </div>
+    <div class="result-section sec-care">
+      <h3>✦ คำแนะนำดูแลสุขภาพ</h3>
+      <p id="secCare"></p>
+    </div>
+    <div class="result-section sec-period">
+      <h3>✦ ช่วงเวลาที่ต้องระวังเป็นพิเศษ</h3>
+      <p id="secPeriod"></p>
+    </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 วิเคราะห์ใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;document.getElementById('coinDisplay').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+// DROPDOWNS
+document.addEventListener('DOMContentLoaded',function(){
+  var dayEl=document.getElementById('inDay');
+  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+  var months=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+  var monthEl=document.getElementById('inMonth');
+  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+  var yearEl=document.getElementById('inYear');
+  var curY=new Date().getFullYear();
+  for(var y=curY;y>=curY-100;y--){var o=document.createElement('option');o.value=y;o.textContent=y;if(y===1990)o.selected=true;yearEl.appendChild(o);}
+  var hourEl=document.getElementById('inHour');
+  var oh=document.createElement('option');oh.value='';oh.textContent='ไม่ทราบ';hourEl.appendChild(oh);
+  for(var h=0;h<=23;h++){var o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+' น.';hourEl.appendChild(o);}
+  var minEl=document.getElementById('inMinute');
+  var om=document.createElement('option');om.value=0;om.textContent='00 นาที';minEl.appendChild(om);
+  for(var m2=1;m2<=59;m2++){var o=document.createElement('option');o.value=m2;o.textContent=(m2<10?'0'+m2:m2)+' นาที';minEl.appendChild(o);}
+});
+
+// ZODIAC CALC
+function getZodiacSign(month, day) {
+  const signs = [
+    { name:'Aquarius',    nameTH:'กุมภ์',   start:[1,20],  end:[2,18]  },
+    { name:'Pisces',      nameTH:'มีน',     start:[2,19],  end:[3,20]  },
+    { name:'Aries',       nameTH:'เมษ',     start:[3,21],  end:[4,19]  },
+    { name:'Taurus',      nameTH:'พฤษภ',    start:[4,20],  end:[5,20]  },
+    { name:'Gemini',      nameTH:'เมถุน',   start:[5,21],  end:[6,20]  },
+    { name:'Cancer',      nameTH:'กรกฎ',    start:[6,21],  end:[7,22]  },
+    { name:'Leo',         nameTH:'สิงห์',   start:[7,23],  end:[8,22]  },
+    { name:'Virgo',       nameTH:'กันย์',   start:[8,23],  end:[9,22]  },
+    { name:'Libra',       nameTH:'ตุลย์',   start:[9,23],  end:[10,22] },
+    { name:'Scorpio',     nameTH:'พิจิก',   start:[10,23], end:[11,21] },
+    { name:'Sagittarius', nameTH:'ธนู',     start:[11,22], end:[12,21] },
+    { name:'Capricorn',   nameTH:'มกร',     start:[12,22], end:[1,19]  },
+  ];
+  for(const s of signs){
+    const [sm,sd]=s.start, [em,ed]=s.end;
+    if(sm===em){if(month===sm&&day>=sd&&day<=ed)return s;}
+    else{
+      if((month===sm&&day>=sd)||(month===em&&day<=ed))return s;
+    }
+  }
+  return signs[11]; // Capricorn default
+}
+
+// PLANET DATA (approximate based on year)
+function getApproxPlanets(year, month, day) {
+  const planets = [];
+  // Saturn cycle ~29yr
+  const saturnSigns = ['Capricorn','Aquarius','Pisces','Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius'];
+  const saturnIdx = Math.floor(((year - 1900) * 12 / 29.5)) % 12;
+  planets.push({ name:'Saturn ♄', nameTH:'เสาร์', sign:saturnSigns[saturnIdx] });
+  // Jupiter cycle ~12yr
+  const jupiterSigns = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const jupiterIdx = ((year - 1900) % 12 + 12) % 12;
+  planets.push({ name:'Jupiter ♃', nameTH:'พฤหัส', sign:jupiterSigns[jupiterIdx] });
+  // Mars cycle ~2yr
+  const marsIdx = Math.floor(((year-1900)*12/2) + month/2) % 12;
+  const marsSigns = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  planets.push({ name:'Mars ♂', nameTH:'อังคาร', sign:marsSigns[(marsIdx+12)%12] });
+  return planets;
+}
+
+// BODY PARTS MAP
+const SIGN_BODY = {
+  Aries:       { th:'เมษ ♈',        body:'ศีรษะ สมอง กระโหลก ใบหน้า',      risk:'ไมเกรน ความดัน ปวดหัว' },
+  Taurus:      { th:'พฤษภ ♉',       body:'ลำคอ ต่อมไทรอยด์ สายเสียง',      risk:'ต่อมไทรอยด์ คออักเสบ' },
+  Gemini:      { th:'เมถุน ♊',      body:'แขน ปอด ไหล่ มือ ระบบประสาท',    risk:'ปอด หลอดลม ระบบหายใจ' },
+  Cancer:      { th:'กรกฎ ♋',       body:'หน้าอก กระเพาะ เต้านม ซี่โครง',   risk:'กระเพาะ กรดไหลย้อน' },
+  Leo:         { th:'สิงห์ ♌',      body:'หัวใจ กระดูกสันหลัง หลังส่วนบน', risk:'หัวใจ ความดัน หลัง' },
+  Virgo:       { th:'กันย์ ♍',      body:'ลำไส้ ม้าม ระบบย่อยอาหาร',        risk:'ลำไส้ท้องผูก ระบบย่อย' },
+  Libra:       { th:'ตุลย์ ♎',      body:'ไต ผิวหนัง บั้นเอว กระเพาะปัสสาวะ', risk:'ไต นิ่ว กระเพาะปัสสาวะ' },
+  Scorpio:     { th:'พิจิก ♏',      body:'อวัยวะสืบพันธุ์ ลำไส้ใหญ่ ทวาร',  risk:'ระบบขับถ่าย สืบพันธุ์' },
+  Sagittarius: { th:'ธนู ♐',        body:'สะโพก ต้นขา ตับ เส้นประสาท sciatic', risk:'ตับ ปวดสะโพก' },
+  Capricorn:   { th:'มกร ♑',        body:'เข่า กระดูก ข้อต่อ ฟัน ผิวหนัง', risk:'ข้ออักเสบ กระดูก เข่า' },
+  Aquarius:    { th:'กุมภ์ ♒',      body:'ข้อเท้า น่อง ระบบไหลเวียนโลหิต',  risk:'เส้นเลือด ข้อเท้า' },
+  Pisces:      { th:'มีน ♓',        body:'เท้า นิ้วเท้า ระบบน้ำเหลือง',      risk:'เท้า ระบบภูมิคุ้มกัน' },
+};
+
+const PLANET_BODY = {
+  'Saturn ♄': 'กระดูก ผิวหนัง ฟัน ข้อต่อ ม้าม',
+  'Jupiter ♃': 'ตับ ต้นขา ต่อมใต้สมอง',
+  'Mars ♂': 'กล้ามเนื้อ เลือด ต่อมหมวกไต',
+};
+
+const TAG_MAP = {
+  '[SIGN]':'secSign','[PLANET]':'secPlanet',
+  '[WEAK]':'secWeak','[CARE]':'secCare','[PERIOD]':'secPeriod'
+};
+
+function parseByTag(text){
+  let currentId=null;
+  const content={};
+  text.split('\n').forEach(line=>{
+    const t=line.trim();
+    if(TAG_MAP[t]){currentId=TAG_MAP[t];if(!content[currentId])content[currentId]='';}
+    else if(currentId&&t) content[currentId]+=t+' ';
+  });
+  Object.entries(content).forEach(([id,txt])=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=txt.trim();
+  });
+}
+
+window.startReading = async function() {
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const day=parseInt(document.getElementById('inDay').value);
+  const month=parseInt(document.getElementById('inMonth').value);
+  const year=parseInt(document.getElementById('inYear').value);
+  const hour=document.getElementById('inHour').value;
+  const minute=document.getElementById('inMinute').value;
+
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
+
+  // คำนวณ
+  const zodiac = getZodiacSign(month, day);
+  const planets = getApproxPlanets(year, month, day);
+  const signData = SIGN_BODY[zodiac.name] || SIGN_BODY['Aries'];
+
+  // profile tags
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.add('show');
+  const yearBE = year + 543;
+  document.getElementById('profileTags').innerHTML =
+    `<div class="profile-tag">♈ ราศี${signData.th}</div>` +
+    `<div class="profile-tag">🎂 เกิด ${day}/${month}/${yearBE}</div>` +
+    (hour !== '' ? `<div class="profile-tag">⏰ ${hour}:${String(minute).padStart(2,'0')} น.</div>` : '') +
+    planets.map(p=>`<div class="profile-tag">🌠 ${p.nameTH}ใน ${p.sign}</div>`).join('');
+
+  // loading
+  ['secSign','secPlanet','secWeak','secCare','secPeriod'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<div class="loading-dots">กำลังวิเคราะห์<span>.</span><span>.</span><span>.</span></div>';
+  });
+  setTimeout(()=>resultBox.scrollIntoView({behavior:'smooth'}),100);
+
+  // build prompt
+  const planetDesc = planets.map(p=>`${p.name} อยู่ใน ${p.sign} คุมอวัยวะ: ${PLANET_BODY[p.name]||''}`).join(', ');
+  const prompt = `วิเคราะห์ Medical Astrology สำหรับผู้เกิดวันที่ ${day}/${month}/${year} เวลา ${hour||'ไม่ทราบ'}:${minute||'00'} น.
+ราศี: ${zodiac.name} (${signData.th}) คุมอวัยวะ: ${signData.body} โรคที่เสี่ยง: ${signData.risk}
+ดาวเคราะห์: ${planetDesc}
+
+ตอบโดยใช้ tag นำหน้าทุก section ห้ามมีข้อความก่อน tag แรก:
+[SIGN]
+วิเคราะห์ราศีและอวัยวะที่ราศีนี้คุม บอกลักษณะสุขภาพของราศีนี้ 3-4 ประโยค
+[PLANET]
+วิเคราะห์ดาวเคราะห์สำคัญและผลต่อสุขภาพ 3-4 ประโยค
+[WEAK]
+จุดอ่อนของร่างกายที่ต้องระวัง อวัยวะที่เสี่ยง โรคที่ควรระวัง 3-4 ประโยค
+[CARE]
+คำแนะนำดูแลสุขภาพ อาหาร การออกกำลังกาย วิตามิน 3-4 ประโยค
+[PERIOD]
+ช่วงเวลาที่ต้องระวังเป็นพิเศษในปีนี้ ดาวจรกระทบอวัยวะไหน 3-4 ประโยค
+เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง" เขียนเป็นภาษาไทย ห้ามใช้ markdown`;
+
+  try {
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({
+        service:'medical_astrology',
+        model:'claude-sonnet-4-6',
+        max_tokens:3000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false;btn.textContent='🌿 วิเคราะห์สุขภาพเลยค่ะ';return;
+    }
+
+    ['secSign','secPlanet','secWeak','secCare','secPeriod'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.textContent='';
+    });
+
+    const reader=res.body.getReader();
+    const decoder=new TextDecoder();
+    let text='';
+    while(true){
+      const{done,value}=await reader.read();if(done)break;
+      text+=decoder.decode(value);parseByTag(text);
+    }
+    parseByTag(text);
+
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'Medical Astrology เจาะลึกสุขภาพ',
+      question:`${day}/${month}/${year} เวลา ${hour||'?'}:${String(minute).padStart(2,'0')}`,
+      result:`ราศี${signData.th} — ${signData.body}`,
+      createdAt:serverTimestamp()
+    });
+
+  }catch(e){
+    console.error(e);
+    document.getElementById('secSign').textContent='เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+  }
+
+  btn.disabled=false;btn.textContent='🌿 วิเคราะห์ใหม่อีกครั้ง';
+};
+
+window.resetResult = function(){
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+</body>
+</html>
