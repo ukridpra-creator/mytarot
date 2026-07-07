@@ -85,6 +85,7 @@ const SERVICE_COSTS = {
   "tarot_health": TIER.T30,
   "tarot_money": TIER.T30,
   "medical_astrology": TIER.T29,
+  "horary": TIER.T10,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
