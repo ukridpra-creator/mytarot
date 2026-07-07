@@ -362,6 +362,11 @@ function parseByTag(text){
 function shuffle(){
   shuffled=[...TAROT].sort(()=>Math.random()-0.5);
   renderCards();
+  setTimeout(()=>{
+    const s=document.getElementById('cardsScroll');
+    s.scrollTo({left:120,behavior:'smooth'});
+    setTimeout(()=>s.scrollTo({left:0,behavior:'smooth'}),600);
+  },500);
 }
 
 function renderCards(){
