@@ -505,7 +505,7 @@ window.acceptReading=async function(){
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
       body:JSON.stringify({
-        service:'tarot',
+        service:'tarot_love',
         model:'claude-sonnet-4-6',
         max_tokens:4000,
         system:`คุณคือหมอดูไพ่ทาโรต์ด้านความรัก Gen Z สนุก เป็นกันเอง เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" ชื่อไพ่ใช้ภาษาอังกฤษ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้ครบทุกตำแหน่ง แต่ละตำแหน่ง 3-4 ประโยค รวมประมาณ 800-1000 คำ จบด้วยคำแนะนำและกำลังใจ ต้องเขียนให้จบสมบูรณ์ทุกครั้ง ห้ามหยุดกลางคัน ตอบโดยใช้ tag นำหน้าทุก section:
