@@ -6,5 +6,8 @@
       "destination": "https://mytarot.vip/$1",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    { "source": "/pages/:path*", "destination": "/pages/:path*.html" }
   ]
 }
