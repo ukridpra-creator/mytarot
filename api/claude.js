@@ -80,6 +80,10 @@ const SERVICE_COSTS = {
   "cartomancy": TIER.T19,
   "synastry_read": TIER.FREE,
   "western": TIER.T49,
+  "tarot_love": TIER.T30,
+  "tarot_work": TIER.T30,
+  "tarot_health": TIER.T30,
+  "tarot_money": TIER.T30,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
