@@ -91,9 +91,21 @@
       <div class="menu-arrow">›</div>
     </a>
 
+    <a href="taegil.html" class="menu-card" style="border-left:3px solid #ec4899;background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(219,39,119,0.05));border-color:rgba(236,72,153,0.25);">
+      <div class="menu-icon" style="background:rgba(236,72,153,0.2);">
+        <img src="../images/icon-taegil.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🗓️</span>'">
+      </div>
+      <div class="menu-info">
+        <div class="menu-name">แทกอิล — หาวันดีประจำเดือน</div>
+        <div class="menu-desc">คำนวณพลังงานแต่ละวันจากเลขศาสตร์และดาวจร หาวันมงคลสำหรับคุณพี่ค่ะ</div>
+      </div>
+      <div class="menu-badge free">ฟรี</div>
+      <div class="menu-arrow">›</div>
+    </a>
+
   </div>
 
-  <!-- พรีเมียม -->
+  <!-- พรีเมียม เรียงราคา -->
   <div class="section-title">✦ พรีเมียม</div>
   <div class="menu-list">
 
@@ -166,17 +178,14 @@ setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth,
 const db = getFirestore(app);
 
 window.updateCoinUI = function(coins) { document.getElementById('coinCount').textContent = coins; };
-
 function setAvatarDisplay(avatar) {
   var el = document.getElementById('avatarEl'); if (!el) return;
   if (avatar && avatar.includes('.png')) {
     el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
   } else { el.textContent = avatar || '👤'; }
 }
-
 window.loginNow  = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
 window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
-
 onAuthStateChanged(auth, async user => {
   if (user) {
     var snap = await getDoc(doc(db, 'users', user.uid));
