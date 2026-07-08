@@ -193,8 +193,8 @@ const monthNames=["มกราคม","กุมภาพันธ์","มี�
 const monthEl=document.getElementById('inMonth');
 monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
 const yearEl=document.getElementById('inYear');
-const curY=new Date().getFullYear();
-for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=(y+543)+' ('+y+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
+const initY=new Date().getFullYear();
+for(let y=initY;y>=initY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=(y+543)+' ('+y+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
 
 // ===== PLANET TRANSITS =====
 const TRANSITS={
