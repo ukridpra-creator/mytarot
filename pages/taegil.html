@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taegil หาวันดีประจำเดือน — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(236,72,153,0.2); border:1px solid rgba(236,72,153,0.3); display:flex; align-items:center; justify-content:center; color:#ec4899; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#1a1535; }
+
+    .btn-calc { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#ec4899,#a855f7); }
+    .btn-calc:disabled { opacity:0.5; cursor:not-allowed; }
+
+    /* PROFILE */
+    .profile-box { background:rgba(236,72,153,0.08); border:1px solid rgba(236,72,153,0.2); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:none; }
+    .profile-box.show { display:block; }
+    .profile-num { text-align:center; margin-bottom:8px; }
+    .profile-num span { font-size:48px; font-weight:800; color:#ec4899; }
+    .profile-label { font-size:13px; color:rgba(255,255,255,0.5); text-align:center; }
+    .profile-desc { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.8; margin-top:8px; text-align:center; }
+
+    /* CALENDAR */
+    .cal-box { display:none; }
+    .cal-box.show { display:block; }
+    .cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    .cal-nav-btn { width:36px; height:36px; border-radius:50%; background:rgba(236,72,153,0.15); border:1px solid rgba(236,72,153,0.3); color:#ec4899; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .cal-title { font-size:16px; font-weight:700; color:white; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:16px; }
+    .cal-head { text-align:center; font-size:10px; color:var(--dim); padding:4px 0; }
+    .cal-day { aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; cursor:default; position:relative; }
+    .cal-day.empty { background:transparent; }
+    .cal-day.today { border:1px solid rgba(255,255,255,0.3); }
+    .cal-day-num { font-size:11px; font-weight:700; color:white; line-height:1; }
+    .cal-day-icon { font-size:13px; line-height:1; }
+    .cal-day.good { background:rgba(16,185,129,0.15); }
+    .cal-day.warn { background:rgba(245,158,11,0.12); }
+    .cal-day.bad  { background:rgba(239,68,68,0.12); }
+    .cal-day.great{ background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); }
+
+    /* LEGEND */
+    .legend { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:16px; }
+    .legend-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+    .legend-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .legend-item { display:flex; align-items:flex-start; gap:8px; }
+    .legend-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+    .legend-text { font-size:11px; color:rgba(255,255,255,0.6); line-height:1.5; }
+    .legend-text strong { color:white; font-size:12px; display:block; }
+
+    /* DETAIL POPUP */
+    .detail-overlay { position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); display:none; align-items:flex-end; justify-content:center; }
+    .detail-overlay.show { display:flex; }
+    .detail-sheet { background:linear-gradient(180deg,#1a0e2e,#0d0820); border-radius:24px 24px 0 0; padding:24px 20px 40px; width:100%; max-width:480px; border-top:1px solid var(--border); }
+    .detail-date { font-size:13px; color:var(--dim); margin-bottom:4px; }
+    .detail-icon { font-size:48px; text-align:center; margin:8px 0; }
+    .detail-label { font-size:20px; font-weight:800; color:white; text-align:center; margin-bottom:12px; }
+    .detail-desc { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.9; margin-bottom:12px; }
+    .detail-do { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); border-radius:12px; padding:12px; margin-bottom:8px; font-size:13px; color:#10b981; }
+    .detail-avoid { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:12px; padding:12px; font-size:13px; color:#ef4444; }
+    .detail-close { width:100%; margin-top:16px; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<!-- DETAIL POPUP -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-sheet">
+    <div class="detail-date" id="detailDate"></div>
+    <div class="detail-icon" id="detailIcon"></div>
+    <div class="detail-label" id="detailLabel"></div>
+    <div class="detail-desc" id="detailDesc"></div>
+    <div class="detail-do" id="detailDo"></div>
+    <div class="detail-avoid" id="detailAvoid"></div>
+    <button class="detail-close" onclick="closeDetail()">ปิด</button>
+  </div>
+</div>
+
+<div class="page-header">
+  <a href="korean-hub.html" class="back-btn">←</a>
+  <div class="page-title">🗓️ Taegil</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-taegil.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-title">🗓️ Taegil — หาวันดี</div>
+    <div class="hero-desc">แต่ละวันมีพลังงานต่างกันค่ะ<br>รู้ก่อนว่าวันไหนดีเรื่องอะไร จะได้วางแผนได้เลยค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">🎂 วันเกิดของคุณพี่ค่ะ</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <button class="btn-calc" id="calcBtn" onclick="calculate()">🗓️ ดูปฏิทินพลังงานเลยค่ะ</button>
+
+  <!-- PROFILE -->
+  <div class="profile-box" id="profileBox">
+    <div class="profile-label">เลขชีวิตของคุณพี่</div>
+    <div class="profile-num"><span id="lifePathNum">—</span></div>
+    <div class="profile-desc" id="lifePathDesc"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="cal-box" id="calBox">
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="prevMonth()">←</button>
+      <div class="cal-title" id="calTitle"></div>
+      <button class="cal-nav-btn" onclick="nextMonth()">→</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" id="legendBox" style="display:none">
+    <div class="legend-title">✦ ความหมายสัญลักษณ์</div>
+    <div class="legend-grid">
+      <div class="legend-item"><div class="legend-icon">🌟</div><div class="legend-text"><strong>วันเริ่มต้น</strong>พลังงานสูง เริ่มสิ่งใหม่ได้เลย</div></div>
+      <div class="legend-item"><div class="legend-icon">❤️</div><div class="legend-text"><strong>วันความรัก</strong>ดีเรื่องความสัมพันธ์</div></div>
+      <div class="legend-item"><div class="legend-icon">🎨</div><div class="legend-text"><strong>วันสร้างสรรค์</strong>ไอเดียพุ่ง ทำคอนเทนได้เลย</div></div>
+      <div class="legend-item"><div class="legend-icon">💼</div><div class="legend-text"><strong>วันทำงาน</strong>โฟกัส วางแผนระยะยาว</div></div>
+      <div class="legend-item"><div class="legend-icon">🌈</div><div class="legend-text"><strong>วันเปลี่ยนแปลง</strong>ลองสิ่งใหม่ เดินทาง</div></div>
+      <div class="legend-item"><div class="legend-icon">🏠</div><div class="legend-text"><strong>วันครอบครัว</strong>ดูแลคนรัก พักผ่อน</div></div>
+      <div class="legend-item"><div class="legend-icon">🔮</div><div class="legend-text"><strong>วันใคร่ครวญ</strong>ไม่ควรตัดสินใจใหญ่</div></div>
+      <div class="legend-item"><div class="legend-icon">💰</div><div class="legend-text"><strong>วันการเงิน</strong>ดีมากเรื่องธุรกิจ ลงทุน</div></div>
+      <div class="legend-item"><div class="legend-icon">🌺</div><div class="legend-text"><strong>วันปิดบท</strong>จบสิ่งเก่า ให้อภัย</div></div>
+      <div class="legend-item"><div class="legend-icon">⚠️</div><div class="legend-text"><strong>วันระวัง</strong>ระมัดระวังการตัดสินใจ</div></div>
+      <div class="legend-item"><div class="legend-icon">🚫</div><div class="legend-text"><strong>วันหลีกเลี่ยง</strong>ไม่เหมาะเริ่มสิ่งสำคัญ</div></div>
+      <div class="legend-item"><div class="legend-icon">✨</div><div class="legend-text"><strong>วันมงคลสูงสุด</strong>วันพิเศษของคุณพี่ค่ะ</div></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+// DROPDOWNS
+const dayEl=document.getElementById('inDay');
+for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+const monthNames=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+const monthEl=document.getElementById('inMonth');
+monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+const yearEl=document.getElementById('inYear');
+const curY=new Date().getFullYear();
+for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=y+(543)+' ('+(y)+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
+
+// DATA
+const DAY_MEANING = {
+  1: { icon:'🌟', label:'วันเริ่มต้น', cls:'great',
+       desc:'พลังงานวันนี้แรงมากค่ะ จักรวาลเปิดไฟเขียวให้คุณพี่ลงมือทำสิ่งที่คิดไว้นานแล้วได้เลยค่ะ อะไรที่ผัดมาตลอด วันนี้แหละใช่เลย ยิ่งเริ่มเร็วยิ่งดีค่ะ พลังงานหมายเลข 1 ส่งเสริมความกล้าและความเป็นผู้นำอย่างเต็มที่ค่ะ',
+       do:'✅ เริ่มโปรเจกต์ใหม่ ตัดสินใจ ประชุมสำคัญ pitch งาน',
+       avoid:'❌ ผัดวันประกันพรุ่ง รอคนอื่น ทำตามคนอื่นโดยไม่มีเหตุผล' },
+  2: { icon:'❤️', label:'วันความสัมพันธ์', cls:'good',
+       desc:'วันนี้ดีมากสำหรับเรื่องคนค่ะ ไม่ว่าจะความรัก เพื่อน หรือหุ้นส่วน พลังงานวันนี้อ่อนโยนและเข้าอกเข้าใจ ถ้ามีเรื่องค้างคาใจกับใครอยู่ วันนี้เหมาะมากที่จะพูดคุยกันค่ะ บรรยากาศเปิดรับและประนีประนอมสุดๆ ค่ะ',
+       do:'✅ นัดหมาย ขอโทษ บอกรัก คุยเรื่องสำคัญ ทำงานเป็นทีม',
+       avoid:'❌ ทะเลาะ ตัดสินคนอื่น ทำงานคนเดียวทั้งวัน' },
+  3: { icon:'🎨', label:'วันสร้างสรรค์', cls:'good',
+       desc:'ไอเดียพุ่งแรงมากวันนี้ค่ะ ถ้ามีงานที่ต้องใช้ความคิดสร้างสรรค์รีบจัดการเลยนะคะ พลังงานเลข 3 ส่งเสริมการแสดงออก ความสนุก และการสื่อสารค่ะ วันนี้ทำคอนเทน เขียน วาด หรืออะไรก็ตามที่ได้ใช้ creativity ออกมาได้เลยค่ะ',
+       do:'✅ ทำคอนเทน โซเชียลมีเดีย งานศิลปะ เขียน ร้องเพลง',
+       avoid:'❌ งานซ้ำซาก routine น่าเบื่อ ประชุมที่ไม่จำเป็น' },
+  4: { icon:'💼', label:'วันทำงานหนัก', cls:'good',
+       desc:'วันนี้เป็นวันของคนขยันค่ะ พลังงานเลข 4 ทำให้โฟกัสได้ดีมาก เหมาะกับงานที่ต้องใช้ความละเอียดและความอดทนค่ะ ถ้ามีโปรเจกต์ยาวๆ ที่ต้องค่อยๆ ทำ วันนี้แหละที่ดีที่สุดค่ะ อย่าเสี่ยงหรือลองอะไรใหม่มากนักวันนี้นะคะ',
+       do:'✅ วางแผนระยะยาว ทำงานจริงจัง จัดระเบียบ ทำบัญชี',
+       avoid:'❌ เสี่ยง ลงทุนตามความรู้สึก ตัดสินใจแบบ impulsive' },
+  5: { icon:'🌈', label:'วันเปลี่ยนแปลง', cls:'good',
+       desc:'พลังงานวันนี้พาให้อยากลองอะไรใหม่ๆ ค่ะ เหมาะมากถ้าคุณพี่กำลังคิดจะเปลี่ยนแปลงอะไรในชีวิต ไม่ว่าจะเปลี่ยนงาน ลอง hobby ใหม่ หรือแค่เปลี่ยนเส้นทางกลับบ้านก็ยังได้ค่ะ พลังงานเลข 5 ชอบอิสระและความตื่นเต้นค่ะ',
+       do:'✅ ลองสิ่งใหม่ เดินทาง เปลี่ยนแปลง พบคนใหม่ ทดลอง',
+       avoid:'❌ ยึดติดกับของเดิม ปฏิเสธโอกาสใหม่ อยู่ใน comfort zone' },
+  6: { icon:'🏠', label:'วันครอบครัว', cls:'good',
+       desc:'วันนี้จักรวาลดึงคุณพี่กลับมาดูแลคนรอบข้างค่ะ พลังงานเลข 6 เต็มไปด้วยความรัก ความอบอุ่น และความรับผิดชอบค่ะ เหมาะมากที่จะใช้เวลากับครอบครัว คนรัก หรือแม้แต่ดูแลตัวเองก็ได้ค่ะ วันนี้อย่าเอางานมาเป็นที่หนึ่งนะคะ',
+       do:'✅ ใช้เวลากับครอบครัว คนรัก ทำอาหาร ดูแลบ้าน self-care',
+       avoid:'❌ ละเลยคนใกล้ชิด workaholic เกินไป เอาตัวเองไว้ท้ายสุด' },
+  7: { icon:'🔮', label:'วันใคร่ครวญ', cls:'warn',
+       desc:'วันนี้เป็นวันของการหยุดคิดค่ะ พลังงานเลข 7 ลึกลับและชอบความสงบค่ะ ไม่เหมาะกับการตัดสินใจใหญ่หรือเซ็นสัญญาสำคัญเลยค่ะ แต่ถ้าอยากนั่งคิดทบทวนชีวิต อ่านหนังสือ หรือ meditate วันนี้เป็นวันที่ดีที่สุดเลยค่ะ',
+       do:'✅ พักผ่อน ใคร่ครวญ วิจัย อ่านหนังสือ meditaion',
+       avoid:'❌ ตัดสินใจใหญ่ เซ็นสัญญา ลงทุน เริ่มโปรเจกต์สำคัญ' },
+  8: { icon:'💰', label:'วันการเงิน', cls:'good',
+       desc:'วันเงินๆ ทองๆ มาแล้วค่ะ พลังงานเลข 8 ส่งเสริมเรื่องธุรกิจและการเงินอย่างเต็มที่ค่ะ ถ้ามีแผนลงทุน เจรจาธุรกิจ หรือขอขึ้นเงินเดือน วันนี้โอกาสสูงมากค่ะ แต่ต้องระวังอย่าโลภเกินไปนะคะ พลังงานเลข 8 ให้ผลตามที่ลงทุนจริงๆ ค่ะ',
+       do:'✅ เจรจาธุรกิจ ลงทุน ขอขึ้นเงินเดือน ทำสัญญาการเงิน',
+       avoid:'❌ ใช้เงินฟุ่มเฟือย โลภเกินไป เชื่อคนง่ายเรื่องเงิน' },
+  9: { icon:'🌺', label:'วันปิดบท', cls:'warn',
+       desc:'วันนี้พลังงานพาให้จบสิ่งที่ค้างอยู่ค่ะ ถ้ามีเรื่องที่ยังปล่อยวางไม่ได้ ความสัมพันธ์ที่ควรสิ้นสุด หรืองานที่ทำค้างไว้ วันนี้เหมาะมากที่จะจัดการให้เสร็จค่ะ พลังงานเลข 9 ให้พลังการ let go และเปิดทางให้สิ่งใหม่เข้ามาค่ะ',
+       do:'✅ จบโปรเจกต์ค้าง ให้อภัย ปล่อยวาง เคลียร์ของ บริจาค',
+       avoid:'❌ เริ่มสิ่งใหม่ ลงทุนใหม่ เปิดธุรกิจ เริ่มความสัมพันธ์ใหม่' },
+};
+
+const LIFE_PATH_DESC = {
+  1: 'ผู้นำโดยธรรมชาติ มีพลังงานสูง กล้าตัดสินใจ ชอบเป็นคนแรกค่ะ',
+  2: 'นักประสานงานเก่ง อ่อนไหว เข้าใจคนอื่นดี ชอบทำงานเป็นทีมค่ะ',
+  3: 'นักสร้างสรรค์ตัวจริง ชอบแสดงออก พูดเก่ง มี charisma สูงค่ะ',
+  4: 'คนมั่นคง ขยัน มีระเบียบ สร้างสิ่งที่ยั่งยืนได้ดีมากค่ะ',
+  5: 'คนรักอิสระ ชอบการเปลี่ยนแปลง ปรับตัวเก่ง ชีวิตไม่มีซ้ำค่ะ',
+  6: 'นักดูแลตัวจริง รับผิดชอบสูง รักครอบครัว ใจดีมากค่ะ',
+  7: 'นักวิเคราะห์ ลึกซึ้ง ใฝ่รู้ ชอบค้นหาความจริงค่ะ',
+  8: 'นักธุรกิจเกิดมาเพื่อสิ่งนี้ มีพลังงานดึงดูดเงินและความสำเร็จค่ะ',
+  9: 'นักมนุษยธรรม ใจกว้าง มีอุดมการณ์ ชอบช่วยเหลือคนอื่นค่ะ',
+};
+
+const CONFLICT = {
+  1:[2,6], 2:[1,8], 3:[4,8], 4:[5,7],
+  5:[4,6], 6:[3,5], 7:[2,8], 8:[3,7], 9:[1,4]
+};
+
+let lifePath=0, currentYear=new Date().getFullYear(), currentMonth=new Date().getMonth()+1;
+
+function reduce(n){while(n>9&&n!==11&&n!==22){let s=0;String(n).split('').forEach(d=>s+=parseInt(d));n=s;}return n;}
+
+function calcLifePath(d,m,y){
+  let sum=0;
+  String(d).split('').forEach(c=>sum+=parseInt(c));
+  String(m).split('').forEach(c=>sum+=parseInt(c));
+  String(y).split('').forEach(c=>sum+=parseInt(c));
+  return reduce(sum);
+}
+
+function calcPersonalYear(lp,y){return reduce(lp+reduce(y));}
+function calcPersonalMonth(lp,y,m){return reduce(calcPersonalYear(lp,y)+reduce(m));}
+function calcPersonalDay(lp,y,m,d){return reduce(calcPersonalMonth(lp,y,m)+reduce(d));}
+
+window.calculate=function(){
+  const d=parseInt(document.getElementById('inDay').value);
+  const m=parseInt(document.getElementById('inMonth').value);
+  const y=parseInt(document.getElementById('inYear').value);
+  lifePath=calcLifePath(d,m,y);
+  document.getElementById('lifePathNum').textContent=lifePath;
+  document.getElementById('lifePathDesc').textContent=LIFE_PATH_DESC[lifePath]||'';
+  document.getElementById('profileBox').classList.add('show');
+  renderCalendar();
+  document.getElementById('calBox').classList.add('show');
+  document.getElementById('legendBox').style.display='block';
+  document.getElementById('profileBox').scrollIntoView({behavior:'smooth'});
+};
+
+const thMonths=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const thDays=['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+function renderCalendar(){
+  document.getElementById('calTitle').textContent=`${thMonths[currentMonth]} ${currentYear+543}`;
+  const grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  thDays.forEach(d=>{const el=document.createElement('div');el.className='cal-head';el.textContent=d;grid.appendChild(el);});
+  const firstDay=new Date(currentYear,currentMonth-1,1).getDay();
+  const daysInMonth=new Date(currentYear,currentMonth,0).getDate();
+  const today=new Date();
+  for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
+  for(let d=1;d<=daysInMonth;d++){
+    const pd=calcPersonalDay(lifePath,currentYear,currentMonth,d);
+    const conflict=CONFLICT[lifePath]||[];
+    const meaning=DAY_MEANING[pd]||DAY_MEANING[1];
+    let cls='cal-day';
+    if(conflict.includes(pd)) cls+=' bad';
+    else if(pd===7||pd===9) cls+=' warn';
+    else if(pd===1) cls+=' great';
+    else cls+=' good';
+    const isToday=today.getDate()===d&&today.getMonth()+1===currentMonth&&today.getFullYear()===currentYear;
+    if(isToday) cls+=' today';
+    const conflict2=CONFLICT[lifePath]||[];
+    let icon=meaning.icon;
+    if(conflict2.includes(pd)) icon='🚫';
+    const el=document.createElement('div');
+    el.className=cls;
+    el.innerHTML=`<div class="cal-day-num">${d}</div><div class="cal-day-icon">${icon}</div>`;
+    el.onclick=()=>showDetail(d,pd,meaning,conflict2.includes(pd));
+    grid.appendChild(el);
+  }
+}
+
+window.prevMonth=function(){
+  currentMonth--;if(currentMonth<1){currentMonth=12;currentYear--;}
+  renderCalendar();
+};
+window.nextMonth=function(){
+  currentMonth++;if(currentMonth>12){currentMonth=1;currentYear++;}
+  renderCalendar();
+};
+
+function showDetail(d,pd,meaning,isBad){
+  const thMonthsArr=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('detailDate').textContent=`${d} ${thMonthsArr[currentMonth]} ${currentYear+543} • พลังงานวัน ${pd}`;
+  document.getElementById('detailIcon').textContent=isBad?'🚫':meaning.icon;
+  document.getElementById('detailLabel').textContent=isBad?'วันหลีกเลี่ยง':meaning.label;
+  document.getElementById('detailDesc').textContent=isBad?'วันนี้พลังงานขัดแย้งกับเลขชีวิตของคุณพี่ค่ะ ไม่เหมาะเริ่มสิ่งสำคัญ แนะนำให้ทำงานปกติไปก่อนนะคะ':meaning.desc;
+  document.getElementById('detailDo').textContent=isBad?'✅ ทำงานประจำ พักผ่อน ดูแลสุขภาพ':meaning.do;
+  document.getElementById('detailAvoid').textContent=isBad?'❌ เริ่มโปรเจกต์ใหม่ เซ็นสัญญา ลงทุนสำคัญ':meaning.avoid;
+  document.getElementById('detailOverlay').classList.add('show');
+}
+window.closeDetail=function(){document.getElementById('detailOverlay').classList.remove('show');};
+</script>
+</body>
+</html>
