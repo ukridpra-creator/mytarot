@@ -16,75 +16,69 @@
     .hero { text-align:center; padding:8px 0 20px; }
     .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
     .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
-
     .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
     .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
     .date-row { display:flex; gap:8px; }
     .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
     .sel option { background:#1a1535; }
-
     .btn-calc { width:100%; border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#ec4899,#a855f7); }
-    .btn-calc:disabled { opacity:0.5; cursor:not-allowed; }
-
-    /* PROFILE */
     .profile-box { background:rgba(236,72,153,0.08); border:1px solid rgba(236,72,153,0.2); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:none; }
     .profile-box.show { display:block; }
-    .profile-num { text-align:center; margin-bottom:8px; }
+    .profile-num { text-align:center; margin-bottom:4px; }
     .profile-num span { font-size:48px; font-weight:800; color:#ec4899; }
     .profile-label { font-size:13px; color:rgba(255,255,255,0.5); text-align:center; }
     .profile-desc { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.8; margin-top:8px; text-align:center; }
-
-    /* CALENDAR */
     .cal-box { display:none; }
     .cal-box.show { display:block; }
     .cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
     .cal-nav-btn { width:36px; height:36px; border-radius:50%; background:rgba(236,72,153,0.15); border:1px solid rgba(236,72,153,0.3); color:#ec4899; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
     .cal-title { font-size:16px; font-weight:700; color:white; }
-    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:16px; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px; }
     .cal-head { text-align:center; font-size:10px; color:var(--dim); padding:4px 0; }
-    .cal-day { aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; cursor:default; position:relative; }
-    .cal-day.empty { background:transparent; }
-    .cal-day.today { border:1px solid rgba(255,255,255,0.3); }
+    .cal-day { aspect-ratio:1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; cursor:pointer; position:relative; }
+    .cal-day.empty { background:transparent; cursor:default; pointer-events:none; }
     .cal-day-num { font-size:11px; font-weight:700; color:white; line-height:1; }
     .cal-day-icon { font-size:13px; line-height:1; }
-    .cal-day.good { background:rgba(16,185,129,0.15); }
-    .cal-day.warn { background:rgba(245,158,11,0.12); }
-    .cal-day.bad  { background:rgba(239,68,68,0.12); }
-    .cal-day.great{ background:rgba(168,85,247,0.2); border:1px solid rgba(168,85,247,0.4); }
-
-    /* LEGEND */
+    .cal-day.great  { background:rgba(168,85,247,0.25); border:1px solid rgba(168,85,247,0.5); }
+    .cal-day.good   { background:rgba(16,185,129,0.15); }
+    .cal-day.normal { background:rgba(96,165,250,0.1); }
+    .cal-day.warn   { background:rgba(245,158,11,0.12); }
+    .cal-day.bad    { background:rgba(239,68,68,0.12); }
+    .cal-day.today  { border:2px solid #f59e0b !important; box-shadow:0 0 8px rgba(245,158,11,0.4); }
+    .cal-note { text-align:center; font-size:12px; color:var(--dim); margin-bottom:16px; }
     .legend { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:16px; }
     .legend-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
     .legend-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .legend-item { display:flex; align-items:flex-start; gap:8px; }
     .legend-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
-    .legend-text { font-size:11px; color:rgba(255,255,255,0.6); line-height:1.5; }
     .legend-text strong { color:white; font-size:12px; display:block; }
-
-    /* DETAIL POPUP */
+    .legend-text span { font-size:11px; color:rgba(255,255,255,0.5); }
     .detail-overlay { position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); display:none; align-items:flex-end; justify-content:center; }
     .detail-overlay.show { display:flex; }
     .detail-sheet { background:linear-gradient(180deg,#1a0e2e,#0d0820); border-radius:24px 24px 0 0; padding:24px 20px 40px; width:100%; max-width:480px; border-top:1px solid var(--border); }
-    .detail-date { font-size:13px; color:var(--dim); margin-bottom:4px; }
-    .detail-icon { font-size:48px; text-align:center; margin:8px 0; }
-    .detail-label { font-size:20px; font-weight:800; color:white; text-align:center; margin-bottom:12px; }
-    .detail-desc { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.9; margin-bottom:12px; }
+    .detail-date { font-size:12px; color:var(--dim); margin-bottom:8px; }
+    .detail-icon { font-size:48px; text-align:center; margin:4px 0; }
+    .detail-label { font-size:20px; font-weight:800; color:white; text-align:center; margin-bottom:4px; }
+    .detail-level { font-size:13px; text-align:center; margin-bottom:12px; }
+    .detail-desc { font-size:14px; color:rgba(255,255,255,0.8); line-height:1.9; margin-bottom:12px; }
     .detail-do { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); border-radius:12px; padding:12px; margin-bottom:8px; font-size:13px; color:#10b981; }
     .detail-avoid { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:12px; padding:12px; font-size:13px; color:#ef4444; }
+    .detail-planet { background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.2); border-radius:12px; padding:12px; margin-top:8px; font-size:12px; color:rgba(255,255,255,0.5); }
     .detail-close { width:100%; margin-top:16px; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
   </style>
 </head>
 <body>
 
-<!-- DETAIL POPUP -->
 <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
   <div class="detail-sheet">
     <div class="detail-date" id="detailDate"></div>
     <div class="detail-icon" id="detailIcon"></div>
     <div class="detail-label" id="detailLabel"></div>
+    <div class="detail-level" id="detailLevel"></div>
     <div class="detail-desc" id="detailDesc"></div>
     <div class="detail-do" id="detailDo"></div>
     <div class="detail-avoid" id="detailAvoid"></div>
+    <div class="detail-planet" id="detailPlanet"></div>
     <button class="detail-close" onclick="closeDetail()">ปิด</button>
   </div>
 </div>
@@ -117,7 +111,7 @@
   <div class="hero">
     <div style="margin-bottom:12px"><img src="../images/mascot-taegil.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
     <div class="hero-title">🗓️ Taegil — หาวันดี</div>
-    <div class="hero-desc">แต่ละวันมีพลังงานต่างกันค่ะ<br>รู้ก่อนว่าวันไหนดีเรื่องอะไร จะได้วางแผนได้เลยค่ะ</div>
+    <div class="hero-desc">คำนวณพลังงานแต่ละวันจากเลขศาสตร์<br>และดาวจรค่ะ กดวันไหนก็ได้เพื่อดูรายละเอียดค่ะ</div>
   </div>
 
   <div class="input-card">
@@ -131,14 +125,12 @@
 
   <button class="btn-calc" id="calcBtn" onclick="calculate()">🗓️ ดูปฏิทินพลังงานเลยค่ะ</button>
 
-  <!-- PROFILE -->
   <div class="profile-box" id="profileBox">
     <div class="profile-label">เลขชีวิตของคุณพี่</div>
     <div class="profile-num"><span id="lifePathNum">—</span></div>
     <div class="profile-desc" id="lifePathDesc"></div>
   </div>
 
-  <!-- CALENDAR -->
   <div class="cal-box" id="calBox">
     <div class="cal-nav">
       <button class="cal-nav-btn" onclick="prevMonth()">←</button>
@@ -146,24 +138,24 @@
       <button class="cal-nav-btn" onclick="nextMonth()">→</button>
     </div>
     <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-note">✨ กดที่วันไหนก็ได้เพื่อดูคำทำนายและสิ่งที่ควรทำค่ะ</div>
   </div>
 
-  <!-- LEGEND -->
   <div class="legend" id="legendBox" style="display:none">
     <div class="legend-title">✦ ความหมายสัญลักษณ์</div>
     <div class="legend-grid">
-      <div class="legend-item"><div class="legend-icon">🌟</div><div class="legend-text"><strong>วันเริ่มต้น</strong>พลังงานสูง เริ่มสิ่งใหม่ได้เลย</div></div>
-      <div class="legend-item"><div class="legend-icon">❤️</div><div class="legend-text"><strong>วันความรัก</strong>ดีเรื่องความสัมพันธ์</div></div>
-      <div class="legend-item"><div class="legend-icon">🎨</div><div class="legend-text"><strong>วันสร้างสรรค์</strong>ไอเดียพุ่ง ทำคอนเทนได้เลย</div></div>
-      <div class="legend-item"><div class="legend-icon">💼</div><div class="legend-text"><strong>วันทำงาน</strong>โฟกัส วางแผนระยะยาว</div></div>
-      <div class="legend-item"><div class="legend-icon">🌈</div><div class="legend-text"><strong>วันเปลี่ยนแปลง</strong>ลองสิ่งใหม่ เดินทาง</div></div>
-      <div class="legend-item"><div class="legend-icon">🏠</div><div class="legend-text"><strong>วันครอบครัว</strong>ดูแลคนรัก พักผ่อน</div></div>
-      <div class="legend-item"><div class="legend-icon">🔮</div><div class="legend-text"><strong>วันใคร่ครวญ</strong>ไม่ควรตัดสินใจใหญ่</div></div>
-      <div class="legend-item"><div class="legend-icon">💰</div><div class="legend-text"><strong>วันการเงิน</strong>ดีมากเรื่องธุรกิจ ลงทุน</div></div>
-      <div class="legend-item"><div class="legend-icon">🌺</div><div class="legend-text"><strong>วันปิดบท</strong>จบสิ่งเก่า ให้อภัย</div></div>
-      <div class="legend-item"><div class="legend-icon">⚠️</div><div class="legend-text"><strong>วันระวัง</strong>ระมัดระวังการตัดสินใจ</div></div>
-      <div class="legend-item"><div class="legend-icon">🚫</div><div class="legend-text"><strong>วันหลีกเลี่ยง</strong>ไม่เหมาะเริ่มสิ่งสำคัญ</div></div>
-      <div class="legend-item"><div class="legend-icon">✨</div><div class="legend-text"><strong>วันมงคลสูงสุด</strong>วันพิเศษของคุณพี่ค่ะ</div></div>
+      <div class="legend-item"><div class="legend-icon">✨</div><div class="legend-text"><strong>วันมงคลสูงสุด</strong><span>วันพิเศษของคุณพี่ค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🌟</div><div class="legend-text"><strong>วันเริ่มต้น</strong><span>พลังงานสูง เริ่มสิ่งใหม่ค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">❤️</div><div class="legend-text"><strong>วันความรัก</strong><span>ดีเรื่องความสัมพันธ์ค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🎨</div><div class="legend-text"><strong>วันสร้างสรรค์</strong><span>ไอเดียพุ่ง ทำคอนเทนค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">💼</div><div class="legend-text"><strong>วันทำงาน</strong><span>โฟกัส วางแผนระยะยาวค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🌈</div><div class="legend-text"><strong>วันเปลี่ยนแปลง</strong><span>ลองสิ่งใหม่ เดินทางค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🏠</div><div class="legend-text"><strong>วันครอบครัว</strong><span>ดูแลคนรัก พักผ่อนค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🔮</div><div class="legend-text"><strong>วันใคร่ครวณ</strong><span>ไม่ควรตัดสินใจใหญ่ค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">💰</div><div class="legend-text"><strong>วันการเงิน</strong><span>ดีเรื่องธุรกิจ ลงทุนค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🌺</div><div class="legend-text"><strong>วันปิดบท</strong><span>จบสิ่งเก่า ให้อภัยค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">⚠️</div><div class="legend-text"><strong>วันระวัง</strong><span>ระมัดระวังการตัดสินใจค่ะ</span></div></div>
+      <div class="legend-item"><div class="legend-icon">🚫</div><div class="legend-text"><strong>วันหลีกเลี่ยง</strong><span>ไม่เหมาะเริ่มสิ่งสำคัญค่ะ</span></div></div>
     </div>
   </div>
 </div>
@@ -221,68 +213,155 @@ const monthEl=document.getElementById('inMonth');
 monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
 const yearEl=document.getElementById('inYear');
 const curY=new Date().getFullYear();
-for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=y+(543)+' ('+(y)+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
+for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=(y+543)+' ('+y+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
 
-// DATA
-const DAY_MEANING = {
-  1: { icon:'🌟', label:'วันเริ่มต้น', cls:'great',
-       desc:'พลังงานวันนี้แรงมากค่ะ จักรวาลเปิดไฟเขียวให้คุณพี่ลงมือทำสิ่งที่คิดไว้นานแล้วได้เลยค่ะ อะไรที่ผัดมาตลอด วันนี้แหละใช่เลย ยิ่งเริ่มเร็วยิ่งดีค่ะ พลังงานหมายเลข 1 ส่งเสริมความกล้าและความเป็นผู้นำอย่างเต็มที่ค่ะ',
-       do:'✅ เริ่มโปรเจกต์ใหม่ ตัดสินใจ ประชุมสำคัญ pitch งาน',
-       avoid:'❌ ผัดวันประกันพรุ่ง รอคนอื่น ทำตามคนอื่นโดยไม่มีเหตุผล' },
-  2: { icon:'❤️', label:'วันความสัมพันธ์', cls:'good',
-       desc:'วันนี้ดีมากสำหรับเรื่องคนค่ะ ไม่ว่าจะความรัก เพื่อน หรือหุ้นส่วน พลังงานวันนี้อ่อนโยนและเข้าอกเข้าใจ ถ้ามีเรื่องค้างคาใจกับใครอยู่ วันนี้เหมาะมากที่จะพูดคุยกันค่ะ บรรยากาศเปิดรับและประนีประนอมสุดๆ ค่ะ',
-       do:'✅ นัดหมาย ขอโทษ บอกรัก คุยเรื่องสำคัญ ทำงานเป็นทีม',
-       avoid:'❌ ทะเลาะ ตัดสินคนอื่น ทำงานคนเดียวทั้งวัน' },
-  3: { icon:'🎨', label:'วันสร้างสรรค์', cls:'good',
-       desc:'ไอเดียพุ่งแรงมากวันนี้ค่ะ ถ้ามีงานที่ต้องใช้ความคิดสร้างสรรค์รีบจัดการเลยนะคะ พลังงานเลข 3 ส่งเสริมการแสดงออก ความสนุก และการสื่อสารค่ะ วันนี้ทำคอนเทน เขียน วาด หรืออะไรก็ตามที่ได้ใช้ creativity ออกมาได้เลยค่ะ',
-       do:'✅ ทำคอนเทน โซเชียลมีเดีย งานศิลปะ เขียน ร้องเพลง',
-       avoid:'❌ งานซ้ำซาก routine น่าเบื่อ ประชุมที่ไม่จำเป็น' },
-  4: { icon:'💼', label:'วันทำงานหนัก', cls:'good',
-       desc:'วันนี้เป็นวันของคนขยันค่ะ พลังงานเลข 4 ทำให้โฟกัสได้ดีมาก เหมาะกับงานที่ต้องใช้ความละเอียดและความอดทนค่ะ ถ้ามีโปรเจกต์ยาวๆ ที่ต้องค่อยๆ ทำ วันนี้แหละที่ดีที่สุดค่ะ อย่าเสี่ยงหรือลองอะไรใหม่มากนักวันนี้นะคะ',
-       do:'✅ วางแผนระยะยาว ทำงานจริงจัง จัดระเบียบ ทำบัญชี',
-       avoid:'❌ เสี่ยง ลงทุนตามความรู้สึก ตัดสินใจแบบ impulsive' },
-  5: { icon:'🌈', label:'วันเปลี่ยนแปลง', cls:'good',
-       desc:'พลังงานวันนี้พาให้อยากลองอะไรใหม่ๆ ค่ะ เหมาะมากถ้าคุณพี่กำลังคิดจะเปลี่ยนแปลงอะไรในชีวิต ไม่ว่าจะเปลี่ยนงาน ลอง hobby ใหม่ หรือแค่เปลี่ยนเส้นทางกลับบ้านก็ยังได้ค่ะ พลังงานเลข 5 ชอบอิสระและความตื่นเต้นค่ะ',
-       do:'✅ ลองสิ่งใหม่ เดินทาง เปลี่ยนแปลง พบคนใหม่ ทดลอง',
-       avoid:'❌ ยึดติดกับของเดิม ปฏิเสธโอกาสใหม่ อยู่ใน comfort zone' },
-  6: { icon:'🏠', label:'วันครอบครัว', cls:'good',
-       desc:'วันนี้จักรวาลดึงคุณพี่กลับมาดูแลคนรอบข้างค่ะ พลังงานเลข 6 เต็มไปด้วยความรัก ความอบอุ่น และความรับผิดชอบค่ะ เหมาะมากที่จะใช้เวลากับครอบครัว คนรัก หรือแม้แต่ดูแลตัวเองก็ได้ค่ะ วันนี้อย่าเอางานมาเป็นที่หนึ่งนะคะ',
-       do:'✅ ใช้เวลากับครอบครัว คนรัก ทำอาหาร ดูแลบ้าน self-care',
-       avoid:'❌ ละเลยคนใกล้ชิด workaholic เกินไป เอาตัวเองไว้ท้ายสุด' },
-  7: { icon:'🔮', label:'วันใคร่ครวญ', cls:'warn',
-       desc:'วันนี้เป็นวันของการหยุดคิดค่ะ พลังงานเลข 7 ลึกลับและชอบความสงบค่ะ ไม่เหมาะกับการตัดสินใจใหญ่หรือเซ็นสัญญาสำคัญเลยค่ะ แต่ถ้าอยากนั่งคิดทบทวนชีวิต อ่านหนังสือ หรือ meditate วันนี้เป็นวันที่ดีที่สุดเลยค่ะ',
-       do:'✅ พักผ่อน ใคร่ครวญ วิจัย อ่านหนังสือ meditaion',
-       avoid:'❌ ตัดสินใจใหญ่ เซ็นสัญญา ลงทุน เริ่มโปรเจกต์สำคัญ' },
-  8: { icon:'💰', label:'วันการเงิน', cls:'good',
-       desc:'วันเงินๆ ทองๆ มาแล้วค่ะ พลังงานเลข 8 ส่งเสริมเรื่องธุรกิจและการเงินอย่างเต็มที่ค่ะ ถ้ามีแผนลงทุน เจรจาธุรกิจ หรือขอขึ้นเงินเดือน วันนี้โอกาสสูงมากค่ะ แต่ต้องระวังอย่าโลภเกินไปนะคะ พลังงานเลข 8 ให้ผลตามที่ลงทุนจริงๆ ค่ะ',
-       do:'✅ เจรจาธุรกิจ ลงทุน ขอขึ้นเงินเดือน ทำสัญญาการเงิน',
-       avoid:'❌ ใช้เงินฟุ่มเฟือย โลภเกินไป เชื่อคนง่ายเรื่องเงิน' },
-  9: { icon:'🌺', label:'วันปิดบท', cls:'warn',
-       desc:'วันนี้พลังงานพาให้จบสิ่งที่ค้างอยู่ค่ะ ถ้ามีเรื่องที่ยังปล่อยวางไม่ได้ ความสัมพันธ์ที่ควรสิ้นสุด หรืองานที่ทำค้างไว้ วันนี้เหมาะมากที่จะจัดการให้เสร็จค่ะ พลังงานเลข 9 ให้พลังการ let go และเปิดทางให้สิ่งใหม่เข้ามาค่ะ',
-       do:'✅ จบโปรเจกต์ค้าง ให้อภัย ปล่อยวาง เคลียร์ของ บริจาค',
-       avoid:'❌ เริ่มสิ่งใหม่ ลงทุนใหม่ เปิดธุรกิจ เริ่มความสัมพันธ์ใหม่' },
+// ===== PLANET TRANSITS DATA =====
+const TRANSITS = {
+  2026: {
+    sun:  [{d:'2026-01-14',s:9},{d:'2026-02-13',s:10},{d:'2026-03-15',s:11},{d:'2026-04-14',s:0},{d:'2026-05-15',s:1},{d:'2026-06-15',s:2},{d:'2026-07-17',s:3},{d:'2026-08-17',s:4},{d:'2026-09-17',s:5},{d:'2026-10-18',s:6},{d:'2026-11-17',s:7},{d:'2026-12-16',s:8}],
+    mars: [{d:'2026-01-15',s:9},{d:'2026-02-23',s:10},{d:'2026-04-02',s:11},{d:'2026-05-12',s:0},{d:'2026-06-21',s:1},{d:'2026-08-04',s:2},{d:'2026-09-19',s:3},{d:'2026-11-10',s:4}],
+    merc: [{d:'2026-01-11',s:9},{d:'2026-01-30',s:10},{d:'2026-04-07',s:11},{d:'2026-04-24',s:0},{d:'2026-05-10',s:1},{d:'2026-05-27',s:2},{d:'2026-07-31',s:3},{d:'2026-08-18',s:4},{d:'2026-09-03',s:5},{d:'2026-09-22',s:6},{d:'2026-11-30',s:7},{d:'2026-12-18',s:8}],
+    jup:  [{d:'2026-05-31',s:3},{d:'2026-10-20',s:4}],
+    ven:  [{d:'2026-01-15',s:9},{d:'2026-02-08',s:10},{d:'2026-03-04',s:11},{d:'2026-03-28',s:0},{d:'2026-04-22',s:1},{d:'2026-05-17',s:2},{d:'2026-06-10',s:3},{d:'2026-07-06',s:4},{d:'2026-08-01',s:5},{d:'2026-08-31',s:6}],
+    sat:  [{d:'2026-02-13',s:11}],
+    rahu: [{d:'2026-11-22',s:9}],
+    ketu: [{d:'2026-01-05',s:11},{d:'2026-03-02',s:10},{d:'2026-04-28',s:9},{d:'2026-06-23',s:8},{d:'2026-08-19',s:7},{d:'2026-10-14',s:6},{d:'2026-12-10',s:5}],
+  },
+  2027: {
+    sun:  [{d:'2027-01-15',s:9},{d:'2027-02-13',s:10},{d:'2027-03-15',s:11},{d:'2027-04-14',s:0},{d:'2027-05-15',s:1},{d:'2027-06-15',s:2},{d:'2027-07-17',s:3},{d:'2027-08-18',s:4},{d:'2027-09-18',s:5},{d:'2027-10-18',s:6},{d:'2027-11-17',s:7},{d:'2027-12-17',s:8}],
+    mars: [{d:'2027-03-19',s:3},{d:'2027-04-26',s:4},{d:'2027-07-04',s:5},{d:'2027-08-22',s:6},{d:'2027-10-06',s:7},{d:'2027-11-16',s:8},{d:'2027-12-26',s:9}],
+    merc: [{d:'2027-01-04',s:9},{d:'2027-03-13',s:10},{d:'2027-03-31',s:11},{d:'2027-04-16',s:0},{d:'2027-05-03',s:1},{d:'2027-07-05',s:2},{d:'2027-07-25',s:3},{d:'2027-08-10',s:4},{d:'2027-08-27',s:5},{d:'2027-11-04',s:6},{d:'2027-11-23',s:7},{d:'2027-12-09',s:8},{d:'2027-12-28',s:9}],
+    jup:  [{d:'2027-02-09',s:3},{d:'2027-06-23',s:4},{d:'2027-11-14',s:5}],
+    ven:  [{d:'2027-01-02',s:7},{d:'2027-01-31',s:8},{d:'2027-02-26',s:9},{d:'2027-03-23',s:10},{d:'2027-04-17',s:11},{d:'2027-05-12',s:0},{d:'2027-06-05',s:1},{d:'2027-06-30',s:2},{d:'2027-07-25',s:3},{d:'2027-08-18',s:4},{d:'2027-09-11',s:5},{d:'2027-10-06',s:6},{d:'2027-10-30',s:7},{d:'2027-11-23',s:8},{d:'2027-12-18',s:9}],
+    sat:  [{d:'2027-01-01',s:11}],
+    rahu: [{d:'2027-01-01',s:9}],
+    ketu: [{d:'2027-02-05',s:4},{d:'2027-04-02',s:3},{d:'2027-05-29',s:2},{d:'2027-07-24',s:1},{d:'2027-09-19',s:0},{d:'2027-11-15',s:11}],
+  },
+  2028: {
+    sun:  [{d:'2028-01-15',s:9},{d:'2028-02-13',s:10},{d:'2028-03-14',s:11},{d:'2028-04-13',s:0},{d:'2028-05-14',s:1},{d:'2028-06-15',s:2},{d:'2028-07-16',s:3},{d:'2028-08-17',s:4},{d:'2028-09-17',s:5},{d:'2028-10-17',s:6},{d:'2028-11-16',s:7},{d:'2028-12-16',s:8}],
+    mars: [{d:'2028-02-03',s:10},{d:'2028-03-12',s:11},{d:'2028-04-21',s:0},{d:'2028-05-31',s:1},{d:'2028-07-13',s:2},{d:'2028-08-27',s:3},{d:'2028-10-14',s:4},{d:'2028-12-07',s:5}],
+    merc: [{d:'2028-02-03',s:8},{d:'2028-02-08',s:9},{d:'2028-03-06',s:10},{d:'2028-03-22',s:11},{d:'2028-04-08',s:0},{d:'2028-04-27',s:1},{d:'2028-05-31',s:0},{d:'2028-06-02',s:1},{d:'2028-06-30',s:2},{d:'2028-07-16',s:3},{d:'2028-08-01',s:4},{d:'2028-08-20',s:5},{d:'2028-09-24',s:4},{d:'2028-10-02',s:5},{d:'2028-10-27',s:6},{d:'2028-11-13',s:7},{d:'2028-12-01',s:8}],
+    jup:  [{d:'2028-03-16',s:4},{d:'2028-08-26',s:5}],
+    ven:  [{d:'2028-01-11',s:10},{d:'2028-02-05',s:11},{d:'2028-03-01',s:0},{d:'2028-03-29',s:1},{d:'2028-05-06',s:2},{d:'2028-06-01',s:1},{d:'2028-08-03',s:2},{d:'2028-09-02',s:3},{d:'2028-09-28',s:4},{d:'2028-10-24',s:5},{d:'2028-11-17',s:6},{d:'2028-12-12',s:7}],
+    sat:  [{d:'2028-04-12',s:0}],
+    rahu: [{d:'2028-06-10',s:8}],
+    ketu: [{d:'2028-01-10',s:10},{d:'2028-03-07',s:9},{d:'2028-05-02',s:8},{d:'2028-06-28',s:7},{d:'2028-08-23',s:6},{d:'2028-10-19',s:5},{d:'2028-12-15',s:4}],
+  }
 };
 
+// ===== NUMEROLOGY DATA =====
 const LIFE_PATH_DESC = {
-  1: 'ผู้นำโดยธรรมชาติ มีพลังงานสูง กล้าตัดสินใจ ชอบเป็นคนแรกค่ะ',
-  2: 'นักประสานงานเก่ง อ่อนไหว เข้าใจคนอื่นดี ชอบทำงานเป็นทีมค่ะ',
-  3: 'นักสร้างสรรค์ตัวจริง ชอบแสดงออก พูดเก่ง มี charisma สูงค่ะ',
-  4: 'คนมั่นคง ขยัน มีระเบียบ สร้างสิ่งที่ยั่งยืนได้ดีมากค่ะ',
-  5: 'คนรักอิสระ ชอบการเปลี่ยนแปลง ปรับตัวเก่ง ชีวิตไม่มีซ้ำค่ะ',
-  6: 'นักดูแลตัวจริง รับผิดชอบสูง รักครอบครัว ใจดีมากค่ะ',
-  7: 'นักวิเคราะห์ ลึกซึ้ง ใฝ่รู้ ชอบค้นหาความจริงค่ะ',
-  8: 'นักธุรกิจเกิดมาเพื่อสิ่งนี้ มีพลังงานดึงดูดเงินและความสำเร็จค่ะ',
-  9: 'นักมนุษยธรรม ใจกว้าง มีอุดมการณ์ ชอบช่วยเหลือคนอื่นค่ะ',
+  1:'ผู้นำโดยธรรมชาติ มีพลังงานสูง กล้าตัดสินใจ ชอบเป็นคนแรกค่ะ',
+  2:'นักประสานงานเก่ง อ่อนไหว เข้าใจคนอื่นดี ชอบทำงานเป็นทีมค่ะ',
+  3:'นักสร้างสรรค์ตัวจริง ชอบแสดงออก พูดเก่ง มี charisma สูงค่ะ',
+  4:'คนมั่นคง ขยัน มีระเบียบ สร้างสิ่งที่ยั่งยืนได้ดีมากค่ะ',
+  5:'คนรักอิสระ ชอบการเปลี่ยนแปลง ปรับตัวเก่ง ชีวิตไม่มีซ้ำค่ะ',
+  6:'นักดูแลตัวจริง รับผิดชอบสูง รักครอบครัว ใจดีมากค่ะ',
+  7:'นักวิเคราะห์ ลึกซึ้ง ใฝ่รู้ ชอบค้นหาความจริงค่ะ',
+  8:'นักธุรกิจเกิดมาเพื่อสิ่งนี้ มีพลังงานดึงดูดเงินและความสำเร็จค่ะ',
+  9:'นักมนุษยธรรม ใจกว้าง มีอุดมการณ์ ชอบช่วยเหลือคนอื่นค่ะ',
 };
 
-const CONFLICT = {
-  1:[2,6], 2:[1,8], 3:[4,8], 4:[5,7],
-  5:[4,6], 6:[3,5], 7:[2,8], 8:[3,7], 9:[1,4]
+// เลขที่เข้ากัน/ขัดแย้งกับ Life Path
+const LP_GOOD = {1:[1,4,7],2:[2,4,8],3:[3,6,9],4:[1,2,4],5:[1,5,7],6:[2,3,6],7:[1,5,7],8:[2,4,8],9:[3,6,9]};
+const LP_BAD  = {1:[2,6],2:[1,5],3:[4,8],4:[5,9],5:[4,6],6:[1,5],7:[2,8],8:[3,7],9:[1,4]};
+
+// คำทำนายตามเรื่องและ level
+const DAY_BASE = {
+  1:{icon:'🌟',label:'วันเริ่มต้น',topic:'การเริ่มต้น'},
+  2:{icon:'❤️',label:'วันความรัก',topic:'ความสัมพันธ์'},
+  3:{icon:'🎨',label:'วันสร้างสรรค์',topic:'ความคิดสร้างสรรค์'},
+  4:{icon:'💼',label:'วันทำงาน',topic:'การงาน'},
+  5:{icon:'🌈',label:'วันเปลี่ยนแปลง',topic:'การเปลี่ยนแปลง'},
+  6:{icon:'🏠',label:'วันครอบครัว',topic:'ครอบครัว'},
+  7:{icon:'🔮',label:'วันใคร่ครวณ',topic:'การพิจารณา'},
+  8:{icon:'💰',label:'วันการเงิน',topic:'การเงิน'},
+  9:{icon:'🌺',label:'วันปิดบท',topic:'การปล่อยวาง'},
 };
 
-let lifePath=0, currentYear=new Date().getFullYear(), currentMonth=new Date().getMonth()+1;
+const PREDICTIONS = {
+  1: {
+    great: {desc:'วันนี้พลังงานเปิดทางให้คุณพี่เต็มที่มากค่ะ สิ่งที่วางแผนไว้นานแล้วถึงเวลาลงมือแล้วค่ะ ความกล้าและความเป็นผู้นำจะนำพาคุณพี่ไปสู่ความสำเร็จในวันนี้ค่ะ',do:'✅ เริ่มโปรเจกต์ใหม่ ตัดสินใจสำคัญ ประชุม pitch งาน',avoid:'❌ ผัดวันประกันพรุ่ง รอให้คนอื่นนำ'},
+    good:  {desc:'วันนี้มีพลังงานดีสำหรับการเริ่มต้นค่ะ ลงมือทำสิ่งที่อยากทำได้เลยค่ะ โอกาสเปิดรออยู่ค่ะ',do:'✅ เริ่มงานใหม่ วางแผน ตัดสินใจ',avoid:'❌ ลังเลนานเกินไป'},
+    warn:  {desc:'วันนี้มีพลังงานเริ่มต้นแต่ดาวจรขัดอยู่บ้างค่ะ ถ้าจะเริ่มอะไรใหม่ขอให้ระวังรายละเอียดด้วยนะคะ',do:'✅ เริ่มสิ่งเล็กน้อยได้ค่ะ ไม่ต้องรีบใหญ่',avoid:'❌ ตัดสินใจใหญ่โดยไม่ไตร่ตรอง'},
+    bad:   {desc:'วันนี้ไม่เหมาะเริ่มสิ่งใหม่เลยค่ะ พลังงานขัดแย้งกันอยู่ค่ะ รอวันที่ดีกว่านี้จะดีกว่าค่ะ',do:'✅ ทำงานประจำ พักผ่อน',avoid:'❌ เริ่มโปรเจกต์ใหม่ ลงทุน'},
+  },
+  2: {
+    great: {desc:'วันนี้ดวงความรักและความสัมพันธ์แรงมากค่ะ ถ้ามีเรื่องในใจกับใครสักคน วันนี้แหละที่ดีที่สุดสำหรับการพูดคุยค่ะ บรรยากาศเปิดรับและอบอุ่นมากค่ะ',do:'✅ บอกรัก นัดหมาย คุยเรื่องสำคัญ ขอโทษ',avoid:'❌ ทะเลาะ ตัดสินคนอื่น'},
+    good:  {desc:'วันนี้ความสัมพันธ์ราบรื่นค่ะ เหมาะทำงานเป็นทีมหรือใช้เวลากับคนที่รักค่ะ',do:'✅ ทำงานร่วมกัน ใช้เวลากับคนรัก',avoid:'❌ แยกตัวอยู่คนเดียวทั้งวัน'},
+    warn:  {desc:'วันนี้ความสัมพันธ์มีความละเอียดอ่อนค่ะ ระวังคำพูดและการแสดงออกหน่อยนะคะ',do:'✅ ฟังมากกว่าพูด ใจเย็นไว้ค่ะ',avoid:'❌ ตัดสินใจเรื่องความรักแบบหุนหันพลันแล่น'},
+    bad:   {desc:'วันนี้ไม่เหมาะคุยเรื่องสำคัญกับคนรักค่ะ อาจเกิดความเข้าใจผิดได้ง่ายค่ะ รอวันที่ดีกว่านี้ค่ะ',do:'✅ ใช้เวลาส่วนตัว ดูแลตัวเอง',avoid:'❌ เจรจาเรื่องสำคัญ ตัดสินใจเรื่องความรัก'},
+  },
+  3: {
+    great: {desc:'วันนี้ไอเดียพุ่งแรงมากค่ะ จักรวาลเปิดช่องทางความคิดสร้างสรรค์ให้เต็มที่ค่ะ งานคอนเทน ศิลปะ หรืออะไรก็ตามที่ต้องใช้ความคิดสร้างสรรค์ ทำได้เลยค่ะ',do:'✅ ทำคอนเทน เขียน วาด ร้องเพลง โซเชียล',avoid:'❌ งานซ้ำซากน่าเบื่อ ประชุมที่ไม่จำเป็น'},
+    good:  {desc:'วันนี้ความคิดสร้างสรรค์ไหลลื่นดีค่ะ เหมาะกับงานที่ต้องใช้ไอเดียค่ะ',do:'✅ brainstorm วางแผนคอนเทน ทำงานสร้างสรรค์',avoid:'❌ งานที่ต้องใช้ความละเอียดสูง'},
+    warn:  {desc:'วันนี้ไอเดียมีบ้างแต่ไม่ค่อยไหลลื่นค่ะ อย่าฝืนมากนักนะคะ',do:'✅ ทำงานที่ค้างอยู่ให้เสร็จ',avoid:'❌ บังคับตัวเองให้ creative เกินไป'},
+    bad:   {desc:'วันนี้ไม่เหมาะงานสร้างสรรค์ค่ะ ทำงาน routine ธรรมดาไปก่อนดีกว่าค่ะ',do:'✅ ทำงานประจำ จัดระเบียบ',avoid:'❌ เปิดตัว content ใหม่ pitch ไอเดีย'},
+  },
+  4: {
+    great: {desc:'วันนี้พลังงานการทำงานและการวางแผนดีมากค่ะ ถ้ามีงานสำคัญที่ต้องการความละเอียดและความมั่นคง วันนี้แหละที่เหมาะที่สุดค่ะ',do:'✅ วางแผนระยะยาว ทำงานหนัก จัดระเบียบ ทำบัญชี',avoid:'❌ เสี่ยงโดยไม่มีแผน ตัดสินใจแบบ impulsive'},
+    good:  {desc:'วันนี้เหมาะทำงานที่ต้องใช้ความละเอียดและความอดทนค่ะ โฟกัสได้ดีมากค่ะ',do:'✅ ทำงานที่ค้าง วางแผน จัดการเอกสาร',avoid:'❌ ผัดวันประกันพรุ่ง'},
+    warn:  {desc:'วันนี้ทำงานได้แต่อาจติดขัดบ้างค่ะ อดทนไว้นะคะ',do:'✅ ทำงานที่ไม่สำคัญมากก่อน',avoid:'❌ ส่งงานด่วนที่สำคัญมากในวันนี้'},
+    bad:   {desc:'วันนี้การงานมีอุปสรรคค่ะ หลีกเลี่ยงการนำเสนองานสำคัญค่ะ',do:'✅ พักผ่อน เตรียมตัวสำหรับวันพรุ่งนี้',avoid:'❌ ประชุมสำคัญ ส่งงานใหญ่'},
+  },
+  5: {
+    great: {desc:'วันนี้พลังงานการเปลี่ยนแปลงแรงสุดๆ ค่ะ ถ้าคิดจะเปลี่ยนอะไรในชีวิต ไม่ว่าจะงาน ความสัมพันธ์ หรือไลฟ์สไตล์ วันนี้เป็นวันที่ดีที่สุดเลยค่ะ',do:'✅ ลองสิ่งใหม่ เดินทาง เปลี่ยนแปลง พบคนใหม่',avoid:'❌ ยึดติดของเดิม ปฏิเสธโอกาสใหม่'},
+    good:  {desc:'วันนี้เหมาะลองอะไรใหม่ๆ ค่ะ อย่ากลัวการเปลี่ยนแปลงค่ะ',do:'✅ ลอง hobby ใหม่ เดินทางสั้น พบเพื่อนใหม่',avoid:'❌ อยู่ใน comfort zone ทั้งวัน'},
+    warn:  {desc:'วันนี้อยากเปลี่ยนแปลงแต่ดาวขัดอยู่บ้างค่ะ ระวังการตัดสินใจเร็วเกินไปนะคะ',do:'✅ วางแผนการเปลี่ยนแปลง แต่ยังไม่ต้องลงมือ',avoid:'❌ เปลี่ยนแปลงครั้งใหญ่ในวันนี้'},
+    bad:   {desc:'วันนี้ไม่เหมาะเปลี่ยนแปลงอะไรสำคัญค่ะ รอวันที่ดีกว่านี้จะดีกว่าค่ะ',do:'✅ ทำสิ่งที่คุ้นเคย routine เดิม',avoid:'❌ เปลี่ยนงาน ย้ายบ้าน ตัดสินใจใหญ่'},
+  },
+  6: {
+    great: {desc:'วันนี้พลังงานครอบครัวและความรักแรงมากค่ะ จักรวาลดึงให้คุณพี่กลับมาดูแลคนที่รักค่ะ วันนี้เหมาะมากที่จะใช้เวลากับครอบครัวหรือคนรักค่ะ',do:'✅ ใช้เวลากับครอบครัว ทำอาหาร ดูแลบ้าน self-care',avoid:'❌ ทำงาน OT เกินไป ละเลยคนใกล้ชิด'},
+    good:  {desc:'วันนี้เหมาะดูแลตัวเองและคนรอบข้างค่ะ พลังงานอบอุ่นมากค่ะ',do:'✅ โทรหาคนที่คิดถึง ทำกับข้าว พักผ่อน',avoid:'❌ เอางานมาเป็นที่หนึ่งค่ะ'},
+    warn:  {desc:'วันนี้ความสัมพันธ์ในบ้านอาจมีความตึงเครียดเล็กน้อยค่ะ ใจเย็นไว้นะคะ',do:'✅ ฟังมากกว่าพูด ให้พื้นที่กันและกัน',avoid:'❌ เถียงเรื่องในบ้าน'},
+    bad:   {desc:'วันนี้ระวังความขัดแย้งในครอบครัวหน่อยนะคะ หลีกเลี่ยงเรื่องที่อ่อนไหวค่ะ',do:'✅ ทำกิจกรรมคนเดียว งานอดิเรก',avoid:'❌ คุยเรื่องสำคัญในครอบครัว'},
+  },
+  7: {
+    great: {desc:'วันนี้พลังงานการคิดและการวิเคราะห์สูงมากค่ะ เหมาะมากสำหรับการวิจัย ศึกษาข้อมูล หรือตัดสินใจที่ต้องใช้ความลึกซึ้งค่ะ',do:'✅ วิจัย อ่านหนังสือ meditaion คิดทบทวนชีวิต',avoid:'❌ ตัดสินใจโดยใช้แค่ความรู้สึก'},
+    good:  {desc:'วันนี้เหมาะนั่งคิดและวางแผนค่ะ สมองทำงานได้ดีมากค่ะ',do:'✅ คิดวิเคราะห์ วางแผน ศึกษาข้อมูล',avoid:'❌ ลงมือทำทันทีโดยไม่คิด'},
+    warn:  {desc:'วันนี้ความคิดอาจฟุ้งซ่านบ้างค่ะ ไม่เหมาะตัดสินใจใหญ่นะคะ',do:'✅ พักผ่อน ทำสิ่งที่ชอบ',avoid:'❌ ตัดสินใจสำคัญ เซ็นสัญญา'},
+    bad:   {desc:'วันนี้ไม่เหมาะตัดสินใจใดๆ ทั้งนั้นค่ะ รอให้หัวใสกว่านี้ก่อนนะคะ',do:'✅ นอนพัก ออกกำลังกาย เดินเล่น',avoid:'❌ ตัดสินใจใหญ่ ลงทุน เซ็นสัญญา'},
+  },
+  8: {
+    great: {desc:'วันนี้ดวงการเงินและธุรกิจแรงมากค่ะ โอกาสทองมาถึงแล้วค่ะ ถ้ามีแผนลงทุนหรือเจรจาธุรกิจ วันนี้โอกาสสูงมากค่ะ อย่าปล่อยผ่านนะคะ',do:'✅ เจรจาธุรกิจ ลงทุน ขอขึ้นเงินเดือน ทำสัญญาการเงิน',avoid:'❌ ใช้เงินฟุ่มเฟือย โลภเกินไป'},
+    good:  {desc:'วันนี้การเงินไหลลื่นค่ะ เหมาะจัดการเงินและวางแผนทางการเงินค่ะ',do:'✅ วางแผนการเงิน ออมเงิน จัดการบัญชี',avoid:'❌ ใช้จ่ายเกินงบ'},
+    warn:  {desc:'วันนี้เรื่องเงินต้องระวังนิดนึงค่ะ ไม่ควรตัดสินใจทางการเงินขนาดใหญ่ค่ะ',do:'✅ ดูแลเงินที่มีอยู่ ไม่ต้องเสี่ยง',avoid:'❌ ลงทุนใหม่ กู้เงิน'},
+    bad:   {desc:'วันนี้ระวังเรื่องเงินมากค่ะ อาจมีรายจ่ายที่ไม่คาดคิดค่ะ ไม่ควรแตะเรื่องการเงินสำคัญค่ะ',do:'✅ เก็บเงินไว้ก่อนค่ะ อย่าเพิ่งลงทุน',avoid:'❌ ลงทุน กู้เงิน เซ็นสัญญาการเงิน'},
+  },
+  9: {
+    great: {desc:'วันนี้พลังงานการปิดบทและปล่อยวางแรงมากค่ะ ถ้ามีเรื่องที่ค้างคาใจนานแล้ว วันนี้เป็นวันที่ดีที่สุดสำหรับการจบและเดินหน้าต่อค่ะ',do:'✅ จบโปรเจกต์ค้าง ให้อภัย ปล่อยวาง เคลียร์ของ บริจาค',avoid:'❌ เริ่มสิ่งใหม่ ลงทุนใหม่ เปิดธุรกิจ'},
+    good:  {desc:'วันนี้เหมาะจัดการสิ่งที่ค้างอยู่ค่ะ ปิดให้จบแล้วเดินหน้าต่อค่ะ',do:'✅ ทำงานค้างให้เสร็จ คืนของที่ยืมมา',avoid:'❌ เริ่มโปรเจกต์ใหม่'},
+    warn:  {desc:'วันนี้การปล่อยวางยากขึ้นบ้างค่ะ แต่ก็ยังควรพยายามค่ะ',do:'✅ ค่อยๆ จัดการสิ่งที่ค้างอยู่',avoid:'❌ ยึดติดกับสิ่งเก่าที่ควรปล่อยไปแล้ว'},
+    bad:   {desc:'วันนี้ยังไม่ใช่เวลาจบอะไรค่ะ รอให้พร้อมกว่านี้ก่อนค่ะ',do:'✅ ทำกิจกรรมผ่อนคลาย',avoid:'❌ ตัดสินใจจบอะไรแบบหุนหันพลันแล่น'},
+  },
+};
 
-function reduce(n){while(n>9&&n!==11&&n!==22){let s=0;String(n).split('').forEach(d=>s+=parseInt(d));n=s;}return n;}
+// ===== PLANET EFFECT =====
+// ราศีมิตรของแต่ละดาว
+const PLANET_FRIENDLY = {
+  jup:  [0,3,4,8,11],   // เมษ กรกฎ สิงห์ ธนู มีน
+  ven:  [1,2,5,6,7],    // พฤษภ เมถุน กันย์ ตุลย์ พิจิก
+  sun:  [0,3,4],         // เมษ กรกฎ สิงห์
+  mars: [0,3,7,8],       // เมษ กรกฎ พิจิก ธนู
+  sat:  [6,9,10],        // ตุลย์ มกร กุมภ์
+  merc: [2,5],           // เมถุน กันย์
+  rahu: [1,2,3,6,10,11], // พฤษภ เมถุน กรกฎ ตุลย์ กุมภ์ มีน
+  ketu: [3,9,11],        // กรกฎ ธนู มีน
+};
+
+const PLANET_ENEMY = {
+  jup:  [2,5,6],         // เมถุน กันย์ ตุลย์
+  ven:  [0,8],           // เมษ ธนู
+  sun:  [6,9,10],        // ตุลย์ มกร กุมภ์
+  mars: [1,2,5,6],       // พฤษภ เมถุน กันย์ ตุลย์
+  sat:  [0,3,4],         // เมษ กรกฎ สิงห์
+  merc: [9,10],          // มกร กุมภ์
+  rahu: [4,8,9,0],       // สิงห์ ธนู มกร เมษ
+  ketu: [0,1,5,7],       // เมษ พฤษภ กันย์ พิจิก
+};
+
+// ===== CORE FUNCTIONS =====
+function reduce(n){while(n>9){let s=0;String(n).split('').forEach(d=>s+=parseInt(d));n=s;}return n;}
 
 function calcLifePath(d,m,y){
   let sum=0;
@@ -296,6 +375,81 @@ function calcPersonalYear(lp,y){return reduce(lp+reduce(y));}
 function calcPersonalMonth(lp,y,m){return reduce(calcPersonalYear(lp,y)+reduce(m));}
 function calcPersonalDay(lp,y,m,d){return reduce(calcPersonalMonth(lp,y,m)+reduce(d));}
 
+function getPlanetSign(planet, year, month, day){
+  const data = TRANSITS[year];
+  if(!data || !data[planet]) return -1;
+  const entries = data[planet];
+  const targetDate = new Date(year, month-1, day);
+  let sign = entries[0].s;
+  for(const e of entries){
+    const ed = new Date(e.d);
+    if(ed <= targetDate) sign = e.s;
+    else break;
+  }
+  return sign;
+}
+
+function getPlanetModifier(planet, sign){
+  if(PLANET_FRIENDLY[planet] && PLANET_FRIENDLY[planet].includes(sign)) return 1;
+  if(PLANET_ENEMY[planet] && PLANET_ENEMY[planet].includes(sign)) return -1;
+  return 0;
+}
+
+function calcDayScore(lp, year, month, day){
+  const pd = calcPersonalDay(lp, year, month, day);
+
+  // Base score จาก numerology
+  let score = 0;
+  if(pd === lp) score = 3; // ตรงกับ life path = มงคลสูงสุด
+  else if(LP_GOOD[lp] && LP_GOOD[lp].includes(pd)) score = 2;
+  else if(LP_BAD[lp] && LP_BAD[lp].includes(pd)) score = 0;
+  else score = 1;
+
+  // Planet modifier
+  const planetList = ['jup','ven','sun','mars','sat','rahu','ketu'];
+  let planetScore = 0;
+  const planetInfo = [];
+
+  for(const p of planetList){
+    const sign = getPlanetSign(p, year, month, day);
+    if(sign === -1) continue;
+    const mod = getPlanetModifier(p, sign);
+    planetScore += mod;
+    if(mod !== 0){
+      const pNames = {jup:'พฤหัส',ven:'ศุกร์',sun:'อาทิตย์',mars:'อังคาร',sat:'เสาร์',rahu:'ราหู',ketu:'เกตุ'};
+      const signNames = ['เมษ','พฤษภ','เมถุน','กรกฎ','สิงห์','กันย์','ตุลย์','พิจิก','ธนู','มกร','กุมภ์','มีน'];
+      planetInfo.push(`${pNames[p]}อยู่ราศี${signNames[sign]} ${mod>0?'✨ เสริม':'⚠️ ขัด'}`);
+    }
+  }
+
+  const totalScore = score + Math.max(-2, Math.min(2, planetScore));
+
+  // Map score → level
+  let level, icon, cls;
+  if(totalScore >= 4){level='great'; icon='✨'; cls='great';}
+  else if(totalScore === 3){level='great'; icon='✨'; cls='great';}
+  else if(totalScore === 2){level='good'; icon=DAY_BASE[pd].icon; cls='good';}
+  else if(totalScore === 1){level='warn'; icon=DAY_BASE[pd].icon; cls='normal';}
+  else if(totalScore === 0){level='warn'; icon='⚠️'; cls='warn';}
+  else{level='bad'; icon='🚫'; cls='bad';}
+
+  // Special: ถ้าคะแนนดีมากแต่ pd=7 หรือ 9 → ⚠️ แทน
+  if((pd===7||pd===9) && level==='good') { level='warn'; icon='⚠️'; cls='warn'; }
+
+  return {pd, score:totalScore, level, icon, cls, planetInfo};
+}
+
+function getDayPrediction(pd, level){
+  const p = PREDICTIONS[pd];
+  if(!p) return PREDICTIONS[1][level]||PREDICTIONS[1].good;
+  return p[level] || p.good;
+}
+
+// ===== CALENDAR =====
+let lifePath=0, currentYear=new Date().getFullYear(), currentMonth=new Date().getMonth()+1;
+const thMonths=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const thDays=['อา','จ','อ','พ','พฤ','ศ','ส'];
+
 window.calculate=function(){
   const d=parseInt(document.getElementById('inDay').value);
   const m=parseInt(document.getElementById('inMonth').value);
@@ -307,11 +461,8 @@ window.calculate=function(){
   renderCalendar();
   document.getElementById('calBox').classList.add('show');
   document.getElementById('legendBox').style.display='block';
-  document.getElementById('profileBox').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>document.getElementById('profileBox').scrollIntoView({behavior:'smooth'}),100);
 };
-
-const thMonths=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-const thDays=['อา','จ','อ','พ','พฤ','ศ','ส'];
 
 function renderCalendar(){
   document.getElementById('calTitle').textContent=`${thMonths[currentMonth]} ${currentYear+543}`;
@@ -323,44 +474,36 @@ function renderCalendar(){
   const today=new Date();
   for(let i=0;i<firstDay;i++){const el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
   for(let d=1;d<=daysInMonth;d++){
-    const pd=calcPersonalDay(lifePath,currentYear,currentMonth,d);
-    const conflict=CONFLICT[lifePath]||[];
-    const meaning=DAY_MEANING[pd]||DAY_MEANING[1];
-    let cls='cal-day';
-    if(conflict.includes(pd)) cls+=' bad';
-    else if(pd===7||pd===9) cls+=' warn';
-    else if(pd===1) cls+=' great';
-    else cls+=' good';
+    const result = calcDayScore(lifePath, currentYear, currentMonth, d);
+    let cls = 'cal-day ' + result.cls;
     const isToday=today.getDate()===d&&today.getMonth()+1===currentMonth&&today.getFullYear()===currentYear;
     if(isToday) cls+=' today';
-    const conflict2=CONFLICT[lifePath]||[];
-    let icon=meaning.icon;
-    if(conflict2.includes(pd)) icon='🚫';
     const el=document.createElement('div');
     el.className=cls;
-    el.innerHTML=`<div class="cal-day-num">${d}</div><div class="cal-day-icon">${icon}</div>`;
-    el.onclick=()=>showDetail(d,pd,meaning,conflict2.includes(pd));
+    el.innerHTML=`<div class="cal-day-num">${d}</div><div class="cal-day-icon">${result.icon}</div>`;
+    el.onclick=()=>showDetail(d, result);
     grid.appendChild(el);
   }
 }
 
-window.prevMonth=function(){
-  currentMonth--;if(currentMonth<1){currentMonth=12;currentYear--;}
-  renderCalendar();
-};
-window.nextMonth=function(){
-  currentMonth++;if(currentMonth>12){currentMonth=1;currentYear++;}
-  renderCalendar();
-};
+window.prevMonth=function(){currentMonth--;if(currentMonth<1){currentMonth=12;currentYear--;}renderCalendar();};
+window.nextMonth=function(){currentMonth++;if(currentMonth>12){currentMonth=1;currentYear++;}renderCalendar();};
 
-function showDetail(d,pd,meaning,isBad){
-  const thMonthsArr=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  document.getElementById('detailDate').textContent=`${d} ${thMonthsArr[currentMonth]} ${currentYear+543} • พลังงานวัน ${pd}`;
-  document.getElementById('detailIcon').textContent=isBad?'🚫':meaning.icon;
-  document.getElementById('detailLabel').textContent=isBad?'วันหลีกเลี่ยง':meaning.label;
-  document.getElementById('detailDesc').textContent=isBad?'วันนี้พลังงานขัดแย้งกับเลขชีวิตของคุณพี่ค่ะ ไม่เหมาะเริ่มสิ่งสำคัญ แนะนำให้ทำงานปกติไปก่อนนะคะ':meaning.desc;
-  document.getElementById('detailDo').textContent=isBad?'✅ ทำงานประจำ พักผ่อน ดูแลสุขภาพ':meaning.do;
-  document.getElementById('detailAvoid').textContent=isBad?'❌ เริ่มโปรเจกต์ใหม่ เซ็นสัญญา ลงทุนสำคัญ':meaning.avoid;
+const levelLabel = {great:'✨ วันมงคลสูงสุด',good:'🟢 วันดี',warn:'🟡 วันระวัง',bad:'🔴 วันหลีกเลี่ยง'};
+const levelColor  = {great:'#a855f7',good:'#10b981',warn:'#f59e0b',bad:'#ef4444'};
+const thMonthsShort=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function showDetail(d, result){
+  const pred = getDayPrediction(result.pd, result.level);
+  const base = DAY_BASE[result.pd] || DAY_BASE[1];
+  document.getElementById('detailDate').textContent=`${d} ${thMonthsShort[currentMonth]} ${currentYear+543}`;
+  document.getElementById('detailIcon').textContent=result.level==='great'?'✨':result.level==='bad'?'🚫':result.level==='warn'?'⚠️':base.icon;
+  document.getElementById('detailLabel').textContent=result.level==='great'?'วันมงคลสูงสุด':result.level==='bad'?'วันหลีกเลี่ยง':result.level==='warn'?'วันระวัง — '+base.label:base.label;
+  document.getElementById('detailLevel').innerHTML=`<span style="color:${levelColor[result.level]}">${levelLabel[result.level]}</span> • ${base.topic}`;
+  document.getElementById('detailDesc').textContent=pred.desc;
+  document.getElementById('detailDo').textContent=pred.do;
+  document.getElementById('detailAvoid').textContent=pred.avoid;
+  document.getElementById('detailPlanet').textContent=result.planetInfo.length>0?'🌠 ดาวจร: '+result.planetInfo.join(' | '):'🌠 ดาวจรวันนี้: ปกติค่ะ';
   document.getElementById('detailOverlay').classList.add('show');
 }
 window.closeDetail=function(){document.getElementById('detailOverlay').classList.remove('show');};
