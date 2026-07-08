@@ -378,10 +378,10 @@ function calcScore(lp,year,month,day){
   const pd=calcPD(lp,year,month,day);
   // Base score
   let base=0;
-  if(pd===lp) base=4;
-  else if((LP_GOOD[lp]||[]).includes(pd)) base=3;
-  else if((LP_BAD[lp]||[]).includes(pd)) base=1;
-  else base=2;
+  if(pd===lp) base=3;
+  else if((LP_GOOD[lp]||[]).includes(pd)) base=2;
+  else if((LP_BAD[lp]||[]).includes(pd)) base=0;
+  else base=1;
   // Planet score
   let pScore=0;const pInfo=[];
   for(const p of ['jup','ven','sun','mars','sat','merc','rahu','ketu']){
@@ -402,20 +402,16 @@ function getResult(lp,year,month,day){
   const pred=PRED[pd]||PRED[1];
   let icon,label,level,desc,doTxt,avoidTxt;
 
-  if(total>=4){
-    // มงคลสูงสุด
+  if(total>=5){
+    // มงคลสูงสุด (ต้องตรง LP + ดาวเสริม)
     icon='✨';label='วันมงคลสูงสุด';level='great';
     desc=`วันนี้เป็นวันพิเศษสุดๆ ของคุณพี่ค่ะ พลังงานทุกอย่างสอดคล้องกันหมดเลยค่ะ เรื่อง${topic.topic}ดีมากๆ ค่ะ อะไรที่รอโอกาสอยู่ วันนี้แหละที่ดีที่สุดของเดือนเลยค่ะ อย่าปล่อยวันนี้ผ่านไปโดยเปล่าประโยชน์นะคะ`;
     doTxt=pred.do;avoidTxt=pred.avoid;
-  } else if(total===3){
+  } else if(total===4||total===3){
     // วันดีตามเรื่อง
     icon=topic.icon;label=topic.label;level='good';
     desc=pred.good;doTxt=pred.do;avoidTxt=pred.avoid;
-  } else if(total===2){
-    // วันดีตามเรื่อง
-    icon=topic.icon;label=topic.label;level='good';
-    desc=pred.good;doTxt=pred.do;avoidTxt=pred.avoid;
-  } else if(total===1){
+  } else if(total===2||total===1){
     // วันธรรมดา
     icon='';label='วันธรรมดา';level='normal';
     desc=NORMAL_DESC;doTxt='✅ ทำงานประจำ พักผ่อน ทำสิ่งที่ชอบ';avoidTxt='';
