@@ -378,10 +378,10 @@ function calcScore(lp,year,month,day){
   const pd=calcPD(lp,year,month,day);
   // Base score
   let base=0;
-  if(pd===lp) base=3;
-  else if((LP_GOOD[lp]||[]).includes(pd)) base=2;
-  else if((LP_BAD[lp]||[]).includes(pd)) base=0;
-  else base=1;
+  if(pd===lp) base=4;
+  else if((LP_GOOD[lp]||[]).includes(pd)) base=3;
+  else if((LP_BAD[lp]||[]).includes(pd)) base=1;
+  else base=2;
   // Planet score
   let pScore=0;const pInfo=[];
   for(const p of ['jup','ven','sun','mars','sat','merc','rahu','ketu']){
