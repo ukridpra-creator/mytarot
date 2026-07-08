@@ -403,7 +403,7 @@ function getResult(lp,year,month,day){
   let icon,label,level,desc,doTxt,avoidTxt;
 
   if(total>=5){
-    // มงคลสูงสุด (ต้องตรง LP + ดาวเสริม)
+    // มงคลสูงสุด
     icon='✨';label='วันมงคลสูงสุด';level='great';
     desc=`วันนี้เป็นวันพิเศษสุดๆ ของคุณพี่ค่ะ พลังงานทุกอย่างสอดคล้องกันหมดเลยค่ะ เรื่อง${topic.topic}ดีมากๆ ค่ะ อะไรที่รอโอกาสอยู่ วันนี้แหละที่ดีที่สุดของเดือนเลยค่ะ อย่าปล่อยวันนี้ผ่านไปโดยเปล่าประโยชน์นะคะ`;
     doTxt=pred.do;avoidTxt=pred.avoid;
@@ -411,16 +411,16 @@ function getResult(lp,year,month,day){
     // วันดีตามเรื่อง
     icon=topic.icon;label=topic.label;level='good';
     desc=pred.good;doTxt=pred.do;avoidTxt=pred.avoid;
-  } else if(total===2||total===1){
+  } else if(total===2||total===1||total===0){
     // วันธรรมดา
     icon='';label='วันธรรมดา';level='normal';
     desc=NORMAL_DESC;doTxt='✅ ทำงานประจำ พักผ่อน ทำสิ่งที่ชอบ';avoidTxt='';
-  } else if(total===0){
+  } else if(total===-1){
     // ระวัง
     icon='⚠️';label=`ระวังเรื่อง${topic.topic}`;level='warn';
     desc=pred.warn;doTxt=pred.warndo;avoidTxt=pred.warnavoid;
   } else {
-    // หลีกเลี่ยง
+    // หลีกเลี่ยง (-2)
     icon='🚫';label=`หลีกเลี่ยงเรื่อง${topic.topic}`;level='bad';
     desc=pred.bad;doTxt=pred.baddo;avoidTxt=pred.badavoid;
   }
