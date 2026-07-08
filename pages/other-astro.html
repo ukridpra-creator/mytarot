@@ -20,7 +20,8 @@
     .menu-card { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; cursor:pointer; text-decoration:none; transition:all 0.3s; }
     .menu-card:active { transform:scale(0.98); }
     .menu-card.coming-soon { opacity:0.5; pointer-events:none; }
-    .menu-icon-emoji { width:52px; height:52px; border-radius:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:26px; }
+    .menu-icon { width:52px; height:52px; border-radius:16px; flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .menu-icon img { width:100%; height:100%; object-fit:cover; }
     .menu-info { flex:1; }
     .menu-name { font-size:16px; font-weight:700; color:white; margin-bottom:4px; }
     .menu-desc { font-size:12px; color:var(--dim); line-height:1.5; }
@@ -69,7 +70,7 @@
   <div class="section-title">✨ ฟรี</div>
   <div class="menu-list">
     <div class="menu-card coming-soon" style="border-left:3px solid #4b5563;border-color:rgba(75,85,99,0.25);">
-      <div class="menu-icon-emoji" style="background:rgba(75,85,99,0.2);">🔢</div>
+      <div class="menu-icon" style="background:rgba(75,85,99,0.2);"><span style="font-size:26px">🔢</span></div>
       <div class="menu-info">
         <div class="menu-name">Angel Numbers</div>
         <div class="menu-desc">ความหมายของเลขนางฟ้า 111 222 333 444 ที่คุณเห็นบ่อยๆ ค่ะ</div>
@@ -79,26 +80,15 @@
     </div>
   </div>
 
-  <!-- พรีเมียม -->
+  <!-- พรีเมียม เรียงราคา -->
   <div class="section-title">✦ พรีเมียม</div>
   <div class="menu-list">
 
-    <a href="soul-aura.html" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
-      <div class="menu-icon" style="background:rgba(168,85,247,0.2);width:52px;height:52px;border-radius:16px;flex-shrink:0;overflow:hidden;">
-  <img src="../images/icon-aura.png" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔮</span>'">
-</div>
-      <div class="menu-info">
-        <div class="menu-name">Soul Aura Color</div>
-        <div class="menu-desc">ค้นพบสีออร่าดวงจิตประจำตัวคุณตามศาสตร์พลังงานจิตวิญญาณค่ะ</div>
-      </div>
-      <div class="menu-badge">🪙 19</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
+    <!-- 10 เหรียญ -->
     <a href="biorhythm.html" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
-      <div class="menu-icon" style="background:rgba(239,68,68,0.2);width:52px;height:52px;border-radius:16px;flex-shrink:0;overflow:hidden;">
-  <img src="../images/icon-graph.png" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>📊</span>'">
-</div>
+      <div class="menu-icon" style="background:rgba(239,68,68,0.2);">
+        <img src="../images/icon-graph.png" onerror="this.outerHTML='<span style=font-size:26px>📊</span>'">
+      </div>
       <div class="menu-info">
         <div class="menu-name">Biorhythm กราฟชีวิต</div>
         <div class="menu-desc">วิเคราะห์วงจรพลังงานร่างกาย อารมณ์ สติปัญญา จากวันเกิดค่ะ</div>
@@ -107,10 +97,37 @@
       <div class="menu-arrow">›</div>
     </a>
 
+    <!-- 10 เหรียญ -->
+    <a href="horary.html" class="menu-card" style="border-left:3px solid #818cf8;background:linear-gradient(135deg,rgba(129,140,248,0.08),rgba(99,102,241,0.05));border-color:rgba(129,140,248,0.25);">
+      <div class="menu-icon" style="background:rgba(129,140,248,0.2);">
+        <img src="../images/icon-horary.png" onerror="this.outerHTML='<span style=font-size:26px>🔮</span>'">
+      </div>
+      <div class="menu-info">
+        <div class="menu-name">Horary Astrology</div>
+        <div class="menu-desc">ไม่ต้องรู้วันเกิด! ถามคำถามในใจ ดวงดาว ณ เวลานั้นจะตอบค่ะ</div>
+      </div>
+      <div class="menu-badge">🪙 10</div>
+      <div class="menu-arrow">›</div>
+    </a>
+
+    <!-- 19 เหรียญ -->
+    <a href="soul-aura.html" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
+      <div class="menu-icon" style="background:rgba(168,85,247,0.2);">
+        <img src="../images/icon-aura.png" onerror="this.outerHTML='<span style=font-size:26px>🔮</span>'">
+      </div>
+      <div class="menu-info">
+        <div class="menu-name">Soul Aura Color</div>
+        <div class="menu-desc">ค้นพบสีออร่าดวงจิตประจำตัวคุณตามศาสตร์พลังงานจิตวิญญาณค่ะ</div>
+      </div>
+      <div class="menu-badge">🪙 19</div>
+      <div class="menu-arrow">›</div>
+    </a>
+
+    <!-- 19 เหรียญ -->
     <a href="kabbalah.html" class="menu-card" style="border-left:3px solid #6366f1;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(79,70,229,0.05));border-color:rgba(99,102,241,0.25);">
-      <div class="menu-icon" style="background:rgba(99,102,241,0.2);width:52px;height:52px;border-radius:16px;flex-shrink:0;overflow:hidden;">
-  <img src="../images/icon-kabbalah.png" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🌳</span>'">
-</div>
+      <div class="menu-icon" style="background:rgba(99,102,241,0.2);">
+        <img src="../images/icon-kabbalah.png" onerror="this.outerHTML='<span style=font-size:26px>🌳</span>'">
+      </div>
       <div class="menu-info">
         <div class="menu-name">Kabbalah Tree of Life</div>
         <div class="menu-desc">ต้นไม้แห่งชีวิต 10 Sefirot ศาสตร์ลึกลับจากคับบาลาห์ค่ะ</div>
@@ -119,10 +136,24 @@
       <div class="menu-arrow">›</div>
     </a>
 
+    <!-- 29 เหรียญ -->
+    <a href="medical-astrology.html" class="menu-card" style="border-left:3px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));border-color:rgba(16,185,129,0.25);">
+      <div class="menu-icon" style="background:rgba(16,185,129,0.2);">
+        <img src="../images/icon-medical.png" onerror="this.outerHTML='<span style=font-size:26px>🌿</span>'">
+      </div>
+      <div class="menu-info">
+        <div class="menu-name">Medical Astrology</div>
+        <div class="menu-desc">โหราศาสตร์การแพทย์โบราณ วิเคราะห์สุขภาพจากราศีและดาวเคราะห์ค่ะ</div>
+      </div>
+      <div class="menu-badge">🪙 29</div>
+      <div class="menu-arrow">›</div>
+    </a>
+
+    <!-- 79 เหรียญ -->
     <a href="destiny.html" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(180,135,11,0.05));border-color:rgba(212,175,55,0.25);">
-      <div class="menu-icon" style="background:rgba(212,175,55,0.2);width:52px;height:52px;border-radius:16px;flex-shrink:0;overflow:hidden;">
-  <img src="../images/icon-destiny.png" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔮</span>'">
-</div>
+      <div class="menu-icon" style="background:rgba(212,175,55,0.2);">
+        <img src="../images/icon-destiny.png" onerror="this.outerHTML='<span style=font-size:26px>🔮</span>'">
+      </div>
       <div class="menu-info">
         <div class="menu-name">Destiny - เจาะลึกดวงชะตา</div>
         <div class="menu-desc">โหราศาสตร์ประยุกต์ 5 ศาสตร์ + ดาวจรปีนี้ วิเคราะห์ครบทุกมิติชีวิตค่ะ</div>
@@ -131,8 +162,9 @@
       <div class="menu-arrow">›</div>
     </a>
 
+    <!-- coming soon -->
     <div class="menu-card coming-soon" style="border-left:3px solid #4b5563;border-color:rgba(75,85,99,0.25);">
-      <div class="menu-icon-emoji" style="background:rgba(75,85,99,0.2);">🗿</div>
+      <div class="menu-icon" style="background:rgba(75,85,99,0.2);"><span style="font-size:26px">🗿</span></div>
       <div class="menu-info">
         <div class="menu-name">Mayan Calendar</div>
         <div class="menu-desc">ปฏิทินมายัน Tzolkin 20 สัญลักษณ์ ค้นพบวันเกิดตามมายันค่ะ</div>
@@ -159,32 +191,18 @@ import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersist
 import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
-  storageBucket:"my-tarot67.firebasestorage.app",
-  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
-};
+const firebaseConfig={apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",authDomain:"my-tarot67.firebaseapp.com",projectId:"my-tarot67",storageBucket:"my-tarot67.firebasestorage.app",messagingSenderId:"33661162829",appId:"1:33661162829:web:9e06a7cd5a00d613785304"};
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
 const db=getFirestore(app);
-
 window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
 function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
 window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
 onAuthStateChanged(auth,async user=>{
-  if(user){
-    var snap=await getDoc(doc(db,'users',user.uid));
-    var data=snap.exists()?snap.data():{};
-    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
-    document.getElementById('guestView').style.display='none';
-    document.getElementById('loggedView').style.display='block';
-    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
-    document.getElementById('menuEmail').textContent=user.email;
-    if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  } else {updateCoinUI('—');setAvatarDisplay('');}
+  if(user){var snap=await getDoc(doc(db,'users',user.uid));var data=snap.exists()?snap.data():{};updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');document.getElementById('guestView').style.display='none';document.getElementById('loggedView').style.display='block';document.getElementById('menuName').textContent=data.displayName||user.displayName||'';document.getElementById('menuEmail').textContent=user.email;if(typeof setupCheckin==='function')setupCheckin(user,'../');}
+  else{updateCoinUI('—');setAvatarDisplay('');}
 });
 </script>
 </body>
