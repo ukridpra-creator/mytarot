@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>นโยบายการคืนเงิน | MyTarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Cinzel:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0b1a;
+      --surface: #16132b;
+      --surface2: #1e1a35;
+      --gold: #c9a84c;
+      --gold-soft: #e8c97a;
+      --purple: #7c5cbf;
+      --purple-light: #a87de8;
+      --text: #e8e2f5;
+      --text-muted: #9488b8;
+      --border: rgba(201,168,76,0.18);
+      --green: #4caf82;
+      --red: #e05a5a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* Stars bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 30%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 75%, rgba(255,255,255,0.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.2) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 48px 24px 36px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(124,92,191,0.12) 0%, transparent 100%);
+    }
+
+    .logo-link {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      margin-bottom: 24px;
+    }
+
+    .logo-link span { color: var(--purple-light); }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      color: var(--gold-soft);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 28px;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .icon-gold { background: rgba(201,168,76,0.15); }
+    .icon-green { background: rgba(76,175,130,0.15); }
+    .icon-red { background: rgba(224,90,90,0.15); }
+    .icon-purple { background: rgba(124,92,191,0.15); }
+    .icon-blue { background: rgba(100,149,237,0.15); }
+
+    .section h2 {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--gold-soft);
+    }
+
+    .section p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .dot-green { background: var(--green); }
+    .dot-red { background: var(--red); }
+    .dot-gold { background: var(--gold); }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--purple-light));
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .step-text strong {
+      color: var(--gold-soft);
+      font-weight: 600;
+    }
+
+    .contact-box {
+      background: var(--surface2);
+      border: 1px solid rgba(168,125,232,0.25);
+      border-radius: 12px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .contact-item a {
+      color: var(--purple-light);
+      text-decoration: none;
+    }
+
+    .contact-item a:hover { text-decoration: underline; }
+
+    .contact-icon {
+      font-size: 1.2rem;
+      width: 28px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      font-size: 0.8rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+
+    .note {
+      background: rgba(124,92,191,0.08);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 16px;
+      margin-top: 16px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a { color: var(--purple-light); text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .section { padding: 20px 18px; }
+      header { padding: 36px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo-link" href="/">✦ My<span>Tarot</span></a>
+  <h1>นโยบายการคืนเงิน</h1>
+  <p>Refund Policy · อัปเดตล่าสุด: กรกฎาคม 2568</p>
+</header>
+
+<main>
+
+  <!-- Overview -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-gold">✦</div>
+      <h2>ภาพรวม</h2>
+    </div>
+    <p>MyTarot ให้บริการดูดวง ไพ่ทาโรต์ และโหราศาสตร์ในรูปแบบดิจิทัลผ่านระบบเหรียญ (Coins) เมื่อมีการใช้บริการแล้วถือว่าได้รับบริการนั้นเรียบร้อย เราขอสงวนสิทธิ์ในการคืนเงินตามเงื่อนไขด้านล่าง</p>
+  </div>
+
+  <!-- Can refund -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-green">✅</div>
+      <h2>กรณีที่สามารถขอคืนเงินได้</h2>
+    </div>
+    <ul class="list">
+      <li><span class="dot dot-green"></span>ชำระเงินแล้วแต่ Coins ไม่เข้าบัญชีเนื่องจากข้อผิดพลาดของระบบ</li>
+      <li><span class="dot dot-green"></span>เกิดการตัดเงินซ้ำ (Duplicate Charge) โดยไม่ได้ตั้งใจ</li>
+      <li><span class="dot dot-green"></span>ชำระเงินสำเร็จแต่ไม่สามารถเข้าใช้งานบริการได้เลย</li>
+    </ul>
+    <div class="note">⏱ ต้องยื่นคำร้องภายใน <strong>7 วัน</strong> นับจากวันที่ชำระเงิน พร้อมแนบหลักฐานการชำระ</div>
+  </div>
+
+  <!-- Cannot refund -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-red">❌</div>
+      <h2>กรณีที่ไม่สามารถขอคืนเงินได้</h2>
+    </div>
+    <ul class="list">
+      <li><span class="dot dot-red"></span>Coins ที่ใช้งานไปแล้ว (บริการ digital ที่ส่งมอบแล้วไม่สามารถคืนได้)</li>
+      <li><span class="dot dot-red"></span>ไม่พอใจผลการทำนาย เนื่องจากเป็นบริการเพื่อความบันเทิงไม่ใช่การรับประกันผล</li>
+      <li><span class="dot dot-red"></span>Coins ที่ได้รับฟรี (เช็คอินรายวัน / โบนัส / โปรโมชัน)</li>
+      <li><span class="dot dot-red"></span>เปลี่ยนใจหลังซื้อ Coins โดยที่ระบบทำงานปกติ</li>
+    </ul>
+  </div>
+
+  <!-- Process -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-purple">📋</div>
+      <h2>ขั้นตอนการขอคืนเงิน</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>ติดต่อเราผ่านช่องทางด้านล่าง</strong> พร้อมแจ้งชื่อบัญชี, อีเมลที่ลงทะเบียน และวันที่ชำระเงิน</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>แนบหลักฐาน</strong> เช่น สลิปการโอนเงิน หรือ screenshot การชำระ</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>ทีมงานตรวจสอบ</strong> ภายใน 3 วันทำการ และแจ้งผลกลับ</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>คืนเงินภายใน 7–14 วันทำการ</strong> ผ่านช่องทางการชำระเดิม</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-blue">💬</div>
+      <h2>ช่องทางติดต่อ / ร้องเรียน</h2>
+    </div>
+    <div class="contact-box">
+      <div class="contact-item">
+        <span class="contact-icon">📧</span>
+        <span>Email: <a href="mailto:mytarot69@gmail.com">mytarot69@gmail.com</a> <span class="badge">ทางการ</span></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">💚</span>
+        <span>LINE OA: <a href="https://lin.ee/NYQlX8h" target="_blank">@MyTarot</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">🕐</span>
+        <span>เวลาทำการ: ทุกวัน 09:00 – 21:00 น.</span>
+      </div>
+    </div>
+    <div class="note">📌 กรุณาอย่าแชร์รหัสผ่านหรือข้อมูลบัตรเครดิตผ่านช่องทางติดต่อเหล่านี้</div>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2568 MyTarot · <a href="/privacy">นโยบายความเป็นส่วนตัว</a> · <a href="/terms">ข้อกำหนดการใช้งาน</a></p>
+</footer>
+
+</body>
+</html>
