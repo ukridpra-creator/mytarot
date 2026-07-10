@@ -2,14 +2,14 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// แพ็คเกจเหรียญ
+// แพ็คเกจเหรียญ — sync กับ coins.html
 const PACKAGES = {
-  '99':  { coins: 100,  amount: 9900,  label: '100 เหรียญ' },
-  '199': { coins: 220,  amount: 19900, label: '220 เหรียญ' },
-  '299': { coins: 350,  amount: 29900, label: '350 เหรียญ' },
-  '499': { coins: 600,  amount: 49900, label: '600 เหรียญ' },
-  '799': { coins: 1000, amount: 79900, label: '1000 เหรียญ' },
-  '999': { coins: 1350, amount: 99900, label: '1350 เหรียญ' },
+  '25':   { coins: 50,    amount: 2500,   label: '50 เหรียญ' },
+  '50':   { coins: 100,   amount: 5000,   label: '100 เหรียญ' },
+  '150':  { coins: 330,   amount: 15000,  label: '330 เหรียญ (+30 ฟรี)' },
+  '250':  { coins: 575,   amount: 25000,  label: '575 เหรียญ (+75 ฟรี)' },
+  '500':  { coins: 1200,  amount: 50000,  label: '1,200 เหรียญ (+200 ฟรี)' },
+  '1000': { coins: 2500,  amount: 100000, label: '2,500 เหรียญ (+500 ฟรี)' },
 };
 
 export default async function handler(req, res) {
@@ -25,9 +25,7 @@ export default async function handler(req, res) {
   if (!pkg) return res.status(400).json({ error: 'invalid_package' });
 
   try {
-    const paymentMethodTypes = method === 'card'
-      ? ['card']
-      : ['promptpay'];
+    const paymentMethodTypes = method === 'card' ? ['card'] : ['promptpay'];
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: pkg.amount,
