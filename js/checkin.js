@@ -3,6 +3,58 @@
 
 (function() {
 
+// ─── IN-APP BROWSER DETECTION ───
+(function() {
+  var ua = navigator.userAgent || '';
+  var isLine     = /Line\//i.test(ua);
+  var isTikTok   = /TikTok|Musical/i.test(ua);
+  var isFacebook = /FBAN|FBAV|FB_IAB/i.test(ua);
+  var isIG       = /Instagram/i.test(ua);
+  var isInApp    = isLine || isTikTok || isFacebook || isIG;
+
+  if (!isInApp) return;
+
+  var url = window.location.href;
+
+  // Android — redirect ไป Chrome อัตโนมัติ
+  if (/Android/i.test(ua)) {
+    window.location.href = 'intent://' + url.replace(/https?:\/\//, '') +
+      '#Intent;scheme=https;package=com.android.chrome;action=android.intent.action.VIEW;end';
+    return;
+  }
+
+  // iOS — แสดง popup แจ้ง
+  document.addEventListener('DOMContentLoaded', function() {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:24px;';
+    overlay.innerHTML =
+      '<div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:28px 20px;width:100%;max-width:320px;text-align:center;">' +
+        '<div style="font-size:48px;margin-bottom:12px;">🌐</div>' +
+        '<div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">กรุณาเปิดใน Browser ค่ะ</div>' +
+        '<div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;line-height:1.6;">เพื่อเข้าสู่ระบบด้วย Google<br>กรุณาเปิดลิงค์ใน Safari หรือ Chrome ค่ะ</div>' +
+        '<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:16px;word-break:break-all;">' + url + '</div>' +
+        '<button id="inAppCopyBtn" style="width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#d4af37);border:none;color:white;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;">📋 คัดลอกลิงค์</button>' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:12px;">แล้วเปิด Safari หรือ Chrome วางลิงค์ค่ะ</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    document.getElementById('inAppCopyBtn').addEventListener('click', function() {
+      navigator.clipboard.writeText(url).then(function() {
+        document.getElementById('inAppCopyBtn').textContent = '✅ คัดลอกแล้วค่ะ!';
+      }).catch(function() {
+        // fallback สำหรับ iOS เก่า
+        var ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        document.getElementById('inAppCopyBtn').textContent = '✅ คัดลอกแล้วค่ะ!';
+      });
+    });
+  });
+})();
+
 // ─── INJECT HTML ───
 var html = `
 <div class="ci-overlay" id="ciOverlay" onclick="if(event.target===this)closeCheckin()">
@@ -170,11 +222,9 @@ function renderDays(streak, alreadyDone) {
   var html = '';
   for (var i = 0; i < 7; i++) {
     var cls = 'ci-day';
-    // วงถึงไหน: today = streak-1 เสมอ, done = ก่อนหน้า today
     var isToday = (i === streak - 1);
     var isDone  = (i < streak - 1);
     if (alreadyDone) {
-      // เช็คอินแล้ว: วง done ถึง streak ทั้งหมด ไม่มี today highlight
       isToday = false;
       isDone  = (i < streak);
     }
@@ -227,7 +277,6 @@ window.openCheckin = async function() {
     return;
   }
 
-  // เปิด popup ทันที — skeleton แสดงระหว่างรอ
   document.getElementById('ciOverlay').classList.add('show');
 
   try {
@@ -263,7 +312,6 @@ window.doCheckin = async function() {
 
     if (data.already) { renderUI(data); return; }
 
-    // coin pop animation
     var pop = document.createElement('div');
     pop.className   = 'ci-coin-pop';
     pop.textContent = '+' + data.reward + ' 🪙';
@@ -288,13 +336,10 @@ window.closeCheckin = function() {
 };
 
 // ─── SETUP ───
-// เรียกหลัง auth ready: setupCheckin(user, '../')
-// จะเด้งอัตโนมัติถ้ายังไม่ได้เช็คอินวันนี้
 window.setupCheckin = async function(user, apiBase) {
   window.__ciCurrentUser = user;
   window.__ciApiBase     = apiBase || '';
 
-  // เช็คแบบ background — ถ้ายังไม่เช็คอิน เด้งหลัง 1.5 วิ
   try {
     var idToken = await user.getIdToken();
     var res = await fetch(window.__ciApiBase + '/api/checkin', {
