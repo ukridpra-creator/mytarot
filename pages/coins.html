@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     body { padding-bottom: 80px; background:#080614; }
     .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
@@ -386,51 +387,109 @@ window.confirmPayment=function(){
 };
 
 // CARD FORM
-window.openCard=function(){
-  const total=selCoins+selBonus;
-  document.getElementById('cardSub').textContent='🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
-  document.getElementById('cardPayAmount').textContent=selPrice.toLocaleString()+' ฿';
+
+
+
+// ── STRIPE ──
+const stripe = Stripe('REPLACE_WITH_YOUR_PK_LIVE_KEY');
+let stripeElements = null, stripeCardElement = null, currentPaymentIntentId = null;
+
+async function createPaymentIntent(method) {
+  if (!currentUser) return null;
+  const pkgMap = {50:'99',100:'99',300:'199',500:'299',1000:'499',2000:'799'};
+  const packageId = pkgMap[selCoins] || '99';
+  const res = await fetch('/api/create-payment', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ packageId, userId: currentUser.uid, method })
+  });
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+window.openCard = async function() {
+  const total = selCoins + selBonus;
+  document.getElementById('cardSub').textContent = '🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
+  document.getElementById('cardPayAmount').textContent = selPrice.toLocaleString()+' ฿';
   document.getElementById('cardOverlay').classList.add('show');
-};
-window.closeCard=function(){document.getElementById('cardOverlay').classList.remove('show');};
-
-window.formatCardNum=function(el){
-  var v=el.value.replace(/\D/g,'').slice(0,16);
-  el.value=v.replace(/(.{4})/g,'$1 ').trim();
-  var display=v.padEnd(16,'•').replace(/(.{4})/g,'$1 ').trim();
-  document.getElementById('cardNumPreview').textContent=display;
-};
-window.formatExp=function(el){
-  var v=el.value.replace(/\D/g,'');
-  if(v.length>=2) v=v.slice(0,2)+'/'+v.slice(2,4);
-  el.value=v;
-  document.getElementById('cardExpPreview').textContent=v||'MM/YY';
-};
-window.updateCardPreview=function(){};
-
-window.processCardPayment=async function(){
-  const num=document.getElementById('cardNum').value.replace(/\s/g,'');
-  const name=document.getElementById('cardName').value.trim();
-  const exp=document.getElementById('cardExp').value;
-  const cvv=document.getElementById('cardCvv').value;
-  if(num.length<16||!name||exp.length<5||cvv.length<3){alert('กรุณากรอกข้อมูลบัตรให้ครบค่ะ');return;}
-  const btn=document.getElementById('btnCardPay');
-  btn.disabled=true;btn.textContent='⏳ กำลังประมวลผล...';
-  // TODO: เรียก Omise API ตรงนี้ค่ะ
-  // const token = await OmiseCard.createToken(...)
-  // const res = await fetch('/api/payment', { body: { token, amount: selPrice*100, coins: selCoins+selBonus } })
-  alert('🔧 กำลังเชื่อม Omise ค่ะ เร็วๆ นี้นะคะ');
-  btn.disabled=false;btn.textContent='🔒 ชำระ '+selPrice.toLocaleString()+' ฿';
+  // สร้าง Stripe Elements
+  const data = await createPaymentIntent('card');
+  if (!data) { alert('เกิดข้อผิดพลาดค่ะ'); return; }
+  currentPaymentIntentId = data.paymentIntentId;
+  if (!stripeElements) {
+    stripeElements = stripe.elements({ clientSecret: data.clientSecret });
+    stripeCardElement = stripeElements.create('card', {
+      style: { base: { color: '#fff', fontFamily: 'Sarabun, sans-serif', fontSize: '16px', '::placeholder': { color: 'rgba(255,255,255,0.3)' } } }
+    });
+    stripeCardElement.mount('#stripe-card-element');
+    stripeCardElement.on('change', e => {
+      document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : '';
+    });
+  }
 };
 
-// QR
-window.openQR=function(){
-  const total=selCoins+selBonus;
-  document.getElementById('qrAmount').textContent='🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
+window.processCardPayment = async function() {
+  const btn = document.getElementById('btnCardPay');
+  btn.disabled = true; btn.textContent = '⏳ กำลังประมวลผล...';
+  try {
+    const { error } = await stripe.confirmCardPayment(undefined, {
+      payment_method: { card: stripeCardElement }
+    });
+    if (error) {
+      document.getElementById('stripe-card-errors').textContent = error.message;
+      btn.disabled = false; btn.textContent = '🔒 ชำระ '+selPrice.toLocaleString()+' ฿';
+    } else {
+      closeCard();
+      showSuccess();
+    }
+  } catch(e) {
+    btn.disabled = false; btn.textContent = '🔒 ชำระ '+selPrice.toLocaleString()+' ฿';
+  }
+};
+
+window.openQR = async function() {
+  const total = selCoins + selBonus;
+  document.getElementById('qrAmount').textContent = '🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
   document.getElementById('qrOverlay').classList.add('show');
-  // TODO: เรียก Omise PromptPay API ค่ะ
+  document.getElementById('qrBox').style.display = 'flex';
+  document.getElementById('qrImage').style.display = 'none';
+  // สร้าง PromptPay Payment Intent
+  const data = await createPaymentIntent('promptpay');
+  if (!data) { alert('เกิดข้อผิดพลาดค่ะ'); return; }
+  currentPaymentIntentId = data.paymentIntentId;
+  // ดึง QR code จาก payment intent
+  try {
+    const pi = await stripe.retrievePaymentIntent(data.clientSecret);
+    const qrUrl = pi.paymentIntent?.next_action?.promptpay_display_qr_code?.image_url_png;
+    if (qrUrl) {
+      document.getElementById('qrBox').style.display = 'none';
+      document.getElementById('qrImage').src = qrUrl;
+      document.getElementById('qrImage').style.display = 'block';
+    }
+    // Poll สถานะ
+    pollPaymentStatus(data.clientSecret);
+  } catch(e) { console.error(e); }
 };
-window.closeQR=function(){document.getElementById('qrOverlay').classList.remove('show');};
+
+async function pollPaymentStatus(clientSecret) {
+  const interval = setInterval(async () => {
+    const result = await stripe.retrievePaymentIntent(clientSecret);
+    if (result.paymentIntent?.status === 'succeeded') {
+      clearInterval(interval);
+      closeQR();
+      showSuccess();
+    }
+  }, 3000);
+  // หยุด poll หลัง 10 นาที
+  setTimeout(() => clearInterval(interval), 600000);
+}
+
+function showSuccess() {
+  alert('✅ ชำระเงินสำเร็จค่ะ! เหรียญจะเข้าบัญชีภายในไม่กี่วินาทีค่ะ 🪙');
+  window.location.reload();
+}
+
+window.closeQR = function() { document.getElementById('qrOverlay').classList.remove('show'); };
 </script>
 </body>
 </html>
