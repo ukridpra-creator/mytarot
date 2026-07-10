@@ -227,7 +227,7 @@
   <!-- RESULT -->
   <div class="result-box" id="resultBox">
     <div class="result-cards-row" id="resultRow"></div>
-    <div class="result-section sec-meaning"><h3>✦ ความหมายของไพ่</h3><p id="secMeaning"><div class="loading-wrap">วิญญาณแห่งธรรมชาติกำลังกระซิบ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-meaning"><h3>✦ ความหมายของไพ่</h3><p id="secMeaning"></p></div>
     <div class="result-section sec-reading"><h3>✦ คำทำนาย</h3><p id="secReading"></p></div>
     <div class="result-section sec-advice"><h3>✦ คำแนะนำ</h3><p id="secAdvice"></p></div>
 
@@ -480,7 +480,7 @@ function updateSections(text) {
     gb.classList.add('show'); gb.textContent = parsed['GREETING'];
   }
   Object.entries(NATURE_IDS).forEach(([key, id]) => {
-    if (parsed[key]) { const el = document.getElementById(id); if (el) el.textContent = parsed[key]; }
+    if (parsed[key]) { const el = document.getElementById(id); if (el) el.innerHTML = parsed[key]; }
   });
 }
 
