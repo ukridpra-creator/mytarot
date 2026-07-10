@@ -86,6 +86,9 @@ const SERVICE_COSTS = {
   "tarot_money": TIER.T30,
   "medical_astrology": TIER.T29,
   "horary": TIER.T10,
+  "oracle-dream-1": TIER.T10,
+  "oracle-dream-3": TIER.T20,
+  "oracle-dream-5": TIER.T30,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
