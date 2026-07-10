@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คิวเซอิ — ดวงชะตา 9 ดาวญี่ปุ่น | My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; background:linear-gradient(160deg,#0a0a14 0%,#0d0d1e 50%,#0a0a14 100%); }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(255,200,100,0.15); background:rgba(10,10,20,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,200,100,0.1); border:1px solid rgba(255,200,100,0.2); display:flex; align-items:center; justify-content:center; color:#ffc864; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-jp { font-family:'Noto Serif JP',serif; font-size:28px; color:#ffc864; margin-bottom:4px; letter-spacing:4px; }
+    .hero-title { font-size:20px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,200,100,0.15); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:#ffc864; font-weight:700; margin-bottom:10px; display:block; }
+    .date-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,200,100,0.2); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#0d0d1e; }
+
+    .btn-calc { width:100%; border:none; border-radius:16px; padding:16px; color:#0a0a14; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#ffc864,#ff9f1c); }
+
+    /* RESULT */
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+
+    /* 3 ดาว */
+    .stars-row { display:flex; gap:8px; margin-bottom:16px; }
+    .star-card { flex:1; border-radius:16px; padding:14px 10px; text-align:center; border:1px solid; }
+    .star-card .star-emoji { font-size:28px; margin-bottom:6px; }
+    .star-card .star-type { font-size:10px; font-weight:700; margin-bottom:4px; letter-spacing:1px; }
+    .star-card .star-num { font-size:24px; font-weight:800; font-family:'Noto Serif JP',serif; margin-bottom:2px; }
+    .star-card .star-name-jp { font-size:10px; font-family:'Noto Serif JP',serif; margin-bottom:2px; }
+    .star-card .star-name-th { font-size:11px; font-weight:700; }
+
+    .star-year  { background:rgba(255,200,100,0.08); border-color:rgba(255,200,100,0.3); }
+    .star-year .star-type { color:#ffc864; }
+    .star-year .star-num  { color:#ffc864; }
+    .star-year .star-name-th { color:#ffc864; }
+
+    .star-month { background:rgba(96,165,250,0.08); border-color:rgba(96,165,250,0.3); }
+    .star-month .star-type { color:#60a5fa; }
+    .star-month .star-num  { color:#60a5fa; }
+    .star-month .star-name-th { color:#60a5fa; }
+
+    .star-day   { background:rgba(168,85,247,0.08); border-color:rgba(168,85,247,0.3); }
+    .star-day .star-type { color:#a855f7; }
+    .star-day .star-num  { color:#a855f7; }
+    .star-day .star-name-th { color:#a855f7; }
+
+    /* SECTIONS */
+    .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+    .result-section h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+    .result-section p { font-size:14px; line-height:2; color:rgba(255,255,255,0.8); }
+    .sec-year  { background:rgba(255,200,100,0.06); border-color:#ffc864; }
+    .sec-year h3 { color:#ffc864; }
+    .sec-month { background:rgba(96,165,250,0.06); border-color:#60a5fa; }
+    .sec-month h3 { color:#60a5fa; }
+    .sec-day   { background:rgba(168,85,247,0.06); border-color:#a855f7; }
+    .sec-day h3 { color:#a855f7; }
+    .sec-combo { background:rgba(16,185,129,0.06); border-color:#10b981; }
+    .sec-combo h3 { color:#10b981; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="japanese-hub.html" class="back-btn">←</a>
+  <div class="page-title">九星気学 คิวเซอิ</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-9star.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-jp">九星気学</div>
+    <div class="hero-title">คิวเซอิ — ดวงชะตา 9 ดาวญี่ปุ่น</div>
+    <div class="hero-desc">ศาสตร์โบราณจากแดนอาทิตย์อุทัย<br>วิเคราะห์ดวงชะตาจาก 3 ดาวประจำตัวค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">🎂 วันเกิดของคุณพี่ค่ะ</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">⭐ วิเคราะห์ดวงชะตาเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <!-- 3 ดาว -->
+    <div class="stars-row">
+      <div class="star-card star-year">
+        <div class="star-emoji" id="yearEmoji"></div>
+        <div class="star-type">ดาวปี</div>
+        <div class="star-num" id="yearNum"></div>
+        <div class="star-name-jp" id="yearJp"></div>
+        <div class="star-name-th" id="yearTh"></div>
+      </div>
+      <div class="star-card star-month">
+        <div class="star-emoji" id="monthEmoji"></div>
+        <div class="star-type">ดาวเดือน</div>
+        <div class="star-num" id="monthNum"></div>
+        <div class="star-name-jp" id="monthJp"></div>
+        <div class="star-name-th" id="monthTh"></div>
+      </div>
+      <div class="star-card star-day">
+        <div class="star-emoji" id="dayEmoji"></div>
+        <div class="star-type">ดาววัน</div>
+        <div class="star-num" id="dayNum"></div>
+        <div class="star-name-jp" id="dayJp"></div>
+        <div class="star-name-th" id="dayTh"></div>
+      </div>
+    </div>
+
+    <div class="result-section sec-year">
+      <h3 id="secYearTitle">⭐ ดาวปี</h3>
+      <p id="secYear"></p>
+    </div>
+    <div class="result-section sec-month">
+      <h3 id="secMonthTitle">🌙 ดาวเดือน</h3>
+      <p id="secMonth"></p>
+    </div>
+    <div class="result-section sec-day">
+      <h3 id="secDayTitle">✨ ดาววัน</h3>
+      <p id="secDay"></p>
+    </div>
+    <div class="result-section sec-combo">
+      <h3>🌟 พลังงานรวมของคุณพี่</h3>
+      <p id="secCombo"></p>
+    </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 วิเคราะห์ใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){var snap=await getDoc(doc(db,'users',user.uid));var data=snap.exists()?snap.data():{};updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');document.getElementById('guestView').style.display='none';document.getElementById('loggedView').style.display='block';document.getElementById('menuName').textContent=data.displayName||user.displayName||'';document.getElementById('menuEmail').textContent=user.email;if(typeof setupCheckin==='function')setupCheckin(user,'../');}
+  else{updateCoinUI('—');setAvatarDisplay('');}
+});
+
+// DROPDOWNS
+const dayEl=document.getElementById('inDay');
+for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+const monthNames=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const monthEl=document.getElementById('inMonth');
+monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+const yearEl=document.getElementById('inYear');
+const curY=new Date().getFullYear();
+for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=(y+543)+' ('+y+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
+
+// ===== DATA =====
+const STARS = {
+  1: { emoji:'💧', jp:'一白水星', th:'น้ำขาว', element:'น้ำ',
+       year:'คุณพี่เกิดมาพร้อมพลังน้ำที่ยืดหยุ่นและลึกซึ้งค่ะ มีสัญชาตญาณแหลมคมและความสามารถในการปรับตัวเข้ากับทุกสถานการณ์ได้ดีมากค่ะ มักมีเสน่ห์ลึกลับที่คนอื่นอยากเข้าใกล้ค่ะ ชีวิตมีความลุ่มๆ ดอนๆ แต่ก็ฟื้นตัวได้เสมอค่ะ',
+       month:'ด้านในของคุณพี่ซ่อนความอ่อนไหวและความลึกซึ้งไว้ค่ะ ชอบคิดคนเดียวและมีโลกส่วนตัวที่เข้มแข็งมากค่ะ มักไว้ใจคนยากแต่เมื่อไว้ใจแล้วก็ซื่อสัตย์มากค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนสุขุม ลึกลับ และน่าสนใจค่ะ พูดน้อยแต่ทุกคำมีความหมายค่ะ' },
+  2: { emoji:'🌍', jp:'二黒土星', th:'ดินดำ', element:'ดิน',
+       year:'คุณพี่เกิดมาพร้อมพลังดินที่มั่นคงและอดทนค่ะ มีความสามารถในการเลี้ยงดูและดูแลคนอื่นได้ดีมากค่ะ เป็นคนที่คนรอบข้างพึ่งพาได้เสมอค่ะ ทำงานหนักและมีความรับผิดชอบสูงค่ะ',
+       month:'ด้านในของคุณพี่เต็มไปด้วยความเอาใจใส่และความรักที่ให้โดยไม่หวังผลตอบแทนค่ะ มักเป็นคนที่ดูแลคนอื่นก่อนตัวเองค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนน่าเชื่อถือ อบอุ่น และไว้วางใจได้ค่ะ' },
+  3: { emoji:'🌿', jp:'三碧木星', th:'ไม้เขียว', element:'ไม้',
+       year:'คุณพี่เกิดมาพร้อมพลังไม้ที่กระฉับกระเฉงและสร้างสรรค์ค่ะ ชอบเริ่มสิ่งใหม่ๆ มีไอเดียเยอะและมองเห็นโอกาสที่คนอื่นมองข้ามค่ะ พลังงานสูง ชอบความท้าทายค่ะ',
+       month:'ด้านในของคุณพี่เต็มไปด้วยความคิดสร้างสรรค์ที่รอการแสดงออกค่ะ มีความกระตือรือร้นและอยากลองทำสิ่งใหม่ๆ อยู่เสมอค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนมีพลัง สดใส และน่าติดตามค่ะ' },
+  4: { emoji:'🍃', jp:'四緑木星', th:'ไม้เขียวอ่อน', element:'ไม้',
+       year:'คุณพี่เกิดมาพร้อมพลังไม้ที่อ่อนโยนและสื่อสารเก่งค่ะ มีความสามารถในการเชื่อมต่อผู้คนและทำให้ทุกคนเข้าใจกันได้ค่ะ เป็นคนที่ทุกคนอยากคุยด้วยค่ะ',
+       month:'ด้านในของคุณพี่ซ่อนความอ่อนไหวและความอยากเชื่อมต่อกับคนอื่นไว้ค่ะ ให้ความสำคัญกับความสัมพันธ์มากค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนอ่อนโยน เข้าถึงง่าย และน่าไว้ใจค่ะ' },
+  5: { emoji:'⭐', jp:'五黄土星', th:'ดินเหลือง', element:'ดิน',
+       year:'คุณพี่เกิดมาพร้อมพลังงานที่ทรงพลังที่สุดในบรรดา 9 ดาวค่ะ ดาวดินเหลืองเป็นศูนย์กลางของทุกสิ่ง มักดึงดูดคนรอบข้างโดยไม่รู้ตัวค่ะ มีความเป็นผู้นำสูง ตัดสินใจเด็ดขาดค่ะ',
+       month:'ด้านในของคุณพี่มีพลังงานที่ทรงพลังมากค่ะ มักรู้สึกว่าตัวเองต้องแบกรับอะไรบางอย่างเสมอค่ะ แต่นั่นคือพลังของคุณพี่ค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนมีออร่าแรง น่าเกรงขาม แต่ก็น่าเข้าหาค่ะ' },
+  6: { emoji:'🥇', jp:'六白金星', th:'ทองขาว', element:'ทอง',
+       year:'คุณพี่เกิดมาพร้อมพลังทองที่สง่างามและมีหลักการค่ะ มีความเป็นผู้นำโดยธรรมชาติ รักความยุติธรรมและมีมาตรฐานสูงค่ะ เป็นคนที่คนอื่นนับถือค่ะ',
+       month:'ด้านในของคุณพี่เต็มไปด้วยความภาคภูมิใจและมาตรฐานที่สูงค่ะ มักคาดหวังสิ่งที่ดีที่สุดจากตัวเองและคนอื่นค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนสง่างาม มีระเบียบ และน่านับถือค่ะ' },
+  7: { emoji:'✨', jp:'七赤金星', th:'ทองแดง', element:'ทอง',
+       year:'คุณพี่เกิดมาพร้อมเสน่ห์และพลังทองแดงที่สดใสค่ะ เข้าสังคมเก่ง พูดเก่ง ทำให้ทุกคนรู้สึกสบายใจเมื่ออยู่ใกล้ค่ะ มีรสนิยมดีและชอบความสุขในชีวิตค่ะ',
+       month:'ด้านในของคุณพี่ชอบความสนุกสนานและความสุขค่ะ มักมองโลกในแง่ดีและรู้จักเพลิดเพลินกับชีวิตค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนมีเสน่ห์ สดใส และน่าคบหาค่ะ' },
+  8: { emoji:'🏔️', jp:'八白土星', th:'ดินขาว', element:'ดิน',
+       year:'คุณพี่เกิดมาพร้อมพลังดินที่มั่นคงและอนุรักษ์นิยมค่ะ มีความอดทนสูง ทำอะไรแล้วทำจริงค่ะ ชอบสะสมและสร้างสิ่งที่ยั่งยืนค่ะ',
+       month:'ด้านในของคุณพี่ให้ความสำคัญกับความมั่นคงและรากฐานที่แข็งแกร่งค่ะ มักวางแผนระยะยาวมากกว่าคนอื่นค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนน่าเชื่อถือ มั่นคง และไม่เปลี่ยนแปลงง่ายค่ะ' },
+  9: { emoji:'🔥', jp:'九紫火星', th:'ไฟม่วง', element:'ไฟ',
+       year:'คุณพี่เกิดมาพร้อมพลังไฟที่ฉลาดและสว่างไสวค่ะ มีสัญชาตญาณแหลมคม ฉลาดหลักแหลม และมองเห็นสิ่งที่คนอื่นมองไม่เห็นค่ะ เป็นคนที่ความคิดล้ำหน้าค่ะ',
+       month:'ด้านในของคุณพี่เต็มไปด้วยความคิดและความฝันที่สว่างไสวค่ะ มักรู้สึกว่าตัวเองแตกต่างจากคนอื่นค่ะ',
+       day:'ภาพลักษณ์ที่คนอื่นมองเห็นคือคนฉลาด มีออร่าแรง และน่าสนใจค่ะ' },
+};
+
+const COMBO = {
+  '555': 'คุณพี่มีดาวดินเหลืองครบ 3 ดวงค่ะ นี่คือพลังงานที่หายากมากๆ ค่ะ คุณพี่มีพลังงานที่ทรงพลังมากผิดปกติ เส้นทางชีวิตมักโดดเด่นและมีผลกระทบต่อคนรอบข้างมากค่ะ',
+  'fire': 'มีดาวไฟ (九紫) ในชาตา ทำให้คุณพี่มีความฉลาดและสัญชาตญาณที่แหลมคมมากค่ะ',
+  'water_fire': 'น้ำและไฟในชาตาสร้างความสมดุลที่น่าสนใจค่ะ คุณพี่มีทั้งความลึกของน้ำและความสว่างของไฟค่ะ',
+  'wood': 'พลังไม้ในชาตาทำให้คุณพี่มีความคิดสร้างสรรค์และการเติบโตที่ต่อเนื่องค่ะ',
+  'default': 'การรวมกันของ 3 ดาวนี้สร้างบุคลิกภาพที่เป็นเอกลักษณ์เฉพาะตัวค่ะ แต่ละดาวเสริมกันและกัน ทำให้คุณพี่มีพลังงานที่สมดุลและหลากหลายมากค่ะ',
+};
+
+// ===== CALC =====
+function calcYearStar(year) {
+  // ปฏิทินญี่ปุ่น เริ่มปีใหม่ 4 ก.พ.
+  const mod = year % 9;
+  const map = {0:9,1:8,2:7,3:6,4:5,5:4,6:3,7:2,8:1};
+  return map[mod] || 9;
+}
+
+function calcMonthStar(yearStar, month) {
+  // ตาราง month star ตาม year star
+  const table = {
+    1:[8,7,6,5,4,3,2,1,9,8,7,6],
+    2:[2,1,9,8,7,6,5,4,3,2,1,9],
+    3:[5,4,3,2,1,9,8,7,6,5,4,3],
+    4:[8,7,6,5,4,3,2,1,9,8,7,6],
+    5:[2,1,9,8,7,6,5,4,3,2,1,9],
+    6:[5,4,3,2,1,9,8,7,6,5,4,3],
+    7:[8,7,6,5,4,3,2,1,9,8,7,6],
+    8:[2,1,9,8,7,6,5,4,3,2,1,9],
+    9:[5,4,3,2,1,9,8,7,6,5,4,3],
+  };
+  return table[yearStar][month-1];
+}
+
+function calcDayStar(year, month, day) {
+  // คำนวณจาก Julian Day Number
+  const a = Math.floor((14-month)/12);
+  const y = year + 4800 - a;
+  const m = month + 12*a - 3;
+  const jdn = day + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
+  const mod = ((jdn % 9) + 9) % 9;
+  return mod === 0 ? 9 : mod;
+}
+
+function getCombo(ys, ms, ds) {
+  if(ys===5 && ms===5 && ds===5) return COMBO['555'];
+  const elements = [STARS[ys].element, STARS[ms].element, STARS[ds].element];
+  if(elements.includes('ไฟ') && elements.includes('น้ำ')) return COMBO['water_fire'];
+  if(elements.filter(e=>e==='ไม้').length >= 2) return COMBO['wood'];
+  if(elements.includes('ไฟ')) return COMBO['fire'];
+  return COMBO['default'];
+}
+
+window.calculate = function() {
+  const d = parseInt(document.getElementById('inDay').value);
+  const m = parseInt(document.getElementById('inMonth').value);
+  const y = parseInt(document.getElementById('inYear').value);
+
+  // ถ้าเกิดก่อน 4 ก.พ. ให้ใช้ปีก่อนหน้าสำหรับ year star
+  const adjYear = (m === 1 || (m === 2 && d < 4)) ? y - 1 : y;
+
+  const ys = calcYearStar(adjYear);
+  const ms = calcMonthStar(ys, m);
+  const ds = calcDayStar(y, m, d);
+
+  // ใส่ข้อมูล 3 ดาว
+  ['year','month','day'].forEach((type, i) => {
+    const star = [ys, ms, ds][i];
+    const data = STARS[star];
+    document.getElementById(type+'Emoji').textContent = data.emoji;
+    document.getElementById(type+'Num').textContent = star+'★';
+    document.getElementById(type+'Jp').textContent = data.jp;
+    document.getElementById(type+'Th').textContent = data.th;
+  });
+
+  // sections
+  document.getElementById('secYearTitle').textContent = `⭐ ดาวปี — ${STARS[ys].emoji} ${STARS[ys].jp} (${STARS[ys].th})`;
+  document.getElementById('secYear').textContent = STARS[ys].year;
+  document.getElementById('secMonthTitle').textContent = `🌙 ดาวเดือน — ${STARS[ms].emoji} ${STARS[ms].jp} (${STARS[ms].th})`;
+  document.getElementById('secMonth').textContent = STARS[ms].month;
+  document.getElementById('secDayTitle').textContent = `✨ ดาววัน — ${STARS[ds].emoji} ${STARS[ds].jp} (${STARS[ds].th})`;
+  document.getElementById('secDay').textContent = STARS[ds].day;
+  document.getElementById('secCombo').textContent = getCombo(ys, ms, ds);
+
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+};
+
+window.resetResult = function() {
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+</body>
+</html>
