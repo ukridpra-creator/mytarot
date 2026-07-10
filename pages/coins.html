@@ -15,7 +15,7 @@
     .page-title { font-size:18px; font-weight:700; color:white; }
     .page-content { padding:12px 16px 20px; }
 
-    /* BALANCE — compact */
+    /* BALANCE */
     .balance-row { display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(124,58,237,0.1)); border:1px solid rgba(212,175,55,0.25); border-radius:16px; padding:12px 16px; margin-bottom:12px; }
     .balance-left { display:flex; align-items:center; gap:10px; }
     .balance-icon { font-size:28px; }
@@ -47,7 +47,6 @@
     .btn-pay { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:14px; padding:15px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:8px; opacity:0.4; pointer-events:none; transition:all 0.2s; }
     .btn-pay.active { opacity:1; pointer-events:all; }
     .btn-pay:active { transform:scale(0.98); }
-    .secure-note { text-align:center; font-size:11px; color:rgba(255,255,255,0.25); margin-bottom:16px; }
 
     /* PAYMENT SHEET */
     .payment-overlay { position:fixed; inset:0; z-index:400; background:rgba(0,0,0,0.7); display:none; align-items:flex-end; }
@@ -72,7 +71,7 @@
     /* CREDIT CARD FORM */
     .card-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.85); display:none; align-items:flex-end; }
     .card-overlay.show { display:flex; }
-    .card-sheet { width:100%; background:linear-gradient(180deg,#1a0e2e,#0d0820); border:1px solid rgba(212,175,55,0.2); border-radius:24px 24px 0 0; padding:24px 20px 40px; }
+    .card-sheet { width:100%; background:linear-gradient(180deg,#1a0e2e,#0d0820); border:1px solid rgba(212,175,55,0.2); border-radius:24px 24px 0 0; padding:24px 20px 40px; max-height:90vh; overflow-y:auto; }
     .card-title { font-size:16px; font-weight:800; color:white; margin-bottom:4px; }
     .card-sub { font-size:13px; color:var(--dim); margin-bottom:20px; }
     .card-visual { background:linear-gradient(135deg,#1e1248,#4c1d95); border-radius:16px; padding:20px; margin-bottom:20px; position:relative; overflow:hidden; }
@@ -83,11 +82,11 @@
     .card-info-label { font-size:9px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
     .card-info-val { font-size:12px; font-weight:700; color:white; }
     .input-label { font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:5px; display:block; }
-    .card-input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:12px 14px; color:white; font-size:16px; font-family:'Sarabun',sans-serif; outline:none; box-sizing:border-box; margin-bottom:12px; }
-    .card-input:focus { border-color:#d4af37; }
-    .card-input::placeholder { color:rgba(255,255,255,0.2); font-size:14px; }
-    .card-row { display:flex; gap:10px; }
-    .card-row .card-input { flex:1; }
+
+    /* Stripe Element container */
+    #stripe-card-element { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:14px; margin-bottom:12px; }
+    #stripe-card-errors { color:#f87171; font-size:12px; margin-bottom:8px; min-height:18px; }
+
     .btn-card-pay { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:14px; padding:15px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:4px; }
     .btn-card-pay:disabled { opacity:0.4; cursor:not-allowed; }
     .card-cancel { width:100%; padding:12px; margin-top:10px; border:none; border-radius:12px; background:rgba(255,255,255,0.05); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
@@ -100,7 +99,8 @@
     .qr-logo { font-size:28px; margin-bottom:4px; }
     .qr-title { font-size:15px; font-weight:800; color:#1a1a1a; margin-bottom:4px; }
     .qr-amount { font-size:22px; font-weight:800; color:#d4af37; margin-bottom:14px; }
-    .qr-box { width:180px; height:180px; margin:0 auto 12px; background:#f5f5f5; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#999; border:2px dashed #ddd; flex-direction:column; gap:6px; }
+    .qr-box { width:180px; height:180px; margin:0 auto 12px; background:#f5f5f5; border-radius:12px; display:flex; align-items:center; justify-content:center; border:2px dashed #ddd; flex-direction:column; gap:6px; }
+    #qrImage { width:180px; height:180px; border-radius:12px; display:none; margin:0 auto 12px; }
     .qr-steps { text-align:left; background:#f9f9f9; border-radius:10px; padding:10px 14px; margin-bottom:12px; }
     .qr-step { font-size:11px; color:#555; margin-bottom:4px; display:flex; gap:6px; }
     .qr-step-num { font-weight:700; color:#d4af37; flex-shrink:0; }
@@ -145,42 +145,22 @@
     <div class="card-title">💳 กรอกข้อมูลบัตร</div>
     <div class="card-sub" id="cardSub"></div>
 
-    <!-- CARD VISUAL -->
     <div class="card-visual">
       <div class="card-chip">💳</div>
-      <div class="card-num-preview" id="cardNumPreview">•••• •••• •••• ••••</div>
+      <div class="card-num-preview">•••• •••• •••• ••••</div>
       <div class="card-info-row">
-        <div>
-          <div class="card-info-label">CARD HOLDER</div>
-          <div class="card-info-val" id="cardNamePreview">YOUR NAME</div>
-        </div>
-        <div>
-          <div class="card-info-label">EXPIRES</div>
-          <div class="card-info-val" id="cardExpPreview">MM/YY</div>
-        </div>
+        <div><div class="card-info-label">CARD HOLDER</div><div class="card-info-val">YOUR NAME</div></div>
+        <div><div class="card-info-label">EXPIRES</div><div class="card-info-val">MM/YY</div></div>
       </div>
     </div>
 
-    <label class="input-label">หมายเลขบัตร</label>
-    <input class="card-input" id="cardNum" type="tel" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" oninput="formatCardNum(this)" onkeyup="updateCardPreview()">
-
-    <label class="input-label">ชื่อบนบัตร</label>
-    <input class="card-input" id="cardName" type="text" placeholder="FIRSTNAME LASTNAME" oninput="document.getElementById('cardNamePreview').textContent=this.value.toUpperCase()||'YOUR NAME'">
-
-    <div class="card-row">
-      <div style="flex:1">
-        <label class="input-label">วันหมดอายุ</label>
-        <input class="card-input" id="cardExp" type="tel" inputmode="numeric" maxlength="5" placeholder="MM/YY" oninput="formatExp(this)">
-      </div>
-      <div style="flex:1">
-        <label class="input-label">CVV</label>
-        <input class="card-input" id="cardCvv" type="tel" inputmode="numeric" maxlength="4" placeholder="•••">
-      </div>
-    </div>
+    <label class="input-label">ข้อมูลบัตร</label>
+    <div id="stripe-card-element"></div>
+    <div id="stripe-card-errors"></div>
 
     <button class="btn-card-pay" id="btnCardPay" onclick="processCardPayment()">🔒 ชำระ <span id="cardPayAmount"></span></button>
     <button class="card-cancel" onclick="closeCard()">← กลับ</button>
-
+    <div class="card-secure">🔒 ปลอดภัยด้วย Stripe Encryption ค่ะ</div>
   </div>
 </div>
 
@@ -194,6 +174,7 @@
       <div style="font-size:28px">⏳</div>
       <div style="font-size:12px;color:#999">กำลังสร้าง QR Code</div>
     </div>
+    <img id="qrImage" alt="PromptPay QR Code" />
     <div class="qr-steps">
       <div class="qr-step"><span class="qr-step-num">1</span>บันทึก QR Code ลงในอัลบั้ม</div>
       <div class="qr-step"><span class="qr-step-num">2</span>เปิดแอปธนาคารแล้วสแกน QR</div>
@@ -229,7 +210,6 @@
 
 <div class="page-content">
 
-  <!-- BALANCE compact -->
   <div class="balance-row">
     <div class="balance-left">
       <div class="balance-icon">🪙</div>
@@ -243,43 +223,41 @@
     </div>
   </div>
 
-  <!-- PACKAGES 3×2 -->
   <div class="pkg-label">✦ เลือกแพ็กเกจค่ะ</div>
   <div class="packages-grid">
-    <div class="pkg-card" id="pkg_50" onclick="selectPackage(50,0,25)">
+    <div class="pkg-card" id="pkg_50" onclick="selectPackage(50,0,'25',25)">
       <div class="pkg-coins">50</div>
       <div class="pkg-bonus"> </div>
       <div class="pkg-price">25฿</div>
     </div>
-    <div class="pkg-card" id="pkg_100" onclick="selectPackage(100,0,50)">
+    <div class="pkg-card" id="pkg_100" onclick="selectPackage(100,0,'50',50)">
       <div class="pkg-coins">100</div>
       <div class="pkg-bonus"> </div>
       <div class="pkg-price">50฿</div>
     </div>
-    <div class="pkg-card popular" id="pkg_300" onclick="selectPackage(300,30,150)">
+    <div class="pkg-card popular" id="pkg_300" onclick="selectPackage(300,30,'150',150)">
       <div class="popular-tag">⭐ ฮิต</div>
       <div class="pkg-coins">300</div>
       <div class="pkg-bonus">+30 ฟรี</div>
       <div class="pkg-price">150฿</div>
     </div>
-    <div class="pkg-card" id="pkg_500" onclick="selectPackage(500,75,250)">
+    <div class="pkg-card" id="pkg_500" onclick="selectPackage(500,75,'250',250)">
       <div class="pkg-coins">500</div>
       <div class="pkg-bonus">+75 ฟรี</div>
       <div class="pkg-price">250฿</div>
     </div>
-    <div class="pkg-card" id="pkg_1000" onclick="selectPackage(1000,200,500)">
+    <div class="pkg-card" id="pkg_1000" onclick="selectPackage(1000,200,'500',500)">
       <div class="pkg-coins">1,000</div>
       <div class="pkg-bonus">+200 ฟรี🎉</div>
       <div class="pkg-price">500฿</div>
     </div>
-    <div class="pkg-card" id="pkg_2000" onclick="selectPackage(2000,500,1000)">
+    <div class="pkg-card" id="pkg_2000" onclick="selectPackage(2000,500,'1000',1000)">
       <div class="pkg-coins">2,000</div>
       <div class="pkg-bonus">+500 ฟรี👑</div>
       <div class="pkg-price">1,000฿</div>
     </div>
   </div>
 
-  <!-- SELECTED INFO -->
   <div class="selected-info" id="selectedInfo">
     <div>
       <div class="sel-coins" id="selCoinsText">🪙 — เหรียญ</div>
@@ -288,7 +266,6 @@
     <div class="sel-price" id="selPriceText">— ฿</div>
   </div>
 
-  <!-- BTN PAY -->
   <button class="btn-pay" id="btnPay" onclick="openPayment()">🪙 ชำระเงินเลยค่ะ</button>
   <div style="margin-top:16px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.8;text-align:center;">
     บริการนี้เป็นความเชื่อส่วนบุคคลและเพื่อความบันเทิงเท่านั้น<br>
@@ -309,7 +286,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, increment, serverTimestamp }
+import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -318,108 +295,128 @@ const firebaseConfig = {
   storageBucket:"my-tarot67.firebasestorage.app",
   messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
-const db=getFirestore(app);
-let currentUser=null;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
 
-window.updateCoinUI=function(c){
-  document.getElementById('coinCount') && (document.getElementById('coinCount').textContent=c);
-  document.getElementById('balanceAmount').textContent=c;
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount') && (document.getElementById('coinCount').textContent = c);
+  document.getElementById('balanceAmount').textContent = c;
 };
-function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
-window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
-window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
-onAuthStateChanged(auth,async user=>{
-  currentUser=user;
-  if(user){
-    var snap=await getDoc(doc(db,'users',user.uid));
-    var data=snap.exists()?snap.data():{};
-    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
-    document.getElementById('guestView').style.display='none';
-    document.getElementById('loggedView').style.display='block';
-    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
-    document.getElementById('menuEmail').textContent=user.email;
-    if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  } else {updateCoinUI('—');setAvatarDisplay('');}
+
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+  }
 });
-
-// STATE
-let selCoins=0, selBonus=0, selPrice=0, selPayment=null;
-
-window.selectPackage=function(coins,bonus,price){
-  selCoins=coins; selBonus=bonus; selPrice=price;
-  ['50','100','300','500','1000','2000'].forEach(k=>document.getElementById('pkg_'+k).classList.remove('selected'));
-  document.getElementById('pkg_'+coins).classList.add('selected');
-  const total=coins+bonus;
-  document.getElementById('selCoinsText').textContent='🪙 '+coins.toLocaleString()+' เหรียญ';
-  document.getElementById('selTotalText').textContent=bonus>0?'รวม '+total.toLocaleString()+' เหรียญ (ฟรี +'+bonus+')':'';
-  document.getElementById('selPriceText').textContent=price.toLocaleString()+'฿';
-  document.getElementById('selectedInfo').classList.add('show');
-  document.getElementById('btnPay').classList.add('active');
-  document.getElementById('btnPay').textContent='🪙 ชำระ '+price.toLocaleString()+' ฿';
-};
-
-// PAYMENT SHEET
-window.openPayment=function(){
-  if(!currentUser){alert('กรุณาเข้าสู่ระบบก่อนนะคะ 🙏');return;}
-  if(selCoins<1) return;
-  const total=selCoins+selBonus;
-  document.getElementById('sheetSub').textContent='🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿ ค่ะ';
-  selPayment=null;
-  ['promptpay','card'].forEach(k=>{document.getElementById('pm_'+k).classList.remove('selected');});
-  document.getElementById('btnConfirmPay').disabled=true;
-  document.getElementById('paymentOverlay').classList.add('show');
-};
-window.closePayment=function(){document.getElementById('paymentOverlay').classList.remove('show');};
-
-window.selectPayment=function(method){
-  selPayment=method;
-  ['promptpay','card'].forEach(k=>document.getElementById('pm_'+k).classList.toggle('selected',k===method));
-  document.getElementById('btnConfirmPay').disabled=false;
-};
-
-window.confirmPayment=function(){
-  closePayment();
-  if(selPayment==='card') openCard();
-  else openQR();
-};
-
-// CARD FORM
-
-
 
 // ── STRIPE ──
 const stripe = Stripe('pk_live_51TrZVrDzUWA2ZCZASwyexOoW3ixeI9cdVjB2OFMIHzEwa3a9lWDvvIHPRrB0luWy33VmH1PCETQ9oDGt99eIrQ7U00TUcgzltg');
-let stripeElements = null, stripeCardElement = null, currentPaymentIntentId = null;
+let stripeCardElement = null;
+let cardClientSecret = null;
+let pollTimer = null;
 
+// STATE
+let selCoins = 0, selBonus = 0, selPkgId = '', selPrice = 0, selPayment = null;
+
+window.selectPackage = function(coins, bonus, pkgId, price) {
+  selCoins = coins; selBonus = bonus; selPkgId = pkgId; selPrice = price;
+  ['50','100','300','500','1000','2000'].forEach(k => document.getElementById('pkg_'+k).classList.remove('selected'));
+  document.getElementById('pkg_'+coins).classList.add('selected');
+  const total = coins + bonus;
+  document.getElementById('selCoinsText').textContent = '🪙 ' + coins.toLocaleString() + ' เหรียญ';
+  document.getElementById('selTotalText').textContent = bonus > 0 ? 'รวม ' + total.toLocaleString() + ' เหรียญ (ฟรี +' + bonus + ')' : '';
+  document.getElementById('selPriceText').textContent = price.toLocaleString() + '฿';
+  document.getElementById('selectedInfo').classList.add('show');
+  document.getElementById('btnPay').classList.add('active');
+  document.getElementById('btnPay').textContent = '🪙 ชำระ ' + price.toLocaleString() + ' ฿';
+};
+
+// ── PAYMENT SHEET ──
+window.openPayment = function() {
+  if (!currentUser) { alert('กรุณาเข้าสู่ระบบก่อนนะคะ 🙏'); return; }
+  if (selCoins < 1) return;
+  const total = selCoins + selBonus;
+  document.getElementById('sheetSub').textContent = '🪙 ' + total.toLocaleString() + ' เหรียญ — ' + selPrice.toLocaleString() + '฿ ค่ะ';
+  selPayment = null;
+  ['promptpay','card'].forEach(k => document.getElementById('pm_'+k).classList.remove('selected'));
+  document.getElementById('btnConfirmPay').disabled = true;
+  document.getElementById('paymentOverlay').classList.add('show');
+};
+window.closePayment = function() { document.getElementById('paymentOverlay').classList.remove('show'); };
+
+window.selectPayment = function(method) {
+  selPayment = method;
+  ['promptpay','card'].forEach(k => document.getElementById('pm_'+k).classList.toggle('selected', k === method));
+  document.getElementById('btnConfirmPay').disabled = false;
+};
+
+window.confirmPayment = function() {
+  closePayment();
+  if (selPayment === 'card') openCard();
+  else openQR();
+};
+
+// ── CREATE PAYMENT INTENT ──
 async function createPaymentIntent(method) {
   if (!currentUser) return null;
-  const pkgMap = {50:'99',100:'99',300:'199',500:'299',1000:'499',2000:'799'};
-  const packageId = pkgMap[selCoins] || '99';
-  const res = await fetch('/api/create-payment', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ packageId, userId: currentUser.uid, method })
-  });
-  if (!res.ok) return null;
-  return await res.json();
+  try {
+    const res = await fetch('/api/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ packageId: selPkgId, userId: currentUser.uid, method })
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch(e) {
+    console.error(e);
+    return null;
+  }
 }
 
+// ── CARD ──
 window.openCard = async function() {
   const total = selCoins + selBonus;
-  document.getElementById('cardSub').textContent = '🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
-  document.getElementById('cardPayAmount').textContent = selPrice.toLocaleString()+' ฿';
+  document.getElementById('cardSub').textContent = '🪙 ' + total.toLocaleString() + ' เหรียญ — ' + selPrice.toLocaleString() + '฿';
+  document.getElementById('cardPayAmount').textContent = selPrice.toLocaleString() + ' ฿';
   document.getElementById('cardOverlay').classList.add('show');
-  // สร้าง Stripe Elements
-  const data = await createPaymentIntent('card');
-  if (!data) { alert('เกิดข้อผิดพลาดค่ะ'); return; }
-  currentPaymentIntentId = data.paymentIntentId;
-  if (!stripeElements) {
-    stripeElements = stripe.elements({ clientSecret: data.clientSecret });
-    stripeCardElement = stripeElements.create('card', {
-      style: { base: { color: '#fff', fontFamily: 'Sarabun, sans-serif', fontSize: '16px', '::placeholder': { color: 'rgba(255,255,255,0.3)' } } }
+
+  // Mount Stripe Card Element ครั้งแรก
+  if (!stripeCardElement) {
+    const elements = stripe.elements();
+    stripeCardElement = elements.create('card', {
+      style: {
+        base: {
+          color: '#fff',
+          fontFamily: 'Sarabun, sans-serif',
+          fontSize: '16px',
+          '::placeholder': { color: 'rgba(255,255,255,0.3)' }
+        }
+      }
     });
     stripeCardElement.mount('#stripe-card-element');
     stripeCardElement.on('change', e => {
@@ -428,68 +425,93 @@ window.openCard = async function() {
   }
 };
 
+window.closeCard = function() { document.getElementById('cardOverlay').classList.remove('show'); };
+
 window.processCardPayment = async function() {
   const btn = document.getElementById('btnCardPay');
-  btn.disabled = true; btn.textContent = '⏳ กำลังประมวลผล...';
-  try {
-    const { error } = await stripe.confirmCardPayment(undefined, {
-      payment_method: { card: stripeCardElement }
-    });
-    if (error) {
-      document.getElementById('stripe-card-errors').textContent = error.message;
-      btn.disabled = false; btn.textContent = '🔒 ชำระ '+selPrice.toLocaleString()+' ฿';
-    } else {
-      closeCard();
-      showSuccess();
-    }
-  } catch(e) {
-    btn.disabled = false; btn.textContent = '🔒 ชำระ '+selPrice.toLocaleString()+' ฿';
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังประมวลผล...';
+
+  const data = await createPaymentIntent('card');
+  if (!data) {
+    document.getElementById('stripe-card-errors').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    btn.disabled = false;
+    btn.innerHTML = '🔒 ชำระ <span id="cardPayAmount">' + selPrice.toLocaleString() + ' ฿</span>';
+    return;
+  }
+
+  const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+    payment_method: { card: stripeCardElement }
+  });
+
+  if (error) {
+    document.getElementById('stripe-card-errors').textContent = error.message;
+    btn.disabled = false;
+    btn.innerHTML = '🔒 ชำระ <span id="cardPayAmount">' + selPrice.toLocaleString() + ' ฿</span>';
+  } else {
+    closeCard();
+    showSuccess();
   }
 };
 
+// ── PROMPTPAY QR ──
 window.openQR = async function() {
   const total = selCoins + selBonus;
-  document.getElementById('qrAmount').textContent = '🪙 '+total.toLocaleString()+' เหรียญ — '+selPrice.toLocaleString()+'฿';
-  document.getElementById('qrOverlay').classList.add('show');
+  document.getElementById('qrAmount').textContent = '🪙 ' + total.toLocaleString() + ' เหรียญ — ' + selPrice.toLocaleString() + '฿';
+
+  // reset state
   document.getElementById('qrBox').style.display = 'flex';
   document.getElementById('qrImage').style.display = 'none';
-  // สร้าง PromptPay Payment Intent
+  document.getElementById('qrOverlay').classList.add('show');
+
   const data = await createPaymentIntent('promptpay');
-  if (!data) { alert('เกิดข้อผิดพลาดค่ะ'); return; }
-  currentPaymentIntentId = data.paymentIntentId;
-  // ดึง QR code จาก payment intent
+  if (!data) {
+    alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ');
+    closeQR();
+    return;
+  }
+
+  // ดึง QR image URL จาก Payment Intent
   try {
-    const pi = await stripe.retrievePaymentIntent(data.clientSecret);
-    const qrUrl = pi.paymentIntent?.next_action?.promptpay_display_qr_code?.image_url_png;
+    const result = await stripe.retrievePaymentIntent(data.clientSecret);
+    const qrUrl = result.paymentIntent?.next_action?.promptpay_display_qr_code?.image_url_png;
     if (qrUrl) {
       document.getElementById('qrBox').style.display = 'none';
       document.getElementById('qrImage').src = qrUrl;
       document.getElementById('qrImage').style.display = 'block';
     }
-    // Poll สถานะ
+    // Poll สถานะทุก 3 วินาที
     pollPaymentStatus(data.clientSecret);
-  } catch(e) { console.error(e); }
+  } catch(e) {
+    console.error(e);
+  }
 };
 
-async function pollPaymentStatus(clientSecret) {
-  const interval = setInterval(async () => {
-    const result = await stripe.retrievePaymentIntent(clientSecret);
-    if (result.paymentIntent?.status === 'succeeded') {
-      clearInterval(interval);
-      closeQR();
-      showSuccess();
-    }
+function pollPaymentStatus(clientSecret) {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    try {
+      const result = await stripe.retrievePaymentIntent(clientSecret);
+      if (result.paymentIntent?.status === 'succeeded') {
+        clearInterval(pollTimer);
+        closeQR();
+        showSuccess();
+      }
+    } catch(e) { console.error(e); }
   }, 3000);
   // หยุด poll หลัง 10 นาที
-  setTimeout(() => clearInterval(interval), 600000);
+  setTimeout(() => clearInterval(pollTimer), 600000);
 }
+
+window.closeQR = function() {
+  document.getElementById('qrOverlay').classList.remove('show');
+  if (pollTimer) clearInterval(pollTimer);
+};
 
 function showSuccess() {
   alert('✅ ชำระเงินสำเร็จค่ะ! เหรียญจะเข้าบัญชีภายในไม่กี่วินาทีค่ะ 🪙');
   window.location.reload();
 }
-
-window.closeQR = function() { document.getElementById('qrOverlay').classList.remove('show'); };
 </script>
 </body>
 </html>
