@@ -355,7 +355,7 @@ function renderCards(){
   document.getElementById('cardsScroll').innerHTML=shuffled.map((card,i)=>{
     const isSel=selected.find(s=>s.id===card.id);
     return `<div class="card-item ${isSel?'selected':''}" onclick="pickCard(${i})">
-      <img src="../images/dream-oracle/${card.id}.png" onerror="this.src='${BACK}'" alt="${card.name}">
+      <img src="${BACK}" alt="card">
     </div>`;
   }).join('');
 }
