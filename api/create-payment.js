@@ -25,18 +25,37 @@ export default async function handler(req, res) {
   if (!pkg) return res.status(400).json({ error: 'invalid_package' });
 
   try {
-    const paymentMethodTypes = method === 'card' ? ['card'] : ['promptpay'];
+    if (method === 'promptpay') {
+      // สร้างและ confirm ทันทีฝั่ง server เพื่อได้ QR URL
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: pkg.amount,
+        currency: 'thb',
+        payment_method_types: ['promptpay'],
+        metadata: { userId, packageId, coins: pkg.coins, label: pkg.label },
+      });
 
+      const confirmed = await stripe.paymentIntents.confirm(paymentIntent.id, {
+        payment_method_data: { type: 'promptpay' },
+      });
+
+      const qrUrl = confirmed.next_action?.promptpay_display_qr_code?.image_url_png || null;
+
+      return res.status(200).json({
+        clientSecret: confirmed.client_secret,
+        paymentIntentId: confirmed.id,
+        qrUrl,
+        amount: pkg.amount,
+        coins: pkg.coins,
+        label: pkg.label,
+      });
+    }
+
+    // card — create เฉยๆ ไม่ต้อง confirm ฝั่ง server
     const paymentIntent = await stripe.paymentIntents.create({
       amount: pkg.amount,
       currency: 'thb',
-      payment_method_types: paymentMethodTypes,
-      metadata: {
-        userId,
-        packageId,
-        coins: pkg.coins,
-        label: pkg.label,
-      },
+      payment_method_types: ['card'],
+      metadata: { userId, packageId, coins: pkg.coins, label: pkg.label },
     });
 
     res.status(200).json({
