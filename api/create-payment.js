@@ -15,7 +15,7 @@ const PACKAGES = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { packageId, userId, method } = req.body;
+  const { packageId, userId, method, email } = req.body;
 
   if (!packageId || !userId) {
     return res.status(400).json({ error: 'missing_params' });
@@ -35,7 +35,10 @@ export default async function handler(req, res) {
       });
 
       const confirmed = await stripe.paymentIntents.confirm(paymentIntent.id, {
-        payment_method_data: { type: 'promptpay' },
+        payment_method_data: {
+          type: 'promptpay',
+          billing_details: { email: email || 'noreply@mytarot.vip' },
+        },
       });
 
       const qrUrl = confirmed.next_action?.promptpay_display_qr_code?.image_url_png || null;

@@ -388,7 +388,7 @@ async function createPaymentIntent(method) {
     const res = await fetch('/api/create-payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ packageId: selPkgId, userId: currentUser.uid, method })
+      body: JSON.stringify({ packageId: selPkgId, userId: currentUser.uid, method, email: currentUser.email })
     });
     if (!res.ok) return null;
     return await res.json();
