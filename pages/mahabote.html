@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>มหาโพธิ์ — โหราศาสตร์พม่า | My Tarot</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<style>
+  body { padding-bottom:80px; background:linear-gradient(160deg,#0d0a06 0%,#1a1000 50%,#0d0a06 100%); }
+  .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(212,175,55,0.2); background:rgba(13,10,6,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+  .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+  .page-title { font-size:18px; font-weight:700; color:white; }
+  .page-content { padding:20px 20px 40px; }
+
+  .hero { text-align:center; padding:8px 0 20px; }
+  .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+  .hero-sub { font-size:13px; color:#d4af37; margin-bottom:4px; letter-spacing:1px; }
+  .hero-desc { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+  .input-card { background:rgba(255,255,255,0.03); border:1px solid rgba(212,175,55,0.15); border-radius:20px; padding:20px; margin-bottom:16px; }
+  .input-label { font-size:13px; color:#d4af37; font-weight:700; margin-bottom:10px; display:block; }
+  .date-row { display:flex; gap:8px; }
+  .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(212,175,55,0.2); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+  .sel option { background:#1a1000; }
+
+  .btn-calc { width:100%; border:none; border-radius:16px; padding:16px; color:#0d0a06; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; background:linear-gradient(135deg,#b8860b,#d4af37,#f0c040); }
+
+  /* RESULT */
+  .result-box { display:none; }
+  .result-box.show { display:block; }
+
+  /* ANIMAL CARD */
+  .animal-card { background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(180,120,0,0.05)); border:1px solid rgba(212,175,55,0.3); border-radius:24px; padding:24px 20px; margin-bottom:16px; text-align:center; }
+  .animal-img { width:140px; height:140px; object-fit:contain; margin:0 auto 12px; display:block; filter:drop-shadow(0 4px 20px rgba(212,175,55,0.3)); }
+  .animal-name { font-size:24px; font-weight:800; color:#d4af37; margin-bottom:4px; }
+  .animal-day { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:12px; }
+  .animal-tags { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .animal-tag { font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
+  .tag-planet { background:rgba(96,165,250,0.15); color:#60a5fa; border:1px solid rgba(96,165,250,0.3); }
+  .tag-dir    { background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); }
+  .tag-color  { background:rgba(168,85,247,0.15); color:#a855f7; border:1px solid rgba(168,85,247,0.3); }
+  .tag-day    { background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+
+  /* SECTIONS */
+  .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
+  .result-section h3 { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .result-section p { font-size:14px; line-height:2.1; color:rgba(255,255,255,0.82); }
+  .sec-char  { background:rgba(212,175,55,0.06); border-color:#d4af37; }
+  .sec-char h3 { color:#d4af37; }
+  .sec-love  { background:rgba(236,72,153,0.06); border-color:#ec4899; }
+  .sec-love h3 { color:#ec4899; }
+  .sec-work  { background:rgba(96,165,250,0.06); border-color:#60a5fa; }
+  .sec-work h3 { color:#60a5fa; }
+  .sec-luck  { background:rgba(16,185,129,0.06); border-color:#10b981; }
+  .sec-luck h3 { color:#10b981; }
+  .sec-compat { background:rgba(168,85,247,0.06); border-color:#a855f7; }
+  .sec-compat h3 { color:#a855f7; }
+
+  /* COMPAT ANIMALS */
+  .compat-row { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .compat-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.04); border-radius:12px; padding:8px 12px; }
+  .compat-img { width:32px; height:32px; object-fit:contain; }
+  .compat-name { font-size:12px; color:rgba(255,255,255,0.7); }
+  .compat-level { font-size:11px; font-weight:700; }
+  .good { color:#10b981; }
+  .warn { color:#f59e0b; }
+  .bad  { color:#ef4444; }
+
+  .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="myanmar-hub.html" class="back-btn">←</a>
+  <div class="page-title">🇲🇲 มหาโพธิ์</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href=\'history.html\'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px"><img src="../images/mascot-mahabote.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div class="hero-sub">MAHABOTE · မဟာဘုတ်</div>
+    <div class="hero-title">🇲🇲 โหราศาสตร์พม่า</div>
+    <div class="hero-desc">ศาสตร์โบราณแห่งแผ่นดินพม่า<br>ค้นพบสัตว์ประจำตัวและดวงชะตาของคุณพี่ค่ะ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">🎂 วันเกิดของคุณพี่ค่ะ</label>
+    <div class="date-row">
+      <select class="sel" id="inDay"></select>
+      <select class="sel" id="inMonth"></select>
+      <select class="sel" id="inYear"></select>
+    </div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">⏰ เวลาเกิด (สำหรับวันพุธค่ะ)</label>
+    <div class="date-row">
+      <select class="sel" id="inHour">
+        <option value="-1">ไม่ทราบ</option>
+      </select>
+      <select class="sel" id="inMinute"></select>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:8px;text-align:center;">วันพุธแบ่งเป็น 2 ช่วง — ก่อนเที่ยง (งูทิพย์) หลังเที่ยง (งู) ค่ะ</div>
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">🐅 ค้นหาสัตว์ประจำตัวเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+    <!-- ANIMAL -->
+    <div class="animal-card">
+      <img class="animal-img" id="animalImg" src="" alt="">
+      <div class="animal-name" id="animalName"></div>
+      <div class="animal-day" id="animalDay"></div>
+      <div class="animal-tags" id="animalTags"></div>
+    </div>
+
+    <!-- SECTIONS -->
+    <div class="result-section sec-char">
+      <h3>✦ บุคลิกและพลังงาน</h3>
+      <p id="secChar"></p>
+    </div>
+    <div class="result-section sec-love">
+      <h3>❤️ ความรักและความสัมพันธ์</h3>
+      <p id="secLove"></p>
+    </div>
+    <div class="result-section sec-work">
+      <h3>💼 การงานและการเงิน</h3>
+      <p id="secWork"></p>
+    </div>
+    <div class="result-section sec-luck">
+      <h3>🍀 โชคลาภและข้อควรระวัง</h3>
+      <p id="secLuck"></p>
+    </div>
+    <div class="result-section sec-compat">
+      <h3>💫 ความเข้ากันกับสัตว์อื่น</h3>
+      <p id="secCompatDesc"></p>
+      <div class="compat-row" id="compatRow"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetResult()">🔄 ค้นหาใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){var snap=await getDoc(doc(db,'users',user.uid));var data=snap.exists()?snap.data():{};updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');document.getElementById('guestView').style.display='none';document.getElementById('loggedView').style.display='block';document.getElementById('menuName').textContent=data.displayName||user.displayName||'';document.getElementById('menuEmail').textContent=user.email;if(typeof setupCheckin==='function')setupCheckin(user,'../');}
+  else{updateCoinUI('—');setAvatarDisplay('');}
+});
+
+// DROPDOWNS
+const dayEl=document.getElementById('inDay');
+for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
+const monthNames=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const monthEl=document.getElementById('inMonth');
+monthNames.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
+const yearEl=document.getElementById('inYear');
+const curY=new Date().getFullYear();
+for(let y=curY;y>=curY-80;y--){const o=document.createElement('option');o.value=y;o.textContent=(y+543)+' ('+y+')';if(y===1990)o.selected=true;yearEl.appendChild(o);}
+const hourEl=document.getElementById('inHour');
+for(let h=0;h<=23;h++){const o=document.createElement('option');o.value=h;o.textContent=(h<10?'0'+h:h)+':00 น.';hourEl.appendChild(o);}
+const minEl=document.getElementById('inMinute');
+for(let m=0;m<=59;m++){const o=document.createElement('option');o.value=m;o.textContent=(m<10?'0'+m:m)+' นาที';minEl.appendChild(o);}
+
+// ===== DATA =====
+const ANIMALS = {
+  sun: {
+    key:'sun', name:'ครุฑ', img:'garuda.png',
+    day:'วันอาทิตย์', planet:'อาทิตย์ ☀️', dir:'ทิศตะวันออกเฉียงเหนือ', color:'แดง ส้ม', lucky:'วันอาทิตย์',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของครุฑ ราชาแห่งนกค่ะ มีความเป็นผู้นำโดยธรรมชาติ สง่างาม และมีออร่าที่คนอื่นรู้สึกได้ทันทีเมื่อเข้ามาในห้องค่ะ ความมั่นใจในตัวเองสูงมาก มักทำอะไรก็โดดเด่นและเป็นที่สังเกตได้ง่ายค่ะ มีความภาคภูมิใจในตัวเองสูงและไม่ชอบถูกดูถูกค่ะ แต่ขณะเดียวกันก็ใจกว้างและพร้อมปกป้องคนที่รักด้วยชีวิตค่ะ',
+    love:'ในความรักคุณพี่เป็นคนที่รักจริงและมอบความอบอุ่นให้อย่างเต็มที่ค่ะ แต่ต้องการคนที่เข้าใจความต้องการพื้นที่ส่วนตัวด้วยค่ะ ไม่ชอบถูกควบคุมหรือจำกัดค่ะ คู่ที่เหมาะคือคนที่เคารพในความเป็นตัวของตัวเองของคุณพี่ค่ะ เมื่อรักแล้วจะซื่อสัตย์และอุทิศตัวให้อย่างเต็มที่ค่ะ',
+    work:'ในด้านการงานคุณพี่เหมาะกับตำแหน่งผู้นำหรืองานที่ต้องการความคิดสร้างสรรค์และการตัดสินใจค่ะ ไม่เหมาะกับงานที่ต้องทำซ้ำๆ หรืออยู่ใต้บังคับบัญชาของคนที่ไม่มีความสามารถค่ะ ด้านการเงินมักมีโชคดีเมื่อลงทุนในสิ่งที่ตัวเองเชื่อมั่นค่ะ',
+    luck:'วันอาทิตย์เป็นวันมงคลที่สุดค่ะ เริ่มสิ่งสำคัญในวันนี้จะได้ผลดีค่ะ ทิศตะวันออกเฉียงเหนือเป็นทิศนำโชคค่ะ ระวังเรื่องความหยิ่งที่อาจทำให้เสียมิตรค่ะ และอย่าตัดสินใจใหญ่ในวันพุธค่ะ',
+    compatDesc:'ครุฑเข้ากันได้ดีกับสัตว์ที่มีพลังงานเสริมกันค่ะ',
+    goodWith:['thu','fri'], warnWith:['wed-am'], badWith:['sat'],
+  },
+  mon: {
+    key:'mon', name:'เสือ', img:'tiger.png',
+    day:'วันจันทร์', planet:'จันทร์ 🌙', dir:'ทิศเหนือ', color:'เหลือง ทอง', lucky:'วันจันทร์',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของเสือค่ะ มีความกล้าหาญ อิสระ และพลังงานสูงมากค่ะ ไม่ชอบถูกควบคุมและต้องการพื้นที่เป็นของตัวเองค่ะ มีสัญชาตญาณที่แหลมคมในการจับความเคลื่อนไหวรอบข้างค่ะ คนที่ไม่รู้จักอาจคิดว่าคุณพี่ดูห่างเหิน แต่จริงๆ แล้วอ่อนโยนมากกับคนที่รักค่ะ มีความเป็นตัวของตัวเองสูงและไม่เปลี่ยนตัวเองเพื่อใครค่ะ',
+    love:'ในความรักคุณพี่เป็นคนรักลึกแต่แสดงออกน้อยค่ะ ต้องการเวลาในการเปิดใจค่ะ เมื่อไว้ใจใครแล้วจะซื่อสัตย์และทุ่มเทอย่างเต็มที่ค่ะ คู่ที่เหมาะคือคนที่เข้าใจในความเป็นตัวเองของคุณพี่และไม่พยายามเปลี่ยนคุณพี่ค่ะ',
+    work:'เหมาะกับงานที่ต้องใช้ความกล้าและการตัดสินใจเร็วค่ะ ธุรกิจส่วนตัว การลงทุน หรืองานที่มีความท้าทายค่ะ ไม่เหมาะกับงานที่มีกฎระเบียบเยอะเกินไปค่ะ ด้านการเงินมักมีรายได้หลายทางค่ะ',
+    luck:'วันจันทร์เป็นวันมงคลค่ะ สีเหลืองและทองเสริมพลังค่ะ ระวังการใจร้อนที่อาจทำให้เสียโอกาสค่ะ ทิศเหนือเป็นทิศนำโชคค่ะ',
+    compatDesc:'เสือเข้ากันได้ดีกับสัตว์ที่มีพลังเสริมกันค่ะ',
+    goodWith:['sun','wed-pm'], warnWith:['thu'], badWith:['tue'],
+  },
+  tue: {
+    key:'tue', name:'สิงห์', img:'lion.png',
+    day:'วันอังคาร', planet:'อังคาร ♂️', dir:'ทิศตะวันตกเฉียงเหนือ', color:'ชมพู แดง', lucky:'วันอังคาร',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของสิงห์ราชาแห่งสัตว์ค่ะ มีความเป็นผู้นำที่แข็งแกร่ง กล้าหาญ และไม่กลัวความท้าทายค่ะ มีความมั่นใจในตัวเองสูงและชอบทำสิ่งที่ยิ่งใหญ่ค่ะ บางครั้งอาจดูแข็งกร้าวแต่จริงๆ มีหัวใจที่อ่อนโยนมากโดยเฉพาะกับคนที่รักค่ะ มีความภาคภูมิใจสูงและต้องการการยอมรับจากคนรอบข้างค่ะ',
+    love:'ในความรักคุณพี่รักอย่างเต็มที่และต้องการคนที่ทำให้รู้สึกพิเศษค่ะ ชอบการแสดงออกถึงความรักอย่างเปิดเผยค่ะ ต้องการคนที่เทิดทูนและให้เกียรติค่ะ เมื่อรักแล้วจะปกป้องคนรักอย่างเต็มที่ค่ะ',
+    work:'เหมาะกับตำแหน่งผู้นำ การเมือง ธุรกิจ หรืองานที่ต้องการความกล้าหาญค่ะ ทำงานได้ดีเมื่อมีอิสระในการตัดสินใจค่ะ ด้านการเงินมักมีโชคในช่วงกลางชีวิตค่ะ',
+    luck:'วันอังคารเป็นวันมงคลค่ะ สีชมพูและแดงเสริมพลังค่ะ ระวังความหยิ่งยโสที่อาจทำให้เสียเพื่อนค่ะ ทิศตะวันตกเฉียงเหนือนำโชคค่ะ',
+    compatDesc:'สิงห์เข้ากันได้ดีกับสัตว์ที่มีพลังสมดุลค่ะ',
+    goodWith:['wed-am','fri'], warnWith:['sun'], badWith:['mon'],
+  },
+  'wed-am': {
+    key:'wed-am', name:'งูทิพย์ (นาคา)', img:'divine-naga.png',
+    day:'วันพุธ (ก่อนเที่ยง)', planet:'พุธ ☿', dir:'ทิศตะวันตก', color:'เหลือง ทอง', lucky:'วันพุธ',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของนาคา งูทิพย์ผู้ทรงพลังค่ะ มีสัญชาตญาณที่แหลมคมและความฉลาดที่ล้ำลึกค่ะ มีเสน่ห์ดึงดูดคนรอบข้างโดยไม่ต้องพยายามค่ะ ปรับตัวได้ในทุกสถานการณ์และมักพบทางออกเมื่อคนอื่นยอมแพ้แล้วค่ะ มีพลังงานลึกลับที่คนอื่นอ่านไม่ออกค่ะ แต่จริงๆ มีความอ่อนไหวสูงและรู้สึกได้ถึงพลังงานของคนรอบข้างค่ะ',
+    love:'ในความรักคุณพี่มีเสน่ห์มากและทำให้คนหลงใหลได้ง่ายค่ะ แต่ไว้ใจคนยากค่ะ เมื่อเปิดใจรักแล้วจะซื่อสัตย์และลึกซึ้งมากค่ะ ต้องการคนที่เข้าใจความซับซ้อนของตัวเองค่ะ ไม่เหมาะกับคนที่ตื้นเขินหรือไม่จริงใจค่ะ',
+    work:'เหมาะกับงานที่ต้องใช้ไหวพริบ การเจรจา หรืองานที่เกี่ยวกับการสื่อสารค่ะ มักประสบความสำเร็จในธุรกิจที่ต้องใช้ความคิดสร้างสรรค์ค่ะ ด้านการเงินมีโชคในการลงทุนหากศึกษาข้อมูลดีค่ะ',
+    luck:'วันพุธเป็นวันมงคลค่ะ สีเหลืองและทองเสริมพลังค่ะ ทิศตะวันตกนำโชคค่ะ ระวังการเปิดใจไว้ใจคนเร็วเกินไปค่ะ',
+    compatDesc:'งูทิพย์เข้ากันได้ดีกับสัตว์ที่มีพลังเสริมกันค่ะ',
+    goodWith:['thu','sat'], warnWith:['fri'], badWith:['tue'],
+  },
+  'wed-pm': {
+    key:'wed-pm', name:'งู', img:'naga.png',
+    day:'วันพุธ (หลังเที่ยง)', planet:'ราหู 🌑', dir:'ทิศตะวันตกเฉียงใต้', color:'น้ำเงิน เทา', lucky:'วันพุธ',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของงูที่ลึกลับและทรงพลังค่ะ มีความสามารถในการอ่านสถานการณ์และคนอื่นได้แม่นยำมากค่ะ มักเก็บความรู้สึกไว้ในใจและไม่แสดงออกง่ายๆ ค่ะ มีความอดทนสูงและรู้จักรอเวลาที่เหมาะสมค่ะ เป็นคนที่ไม่ควรประมาทเพราะมักมีแผนสำรองเสมอค่ะ',
+    love:'ในความรักคุณพี่รักลึกแต่ไม่แสดงออกมากค่ะ ต้องใช้เวลาสร้างความไว้ใจก่อนค่ะ เมื่อรักแล้วจะซื่อสัตย์อย่างมากค่ะ ต้องการคนที่อดทนและเข้าใจในตัวตนที่แท้จริงของคุณพี่ค่ะ',
+    work:'เหมาะกับงานวิจัย การวางแผนระยะยาว หรืองานที่ต้องใช้ความลึกและความละเอียดค่ะ มักประสบความสำเร็จในงานที่คนอื่นมองข้ามค่ะ ด้านการเงินเหมาะกับการออมมากกว่าเสี่ยงค่ะ',
+    luck:'วันพุธเป็นวันมงคลค่ะ สีน้ำเงินและเทาเสริมพลังค่ะ ทิศตะวันตกเฉียงใต้นำโชคค่ะ ระวังการเก็บความรู้สึกไว้นานเกินไปค่ะ',
+    compatDesc:'งูเข้ากันได้ดีกับสัตว์ที่อดทนและเข้าใจค่ะ',
+    goodWith:['mon','sat'], warnWith:['sun'], badWith:['thu'],
+  },
+  thu: {
+    key:'thu', name:'หนู', img:'rat.png',
+    day:'วันพฤหัสบดี', planet:'พฤหัส ♃', dir:'ทิศใต้', color:'ส้ม เหลือง', lucky:'วันพฤหัสบดี',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของหนูที่ฉลาดและเฉลียวฉลาดค่ะ มีความสามารถในการปรับตัวและหาทางออกได้เสมอไม่ว่าสถานการณ์จะยากแค่ไหนค่ะ มีสัญชาตญาณที่ดีในเรื่องของโอกาสและรู้จักเลือกเวลาที่เหมาะสมค่ะ มักโชคดีในเรื่องที่ไม่คาดคิดค่ะ มีความขยันและอดทนในการทำงานค่ะ คนรอบข้างมักมองว่าคุณพี่เป็นคนที่เชื่อถือได้และพึ่งพาได้ค่ะ',
+    love:'ในความรักคุณพี่เป็นคนที่อ่อนโยนและใส่ใจในรายละเอียดเล็กๆ น้อยๆ ที่ทำให้คนรักรู้สึกพิเศษค่ะ มักเป็นฝ่ายดูแลและเอาใจใส่คนรักอย่างดีค่ะ ต้องการคนที่ซื่อสัตย์และมั่นคงค่ะ ไม่ชอบความไม่แน่นอนในความสัมพันธ์ค่ะ',
+    work:'เหมาะกับงานที่ต้องใช้ความฉลาดและไหวพริบค่ะ ธุรกิจ การค้า หรืองานที่ต้องการการวางแผนที่ดีค่ะ ด้านการเงินมักสะสมทรัพย์ได้ดีหากวางแผนอย่างรอบคอบค่ะ มีโชคในการลงทุนในช่วงปลายชีวิตค่ะ',
+    luck:'วันพฤหัสบดีเป็นวันมงคลที่สุดค่ะ สีส้มและเหลืองเสริมพลังค่ะ ทิศใต้นำโชคค่ะ ระวังความกลัวความเสี่ยงที่มากเกินไปจนพลาดโอกาสดีๆ ค่ะ',
+    compatDesc:'หนูเข้ากันได้ดีกับสัตว์ที่มีพลังเสริมกันค่ะ',
+    goodWith:['sun','wed-am'], warnWith:['fri'], badWith:['wed-pm'],
+  },
+  fri: {
+    key:'fri', name:'หนูตะเภา', img:'guinea-pig.png',
+    day:'วันศุกร์', planet:'ศุกร์ ♀️', dir:'ทิศตะวันออกเฉียงใต้', color:'ฟ้า ขาว', lucky:'วันศุกร์',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของหนูตะเภาที่อ่อนโยนและน่ารักค่ะ มีเสน่ห์ตามธรรมชาติที่ทำให้คนอยากเข้าใกล้ค่ะ มีความสามารถในการสร้างความสัมพันธ์ที่ดีกับทุกคนค่ะ ชอบความสงบสุขและหลีกเลี่ยงความขัดแย้งค่ะ มีความคิดสร้างสรรค์และรสนิยมดีในด้านศิลปะและความงามค่ะ มักเป็นคนที่ทำให้บรรยากาศรอบข้างสดใสขึ้นค่ะ',
+    love:'ในความรักคุณพี่รักอย่างอ่อนโยนและเอาใจใส่ค่ะ ชอบบรรยากาศโรแมนติกและการแสดงออกถึงความรักด้วยการกระทำเล็กๆ น้อยๆ ค่ะ ต้องการคนที่เข้าใจและไม่ก้าวร้าวค่ะ มักเสียสละเพื่อคนรักได้มากค่ะ',
+    work:'เหมาะกับงานสร้างสรรค์ ศิลปะ แฟชั่น หรืองานที่เกี่ยวกับความสัมพันธ์ระหว่างบุคคลค่ะ ทำงานได้ดีในสภาพแวดล้อมที่มีความสุขค่ะ ด้านการเงินมักมีโชคจากคนที่ชื่นชมและช่วยเหลือค่ะ',
+    luck:'วันศุกร์เป็นวันมงคลค่ะ สีฟ้าและขาวเสริมพลังค่ะ ทิศตะวันออกเฉียงใต้นำโชคค่ะ ระวังการตัดสินใจตามความรู้สึกมากเกินไปค่ะ',
+    compatDesc:'หนูตะเภาเข้ากันได้ดีกับสัตว์ที่อ่อนโยนและเสริมพลังกันค่ะ',
+    goodWith:['tue','thu'], warnWith:['wed-am'], badWith:['sat'],
+  },
+  sat: {
+    key:'sat', name:'มังกร', img:'dragon.png',
+    day:'วันเสาร์', planet:'เสาร์ ♄', dir:'ทิศตะวันออก', color:'ดำ น้ำเงินเข้ม', lucky:'วันเสาร์',
+    char:'คุณพี่เกิดมาพร้อมพลังงานของมังกรที่ทรงพลังและเต็มไปด้วยพลังงานลึกลับค่ะ มีความเข้มแข็งทั้งกายและใจค่ะ มีความอดทนและความมุ่งมั่นสูงมากค่ะ ไม่ยอมแพ้ง่ายๆ และมักประสบความสำเร็จหลังจากผ่านความยากลำบากค่ะ มีพลังงานที่ทำให้คนอื่นรู้สึกว่าคุณพี่แตกต่างจากคนทั่วไปค่ะ มักมีชะตาชีวิตที่พลิกผันแต่ก็ฟื้นตัวได้เสมอค่ะ',
+    love:'ในความรักคุณพี่รักลึกและซื่อสัตย์มากค่ะ แต่ต้องใช้เวลาในการเปิดใจค่ะ เมื่อรักแล้วจะปกป้องและดูแลคนรักอย่างเต็มที่ค่ะ ต้องการคนที่แข็งแกร่งพอที่จะอยู่เคียงข้างได้ค่ะ',
+    work:'เหมาะกับงานที่ต้องใช้ความอดทนและความมุ่งมั่นระยะยาวค่ะ มักประสบความสำเร็จในงานที่คนอื่นคิดว่ายากเกินไปค่ะ ด้านการเงินมักมีความมั่งคั่งในช่วงกลางถึงปลายชีวิตค่ะ',
+    luck:'วันเสาร์เป็นวันมงคลค่ะ สีดำและน้ำเงินเข้มเสริมพลังค่ะ ทิศตะวันออกนำโชคค่ะ ระวังความดื้อรั้นที่อาจทำให้พลาดโอกาสดีๆ ค่ะ',
+    compatDesc:'มังกรเข้ากันได้ดีกับสัตว์ที่มีพลังสมดุลค่ะ',
+    goodWith:['wed-am','wed-pm'], warnWith:['mon'], badWith:['fri'],
+  },
+};
+
+const ANIMAL_NAMES = {
+  sun:'ครุฑ', mon:'เสือ', tue:'สิงห์',
+  'wed-am':'งูทิพย์', 'wed-pm':'งู',
+  thu:'หนู', fri:'หนูตะเภา', sat:'มังกร'
+};
+
+function getAnimalKey(year, month, day, hour) {
+  // คำนวณวันในสัปดาห์
+  const date = new Date(year, month-1, day);
+  const dow = date.getDay(); // 0=อา, 1=จ, 2=อ, 3=พ, 4=พฤ, 5=ศ, 6=ส
+  const keys = {0:'sun',1:'mon',2:'tue',3:'wed',4:'thu',5:'fri',6:'sat'};
+  const key = keys[dow];
+  if(key === 'wed') {
+    if(hour === -1) return 'wed-am'; // ไม่ทราบเวลา → ถามให้เลือก
+    return hour < 12 ? 'wed-am' : 'wed-pm';
+  }
+  return key;
+}
+
+window.calculate = function() {
+  const d = parseInt(document.getElementById('inDay').value);
+  const m = parseInt(document.getElementById('inMonth').value);
+  const y = parseInt(document.getElementById('inYear').value);
+  const h = parseInt(document.getElementById('inHour').value);
+
+  const key = getAnimalKey(y, m, d, h);
+  const animal = ANIMALS[key];
+  if(!animal) return;
+
+  // ใส่ข้อมูล
+  document.getElementById('animalImg').src = '../images/mahabote/' + animal.img;
+  document.getElementById('animalImg').alt = animal.name;
+  document.getElementById('animalName').textContent = animal.name;
+  document.getElementById('animalDay').textContent = animal.day + ' · ดาว' + animal.planet;
+  document.getElementById('animalTags').innerHTML = `
+    <span class="animal-tag tag-planet">🪐 ${animal.planet}</span>
+    <span class="animal-tag tag-dir">🧭 ${animal.dir}</span>
+    <span class="animal-tag tag-color">🎨 ${animal.color}</span>
+    <span class="animal-tag tag-day">⭐ ${animal.lucky}</span>`;
+
+  document.getElementById('secChar').textContent = animal.char;
+  document.getElementById('secLove').textContent = animal.love;
+  document.getElementById('secWork').textContent = animal.work;
+  document.getElementById('secLuck').textContent = animal.luck;
+  document.getElementById('secCompatDesc').textContent = animal.compatDesc;
+
+  // compat
+  const compatData = [
+    ...animal.goodWith.map(k=>({key:k,level:'good',label:'เข้ากันดีมาก 💕'})),
+    ...animal.warnWith.map(k=>({key:k,level:'warn',label:'ระวังหน่อย ⚠️'})),
+    ...animal.badWith.map(k=>({key:k,level:'bad',label:'พลังงานขัดแย้ง ❌'})),
+  ];
+  document.getElementById('compatRow').innerHTML = compatData.map(c=>`
+    <div class="compat-item">
+      <img class="compat-img" src="../images/mahabote/${ANIMALS[c.key].img}" alt="${ANIMAL_NAMES[c.key]}" onerror="this.style.display='none'">
+      <div>
+        <div class="compat-name">${ANIMAL_NAMES[c.key]}</div>
+        <div class="compat-level ${c.level}">${c.label}</div>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+};
+
+window.resetResult = function() {
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+</script>
+</body>
+</html>
