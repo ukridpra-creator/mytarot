@@ -578,7 +578,7 @@ window.acceptReading=async function(){
     if(nb!=null)updateCoinUI(parseInt(nb));
     if(!res.ok){const err=await res.json().catch(()=>({}));if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');else alert('เกิดข้อผิดพลาดค่ะ');return;}
 
-    secs.slice(1).forEach(s=>{const el=document.getElementById('rs_'+s[0]);if(el)el.textContent='';});
+    secs.slice(1).forEach(s=>{const el=document.getElementById('rs_'+s[0]);if(el)el.innerHTML='';});
 
     const reader=res.body.getReader(),decoder=new TextDecoder();
     let fullText='';
@@ -617,7 +617,7 @@ function parseSections(text,keys){
       gb.classList.add('show');gb.textContent=val;
     }else{
       const el=document.getElementById('rs_'+key);
-      if(el)el.textContent=val;
+      if(el)el.innerHTML=val;
     }
   });
 }
