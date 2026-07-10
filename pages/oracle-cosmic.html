@@ -422,7 +422,7 @@ function parseDelimiter(text,keys){
 function updateSections(text){
   const parsed=parseDelimiter(text,COSMIC_KEYS);
   if(parsed['GREETING']){const gb=document.getElementById('greetingBox');gb.classList.add('show');gb.textContent=parsed['GREETING'];}
-  Object.entries(COSMIC_IDS).forEach(([key,id])=>{if(parsed[key]){const el=document.getElementById(id);if(el)el.textContent=parsed[key];}});
+  Object.entries(COSMIC_IDS).forEach(([key,id])=>{if(parsed[key]){const el=document.getElementById(id);if(el)el.innerHTML=parsed[key];}});
 }
 
 window.acceptReading = async function() {
@@ -485,6 +485,8 @@ window.acceptReading = async function() {
     const reader=res.body.getReader();
     const decoder=new TextDecoder();
     let fullText='';
+    // clear loading ทุก section ก่อน stream เริ่ม
+    Object.values(COSMIC_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
     Object.values(COSMIC_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
 
     while(true){
