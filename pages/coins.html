@@ -471,19 +471,31 @@ window.openQR = async function() {
     return;
   }
 
-  // ดึง QR image URL จาก Payment Intent
+  // ต้อง confirm ก่อนถึงจะได้ QR
   try {
-    const result = await stripe.retrievePaymentIntent(data.clientSecret);
+    const result = await stripe.confirmPromptPayPayment(data.clientSecret, {
+      payment_method: { billing_details: { email: currentUser.email } }
+    });
+
+    if (result.error) {
+      alert('เกิดข้อผิดพลาด: ' + result.error.message);
+      closeQR();
+      return;
+    }
+
     const qrUrl = result.paymentIntent?.next_action?.promptpay_display_qr_code?.image_url_png;
     if (qrUrl) {
       document.getElementById('qrBox').style.display = 'none';
       document.getElementById('qrImage').src = qrUrl;
       document.getElementById('qrImage').style.display = 'block';
     }
+
     // Poll สถานะทุก 3 วินาที
     pollPaymentStatus(data.clientSecret);
   } catch(e) {
     console.error(e);
+    alert('เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ');
+    closeQR();
   }
 };
 
