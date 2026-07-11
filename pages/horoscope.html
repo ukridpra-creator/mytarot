@@ -265,7 +265,8 @@ window.currentUser=null;
 
 window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
 function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png')){el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';}else{el.textContent=a||'👤';}}
-window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
 window.addDocFS=async function(zodiac){
   if(!window.currentUser)return;
