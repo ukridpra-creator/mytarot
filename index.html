@@ -86,7 +86,7 @@
     <button class="btn-login-now" onclick="loginNow();document.getElementById('loginRequiredOverlay').classList.remove('show')">
   <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
 </button>
-<button onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:13px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+<button data-email-btn="1" onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:13px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
   📧 เข้าสู่ระบบด้วย Email
 </button>
 <button class="btn-cancel-login" onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')">ยกเลิก</button>
@@ -110,7 +110,7 @@
   <button class="btn-google" onclick="loginGoogle()">
     <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
   </button>
-  <button onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;">
+  <button data-email-btn="1" onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;">
     📧 เข้าสู่ระบบด้วย Email
   </button>
 </div>
