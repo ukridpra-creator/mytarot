@@ -142,18 +142,36 @@ document.addEventListener('DOMContentLoaded', function() {
       if (modal) modal.classList.add('show');
     };
 
-    // เพิ่มปุ่ม Email ใน guestView ถ้ายังไม่มี
+    // เพิ่มปุ่ม Email ใน guestView ถ้ายังไม่มี และผูก Google btn
     var guestView = document.getElementById('guestView');
-    if (guestView && !guestView.querySelector('[data-email-btn]')) {
-      var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
-      var emailBtn = document.createElement('button');
-      emailBtn.setAttribute('data-email-btn', '1');
-      emailBtn.style.cssText = 'width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;';
-      emailBtn.textContent = '📧 เข้าสู่ระบบด้วย Email';
-      emailBtn.addEventListener('click', function() {
-        window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
-      });
-      guestView.appendChild(emailBtn);
+    if (guestView) {
+      // ผูกปุ่ม Google ใน guestView ให้ใช้ Firebase
+      setTimeout(function() {
+        guestView.querySelectorAll('button').forEach(function(btn) {
+          if (btn.textContent.includes('Google')) {
+            btn.onclick = async function() {
+              await _initAuth();
+              if (window.__ciSignInWithPopup) {
+                try { await window.__ciSignInWithPopup(); } catch(e) { console.error(e); }
+              } else if (typeof window.__ciGoogleSignIn === 'function') {
+                window.__ciGoogleSignIn();
+              }
+            };
+          }
+        });
+      }, 100);
+
+      if (!guestView.querySelector('[data-email-btn]')) {
+        var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
+        var emailBtn = document.createElement('button');
+        emailBtn.setAttribute('data-email-btn', '1');
+        emailBtn.style.cssText = 'width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;';
+        emailBtn.textContent = '📧 เข้าสู่ระบบด้วย Email';
+        emailBtn.addEventListener('click', function() {
+          window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
+        });
+        guestView.appendChild(emailBtn);
+      }
     }
   }, 0);
 
