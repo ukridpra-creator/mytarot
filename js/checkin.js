@@ -3,6 +3,30 @@
 
 (function() {
 
+// ─── FIREBASE AUTH (สำหรับ Google login ใน overlay) ───
+var _auth = null;
+var _GoogleAuthProvider = null;
+
+async function _initAuth() {
+  if (_auth) return;
+  try {
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const cfg = {
+      apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',
+      authDomain:'my-tarot67.firebaseapp.com',
+      projectId:'my-tarot67',
+      storageBucket:'my-tarot67.firebasestorage.app',
+      messagingSenderId:'33661162829',
+      appId:'1:33661162829:web:9e06a7cd5a00d613785304'
+    };
+    const app = getApps().length ? getApps()[0] : initializeApp(cfg);
+    _auth = getAuth(app);
+    _GoogleAuthProvider = GoogleAuthProvider;
+    window.__ciSignInWithPopup = () => signInWithPopup(_auth, new GoogleAuthProvider());
+  } catch(e) { console.error('auth init error', e); }
+}
+
 // ─── IN-APP BROWSER DETECTION ───
 (function() {
   var ua = navigator.userAgent || '';
@@ -118,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (modal) modal.classList.add('show');
     };
 
-    // เพิ่มปุ่ม Email ใน guestView (user menu มุมขวา) ถ้ายังไม่มี
+    // เพิ่มปุ่ม Email ใน guestView ถ้ายังไม่มี
     var guestView = document.getElementById('guestView');
     if (guestView && !guestView.querySelector('[data-email-btn]')) {
       var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
@@ -133,15 +157,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 0);
 
-  // ถ้าหน้านั้นมี loginRequiredOverlay อยู่แล้ว → เช็คว่ามีปุ่ม Email หรือยัง
+  // ถ้าหน้านั้นมี loginRequiredOverlay อยู่แล้ว → เพิ่มปุ่ม Email และผูก Google btn
   var existingOverlay = document.getElementById('loginRequiredOverlay');
   if (existingOverlay) {
-    // ถ้าไม่มีปุ่ม Email → inject เพิ่มเข้าไป
     if (!existingOverlay.querySelector('[data-email-btn]')) {
       var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
-      // หา sheet — ลอง selector หลายแบบค่ะ
       var sheet = existingOverlay.querySelector('.login-required-sheet') ||
-                  existingOverlay.querySelector('.lr-sheet') ||
                   existingOverlay.querySelector('[class*="sheet"]') ||
                   existingOverlay.querySelector('div div');
       if (sheet) {
@@ -152,22 +173,32 @@ document.addEventListener('DOMContentLoaded', function() {
         emailBtn.addEventListener('click', function() {
           window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
         });
-        // แทรกก่อนปุ่มยกเลิก
-        var cancelBtn = sheet.querySelector('.btn-cancel-login') ||
-                        sheet.querySelector('button:last-child');
-        if (cancelBtn) {
-          sheet.insertBefore(emailBtn, cancelBtn);
-        } else {
-          sheet.appendChild(emailBtn);
-        }
+        var cancelBtn = sheet.querySelector('.btn-cancel-login') || sheet.querySelector('button:last-child');
+        if (cancelBtn) sheet.insertBefore(emailBtn, cancelBtn);
+        else sheet.appendChild(emailBtn);
       }
     }
+
+    // ผูกปุ่ม Google ทุกปุ่มใน overlay ให้ใช้ Firebase Auth จาก checkin.js
+    setTimeout(function() {
+      existingOverlay.querySelectorAll('button').forEach(function(btn) {
+        if (btn.textContent.includes('Google')) {
+          btn.onclick = async function() {
+            await _initAuth();
+            if (window.__ciSignInWithPopup) {
+              try { await window.__ciSignInWithPopup(); } catch(e) { console.error(e); }
+            } else if (typeof window.__ciGoogleSignIn === 'function') {
+              window.__ciGoogleSignIn();
+            }
+          };
+        }
+      });
+    }, 100);
+
   } else {
     // ไม่มี loginRequiredOverlay เลย → inject ใหม่ทั้งหมด
     var loginDiv = document.createElement('div');
-    var base = window.__ciApiBase || '';
-    // หา path ที่ถูกต้องสำหรับ login.html
-    var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
+    var loginPath2 = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
     loginDiv.innerHTML =
       '<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove(\'show\')" style="position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;">' +
         '<div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(212,175,55,0.25);border-radius:24px;padding:32px 20px;width:90%;max-width:320px;text-align:center;">' +
@@ -185,26 +216,20 @@ document.addEventListener('DOMContentLoaded', function() {
       '</div>';
     document.body.appendChild(loginDiv);
 
-    // Google btn
-    document.getElementById('ciGoogleBtn').addEventListener('click', function() {
-      document.getElementById('loginRequiredOverlay').classList.remove('show');
-      if (typeof window.__ciGoogleSignIn === 'function') window.__ciGoogleSignIn();
+    document.getElementById('ciGoogleBtn').addEventListener('click', async function() {
+      await _initAuth();
+      if (window.__ciSignInWithPopup) {
+        try { await window.__ciSignInWithPopup(); } catch(e) { console.error(e); }
+      } else if (typeof window.__ciGoogleSignIn === 'function') {
+        window.__ciGoogleSignIn();
+      }
     });
 
-    // Email btn
     document.getElementById('ciEmailBtn').addEventListener('click', function() {
-      window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
+      window.location.href = loginPath2 + '?return=' + encodeURIComponent(window.location.href);
     });
   }
 });
-
-// ─── AUTO CLOSE OVERLAY AFTER LOGIN ───
-// เรียกจาก onAuthStateChanged ในแต่ละหน้า ผ่าน setupCheckin
-function closeLoginOverlay() {
-  var el = document.getElementById('loginRequiredOverlay');
-  if (el) el.classList.remove('show');
-}
-window.__ciCloseLoginOverlay = closeLoginOverlay;
 
 // ─── USER MENU ───
 window.toggleUserMenu = function() {
@@ -220,8 +245,7 @@ window.closeUserMenu = function() {
   if (overlay) overlay.classList.remove('open');
 };
 
-// ─── DEFAULT loginNow — เปิด overlay แทน popup ───
-// หน้าที่มี loginNow ของตัวเองจะ override ทับได้ค่ะ
+// ─── DEFAULT loginNow ───
 if (typeof window.loginNow === 'undefined') {
   window.loginNow = function() {
     var modal = document.getElementById('loginRequiredOverlay');
@@ -340,13 +364,19 @@ window.closeCheckin = function() {
   if (el) el.classList.remove('show');
 };
 
+// ─── AUTO CLOSE OVERLAY AFTER LOGIN ───
+function closeLoginOverlay() {
+  var el = document.getElementById('loginRequiredOverlay');
+  if (el) el.classList.remove('show');
+}
+window.__ciCloseLoginOverlay = closeLoginOverlay;
+
 // ─── SETUP ───
 window.setupCheckin = async function(user, apiBase, googleSignIn) {
   window.__ciCurrentUser = user;
   window.__ciApiBase     = apiBase || '';
   if (googleSignIn) window.__ciGoogleSignIn = googleSignIn;
 
-  // ปิด loginRequiredOverlay อัตโนมัติเมื่อ login สำเร็จ
   closeLoginOverlay();
 
   try {
