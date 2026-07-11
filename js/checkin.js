@@ -16,14 +16,12 @@
 
   var url = window.location.href;
 
-  // Android — redirect ไป Chrome อัตโนมัติ
   if (/Android/i.test(ua)) {
     window.location.href = 'intent://' + url.replace(/https?:\/\//, '') +
       '#Intent;scheme=https;package=com.android.chrome;action=android.intent.action.VIEW;end';
     return;
   }
 
-  // iOS — แสดง popup แจ้ง
   document.addEventListener('DOMContentLoaded', function() {
     var overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;padding:24px;';
@@ -54,7 +52,7 @@
   });
 })();
 
-// ─── INJECT HTML ───
+// ─── INJECT HTML (checkin overlay เท่านั้น) ───
 var html = `
 <div class="ci-overlay" id="ciOverlay" onclick="if(event.target===this)closeCheckin()">
   <div class="ci-sheet">
@@ -79,22 +77,6 @@ var html = `
 
     <button class="ci-btn" id="ciBtnDo" onclick="doCheckin()" disabled>🎁 รับเหรียญเลย</button>
     <div class="ci-done-text" id="ciDoneText"></div>
-  </div>
-</div>
-
-<!-- LOGIN REQUIRED OVERLAY — ใช้ร่วมกันทุกหน้า -->
-<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')" style="position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;">
-  <div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(212,175,55,0.25);border-radius:24px;padding:32px 20px;width:90%;max-width:320px;text-align:center;">
-    <div style="font-size:44px;margin-bottom:12px;">🔮</div>
-    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:6px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:20px;line-height:1.6;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัยค่ะ</div>
-    <button onclick="loginNow ? loginNow() : null; document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:14px;border-radius:14px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
-    </button>
-    <button onclick="window.location.href=(typeof __ciApiBase!=='undefined'?__ciApiBase:'')+'pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;padding:14px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;">
-      📧 เข้าสู่ระบบด้วย Email
-    </button>
-    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;font-family:inherit;cursor:pointer;">ยกเลิก</button>
   </div>
 </div>
 
