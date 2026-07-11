@@ -157,6 +157,20 @@ function closeLoginOverlay() {
 }
 window.__ciCloseLoginOverlay = closeLoginOverlay;
 
+// ─── USER MENU ───
+window.toggleUserMenu = function() {
+  var menu = document.getElementById('userMenu');
+  var overlay = document.getElementById('overlay');
+  if (menu) menu.classList.toggle('open');
+  if (overlay) overlay.classList.toggle('open');
+};
+window.closeUserMenu = function() {
+  var menu = document.getElementById('userMenu');
+  var overlay = document.getElementById('overlay');
+  if (menu) menu.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+};
+
 // ─── RENDER DAYS ───
 function renderDays(streak, alreadyDone) {
   var icons = ['🪙','🪙','🪙','🪙','🪙','🪙','👑'];
