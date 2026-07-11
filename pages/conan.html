@@ -159,20 +159,28 @@
 </div>
 
 <script type="module">
-const PASS='conaniscowsboy';
-
 window.checkPw=function(){
   const v=document.getElementById('pwInput').value;
-  if(v===PASS){
-    document.getElementById('gate').style.display='none';
-    document.getElementById('dash').style.display='block';
-    window._adminPass=v;
-    loadDash();
-    startClock();
-  } else {
-    document.getElementById('gateErr').textContent='รหัสผ่านไม่ถูกต้องค่ะ';
-    document.getElementById('pwInput').value='';
-  }
+  if(!v){return;}
+  // ส่งไปเช็คฝั่ง server เลย ไม่มี password ใน client
+  fetch('/api/admin',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({password:v})
+  }).then(res=>{
+    if(res.ok){
+      document.getElementById('gate').style.display='none';
+      document.getElementById('dash').style.display='block';
+      window._adminPass=v;
+      loadDash();
+      startClock();
+    } else {
+      document.getElementById('gateErr').textContent='รหัสผ่านไม่ถูกต้องค่ะ';
+      document.getElementById('pwInput').value='';
+    }
+  }).catch(()=>{
+    document.getElementById('gateErr').textContent='เกิดข้อผิดพลาดค่ะ';
+  });
 };
 
 function startClock(){
