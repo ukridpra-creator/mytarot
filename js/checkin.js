@@ -111,8 +111,32 @@ document.addEventListener('DOMContentLoaded', function() {
   div.innerHTML = html;
   document.body.appendChild(div);
 
-  // ถ้าหน้านั้นไม่มี loginRequiredOverlay → inject ให้เลย
-  if (!document.getElementById('loginRequiredOverlay')) {
+  // ถ้าหน้านั้นมี loginRequiredOverlay อยู่แล้ว → เช็คว่ามีปุ่ม Email หรือยัง
+  var existingOverlay = document.getElementById('loginRequiredOverlay');
+  if (existingOverlay) {
+    // ถ้าไม่มีปุ่ม Email → inject เพิ่มเข้าไป
+    if (!existingOverlay.querySelector('[data-email-btn]')) {
+      var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
+      var sheet = existingOverlay.querySelector('.login-required-sheet') || existingOverlay.querySelector('div > div');
+      if (sheet) {
+        var emailBtn = document.createElement('button');
+        emailBtn.setAttribute('data-email-btn', '1');
+        emailBtn.style.cssText = 'width:100%;margin-top:10px;padding:13px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;';
+        emailBtn.textContent = '📧 เข้าสู่ระบบด้วย Email';
+        emailBtn.addEventListener('click', function() {
+          window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
+        });
+        // แทรกก่อนปุ่มยกเลิก
+        var cancelBtn = sheet.querySelector('.btn-cancel-login');
+        if (cancelBtn) {
+          sheet.insertBefore(emailBtn, cancelBtn);
+        } else {
+          sheet.appendChild(emailBtn);
+        }
+      }
+    }
+  } else {
+    // ไม่มี loginRequiredOverlay เลย → inject ใหม่ทั้งหมด
     var loginDiv = document.createElement('div');
     var base = window.__ciApiBase || '';
     // หา path ที่ถูกต้องสำหรับ login.html
@@ -170,6 +194,15 @@ window.closeUserMenu = function() {
   if (menu) menu.classList.remove('open');
   if (overlay) overlay.classList.remove('open');
 };
+
+// ─── DEFAULT loginNow — เปิด overlay แทน popup ───
+// หน้าที่มี loginNow ของตัวเองจะ override ทับได้ค่ะ
+if (typeof window.loginNow === 'undefined') {
+  window.loginNow = function() {
+    var modal = document.getElementById('loginRequiredOverlay');
+    if (modal) modal.classList.add('show');
+  };
+}
 
 // ─── RENDER DAYS ───
 function renderDays(streak, alreadyDone) {
