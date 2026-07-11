@@ -64,9 +64,11 @@
           if (typeof setupCheckin === 'function') setupCheckin(user, '');
         } catch(e) { console.error(e); }
       } else {
-        setAvatarDisplay('');
-        updateCoinUI(0);
-      }
+  setAvatarDisplay('');
+  document.querySelector('.coin-badge').textContent = '🪙 0 เหรียญ';
+  document.getElementById('guestView').style.display = 'block';
+  document.getElementById('loggedView').style.display = 'none';
+}
     });
 
     window.loginGoogle = async function() { try { await signInWithPopup(auth, provider); closeUserMenu(); } catch(e) { console.error(e); } };
