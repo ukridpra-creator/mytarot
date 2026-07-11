@@ -111,6 +111,28 @@ document.addEventListener('DOMContentLoaded', function() {
   div.innerHTML = html;
   document.body.appendChild(div);
 
+  // override loginNow ทุกหน้าให้เปิด overlay แทน signInWithPopup เสมอ
+  setTimeout(function() {
+    window.loginNow = function() {
+      var modal = document.getElementById('loginRequiredOverlay');
+      if (modal) modal.classList.add('show');
+    };
+
+    // เพิ่มปุ่ม Email ใน guestView (user menu มุมขวา) ถ้ายังไม่มี
+    var guestView = document.getElementById('guestView');
+    if (guestView && !guestView.querySelector('[data-email-btn]')) {
+      var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
+      var emailBtn = document.createElement('button');
+      emailBtn.setAttribute('data-email-btn', '1');
+      emailBtn.style.cssText = 'width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;';
+      emailBtn.textContent = '📧 เข้าสู่ระบบด้วย Email';
+      emailBtn.addEventListener('click', function() {
+        window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
+      });
+      guestView.appendChild(emailBtn);
+    }
+  }, 0);
+
   // ถ้าหน้านั้นมี loginRequiredOverlay อยู่แล้ว → เช็คว่ามีปุ่ม Email หรือยัง
   var existingOverlay = document.getElementById('loginRequiredOverlay');
   if (existingOverlay) {
@@ -158,18 +180,16 @@ document.addEventListener('DOMContentLoaded', function() {
       '</div>';
     document.body.appendChild(loginDiv);
 
-    // Google btn
+    // Google btn — เปิด popup ของ Firebase
     document.getElementById('ciGoogleBtn').addEventListener('click', function() {
-      if (typeof loginNow === 'function') loginNow();
+      document.getElementById('loginRequiredOverlay').classList.remove('show');
+      if (typeof window.__ciGoogleSignIn === 'function') window.__ciGoogleSignIn();
     });
 
     // Email btn
     document.getElementById('ciEmailBtn').addEventListener('click', function() {
       window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
     });
-  } else {
-    // หน้านั้นมี loginRequiredOverlay อยู่แล้ว (เช่น index.html)
-    // แค่ผูก event Google btn ให้ close overlay หลัง login สำเร็จ
   }
 });
 
@@ -316,9 +336,10 @@ window.closeCheckin = function() {
 };
 
 // ─── SETUP ───
-window.setupCheckin = async function(user, apiBase) {
+window.setupCheckin = async function(user, apiBase, googleSignIn) {
   window.__ciCurrentUser = user;
   window.__ciApiBase     = apiBase || '';
+  if (googleSignIn) window.__ciGoogleSignIn = googleSignIn;
 
   // ปิด loginRequiredOverlay อัตโนมัติเมื่อ login สำเร็จ
   closeLoginOverlay();
