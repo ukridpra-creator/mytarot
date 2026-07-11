@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เข้าสู่ระบบ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:linear-gradient(160deg,#0d0820 0%,#1a0e2e 50%,#0d0820 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Sarabun',sans-serif;}
+
+    .box{width:100%;max-width:360px;}
+
+    /* LOGO */
+    .logo{text-align:center;margin-bottom:32px;}
+    .logo-img{width:100px;height:100px;object-fit:contain;margin-bottom:12px;}
+    .logo-title{font-size:22px;font-weight:800;color:white;}
+    .logo-sub{font-size:13px;color:rgba(255,255,255,0.35);margin-top:4px;}
+
+    /* CARD */
+    .card{background:rgba(255,255,255,0.03);border:1px solid rgba(212,175,55,0.2);border-radius:24px;padding:24px 20px;}
+
+    /* TABS */
+    .tabs{display:flex;background:rgba(255,255,255,0.05);border-radius:14px;padding:4px;margin-bottom:20px;gap:4px;}
+    .tab{flex:1;padding:10px;border:none;border-radius:10px;background:none;color:rgba(255,255,255,0.4);font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;transition:all 0.2s;}
+    .tab.active{background:rgba(124,58,237,0.3);color:white;border:1px solid rgba(124,58,237,0.4);}
+
+    /* FORM */
+    .form{display:none;}
+    .form.show{display:block;}
+    .input-wrap{margin-bottom:12px;}
+    .input-label{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;display:block;}
+    .input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:13px 16px;color:white;font-size:15px;font-family:'Sarabun',sans-serif;outline:none;}
+    .input:focus{border-color:#7c3aed;}
+    .input::placeholder{color:rgba(255,255,255,0.2);}
+
+    /* BUTTONS */
+    .btn-primary{width:100%;background:linear-gradient(135deg,#5b21b6,#7c3aed);border:none;border-radius:14px;padding:15px;color:white;font-size:16px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;margin-bottom:12px;transition:all 0.2s;}
+    .btn-primary:active{transform:scale(0.98);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+
+    .btn-google{width:100%;background:white;border:none;border-radius:14px;padding:14px;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;}
+    .btn-google:active{transform:scale(0.98);}
+
+    /* DIVIDER */
+    .divider{display:flex;align-items:center;gap:10px;margin:16px 0;}
+    .divider-line{flex:1;height:1px;background:rgba(255,255,255,0.1);}
+    .divider-text{font-size:12px;color:rgba(255,255,255,0.3);}
+
+    /* FORGOT */
+    .forgot{text-align:right;margin-bottom:12px;}
+    .forgot a{font-size:12px;color:rgba(212,175,55,0.6);cursor:pointer;text-decoration:none;}
+
+    /* MSG */
+    .msg{font-size:13px;text-align:center;min-height:18px;margin-top:8px;}
+    .msg.err{color:#f87171;}
+    .msg.ok{color:#10b981;}
+
+    /* VERIFY NOTICE */
+    .verify-box{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;text-align:center;display:none;}
+    .verify-box.show{display:block;}
+    .verify-icon{font-size:44px;margin-bottom:12px;}
+    .verify-title{font-size:17px;font-weight:800;color:white;margin-bottom:6px;}
+    .verify-sub{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:16px;}
+    .verify-email{font-size:14px;font-weight:700;color:#10b981;margin-bottom:16px;}
+    .btn-resend{width:100%;padding:12px;border-radius:12px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#10b981;font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-bottom:8px;}
+    .btn-back{width:100%;padding:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;}
+
+    /* RESET NOTICE */
+    .reset-box{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:20px;text-align:center;display:none;}
+    .reset-box.show{display:block;}
+
+    .back-home{text-align:center;margin-top:20px;}
+    .back-home a{font-size:13px;color:rgba(255,255,255,0.3);text-decoration:none;}
+  </style>
+</head>
+<body>
+<div class="box">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="../images/b6a7ffac-d2f3-4534-9963-f60500a96e52.png" class="logo-img" onerror="this.style.display='none'">
+    <div class="logo-title">My Tarot</div>
+    <div class="logo-sub">เข้าสู่ระบบเพื่อเริ่มดูดวงค่ะ ✨</div>
+  </div>
+
+  <!-- VERIFY BOX -->
+  <div class="verify-box" id="verifyBox">
+    <div class="verify-icon">📧</div>
+    <div class="verify-title">ยืนยัน Email ก่อนนะคะ</div>
+    <div class="verify-sub">พริปตาส่งลิงค์ยืนยันไปที่</div>
+    <div class="verify-email" id="verifyEmail"></div>
+    <div class="verify-sub">กดลิงค์ในเมลแล้วกลับมากดปุ่มด้านล่างค่ะ</div>
+    <button class="btn-resend" id="btnResend" onclick="resendVerification()">📨 ส่งอีเมลยืนยันอีกครั้ง</button>
+    <button class="btn-back" onclick="backToLogin()">← กลับ</button>
+  </div>
+
+  <!-- RESET BOX -->
+  <div class="reset-box" id="resetBox">
+    <div style="font-size:44px;margin-bottom:12px;">🔑</div>
+    <div style="font-size:17px;font-weight:800;color:white;margin-bottom:6px;">ส่งลิงค์แล้วค่ะ</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:16px;">เช็ค email แล้วกดลิงค์เพื่อตั้งรหัสผ่านใหม่ค่ะ</div>
+    <button class="btn-back" onclick="backToLogin()">← กลับหน้า login</button>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card" id="mainCard">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchTab('login')">เข้าสู่ระบบ</button>
+      <button class="tab" id="tabRegister" onclick="switchTab('register')">สมัครสมาชิก</button>
+    </div>
+
+    <!-- EMAIL ONLY -->
+    <!-- LOGIN FORM -->
+    <div class="form show" id="formLogin">
+      <div class="input-wrap">
+        <label class="input-label">อีเมล</label>
+        <input class="input" type="email" id="loginEmail" placeholder="email@example.com">
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">รหัสผ่าน</label>
+        <input class="input" type="password" id="loginPassword" placeholder="รหัสผ่านค่ะ" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="forgot"><a onclick="showForgot()">ลืมรหัสผ่าน?</a></div>
+      <button class="btn-primary" id="btnLogin" onclick="doLogin()">🔮 เข้าสู่ระบบ</button>
+      <div class="msg" id="loginMsg"></div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="form" id="formRegister">
+      <div class="input-wrap">
+        <label class="input-label">อีเมล</label>
+        <input class="input" type="email" id="regEmail" placeholder="email@example.com">
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">รหัสผ่าน (อย่างน้อย 6 ตัว)</label>
+        <input class="input" type="password" id="regPassword" placeholder="ตั้งรหัสผ่านค่ะ">
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">ยืนยันรหัสผ่าน</label>
+        <input class="input" type="password" id="regPassword2" placeholder="พิมพ์รหัสผ่านอีกครั้งค่ะ" onkeydown="if(event.key==='Enter')doRegister()">
+      </div>
+      <button class="btn-primary" id="btnRegister" onclick="doRegister()">✨ สมัครสมาชิก</button>
+      <div class="msg" id="registerMsg"></div>
+    </div>
+
+    <!-- FORGOT FORM -->
+    <div class="form" id="formForgot">
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:16px;text-align:center;">ใส่ email แล้วพริปตาจะส่งลิงค์ตั้งรหัสผ่านใหม่ให้ค่ะ</div>
+      <div class="input-wrap">
+        <label class="input-label">อีเมล</label>
+        <input class="input" type="email" id="forgotEmail" placeholder="email@example.com" onkeydown="if(event.key==='Enter')doForgot()">
+      </div>
+      <button class="btn-primary" id="btnForgot" onclick="doForgot()">📨 ส่งลิงค์รีเซ็ตรหัสผ่าน</button>
+      <div class="msg" id="forgotMsg"></div>
+      <div style="text-align:center;margin-top:12px;">
+        <a onclick="backToLogin()" style="font-size:13px;color:rgba(255,255,255,0.3);cursor:pointer;">← กลับ</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="back-home">
+    <a href="../index.html">← กลับหน้าหลัก</a>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence,
+  onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendEmailVerification, sendPasswordResetEmail }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+
+// redirect กลับหน้าเดิมหลัง login
+const returnUrl=new URLSearchParams(window.location.search).get('return')||'../index.html';
+
+let pendingUser=null;
+
+onAuthStateChanged(auth,async user=>{
+  if(user && user.emailVerified){
+    // สร้าง user doc ถ้ายังไม่มี
+    const ref=doc(db,'users',user.uid);
+    const snap=await getDoc(ref);
+    if(!snap.exists()){
+      await setDoc(ref,{
+        displayName:user.displayName||'',
+        email:user.email||'',
+        coins:0,
+        createdAt:serverTimestamp()
+      });
+    }
+    window.location.href=returnUrl;
+  }
+});
+
+// ── TABS ──
+window.switchTab=function(tab){
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active',tab==='register');
+  document.getElementById('formLogin').classList.toggle('show',tab==='login');
+  document.getElementById('formRegister').classList.toggle('show',tab==='register');
+  document.getElementById('formForgot').classList.remove('show');
+};
+
+window.showForgot=function(){
+  document.getElementById('formLogin').classList.remove('show');
+  document.getElementById('formRegister').classList.remove('show');
+  document.getElementById('formForgot').classList.add('show');
+};
+
+window.backToLogin=function(){
+  document.getElementById('verifyBox').classList.remove('show');
+  document.getElementById('resetBox').classList.remove('show');
+  document.getElementById('mainCard').style.display='block';
+  switchTab('login');
+};
+
+// ── GOOGLE ──
+window.loginGoogle=async function(){
+  try{
+    await signInWithPopup(auth,new GoogleAuthProvider());
+  }catch(e){ console.error(e); }
+};
+
+// ── LOGIN ──
+window.doLogin=async function(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPassword').value;
+  const msg=document.getElementById('loginMsg');
+  const btn=document.getElementById('btnLogin');
+  if(!email||!pass){msg.className='msg err';msg.textContent='กรุณากรอกให้ครบค่ะ';return;}
+  btn.disabled=true;btn.textContent='⏳ กำลังเข้าสู่ระบบ...';
+  try{
+    const cred=await signInWithEmailAndPassword(auth,email,pass);
+    if(!cred.user.emailVerified){
+      pendingUser=cred.user;
+      showVerifyBox(email);
+      return;
+    }
+  }catch(e){
+    msg.className='msg err';
+    msg.textContent=e.code==='auth/invalid-credential'?'อีเมลหรือรหัสผ่านไม่ถูกต้องค่ะ':
+      e.code==='auth/too-many-requests'?'ลองใหม่อีกครั้งในภายหลังนะคะ':'เกิดข้อผิดพลาดค่ะ';
+  }
+  btn.disabled=false;btn.textContent='🔮 เข้าสู่ระบบ';
+};
+
+// ── REGISTER ──
+window.doRegister=async function(){
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const pass2=document.getElementById('regPassword2').value;
+  const msg=document.getElementById('registerMsg');
+  const btn=document.getElementById('btnRegister');
+  if(!email||!pass||!pass2){msg.className='msg err';msg.textContent='กรุณากรอกให้ครบค่ะ';return;}
+  if(pass.length<6){msg.className='msg err';msg.textContent='รหัสผ่านต้องมีอย่างน้อย 6 ตัวค่ะ';return;}
+  if(pass!==pass2){msg.className='msg err';msg.textContent='รหัสผ่านไม่ตรงกันค่ะ';return;}
+  btn.disabled=true;btn.textContent='⏳ กำลังสมัคร...';
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    await sendEmailVerification(cred.user);
+    // สร้าง user doc
+    await setDoc(doc(db,'users',cred.user.uid),{
+      displayName:'',email,coins:0,createdAt:serverTimestamp()
+    });
+    pendingUser=cred.user;
+    showVerifyBox(email);
+  }catch(e){
+    msg.className='msg err';
+    msg.textContent=e.code==='auth/email-already-in-use'?'อีเมลนี้มีบัญชีอยู่แล้วค่ะ ลอง login ดูนะคะ':
+      e.code==='auth/invalid-email'?'รูปแบบอีเมลไม่ถูกต้องค่ะ':'เกิดข้อผิดพลาดค่ะ';
+    btn.disabled=false;btn.textContent='✨ สมัครสมาชิก';
+  }
+};
+
+// ── FORGOT ──
+window.doForgot=async function(){
+  const email=document.getElementById('forgotEmail').value.trim();
+  const msg=document.getElementById('forgotMsg');
+  const btn=document.getElementById('btnForgot');
+  if(!email){msg.className='msg err';msg.textContent='กรุณากรอก email ค่ะ';return;}
+  btn.disabled=true;btn.textContent='⏳ กำลังส่ง...';
+  try{
+    await sendPasswordResetEmail(auth,email);
+    document.getElementById('mainCard').style.display='none';
+    document.getElementById('resetBox').classList.add('show');
+  }catch(e){
+    msg.className='msg err';
+    msg.textContent=e.code==='auth/user-not-found'?'ไม่พบบัญชีนี้ค่ะ':'เกิดข้อผิดพลาดค่ะ';
+    btn.disabled=false;btn.textContent='📨 ส่งลิงค์รีเซ็ตรหัสผ่าน';
+  }
+};
+
+// ── VERIFY ──
+function showVerifyBox(email){
+  document.getElementById('mainCard').style.display='none';
+  document.getElementById('verifyEmail').textContent=email;
+  document.getElementById('verifyBox').classList.add('show');
+}
+
+window.resendVerification=async function(){
+  const btn=document.getElementById('btnResend');
+  if(!pendingUser)return;
+  btn.disabled=true;btn.textContent='⏳ กำลังส่ง...';
+  try{
+    await sendEmailVerification(pendingUser);
+    btn.textContent='✅ ส่งแล้วค่ะ เช็ค email ด้วยนะคะ';
+  }catch(e){
+    btn.disabled=false;btn.textContent='📨 ส่งอีเมลยืนยันอีกครั้ง';
+  }
+};
+</script>
+</body>
+</html>

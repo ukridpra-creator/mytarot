@@ -42,7 +42,6 @@
       navigator.clipboard.writeText(url).then(function() {
         document.getElementById('inAppCopyBtn').textContent = '✅ คัดลอกแล้วค่ะ!';
       }).catch(function() {
-        // fallback สำหรับ iOS เก่า
         var ta = document.createElement('textarea');
         ta.value = url;
         document.body.appendChild(ta);
@@ -83,7 +82,25 @@ var html = `
   </div>
 </div>
 
+<!-- LOGIN REQUIRED OVERLAY — ใช้ร่วมกันทุกหน้า -->
+<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')" style="position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(212,175,55,0.25);border-radius:24px;padding:32px 20px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:44px;margin-bottom:12px;">🔮</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:6px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:20px;line-height:1.6;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัยค่ะ</div>
+    <button onclick="loginNow ? loginNow() : null; document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:14px;border-radius:14px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="window.location.href=(typeof __ciApiBase!=='undefined'?__ciApiBase:'')+'pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;padding:14px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;">
+      📧 เข้าสู่ระบบด้วย Email
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;font-family:inherit;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
 <style>
+.login-required-overlay.show { display:flex !important; }
+
 .ci-overlay {
   position: fixed; inset: 0; z-index: 1000;
   background: rgba(0,0,0,0.8);
@@ -129,7 +146,6 @@ var html = `
 .ci-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
 .ci-sub { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
 
-/* DAYS */
 .ci-days { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; }
 
 .ci-day {
@@ -155,7 +171,6 @@ var html = `
   box-shadow: 0 4px 20px rgba(124,58,237,0.5);
 }
 
-/* SKELETON */
 .ci-skel {
   width: 40px; height: 54px; border-radius: 12px;
   background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%);
@@ -164,7 +179,6 @@ var html = `
 }
 @keyframes ciSkel { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-/* REWARD */
 .ci-reward-wrap {
   background: rgba(212,175,55,0.06);
   border: 1px solid rgba(212,175,55,0.15);
@@ -175,7 +189,6 @@ var html = `
 .ci-reward-amt { font-size: 28px; font-weight: 800; color: #fbbf24; }
 .ci-reward-label { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 4px; }
 
-/* BUTTON */
 .ci-btn {
   width: 100%; padding: 15px; border-radius: 16px; border: none; cursor: pointer;
   background: linear-gradient(135deg, #7c3aed, #d4af37);
@@ -195,7 +208,6 @@ var html = `
   margin-top: 12px; min-height: 18px;
 }
 
-/* COIN POP */
 @keyframes ciCoinPop {
   0%   { transform: translateX(-50%) scale(0) translateY(0); opacity: 1; }
   60%  { transform: translateX(-50%) scale(1.4) translateY(-60px); opacity: 1; }
