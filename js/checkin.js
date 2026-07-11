@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
       '</div>';
     document.body.appendChild(loginDiv);
 
-    // Google btn — เปิด popup ของ Firebase
+    // Google btn
     document.getElementById('ciGoogleBtn').addEventListener('click', function() {
       document.getElementById('loginRequiredOverlay').classList.remove('show');
       if (typeof window.__ciGoogleSignIn === 'function') window.__ciGoogleSignIn();
