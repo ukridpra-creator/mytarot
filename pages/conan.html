@@ -159,14 +159,6 @@
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, getDocs, query, orderBy, limit, where, Timestamp }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-
 const PASS='conaniscowsboy';
 
 window.checkPw=function(){
@@ -174,6 +166,7 @@ window.checkPw=function(){
   if(v===PASS){
     document.getElementById('gate').style.display='none';
     document.getElementById('dash').style.display='block';
+    window._adminPass=v;
     loadDash();
     startClock();
   } else {
@@ -190,77 +183,47 @@ function startClock(){
 
 window.loadDash=async function(){
   try{
-    // users
-    const usersSnap=await getDocs(collection(db,'users'));
-    const users=usersSnap.docs.map(d=>d.data());
-    const totalUsers=users.length;
+    const res=await fetch('/api/admin',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:window._adminPass})
+    });
+    if(!res.ok){console.error('admin error',res.status);return;}
+    const d=await res.json();
 
-    // ยูสใหม่วันนี้
-    const todayStart=new Date(); todayStart.setHours(0,0,0,0);
-    const newToday=users.filter(u=>u.createdAt?.toDate()>=todayStart).length;
-
-    document.getElementById('mUsers').textContent=totalUsers.toLocaleString();
-    document.getElementById('mUsersNew').textContent='ใหม่วันนี้ '+newToday+' คน';
-
-    // transactions — วนทุก user
-    let allTx=[], totalRevenue=0, todayRevenue=0, totalCoins=0;
-    const pageCount={};
-
-    for(const d of usersSnap.docs){
-      // transactions
-      const txSnap=await getDocs(collection(db,'users',d.id,'transactions'));
-      txSnap.forEach(tx=>{
-        const data=tx.data();
-        allTx.push({...data,userId:d.id});
-        const amt=(data.amount||0)/100;
-        totalRevenue+=amt;
-        totalCoins+=(data.coins||0);
-        if(data.createdAt?.toDate()>=todayStart) todayRevenue+=amt;
-      });
-      // readings
-      const rSnap=await getDocs(collection(db,'users',d.id,'readings'));
-      rSnap.forEach(r=>{
-        const t=r.data().type||'unknown';
-        pageCount[t]=(pageCount[t]||0)+1;
-      });
-    }
-
-    document.getElementById('mTx').textContent=allTx.length.toLocaleString();
-    document.getElementById('mRevenue').textContent='฿'+totalRevenue.toLocaleString('th-TH',{minimumFractionDigits:0,maximumFractionDigits:0});
-    document.getElementById('mRevenueToday').textContent='วันนี้ ฿'+todayRevenue.toFixed(0);
-    document.getElementById('mCoins').textContent=totalCoins.toLocaleString();
+    document.getElementById('mUsers').textContent=d.totalUsers.toLocaleString();
+    document.getElementById('mUsersNew').textContent='ใหม่วันนี้ '+d.newToday+' คน';
+    document.getElementById('mTx').textContent=d.totalTx.toLocaleString();
+    document.getElementById('mRevenue').textContent='฿'+d.totalRevenue.toLocaleString();
+    document.getElementById('mRevenueToday').textContent='วันนี้ ฿'+d.todayRevenue;
+    document.getElementById('mCoins').textContent=d.totalCoins.toLocaleString();
 
     // TOP PAGES
-    const sorted=Object.entries(pageCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
-    const maxCount=sorted[0]?.[1]||1;
-    document.getElementById('topPages').innerHTML=sorted.length?sorted.map(([name,cnt],i)=>`
+    const maxCount=d.topPages[0]?.count||1;
+    document.getElementById('topPages').innerHTML=d.topPages.length?d.topPages.map((p,i)=>`
       <div class="rank-item">
         <div class="rank-num">${i+1}</div>
-        <div class="rank-name">${name}</div>
-        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(cnt/maxCount*100)}%"></div></div>
-        <div class="rank-count">${cnt}</div>
+        <div class="rank-name">${p.name}</div>
+        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(p.count/maxCount*100)}%"></div></div>
+        <div class="rank-count">${p.count}</div>
       </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
 
     // TOP PACKAGES
-    const pkgCount={};
-    allTx.forEach(tx=>{ const l=tx.label||'unknown'; pkgCount[l]=(pkgCount[l]||0)+1; });
-    const pkgSorted=Object.entries(pkgCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
-    document.getElementById('topPkgs').innerHTML=pkgSorted.length?pkgSorted.map(([name,cnt])=>`
+    document.getElementById('topPkgs').innerHTML=d.topPkgs.length?d.topPkgs.map(p=>`
       <div class="pkg-item">
-        <div class="pkg-name">${name}</div>
-        <div class="pkg-amt">${cnt} ครั้ง</div>
+        <div class="pkg-name">${p.name}</div>
+        <div class="pkg-amt">${p.count} ครั้ง</div>
       </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
 
     // RECENT TX
-    const recent=allTx.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,8);
-    document.getElementById('recentTx').innerHTML=recent.length?recent.map(tx=>`
+    document.getElementById('recentTx').innerHTML=d.recentTx.length?d.recentTx.map(tx=>`
       <div class="tx-item">
         <div class="tx-avatar">🪙</div>
         <div class="tx-info">
-          <div class="tx-name">${tx.label||'—'}</div>
-          <div class="tx-time">${tx.createdAt?.toDate().toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})||'—'}</div>
+          <div class="tx-name">${tx.label}</div>
+          <div class="tx-time">${tx.createdAt?new Date(tx.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</div>
         </div>
-        <div class="tx-amt">฿${((tx.amount||0)/100).toFixed(0)}</div>
+        <div class="tx-amt">฿${tx.amount}</div>
       </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
 
   } catch(e){ console.error(e); }
