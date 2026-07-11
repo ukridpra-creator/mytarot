@@ -84,9 +84,12 @@
     <div class="login-required-title">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
     <div class="login-required-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
     <button class="btn-login-now" onclick="loginNow();document.getElementById('loginRequiredOverlay').classList.remove('show')">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
-    </button>
-    <button class="btn-cancel-login" onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')">ยกเลิก</button>
+  <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+</button>
+<button onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:13px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+  📧 เข้าสู่ระบบด้วย Email
+</button>
+<button class="btn-cancel-login" onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')">ยกเลิก</button>
   </div>
 </div>
 
@@ -102,10 +105,15 @@
 
 <div class="user-menu" id="userMenu">
   <div id="guestView">
-    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
-    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button class="btn-google" onclick="loginGoogle()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
-  </div>
+  <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+  <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+  <button class="btn-google" onclick="loginGoogle()">
+    <img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google
+  </button>
+  <button onclick="window.location.href='pages/login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:12px;border-radius:14px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;">
+    📧 เข้าสู่ระบบด้วย Email
+  </button>
+</div>
   <div id="loggedView" style="display:none">
     <div class="menu-user-info">
       <div class="menu-avatar">👤</div>
