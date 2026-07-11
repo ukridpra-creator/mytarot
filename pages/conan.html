@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --bg:#07050f;
+      --surface:#0f0b1e;
+      --surface2:#16112a;
+      --border:rgba(124,58,237,0.2);
+      --gold:#d4af37;
+      --purple:#7c3aed;
+      --dim:rgba(255,255,255,0.35);
+      --text:rgba(255,255,255,0.85);
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;padding-bottom:60px;}
+
+    /* ── PASSWORD GATE ── */
+    #gate{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+    .gate-box{text-align:center;width:90%;max-width:360px;}
+    .gate-icon{font-size:52px;margin-bottom:20px;}
+    .gate-title{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:white;margin-bottom:6px;}
+    .gate-sub{font-size:13px;color:var(--dim);margin-bottom:32px;}
+    .gate-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 18px;color:white;font-size:16px;font-family:'Sarabun',sans-serif;outline:none;text-align:center;letter-spacing:3px;margin-bottom:12px;}
+    .gate-input:focus{border-color:var(--purple);}
+    .gate-btn{width:100%;background:linear-gradient(135deg,#5b21b6,var(--purple));border:none;border-radius:14px;padding:14px;color:white;font-size:16px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;}
+    .gate-err{font-size:13px;color:#f87171;margin-top:10px;min-height:18px;}
+
+    /* ── DASHBOARD ── */
+    #dash{display:none;}
+    .top-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);background:rgba(7,5,15,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+    .top-logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--gold);letter-spacing:2px;}
+    .top-time{font-size:12px;color:var(--dim);}
+
+    .content{padding:24px 20px;}
+
+    /* METRIC CARDS */
+    .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px 16px;}
+    .metric-label{font-size:11px;color:var(--dim);letter-spacing:1px;margin-bottom:8px;}
+    .metric-val{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:white;line-height:1;}
+    .metric-sub{font-size:11px;color:var(--dim);margin-top:6px;}
+    .metric.gold{border-color:rgba(212,175,55,0.3);}
+    .metric.gold .metric-val{color:var(--gold);}
+    .metric.green .metric-val{color:#10b981;}
+    .metric.purple .metric-val{color:#a855f7;}
+
+    /* SECTION */
+    .sec-title{font-size:12px;color:var(--dim);font-weight:700;letter-spacing:1px;margin-bottom:12px;padding-left:4px;}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:16px;}
+
+    /* TOP PAGES */
+    .rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .rank-item:last-child{border-bottom:none;}
+    .rank-num{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--dim);width:20px;flex-shrink:0;text-align:center;}
+    .rank-name{flex:1;font-size:14px;color:var(--text);}
+    .rank-bar-wrap{width:80px;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;}
+    .rank-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--gold));}
+    .rank-count{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gold);width:36px;text-align:right;flex-shrink:0;}
+
+    /* PACKAGES */
+    .pkg-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .pkg-item:last-child{border-bottom:none;}
+    .pkg-name{font-size:14px;color:var(--text);}
+    .pkg-amt{font-family:'Space Grotesk',sans-serif;font-size:13px;color:#10b981;}
+
+    /* RECENT TX */
+    .tx-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .tx-item:last-child{border-bottom:none;}
+    .tx-avatar{width:34px;height:34px;border-radius:50%;background:rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .tx-info{flex:1;}
+    .tx-name{font-size:13px;color:var(--text);}
+    .tx-time{font-size:11px;color:var(--dim);}
+    .tx-amt{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gold);}
+
+    /* LOADING */
+    .loading{text-align:center;padding:32px;color:var(--dim);font-size:13px;}
+    .skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 100%);background-size:200% 100%;animation:skel 1.2s infinite;border-radius:8px;height:16px;margin-bottom:8px;}
+    @keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* REFRESH */
+    .btn-refresh{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:6px 14px;color:#a855f7;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">🔭</div>
+    <div class="gate-title">Conan</div>
+    <div class="gate-sub">Mission Control · mytarot.vip</div>
+    <input class="gate-input" type="password" id="pwInput" placeholder="••••••••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">เข้าสู่ระบบ</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash">
+  <div class="top-bar">
+    <div class="top-logo">⭐ CONAN</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="top-time" id="topTime"></div>
+      <button class="btn-refresh" onclick="loadDash()">↻ รีเฟรช</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- METRICS -->
+    <div class="sec-title">📊 ภาพรวม</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">ยูสทั้งหมด</div>
+        <div class="metric-val" id="mUsers">—</div>
+        <div class="metric-sub" id="mUsersNew">ใหม่วันนี้ —</div>
+      </div>
+      <div class="metric gold">
+        <div class="metric-label">รายได้รวม</div>
+        <div class="metric-val" id="mRevenue">—</div>
+        <div class="metric-sub" id="mRevenueToday">วันนี้ —</div>
+      </div>
+      <div class="metric green">
+        <div class="metric-label">transaction</div>
+        <div class="metric-val" id="mTx">—</div>
+        <div class="metric-sub">ครั้งทั้งหมด</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-label">เหรียญขายได้</div>
+        <div class="metric-val" id="mCoins">—</div>
+        <div class="metric-sub">เหรียญรวม</div>
+      </div>
+    </div>
+
+    <!-- TOP PAGES -->
+    <div class="sec-title">🔥 หน้าที่เล่นเยอะสุด</div>
+    <div class="card" id="topPages">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+
+    <!-- TOP PACKAGES -->
+    <div class="sec-title">💰 แพ็กเกจที่ขายดีสุด</div>
+    <div class="card" id="topPkgs">
+      <div class="skel"></div><div class="skel"></div>
+    </div>
+
+    <!-- RECENT TX -->
+    <div class="sec-title">🧾 transaction ล่าสุด</div>
+    <div class="card" id="recentTx">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, getDocs, query, orderBy, limit, where, Timestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+const PASS='conaniscowsboy';
+
+window.checkPw=function(){
+  const v=document.getElementById('pwInput').value;
+  if(v===PASS){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('dash').style.display='block';
+    loadDash();
+    startClock();
+  } else {
+    document.getElementById('gateErr').textContent='รหัสผ่านไม่ถูกต้องค่ะ';
+    document.getElementById('pwInput').value='';
+  }
+};
+
+function startClock(){
+  const el=document.getElementById('topTime');
+  const update=()=>{el.textContent=new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});};
+  update(); setInterval(update,60000);
+}
+
+window.loadDash=async function(){
+  try{
+    // users
+    const usersSnap=await getDocs(collection(db,'users'));
+    const users=usersSnap.docs.map(d=>d.data());
+    const totalUsers=users.length;
+
+    // ยูสใหม่วันนี้
+    const todayStart=new Date(); todayStart.setHours(0,0,0,0);
+    const newToday=users.filter(u=>u.createdAt?.toDate()>=todayStart).length;
+
+    document.getElementById('mUsers').textContent=totalUsers.toLocaleString();
+    document.getElementById('mUsersNew').textContent='ใหม่วันนี้ '+newToday+' คน';
+
+    // transactions — วนทุก user
+    let allTx=[], totalRevenue=0, todayRevenue=0, totalCoins=0;
+    const pageCount={};
+
+    for(const d of usersSnap.docs){
+      // transactions
+      const txSnap=await getDocs(collection(db,'users',d.id,'transactions'));
+      txSnap.forEach(tx=>{
+        const data=tx.data();
+        allTx.push({...data,userId:d.id});
+        const amt=(data.amount||0)/100;
+        totalRevenue+=amt;
+        totalCoins+=(data.coins||0);
+        if(data.createdAt?.toDate()>=todayStart) todayRevenue+=amt;
+      });
+      // readings
+      const rSnap=await getDocs(collection(db,'users',d.id,'readings'));
+      rSnap.forEach(r=>{
+        const t=r.data().type||'unknown';
+        pageCount[t]=(pageCount[t]||0)+1;
+      });
+    }
+
+    document.getElementById('mTx').textContent=allTx.length.toLocaleString();
+    document.getElementById('mRevenue').textContent='฿'+totalRevenue.toLocaleString('th-TH',{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('mRevenueToday').textContent='วันนี้ ฿'+todayRevenue.toFixed(0);
+    document.getElementById('mCoins').textContent=totalCoins.toLocaleString();
+
+    // TOP PAGES
+    const sorted=Object.entries(pageCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const maxCount=sorted[0]?.[1]||1;
+    document.getElementById('topPages').innerHTML=sorted.length?sorted.map(([name,cnt],i)=>`
+      <div class="rank-item">
+        <div class="rank-num">${i+1}</div>
+        <div class="rank-name">${name}</div>
+        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(cnt/maxCount*100)}%"></div></div>
+        <div class="rank-count">${cnt}</div>
+      </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
+
+    // TOP PACKAGES
+    const pkgCount={};
+    allTx.forEach(tx=>{ const l=tx.label||'unknown'; pkgCount[l]=(pkgCount[l]||0)+1; });
+    const pkgSorted=Object.entries(pkgCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    document.getElementById('topPkgs').innerHTML=pkgSorted.length?pkgSorted.map(([name,cnt])=>`
+      <div class="pkg-item">
+        <div class="pkg-name">${name}</div>
+        <div class="pkg-amt">${cnt} ครั้ง</div>
+      </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
+
+    // RECENT TX
+    const recent=allTx.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)).slice(0,8);
+    document.getElementById('recentTx').innerHTML=recent.length?recent.map(tx=>`
+      <div class="tx-item">
+        <div class="tx-avatar">🪙</div>
+        <div class="tx-info">
+          <div class="tx-name">${tx.label||'—'}</div>
+          <div class="tx-time">${tx.createdAt?.toDate().toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})||'—'}</div>
+        </div>
+        <div class="tx-amt">฿${((tx.amount||0)/100).toFixed(0)}</div>
+      </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
+
+  } catch(e){ console.error(e); }
+};
+</script>
+</body>
+</html>
