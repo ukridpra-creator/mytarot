@@ -7,7 +7,6 @@ import { getAuth } from 'firebase-admin/auth';
 
 export const config = { maxDuration: 10 };
 
-// init Firebase Admin
 if (!getApps().length) {
   initializeApp({
     credential: cert({
@@ -31,7 +30,6 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
 
-  // verify token
   const authHeader = req.headers.authorization || '';
   const idToken = authHeader.replace('Bearer ', '').trim();
   if (!idToken) return res.status(401).json({ error: 'no_token' });
@@ -50,8 +48,8 @@ export default async function handler(req, res) {
     const data = snap.exists ? snap.data() : {};
 
     const now = new Date(Date.now() + 7 * 60 * 60 * 1000);
-const today = now.toISOString().slice(0, 10);
-const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOString().slice(0, 10);
+    const today = now.toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOString().slice(0, 10);
 
     // เช็คอินแล้ววันนี้
     if ((data.lastCheckin || '') === today) {
@@ -60,6 +58,16 @@ const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOStri
         streak: data.checkinStreak || 0,
         coins: data.coins || 0,
         message: 'เช็คอินแล้ววันนี้ค่ะ'
+      });
+    }
+
+    // checkOnly — แค่ดูว่าเช็คอินแล้วหรือยัง ไม่ได้เหรียญ
+    const { checkOnly } = req.body;
+    if (checkOnly) {
+      return res.status(200).json({
+        already: false,
+        streak: data.checkinStreak || 0,
+        coins: data.coins || 0,
       });
     }
 
@@ -73,8 +81,6 @@ const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOStri
 
     const reward = REWARDS[streak] || 10;
     const newCoins = (data.coins || 0) + reward;
-
-    // reset streak หลังวันที่ 7
     const saveStreak = streak === 7 ? 0 : streak;
 
     await userRef.set({
