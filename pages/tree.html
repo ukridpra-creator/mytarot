@@ -282,6 +282,46 @@ function renderCards(){
 
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
+// ─── SOUND ───
+const _ac = new (window.AudioContext || window.webkitAudioContext)();
+
+function playShake() {
+  // เสียงเขย่าต้นไม้ — noise burst
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const buf = _ac.createBuffer(1, _ac.sampleRate * 0.08, _ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * 0.3;
+      const src = _ac.createBufferSource();
+      const gain = _ac.createGain();
+      const filter = _ac.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 800 + Math.random() * 400;
+      src.buffer = buf;
+      src.connect(filter); filter.connect(gain); gain.connect(_ac.destination);
+      gain.gain.setValueAtTime(0.4, _ac.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + 0.08);
+      src.start(); src.stop(_ac.currentTime + 0.08);
+    }, i * 90);
+  }
+}
+
+function playReveal() {
+  // เสียงผลทำนายออก — mystical chime
+  [440, 554, 659, 880].forEach((freq, i) => {
+    const osc = _ac.createOscillator();
+    const gain = _ac.createGain();
+    osc.connect(gain); gain.connect(_ac.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const t = _ac.currentTime + i * 0.15;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.15, t + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    osc.start(t); osc.stop(t + 0.6);
+  });
+}
+
 window.shakeTree = async function(){
   if(!currentUser){ document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if(isShaking) return;
@@ -291,10 +331,12 @@ window.shakeTree = async function(){
   }
   if(pool.length===0){ renderCards(); return; }
   isShaking = true;
+  _ac.resume();
 
   // เขย่าต้นไม้ + การ์ดไหวเร็ว
   const area = document.getElementById('treeArea');
   area.classList.add('shake');
+  playShake();
   document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('sway'); c.classList.add('fast'); });
 
   await sleep(750);
@@ -366,6 +408,7 @@ function showReveal(colorKey, data, blessing){
   document.getElementById('revealCat').textContent  = isGold ? `✦ ${data.label} — ถุงทอง! ✦` : `✦ ${data.label} ✦`;
   document.getElementById('revealText').textContent = blessing;
   wrap.className = `reveal-wrap show theme-${colorKey}`;
+  playReveal();
 
   // พลิกการ์ด
   setTimeout(()=>{
