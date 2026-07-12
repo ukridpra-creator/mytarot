@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ดวงราศีประจำวัน — Slot เทพ vs ปีศาจ | My Tarot</title>
+<meta name="description" content="เช็คดวงราศีประจำวันฟรีค่ะ! Slot เทพ vs ปีศาจ บอกว่าราศีไหนโชคดีและโชคร้ายที่สุดวันนี้ คำนวณจากดาวจรจริงค่ะ">
+<meta name="keywords" content="ดวงราศีประจำวัน,ราศีโชคดี,ราศีโชคร้าย,ดูดวงฟรี,ดวงวันนี้,โหราศาสตร์ราศี">
+<meta property="og:title" content="ดวงราศีประจำวัน Slot เทพ vs ปีศาจ — My Tarot">
+<meta property="og:description" content="เช็คดวงราศีประจำวันฟรีค่ะ! บอกว่าราศีไหนโชคดีและโชคร้ายที่สุดวันนี้ค่ะ">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:url" content="https://www.mytarot.vip/pages/slot">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/planet-transits-data.js"></script>
+<style>
+body { padding-bottom:80px; background:linear-gradient(160deg,#080614 0%,#0d0820 50%,#080614 100%); }
+
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(124,58,237,0.2); background:rgba(8,6,20,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid rgba(124,58,237,0.3); display:flex; align-items:center; justify-content:center; color:#a855f7; font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title-text { font-size:18px; font-weight:700; color:white; }
+
+.page-content { padding:20px 16px 40px; }
+
+/* HERO */
+.hero { text-align:center; margin-bottom:24px; }
+.hero-mascot { width:100px; height:100px; object-fit:contain; margin-bottom:12px; }
+.hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+.hero-sub { font-size:13px; color:rgba(255,255,255,0.4); }
+.date-badge { display:inline-block; background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:6px 16px; color:#a855f7; font-size:13px; margin-top:10px; }
+
+/* SLOTS */
+.slots-row { display:flex; gap:10px; margin-bottom:24px; }
+
+.slot-card { flex:1; border-radius:20px; padding:16px 12px; text-align:center; position:relative; }
+.slot-angel { background:linear-gradient(160deg,#1e0a3c,#2d1b5e); border:2px solid #d4af37; box-shadow:0 0 30px rgba(212,175,55,0.2); }
+.slot-demon  { background:linear-gradient(160deg,#1a0000,#3d0000); border:2px solid #ef4444; box-shadow:0 0 30px rgba(239,68,68,0.2); }
+
+.slot-tag { position:absolute; top:-12px; left:50%; transform:translateX(-50%); border-radius:20px; padding:3px 14px; font-size:10px; font-weight:800; white-space:nowrap; }
+.slot-tag-angel { background:#d4af37; color:#1a1000; }
+.slot-tag-demon { background:#ef4444; color:white; }
+
+.slot-window { background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px 8px; margin:16px 0 12px; min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.slot-icon { font-size:44px; margin-bottom:4px; }
+.slot-icon-demon { color:#ef4444; }
+.slot-name-angel { font-size:20px; font-weight:800; color:#d4af37; }
+.slot-name-demon  { font-size:20px; font-weight:800; color:#ef4444; }
+.slot-desc { font-size:10px; color:rgba(255,255,255,0.4); margin-top:4px; line-height:1.4; }
+
+.score-row { display:flex; justify-content:space-between; font-size:10px; color:rgba(255,255,255,0.3); margin-bottom:4px; }
+.score-bg { background:rgba(255,255,255,0.08); border-radius:6px; height:6px; overflow:hidden; }
+.score-fill-angel { background:linear-gradient(90deg,#f59e0b,#d4af37); height:100%; border-radius:6px; transition:width 1s ease; }
+.score-fill-demon  { background:linear-gradient(90deg,#991b1b,#ef4444); height:100%; border-radius:6px; transition:width 1s ease; }
+
+/* SPIN BTN */
+.btn-spin { width:100%; padding:16px; border-radius:16px; border:none; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:24px; background:linear-gradient(135deg,#5b21b6,#7c3aed); box-shadow:0 4px 20px rgba(124,58,237,0.4); transition:all 0.2s; }
+.btn-spin:disabled { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.3); cursor:not-allowed; box-shadow:none; }
+.btn-spin:active { transform:scale(0.98); }
+
+/* RANKING TABLE */
+.ranking-section { margin-bottom:24px; }
+.rank-title { font-size:12px; color:rgba(255,255,255,0.4); font-weight:700; letter-spacing:1px; margin-bottom:10px; }
+.rank-row { display:flex; gap:10px; }
+.rank-col { flex:1; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:12px 10px; }
+.rank-col-title-angel { font-size:11px; color:#d4af37; font-weight:700; text-align:center; margin-bottom:10px; }
+.rank-col-title-demon  { font-size:11px; color:#ef4444; font-weight:700; text-align:center; margin-bottom:10px; }
+
+.rank-item { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.rank-item:last-child { border-bottom:none; }
+.rank-num { font-size:12px; font-weight:800; width:16px; flex-shrink:0; }
+.rank-num-angel { color:#d4af37; }
+.rank-num-demon  { color:#ef4444; }
+.rank-zodiac { font-size:18px; flex-shrink:0; }
+.rank-name { font-size:12px; color:white; font-weight:700; flex:1; }
+.rank-score-angel { font-size:11px; color:#d4af37; }
+.rank-score-demon  { font-size:11px; color:#ef4444; }
+
+/* PLANET DETAIL */
+.planet-section { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:14px 16px; }
+.planet-section-title { font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:1px; margin-bottom:10px; }
+.planet-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.planet-row:last-child { border-bottom:none; }
+.planet-name { font-size:13px; color:rgba(255,255,255,0.7); }
+.planet-badge { font-size:11px; padding:2px 10px; border-radius:20px; font-weight:700; }
+.badge-good { color:#d4af37; background:rgba(212,175,55,0.1); }
+.badge-bad  { color:#ef4444; background:rgba(239,68,68,0.1); }
+.badge-neutral { color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.06); }
+
+@keyframes spin { 0%{transform:scale(0.8);opacity:0.5} 50%{transform:scale(1.1);opacity:1} 100%{transform:scale(1);opacity:1} }
+.spinning { animation:spin 0.1s ease infinite; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="western-hub.html" class="back-btn">←</a>
+  <div class="page-title-text">🎰 ดวงราศีประจำวัน</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+
+  <div class="hero">
+    <img src="../images/mascot-slot.png" class="hero-mascot" onerror="this.style.display='none'">
+    <div class="hero-title">🎰 Slot เทพ vs ปีศาจ</div>
+    <div class="hero-sub">ดวงราศีคำนวณจากดาวจรจริงค่ะ</div>
+    <div class="date-badge" id="dateBadge">📅 กำลังโหลด...</div>
+  </div>
+
+  <!-- SLOT CARDS -->
+  <div class="slots-row">
+    <div class="slot-card slot-angel">
+      <div class="slot-tag slot-tag-angel">✨ Slot เทพ</div>
+      <div class="slot-window">
+        <div class="slot-icon" id="angelIcon">✨</div>
+        <div class="slot-name-angel" id="angelName">?</div>
+        <div class="slot-desc" id="angelDesc">กดหมุนเพื่อดูค่ะ</div>
+      </div>
+      <div class="score-row"><span>โชค</span><span id="angelScore">—</span></div>
+      <div class="score-bg"><div class="score-fill-angel" id="angelBar" style="width:0%"></div></div>
+    </div>
+
+    <div class="slot-card slot-demon">
+      <div class="slot-tag slot-tag-demon">💀 Slot ปีศาจ</div>
+      <div class="slot-window">
+        <div class="slot-icon slot-icon-demon" id="demonIcon">💀</div>
+        <div class="slot-name-demon" id="demonName">?</div>
+        <div class="slot-desc" id="demonDesc">กดหมุนเพื่อดูค่ะ</div>
+      </div>
+      <div class="score-row"><span>ระวัง</span><span id="demonScore">—</span></div>
+      <div class="score-bg"><div class="score-fill-demon" id="demonBar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <button class="btn-spin" id="spinBtn" onclick="doSpin()">🎰 หมุนดูดวงเลยค่ะ!</button>
+
+  <!-- RANKING -->
+  <div class="ranking-section" id="rankSection" style="display:none;">
+    <div class="rank-title">✦ TOP 3 ประจำวันนี้ค่ะ</div>
+    <div class="rank-row">
+      <div class="rank-col">
+        <div class="rank-col-title-angel">🌟 โชคดีสุด</div>
+        <div id="goodRank"></div>
+      </div>
+      <div class="rank-col">
+        <div class="rank-col-title-demon">💀 ระวังสุด</div>
+        <div id="badRank"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANET DETAIL -->
+  <div class="planet-section" id="planetSection" style="display:none;">
+    <div class="planet-section-title">🪐 ดาวจรวันนี้ค่ะ</div>
+    <div id="planetRows"></div>
+  </div>
+
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){var snap=await getDoc(doc(db,'users',user.uid));var data=snap.exists()?snap.data():{};updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');document.getElementById('guestView').style.display='none';document.getElementById('loggedView').style.display='block';document.getElementById('menuName').textContent=data.displayName||user.displayName||'';document.getElementById('menuEmail').textContent=user.email;if(typeof setupCheckin==='function')setupCheckin(user,'../');}
+  else{updateCoinUI('—');setAvatarDisplay('');}
+});
+
+// ─── ZODIAC DATA ───
+const ZODIACS = [
+  {name:'เมษ',    icon:'♈', eng:'Aries'},
+  {name:'พฤษภ',  icon:'♉', eng:'Taurus'},
+  {name:'มิถุน', icon:'♊', eng:'Gemini'},
+  {name:'กรกฎ',  icon:'♋', eng:'Cancer'},
+  {name:'สิงห์',  icon:'♌', eng:'Leo'},
+  {name:'กันย์',  icon:'♍', eng:'Virgo'},
+  {name:'ตุลย์',  icon:'♎', eng:'Libra'},
+  {name:'พิจิก',  icon:'♏', eng:'Scorpio'},
+  {name:'ธนู',    icon:'♐', eng:'Sagittarius'},
+  {name:'มกร',    icon:'♑', eng:'Capricorn'},
+  {name:'กุมภ์',  icon:'♒', eng:'Aquarius'},
+  {name:'มีน',    icon:'♓', eng:'Pisces'},
+];
+
+// น้ำหนักดาวต่อราศีที่อยู่
+const PLANET_WEIGHTS = {
+  jup:  { good: 3,  bad: 0,  label:'♃ พฤหัส', effect:'โชคลาภ ขยายโอกาส' },
+  ven:  { good: 2,  bad: 0,  label:'♀ ศุกร์',  effect:'ความรัก เสน่ห์ เงิน' },
+  sun:  { good: 1,  bad: 0,  label:'☀️ อาทิตย์', effect:'พลังงาน ความสำเร็จ' },
+  merc: { good: 1,  bad: 0,  label:'☿ พุธ',    effect:'สติปัญญา การสื่อสาร' },
+  mars: { good: 0,  bad: -1, label:'♂ อังคาร', effect:'ความขัดแย้ง ระวังอุบัติเหตุ' },
+  sat:  { good: 0,  bad: -2, label:'♄ เสาร์',  effect:'อุปสรรค ความล่าช้า' },
+  rahu: { good: 0,  bad: -1, label:'☊ ราหู',   effect:'ความสับสน ระวังคนหลอก' },
+  ketu: { good: 0,  bad: -1, label:'☋ เกตุ',   effect:'การเปลี่ยนแปลง ระวังการสูญเสีย' },
+};
+
+// หาราศีดาวในวันที่กำหนด
+function getPlanetSign(transitions, dateStr) {
+  if (!transitions || transitions.length === 0) return null;
+  let current = transitions[0].s;
+  for (const t of transitions) {
+    if (t.d <= dateStr) current = t.s;
+    else break;
+  }
+  return current;
+}
+
+// คำนวณคะแนนทุกราศีจากดาวจร
+function calcScores(dateStr) {
+  const BE = parseInt(dateStr.split('-')[0]);
+  const CE = BE - 543;
+  const ceDate = CE + dateStr.slice(4);
+
+  // หาปีข้อมูล
+  const yearData = window.PLANET_TRANSITS?.[BE] || window.PLANET_TRANSITS?.[CE] || null;
+  if (!yearData) return null;
+
+  const scores = Array(12).fill(0);
+  const planetInfo = [];
+
+  for (const [planet, weight] of Object.entries(PLANET_WEIGHTS)) {
+    const transitions = yearData[planet];
+    if (!transitions) continue;
+    const sign = getPlanetSign(transitions, ceDate);
+    if (sign === null) continue;
+
+    scores[sign] += weight.good + weight.bad;
+    planetInfo.push({ label: weight.label, sign, effect: weight.effect, good: weight.good, bad: weight.bad });
+  }
+
+  return { scores, planetInfo };
+}
+
+// ─── SET DATE ───
+const today = new Date();
+const thYear = today.getFullYear() + 543;
+const thMonth = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][today.getMonth()];
+document.getElementById('dateBadge').textContent = '📅 ' + today.getDate() + ' ' + thMonth + ' ' + thYear;
+
+const dateStr = thYear + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+
+// ─── SPIN ───
+let hasSpun = false;
+let spinResult = null;
+
+function computeResult() {
+  const result = calcScores(dateStr);
+  if (!result) {
+    // fallback seed-based
+    const seed = today.getDate() + today.getMonth() * 31;
+    const scores = ZODIACS.map((_,i) => ({ idx:i, score: ((seed * (i+1) * 7) % 100) }));
+    scores.sort((a,b) => b.score - a.score);
+    return { ranked: scores, planetInfo: [] };
+  }
+  const ranked = result.scores.map((score,idx) => ({ idx, score })).sort((a,b) => b.score - a.score);
+  return { ranked, planetInfo: result.planetInfo };
+}
+
+window.doSpin = function() {
+  if (hasSpun) return;
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังหมุน...';
+
+  spinResult = computeResult();
+  const { ranked, planetInfo } = spinResult;
+
+  const luckyIdx  = ranked[0].idx;
+  const unluckyIdx = ranked[ranked.length-1].idx;
+  const luckyScore  = Math.min(95, 60 + ranked[0].score * 5);
+  const unluckyScore = Math.min(95, 60 + Math.abs(ranked[ranked.length-1].score) * 5);
+
+  let count = 0;
+  const interval = setInterval(() => {
+    const r1 = Math.floor(Math.random() * 12);
+    const r2 = Math.floor(Math.random() * 12);
+    document.getElementById('angelIcon').textContent = ZODIACS[r1].icon;
+    document.getElementById('angelName').textContent = ZODIACS[r1].name;
+    document.getElementById('demonIcon').textContent = ZODIACS[r2].icon;
+    document.getElementById('demonName').textContent = ZODIACS[r2].name;
+    count++;
+    if (count >= 25) {
+      clearInterval(interval);
+
+      // Angel
+      document.getElementById('angelIcon').textContent = ZODIACS[luckyIdx].icon;
+      document.getElementById('angelName').textContent = ZODIACS[luckyIdx].name;
+      document.getElementById('angelDesc').textContent = 'ดาวหนุนโชคดีที่สุดวันนี้ค่ะ ✨';
+      document.getElementById('angelScore').textContent = luckyScore;
+      document.getElementById('angelBar').style.width = luckyScore + '%';
+
+      // Demon
+      document.getElementById('demonIcon').textContent = ZODIACS[unluckyIdx].icon;
+      document.getElementById('demonIcon').style.color = '#ef4444';
+      document.getElementById('demonName').textContent = ZODIACS[unluckyIdx].name;
+      document.getElementById('demonDesc').textContent = 'ดาวกดดันมากที่สุดวันนี้ค่ะ ⚠️';
+      document.getElementById('demonScore').textContent = unluckyScore;
+      document.getElementById('demonBar').style.width = unluckyScore + '%';
+
+      // Ranking
+      const top3Good = ranked.slice(0,3);
+      const top3Bad  = ranked.slice(-3).reverse();
+
+      document.getElementById('goodRank').innerHTML = top3Good.map((r,i) => `
+        <div class="rank-item">
+          <div class="rank-num rank-num-angel">${i+1}</div>
+          <div class="rank-zodiac">${ZODIACS[r.idx].icon}</div>
+          <div class="rank-name">${ZODIACS[r.idx].name}</div>
+          <div class="rank-score-angel">+${Math.max(0,r.score)}</div>
+        </div>`).join('');
+
+      document.getElementById('badRank').innerHTML = top3Bad.map((r,i) => `
+        <div class="rank-item">
+          <div class="rank-num rank-num-demon">${i+1}</div>
+          <div class="rank-zodiac" style="color:#ef4444">${ZODIACS[r.idx].icon}</div>
+          <div class="rank-name">${ZODIACS[r.idx].name}</div>
+          <div class="rank-score-demon">${Math.min(0,r.score)}</div>
+        </div>`).join('');
+
+      document.getElementById('rankSection').style.display = 'block';
+
+      // Planet rows
+      if (planetInfo.length > 0) {
+        document.getElementById('planetRows').innerHTML = planetInfo.map(p => `
+          <div class="planet-row">
+            <span class="planet-name">${p.label}</span>
+            <span class="planet-badge ${p.good > 0 ? 'badge-good' : p.bad < 0 ? 'badge-bad' : 'badge-neutral'}">
+              ${ZODIACS[p.sign].name} ${p.good > 0 ? '+'+p.good+'⭐' : p.bad < 0 ? p.bad+'⚠️' : ''}
+            </span>
+          </div>`).join('');
+        document.getElementById('planetSection').style.display = 'block';
+      }
+
+      btn.textContent = '✅ ดูแล้ววันนี้ค่ะ!';
+      hasSpun = true;
+    }
+  }, 80);
+};
+</script>
+</body>
+</html>
