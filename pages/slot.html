@@ -122,15 +122,15 @@ body { padding-bottom:80px; background:linear-gradient(160deg,#080614 0%,#0d0820
 
   <div class="hero">
     <img src="../images/mascot-slot.png" class="hero-mascot" onerror="this.style.display='none'">
-    <div class="hero-title">🎰 Slot เทพ vs ปีศาจ</div>
-    <div class="hero-sub">ดวงราศีคำนวณจากดาวจรจริงค่ะ</div>
+    <div class="hero-title">🎰 ราศีโชคดี vs ราศีโชคร้าย</div>
+    <div class="hero-sub">มาดูกันค่ะว่าราศีใดจะโชคดีหรือโชคร้ายที่สุด</div>
     <div class="date-badge" id="dateBadge">📅 กำลังโหลด...</div>
   </div>
 
   <!-- SLOT CARDS -->
   <div class="slots-row">
     <div class="slot-card slot-angel">
-      <div class="slot-tag slot-tag-angel">✨ Slot เทพ</div>
+      <div class="slot-tag slot-tag-angel">✨ ราศีโชคดี</div>
       <div class="slot-window">
         <div class="slot-icon" id="angelIcon">✨</div>
         <div class="slot-name-angel" id="angelName">?</div>
@@ -141,7 +141,7 @@ body { padding-bottom:80px; background:linear-gradient(160deg,#080614 0%,#0d0820
     </div>
 
     <div class="slot-card slot-demon">
-      <div class="slot-tag slot-tag-demon">💀 Slot ปีศาจ</div>
+      <div class="slot-tag slot-tag-demon">💀 ราศีโชคร้าย</div>
       <div class="slot-window">
         <div class="slot-icon slot-icon-demon" id="demonIcon">💀</div>
         <div class="slot-name-demon" id="demonName">?</div>
@@ -167,12 +167,6 @@ body { padding-bottom:80px; background:linear-gradient(160deg,#080614 0%,#0d0820
         <div id="badRank"></div>
       </div>
     </div>
-  </div>
-
-  <!-- PLANET DETAIL -->
-  <div class="planet-section" id="planetSection" style="display:none;">
-    <div class="planet-section-title">🪐 ดาวจรวันนี้ค่ะ</div>
-    <div id="planetRows"></div>
   </div>
 
 </div>
@@ -363,23 +357,10 @@ window.doSpin = function() {
 
       document.getElementById('rankSection').style.display = 'block';
 
-      // Planet rows
-      if (planetInfo.length > 0) {
-        document.getElementById('planetRows').innerHTML = planetInfo.map(p => `
-          <div class="planet-row">
-            <span class="planet-name">${p.label}</span>
-            <span class="planet-badge ${p.good > 0 ? 'badge-good' : p.bad < 0 ? 'badge-bad' : 'badge-neutral'}">
-              ${ZODIACS[p.sign].name} ${p.good > 0 ? '+'+p.good+'⭐' : p.bad < 0 ? p.bad+'⚠️' : ''}
-            </span>
-          </div>`).join('');
-        document.getElementById('planetSection').style.display = 'block';
-      }
-
       btn.textContent = '✅ ดูแล้ววันนี้ค่ะ!';
       hasSpun = true;
     }
   }, 80);
-};
-</script>
+};</script>
 </body>
 </html>
