@@ -1,447 +1,125 @@
-This XML file does not appear to have any style information associated with it. The document tree is shown below.
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<!--  หน้าหลัก  -->
-<url>
-<loc>https://www.mytarot.vip</loc>
-<changefreq>daily</changefreq>
-<priority>1.0</priority>
-</url>
-<!--  Hub Pages  -->
-<url>
-<loc>https://www.mytarot.vip/pages/tarot</loc>
-<changefreq>weekly</changefreq>
-<priority>0.9</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/oracle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.9</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/chinese-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/korean</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/thai-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/western-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/indian-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/body-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/number-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/divination</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/other-astro</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/activity-hub</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  ไพ่ทาโรต์  -->
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-yesno</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-love</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-work</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-money</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-health</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tarot-ask</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  ออราเคิล  -->
-<url>
-<loc>https://www.mytarot.vip/pages/oracle-demon</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/oracle-cosmic</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/oracle-nature</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/oracle-dream</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/han-oracle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/hindu-oracle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/noh-oracle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/love-oracle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์จีน  -->
-<url>
-<loc>https://www.mytarot.vip/pages/chinese</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/loshu</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/purple-star</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/kuigao</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/taiwan-bird</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์เกาหลี  -->
-<url>
-<loc>https://www.mytarot.vip/pages/saju</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/gunghap</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/samjae</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tojung</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/taegil</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์ไทย  -->
-<url>
-<loc>https://www.mytarot.vip/pages/thai-astro</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/thaksa</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/triwai</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/seven</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์ตะวันตก  -->
-<url>
-<loc>https://www.mytarot.vip/pages/western</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/synastry</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/cartomancy</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/horoscope</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/zodiac</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์อินเดีย  -->
-<url>
-<loc>https://www.mytarot.vip/pages/vedic</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/nakshatras</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/rashi</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/pastlife</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/deity</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  ศาสตร์ร่างกาย  -->
-<url>
-<loc>https://www.mytarot.vip/pages/face</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/foot</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/palm</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/blood-type</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/graphology</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/voice</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/mole</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  เลขศาสตร์  -->
-<url>
-<loc>https://www.mytarot.vip/pages/energy-code</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/numerology</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/love-code</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/pinnacle</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/destiny</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/lucky-number</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/lucky-color</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/lucky-day</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  เสี่ยงทาย  -->
-<url>
-<loc>https://www.mytarot.vip/pages/omikuji</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/guanyin</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/rune</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/fortune-cookie</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/iching</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/dream</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<!--  โหราศาสตร์อื่นๆ  -->
-<url>
-<loc>https://www.mytarot.vip/pages/mahabote</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/kyusei</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/biorhythm</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/kabbalah</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/horary</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/medical-astrology</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/soul-aura</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/challenge</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/tree</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-</url>
-<!--  หน้าทั่วไป  -->
-<url>
-<loc>https://www.mytarot.vip/pages/login</loc>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/privacy</loc>
-<changefreq>monthly</changefreq>
-<priority>0.3</priority>
-</url>
-<url>
-<loc>https://www.mytarot.vip/pages/refund</loc>
-<changefreq>monthly</changefreq>
-<priority>0.3</priority>
-</url>
-<url><loc>https://www.mytarot.vip/pages/pinnacle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/seven</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/taiwan-bird</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/zodiac</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/mole</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/loshu</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.mytarot.vip/pages/kuigao</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- หน้าหลัก -->
+  <url><loc>https://www.mytarot.vip</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+
+  <!-- Hub Pages -->
+  <url><loc>https://www.mytarot.vip/pages/tarot</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/oracle</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/chinese-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/korean</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/thai-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/western-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/indian-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/body-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/number-hub</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/divination</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/other-astro</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/activity-hub</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- ไพ่ทาโรต์ -->
+  <url><loc>https://www.mytarot.vip/pages/tarot-yesno</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tarot-love</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tarot-work</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tarot-money</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tarot-health</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tarot-ask</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- ออราเคิล -->
+  <url><loc>https://www.mytarot.vip/pages/oracle-demon</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/oracle-cosmic</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/oracle-nature</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/oracle-dream</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/han-oracle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/hindu-oracle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/noh-oracle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.mytarot.vip/pages/love-oracle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์จีน -->
+  <url><loc>https://www.mytarot.vip/pages/chinese</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/loshu</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/purple-star</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/kuigao</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/taiwan-bird</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์เกาหลี -->
+  <url><loc>https://www.mytarot.vip/pages/saju</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/gunghap</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/samjae</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/tojung</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/taegil</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์ไทย -->
+  <url><loc>https://www.mytarot.vip/pages/thai-astro</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/thaksa</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/triwai</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/seven</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์ตะวันตก -->
+  <url><loc>https://www.mytarot.vip/pages/western</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/synastry</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/cartomancy</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/horoscope</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/zodiac</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/slot</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์อินเดีย -->
+  <url><loc>https://www.mytarot.vip/pages/vedic</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/nakshatras</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/rashi</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/pastlife</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/deity</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- ศาสตร์ร่างกาย -->
+  <url><loc>https://www.mytarot.vip/pages/face</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/foot</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/palm</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/blood-type</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/graphology</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/voice</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/mole</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- เลขศาสตร์ -->
+  <url><loc>https://www.mytarot.vip/pages/energy-code</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/numerology</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/love-code</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/pinnacle</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/destiny</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/lucky-number</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/lucky-color</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/lucky-day</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- เสี่ยงทาย -->
+  <url><loc>https://www.mytarot.vip/pages/omikuji</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/guanyin</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/rune</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/fortune-cookie</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/iching</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/dream</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- โหราศาสตร์อื่นๆ -->
+  <url><loc>https://www.mytarot.vip/pages/mahabote</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/kyusei</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/biorhythm</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/kabbalah</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/horary</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/medical-astrology</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/soul-aura</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.mytarot.vip/pages/challenge</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.mytarot.vip/pages/tree</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/pinnacle</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/seven</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/taiwan-bird</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/zodiac</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/mole</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/loshu</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/kuigao</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/love-oracle</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+
+  <!-- หน้าทั่วไป -->
+  <url><loc>https://www.mytarot.vip/pages/login</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://www.mytarot.vip/pages/refund</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+
 </urlset>
