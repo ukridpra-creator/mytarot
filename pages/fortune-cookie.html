@@ -232,8 +232,39 @@ const FORTUNES = [
 let clicks = 3;
 let isLocked = false;
 
+const _ac = new (window.AudioContext || window.webkitAudioContext)();
+
+function playReveal() {
+  [330, 440, 550, 660, 880].forEach((freq, i) => {
+    const osc = _ac.createOscillator();
+    const gain = _ac.createGain();
+    osc.connect(gain); gain.connect(_ac.destination);
+    osc.type = 'sine'; osc.frequency.value = freq;
+    const t = _ac.currentTime + i * 0.1;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.12, t + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+    osc.start(t); osc.stop(t + 0.5);
+  });
+}
+
 window.hitCookie = function() {
   if(isLocked) return;
+
+  // ─── SOUND: crack ───
+  _ac.resume();
+  const buf = _ac.createBuffer(1, _ac.sampleRate * 0.06, _ac.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.max(0,1-i/data.length*3);
+  const src = _ac.createBufferSource();
+  const gain = _ac.createGain();
+  const filter = _ac.createBiquadFilter();
+  filter.type = 'highpass'; filter.frequency.value = 1200;
+  src.buffer = buf;
+  src.connect(filter); filter.connect(gain); gain.connect(_ac.destination);
+  gain.gain.setValueAtTime(0.6, _ac.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime+0.06);
+  src.start(); src.stop(_ac.currentTime+0.06);
   const wrap = document.getElementById('cookieWrap');
   const hpBar = document.getElementById('hpBar');
   const hint = document.getElementById('tapHint');
@@ -275,7 +306,7 @@ function showFortune() {
   const rand = FORTUNES[Math.floor(Math.random()*FORTUNES.length)];
   const paper = document.getElementById('fortunePaper');
   paper.style.display = 'block';
-  setTimeout(()=>paper.classList.add('show'), 50);
+  setTimeout(()=>{ paper.classList.add('show'); playReveal(); }, 50);
 
   document.getElementById('luckyNum').textContent = rand.num;
   document.getElementById('luckyColor').textContent = rand.color;
