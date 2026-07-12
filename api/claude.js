@@ -48,6 +48,7 @@ const SERVICE_COSTS = {
   "destiny":        49,
   "destiny-2":       0,
   "foot-reading":   30,
+  "hindu-oracle":   30,
   "deity":          20,
   "love-code":      10,
   "saju":           59,
