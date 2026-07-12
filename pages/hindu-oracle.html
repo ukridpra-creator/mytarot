@@ -1,211 +1,139 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ฮินดูออราเคิล Hindu Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ฮินดูออราเคิล รับสารจากเทพเจ้าฮินดู พรหม วิษณุ ศิวะ และเทพอื่นๆ ค่ะ">
-<meta name="keywords" content="ไพ่ฮินดู,hindu oracle,ออราเคิลเทพฮินดู,ดูดวงเทพเจ้า">
-<meta property="og:title" content="ไพ่ฮินดูออราเคิล Hindu Oracle — My Tarot">
-<meta property="og:description" content="ดูดวงไพ่ฮินดูออราเคิล รับสารจากเทพเจ้าฮินดู พรหม วิษณุ ศิวะ และเทพอื่นๆ ค่ะ">
-<meta property="og:url" content="https://www.mytarot.vip/pages/hindu-oracle">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hindu Oracle — ออราเคิลฮินดู | My Tarot</title>
+<meta name="description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
+<meta property="og:title" content="Hindu Oracle — ออราเคิลฮินดู | My Tarot">
+<meta property="og:description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
 <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:url" content="https://www.mytarot.vip/pages/hindu-oracle">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/checkin.js"></script>
-  <style>
-    body { padding-bottom: 60px; }
-    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
-    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(251,146,60,0.2); border: 1px solid rgba(251,146,60,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fb923c; font-size: 16px; text-decoration: none; flex-shrink: 0; }
-    .page-title { font-size: 18px; font-weight: 700; color: white; }
-    .page-content { padding: 20px 20px 40px; }
-    .hero { text-align: center; padding: 12px 0 20px; }
-    .mascot-img { width: 120px; height: 120px; object-fit: contain; margin-bottom: 8px; }
-    .hero-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
-    .hero-desc { font-size: 13px; color: var(--dim); line-height: 1.7; }
-    .slots-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
-    .slot { width: 78px; aspect-ratio: 2/3; background: rgba(251,146,60,0.06); border: 2px dashed rgba(251,146,60,0.3); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s; position: relative; overflow: hidden; }
-    .slot.filled { border: 2px solid rgba(251,146,60,0.6); box-shadow: 0 0 12px rgba(251,146,60,0.2); }
-    .slot-num { font-size: 18px; }
-    .slot-label { font-size: 9px; color: #fb923c; margin-top: 2px; text-align: center; }
-    .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .slot-overlay { position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 4px; }
-    .slot-pos { font-size: 8px; color: #fbbf24; text-align: center; font-weight: 700; }
-    .slots-hint { text-align: center; font-size: 11px; color: var(--dim); margin-bottom: 20px; }
-    .deck-section { margin-bottom: 20px; }
-    .deck-label { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; padding: 6px 14px; border-radius: 20px; display: inline-block; }
-    .deck-label.deity { background: rgba(251,146,60,0.15); color: #fb923c; border: 1px solid rgba(251,146,60,0.3); }
-    .deck-label.weapon { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
-    .deck-label.vahana { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
-    .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
-    .cards-scroll::-webkit-scrollbar { height: 3px; }
-    .cards-scroll::-webkit-scrollbar-thumb { background: rgba(251,146,60,0.4); border-radius: 2px; }
-    .card-item { width: 52px; aspect-ratio: 2/3; flex-shrink: 0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; position: relative; }
-    .card-item:hover { transform: translateY(-4px); border-color: #fb923c; }
-    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-    .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .card-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; background: linear-gradient(135deg, #3d1a00, #7c3a00, #c2410c); border-radius: 6px; text-align: center; }
-    .card-placeholder-emoji { font-size: 18px; margin-bottom: 4px; }
-    .card-placeholder-name { font-size: 7px; color: #fbbf24; font-weight: 700; line-height: 1.2; word-break: break-all; }
-    .scroll-hint { text-align: center; font-size: 11px; color: var(--dim); margin-top: 4px; margin-bottom: 12px; }
-    .combo-banner { display: none; text-align: center; padding: 10px 16px; border-radius: 12px; margin-bottom: 16px; font-size: 13px; font-weight: 700; }
-    .combo-banner.match1 { display: block; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.4); color: #fbbf24; }
-    .combo-banner.match2 { display: block; background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.5); color: #fb923c; animation: glowPulse 1.5s ease-in-out infinite; }
-    @keyframes glowPulse { 0%,100%{box-shadow:0 0 8px rgba(251,146,60,0.3)}50%{box-shadow:0 0 20px rgba(251,146,60,0.7)} }
-    .coin-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
-    .coin-text { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
-    .coin-hint { font-size: 11px; color: var(--dim); }
-    .btn-read { width: 100%; background: linear-gradient(135deg, #c2410c, #fb923c, #fbbf24); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
-    .btn-read:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
-    .reveal-overlay.show { display: flex; }
-    .reveal-title { font-size: 16px; color: #fbbf24; font-weight: 700; margin-bottom: 8px; text-align: center; }
-    .reveal-subtitle { font-size: 12px; color: var(--dim); margin-bottom: 20px; text-align: center; }
-    .reveal-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 8px; }
-    .reveal-card { text-align: center; }
-    .reveal-card-wrap { width: 86px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; margin-bottom: 8px; border: 2px solid rgba(251,146,60,0.4); perspective: 600px; }
-    .reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; }
-    .reveal-card-inner.flipped { transform: rotateY(180deg); }
-    .reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
-    .reveal-card-back { transform: rotateY(0deg); }
-    .reveal-card-front { transform: rotateY(180deg); }
-    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
-    .reveal-card-name { font-size: 10px; color: #fbbf24; font-weight: 700; }
-    .reveal-card-deck { font-size: 9px; color: var(--dim); margin-top: 1px; }
-    .btn-accept { background: linear-gradient(135deg, #c2410c, #fb923c); border: none; border-radius: 16px; padding: 14px 32px; color: white; font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .btn-accept.show { opacity: 1; pointer-events: all; }
-    .result-box { background: rgba(251,146,60,0.04); border: 1px solid rgba(251,146,60,0.2); border-radius: 20px; padding: 20px; display: none; }
-    .result-box.show { display: block; }
-    .result-cards-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
-    .result-card { text-align: center; }
-    .result-card-img { width: 58px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; margin-bottom: 4px; border: 1px solid rgba(251,146,60,0.4); }
-    .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .result-card-name { font-size: 9px; color: #fbbf24; font-weight: 700; line-height: 1.2; }
-    .result-card-deck { font-size: 8px; color: var(--dim); }
-    .result-section { border-radius: 14px; padding: 14px; margin-bottom: 12px; }
-    .result-section.deity-sec { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.2); }
-    .result-section.weapon-sec { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
-    .result-section.vahana-sec { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2); }
-    .result-section.summary-sec { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.3); }
-    .result-section-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .deity-sec .result-section-title { color: #fb923c; }
-    .weapon-sec .result-section-title { color: #fbbf24; }
-    .vahana-sec .result-section-title { color: #34d399; }
-    .summary-sec .result-section-title { color: #a78bfa; }
-    .result-section-text { font-size: 13px; line-height: 1.9; color: var(--text); word-break: break-word; }
-    .loading { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; }
-    .loading-dots { display: flex; gap: 8px; }
-    .loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: #fb923c; animation: bounce 1.2s ease-in-out infinite; }
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-10px);opacity:1} }
-    .loading-text { font-size: 14px; color: var(--dim); }
-    .login-required-overlay.show { display:flex !important; }
-  </style>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../data/oracle-hindu-data.js"></script>
+<style>
+body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%);}
+.page-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(251,146,60,0.2);background:rgba(26,5,0,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+.back-btn{width:36px;height:36px;border-radius:50%;background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.3);display:flex;align-items:center;justify-content:center;color:#fb923c;font-size:16px;text-decoration:none;flex-shrink:0;}
+.page-title-text{font-size:18px;font-weight:700;color:white;}
+.page-content{padding:20px 16px 40px;}
+.hero{text-align:center;margin-bottom:24px;}
+.hero-mascot{width:100px;height:100px;object-fit:contain;margin-bottom:12px;}
+.hero-title{font-size:22px;font-weight:800;color:white;margin-bottom:4px;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.4);}
+.coin-cost{display:inline-block;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:20px;padding:6px 16px;color:#fb923c;font-size:13px;margin-top:8px;}
+.spread-label{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.spread-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+.spread-slot{flex:1;max-width:100px;}
+.spread-slot-label{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
+.spread-card{aspect-ratio:2/3;border-radius:12px;border:2px dashed rgba(251,146,60,0.3);background:rgba(251,146,60,0.05);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all 0.2s;position:relative;}
+.spread-card.selected{border-color:#fb923c;border-style:solid;}
+.spread-card img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
+.spread-card-num{font-size:24px;color:rgba(251,146,60,0.3);}
+.deck-title{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:10px;}
+.deck-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:20px;}
+.deck-card{aspect-ratio:2/3;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.deck-card img{width:100%;height:100%;object-fit:cover;}
+.deck-card.selected{border-color:#fb923c;transform:translateY(-4px);box-shadow:0 4px 16px rgba(251,146,60,0.4);}
+.deck-card.used{opacity:0.3;pointer-events:none;}
+.btn-read{width:100%;padding:16px;border-radius:16px;background:linear-gradient(135deg,#c2410c,#fb923c);border:none;color:white;font-size:16px;font-weight:800;font-family:'Sarabun',sans-serif;cursor:pointer;margin-bottom:20px;opacity:0.4;pointer-events:none;transition:all 0.2s;}
+.btn-read.active{opacity:1;pointer-events:all;}
+.btn-read:disabled{opacity:0.4;cursor:not-allowed;}
+.result-wrap{display:none;}
+.result-wrap.show{display:block;}
+.result-cards{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
+.result-card{flex:1;max-width:100px;text-align:center;}
+.result-card img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px;border:2px solid rgba(251,146,60,0.4);}
+.result-card-name{font-size:10px;color:#fb923c;margin-top:4px;font-weight:700;}
+.result-card-pos{font-size:9px;color:rgba(255,255,255,0.3);}
+.result-section{border-radius:14px;padding:14px 16px;margin-bottom:10px;border-left:3px solid;}
+.sec-body{background:rgba(251,146,60,0.06);border-color:#fb923c;}
+.sec-mind{background:rgba(168,85,247,0.06);border-color:#a855f7;}
+.sec-soul{background:rgba(236,72,153,0.06);border-color:#ec4899;}
+.sec-summary{background:rgba(212,175,55,0.06);border-color:#d4af37;}
+.sec-special{background:rgba(16,185,129,0.06);border-color:#10b981;}
+.result-section h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.sec-body h3{color:#fb923c;}
+.sec-mind h3{color:#a855f7;}
+.sec-soul h3{color:#ec4899;}
+.sec-summary h3{color:#d4af37;}
+.sec-special h3{color:#10b981;}
+.result-section p{font-size:14px;line-height:2;color:rgba(255,255,255,0.8);}
+.loading-wrap{text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-size:13px;}
+.loading-dots span{animation:blink 1.4s infinite;display:inline-block;}
+.loading-dots span:nth-child(2){animation-delay:0.2s;}
+.loading-dots span:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+.btn-reset{width:100%;padding:14px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;}
+.special-badge{text-align:center;padding:8px;margin-bottom:12px;border-radius:12px;font-size:13px;font-weight:700;}
+.badge-special{background:rgba(212,175,55,0.15);color:#d4af37;border:1px solid rgba(212,175,55,0.3);}
+.badge-supreme{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);}
+</style>
 </head>
 <body>
-
-<!-- REVEAL -->
-<div class="reveal-overlay" id="revealOverlay">
-  <div class="reveal-title">🪔 ไพ่เทพของคุณ...</div>
-  <div class="reveal-subtitle">เทพกำลังส่งสารมาหาคุณ</div>
-  <div id="revealRow" class="reveal-row"></div>
-  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🙏 รับพรจากเทพ</button>
-</div>
-
-<!-- HEADER -->
 <div class="page-header">
   <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title">🪔 Hindu Oracle</div>
+  <div class="page-title-text">🪔 Hindu Oracle</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
-    <div class="user-btn" onclick="toggleUserMenu()">
-      <div class="avatar" id="avatarEl">👤</div>
-    </div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
   </div>
 </div>
-
-<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
-    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อดูดวงค่ะ</div>
     <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
-    <div class="menu-user-info">
-      <div class="menu-avatar">👤</div>
-      <div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div>
-    </div>
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
     <div class="menu-divider"></div>
-    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
     <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
   </div>
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
-
-<!-- LOGIN MODAL -->
-<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;">
-  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(251,146,60,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
-    <div style="font-size:48px;margin-bottom:12px;">🪔</div>
-    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
-    </button>
-    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')" style="position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(251,146,60,0.25);border-radius:24px;padding:32px 20px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:44px;margin-bottom:12px;">🪔</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:6px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:20px;line-height:1.6;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวงค่ะ</div>
+    <button id="loginGoogleBtn" style="width:100%;padding:14px;border-radius:14px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;"><img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google</button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;font-family:inherit;cursor:pointer;">ยกเลิก</button>
   </div>
 </div>
-
 <div class="page-content">
   <div class="hero">
-    <img src="../images/mascot-hindu.png" class="mascot-img" alt="mascot" onerror="this.style.display='none'">
+    <img src="../images/mascot-hindu.png" class="hero-mascot" onerror="this.style.display='none'">
     <div class="hero-title">🪔 Hindu Oracle</div>
-    <div class="hero-desc">เลือกกองละ 1 ใบ • เทพ + อาวุธ + พาหนะ<br>ถ้าได้ครบเซ็ตเดียวกัน พลังทวีคูณ ✨</div>
+    <div class="hero-sub">รับพลังจากเทพเจ้าฮินดูค่ะ</div>
+    <div class="coin-cost">🪙 30 เหรียญ</div>
   </div>
-
-  <div style="margin-bottom:8px">
-    <div class="slots-row">
-      <div class="slot" id="slot0"><div class="slot-num">🙏</div><div class="slot-label">เทพ</div></div>
-      <div class="slot" id="slot1"><div class="slot-num">⚔️</div><div class="slot-label">อาวุธ</div></div>
-      <div class="slot" id="slot2"><div class="slot-num">🦚</div><div class="slot-label">พาหนะ</div></div>
+  <div id="selectionWrap">
+    <div class="spread-label">✦ ตำแหน่งไพ่ที่เลือกค่ะ</div>
+    <div class="spread-row">
+      <div class="spread-slot"><div class="spread-slot-label">🧘 กาย</div><div class="spread-card" id="slot0"><div class="spread-card-num">1</div></div></div>
+      <div class="spread-slot"><div class="spread-slot-label">💜 ใจ</div><div class="spread-card" id="slot1"><div class="spread-card-num">2</div></div></div>
+      <div class="spread-slot"><div class="spread-slot-label">✨ จิตวิญญาณ</div><div class="spread-card" id="slot2"><div class="spread-card-num">3</div></div></div>
     </div>
+    <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
+    <div class="deck-title">✦ เลือกไพ่ 3 ใบจากกองนี้ค่ะ</div>
+    <div class="deck-grid" id="deckGrid"></div>
   </div>
-  <div class="slots-hint">เลือกกองละ 1 ใบ • กดไพ่ใน slot เพื่อเอาออก</div>
-
-  <div class="combo-banner" id="comboBanner"></div>
-
-  <div class="deck-section">
-    <span class="deck-label deity">🙏 เทพ — พลังงานที่ส่งมาหาคุณ</span>
-    <div class="cards-scroll" id="deityScroll"></div>
-    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
-  </div>
-  <div class="deck-section">
-    <span class="deck-label weapon">⚔️ อาวุธ — เครื่องมือในมือคุณ</span>
-    <div class="cards-scroll" id="weaponScroll"></div>
-    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
-  </div>
-  <div class="deck-section">
-    <span class="deck-label vahana">🦚 พาหนะ — สิ่งที่พาคุณไปถึงเป้าหมาย</span>
-    <div class="cards-scroll" id="vahanaScroll"></div>
-    <div class="scroll-hint">← เลื่อนดูไพ่ทั้งหมด →</div>
-  </div>
-
-  <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อครั้ง</div>
-    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
-  </div>
-
-  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🪔 ขอพรจากเทพ</button>
-
-  <div class="result-box" id="resultBox">
-    <div class="result-cards-row" id="resultCardsRow"></div>
-    <div id="resultSections"></div>
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-cards" id="resultCards"></div>
+    <div id="specialBadge"></div>
+    <div class="result-section sec-body"><h3>🧘 กาย</h3><p id="secBody"></p></div>
+    <div class="result-section sec-mind"><h3>💜 ใจ</h3><p id="secMind"></p></div>
+    <div class="result-section sec-soul"><h3>✨ จิตวิญญาณ</h3><p id="secSoul"></p></div>
+    <div class="result-section sec-summary"><h3>🌟 สรุป</h3><p id="secSummary"></p></div>
+    <div class="result-section sec-special" id="secSpecialWrap" style="display:none;"><h3 id="secSpecialTitle"></h3><p id="secSpecial"></p></div>
+    <button class="btn-reset" onclick="resetAll()">🔄 เริ่มใหม่อีกครั้ง</button>
   </div>
 </div>
-
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -213,185 +141,206 @@
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
-
-<script src="../data/oracle-hindu-data.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+import { getFirestore, doc, getDoc, addDoc, collection, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',
-  authDomain:'my-tarot67.firebaseapp.com', projectId:'my-tarot67',
-  storageBucket:'my-tarot67.firebasestorage.app',
-  messagingSenderId:'33661162829', appId:'1:33661162829:web:9e06a7cd5a00d613785304'
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(() => {
-  setPersistence(auth, browserLocalPersistence);
-});
-const db = getFirestore(app);
-let currentUser = null;
+const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+let currentUser=null;
 
-window.updateCoinUI = function(c) {
-  document.getElementById('coinCount').textContent = c;
-  document.getElementById('coinDisplay').textContent = c;
-};
-function setAvatarDisplay(a) {
-  var el = document.getElementById('avatarEl');
-  if (!el) return;
-  if (a && a.includes('.png')) { el.innerHTML = '<img src="' + a + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; }
-  else { el.textContent = a || '👤'; }
-}
-window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
-window.loginNow = function() { var m = document.getElementById('loginRequiredOverlay'); if(m) m.classList.add('show'); };
-window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+document.getElementById('loginGoogleBtn').addEventListener('click',function(){window.__ciGoogleSignIn();});
 
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  if (user) {
-    var snap = await getDoc(doc(db, 'users', user.uid));
-    var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0);
-    setAvatarDisplay(data.avatar || '');
-    document.getElementById('guestView').style.display = 'none';
-    document.getElementById('loggedView').style.display = 'block';
-    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
-    document.getElementById('menuEmail').textContent = user.email;
-    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
-  } else {
-    updateCoinUI('—'); setAvatarDisplay('');
-  }
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);
+    setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
 });
 
-const BACK = '../images/bhindu.png';
-const IMG_DEITY  = (id) => `../images/hindu/${id}.png`;
-const IMG_WEAPON = (id) => `../images/hindu/${id}.png`;
-const IMG_VAHANA = (id) => `../images/hindu/${id}.png`;
+const BACK='../images/bhindu.png';
+const IMG=(id)=>`../images/hindu/${id}.png`;
+const MAX=3;
+const POS_LABELS=['🧘 กาย','💜 ใจ','✨ จิตวิญญาณ'];
 
-let selectedDeity = null, selectedWeapon = null, selectedVahana = null;
+const DECK=[
+  ...HINDU_ORACLE.deities.map(c=>({...c,type:'deity'})),
+  ...HINDU_ORACLE.weapons.map(c=>({...c,type:'weapon'})),
+  ...HINDU_ORACLE.vahanas.map(c=>({...c,type:'vahana'})),
+];
 
-function renderDeck(cards, scrollId, deckKey, imgFn) {
-  const scroll = document.getElementById(scrollId);
-  scroll.innerHTML = cards.map((card, i) => {
-    const isSelected = (deckKey==='deity'&&selectedDeity?.id===card.id)||(deckKey==='weapon'&&selectedWeapon?.id===card.id)||(deckKey==='vahana'&&selectedVahana?.id===card.id);
-    const emoji = deckKey==='deity'?'🙏':deckKey==='weapon'?'⚔️':'🦚';
-    return `<div class="card-item ${isSelected?'selected':''}" onclick="selectCard('${deckKey}',${i})">
-      <div class="card-placeholder"><div class="card-placeholder-emoji">${emoji}</div><div class="card-placeholder-name">${card.name}</div></div>
-    </div>`;
-  }).join('');
-}
-function renderAllDecks() {
-  renderDeck(HINDU_ORACLE.deities,'deityScroll','deity',IMG_DEITY);
-  renderDeck(HINDU_ORACLE.weapons,'weaponScroll','weapon',IMG_WEAPON);
-  renderDeck(HINDU_ORACLE.vahanas,'vahanaScroll','vahana',IMG_VAHANA);
-}
+function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5);}
+let pool=shuffle(DECK);
+let selected=[];
 
-window.selectCard = function(deck, idx) {
-  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
-  if(deck==='deity') selectedDeity=HINDU_ORACLE.deities[idx];
-  if(deck==='weapon') selectedWeapon=HINDU_ORACLE.weapons[idx];
-  if(deck==='vahana') selectedVahana=HINDU_ORACLE.vahanas[idx];
-  updateSlots(); renderAllDecks(); checkCombo();
-  document.getElementById('readBtn').disabled=!(selectedDeity&&selectedWeapon&&selectedVahana);
-};
-
-function updateSlots() {
-  const slotData = [
-    {el:document.getElementById('slot0'),card:selectedDeity,label:'เทพ',emoji:'🙏',imgFn:IMG_DEITY},
-    {el:document.getElementById('slot1'),card:selectedWeapon,label:'อาวุธ',emoji:'⚔️',imgFn:IMG_WEAPON},
-    {el:document.getElementById('slot2'),card:selectedVahana,label:'พาหนะ',emoji:'🦚',imgFn:IMG_VAHANA},
-  ];
-  slotData.forEach(({el,card,label,emoji,imgFn})=>{
-    if(card){el.className='slot filled';el.innerHTML=`<img class="slot-img" src="${imgFn(card.id)}" onerror="this.src='${BACK}'"><div class="slot-overlay"><div class="slot-pos">${card.name}</div></div>`;}
-    else{el.className='slot';el.innerHTML=`<div class="slot-num">${emoji}</div><div class="slot-label">${label}</div>`;}
-  });
-}
-
-function checkCombo() {
-  const banner=document.getElementById('comboBanner');
-  if(!selectedDeity||!selectedWeapon||!selectedVahana){banner.className='combo-banner';return;}
-  const matchW=selectedWeapon.id===selectedDeity.weapon_id;
-  const matchV=selectedVahana.id===selectedDeity.vahana_id;
-  const count=(matchW?1:0)+(matchV?1:0);
-  if(count===2){banner.className='combo-banner match2';banner.textContent=`🌟🌟 Perfect Combo! พลังของ${selectedDeity.name}สมบูรณ์แบบ!`;}
-  else if(count===1){const what=matchW?`อาวุธ${selectedWeapon.name}`:`พาหนะ${selectedVahana.name}`;banner.className='combo-banner match1';banner.textContent=`✨ ${what} ตรงกับเทพ! พลังพิเศษเพิ่มขึ้น`;}
-  else{banner.className='combo-banner';}
-}
-
-window.startReading = function() {
-  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
-  if(!selectedDeity||!selectedWeapon||!selectedVahana)return;
-  document.getElementById('readBtn').disabled=true;
-  const cards=[{card:selectedDeity,label:'เทพ',imgFn:IMG_DEITY},{card:selectedWeapon,label:'อาวุธ',imgFn:IMG_WEAPON},{card:selectedVahana,label:'พาหนะ',imgFn:IMG_VAHANA}];
-  document.getElementById('revealRow').innerHTML=cards.map(({card,label,imgFn},i)=>`
-    <div class="reveal-card">
-      <div class="reveal-card-wrap"><div class="reveal-card-inner" id="revealInner${i}">
-        <div class="reveal-card-back"><img src="${BACK}"></div>
-        <div class="reveal-card-front"><img src="${imgFn(card.id)}" onerror="this.src='${BACK}'"></div>
-      </div></div>
-      <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.name}</div>
-      <div class="reveal-card-deck">${label}</div>
+function renderDeck(){
+  document.getElementById('deckGrid').innerHTML=pool.map((card,i)=>`
+    <div class="deck-card" id="dc_${i}" onclick="pickCard(${i})">
+      <img src="${BACK}" alt="ไพ่" loading="lazy">
     </div>`).join('');
-  document.getElementById('btnAccept').className='btn-accept';
-  document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=3){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    setTimeout(()=>{document.getElementById(`revealInner${flipped}`).classList.add('flipped');document.getElementById(`revealName${flipped}`).style.opacity='1';flipped++;flipNext();},600);
-  };
-  setTimeout(flipNext,300);
+}
+
+window.pickCard=function(i){
+  if(selected.length>=MAX)return;
+  if(selected.find(s=>s.idx===i))return;
+  selected.push({idx:i,card:pool[i]});
+  document.getElementById('dc_'+i).classList.add('selected','used');
+  const slotIdx=selected.length-1;
+  const slot=document.getElementById('slot'+slotIdx);
+  slot.classList.add('selected');
+  slot.innerHTML=`<img src="${IMG(pool[i].id)}" onerror="this.src='${BACK}'" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+  if(selected.length===MAX) document.getElementById('readBtn').classList.add('active');
 };
 
-window.acceptReading = async function() {
-  document.getElementById('revealOverlay').classList.remove('show');
+renderDeck();
+
+function checkSpecial(cards){
+  const deities=cards.filter(c=>c.card.type==='deity');
+  const weapons=cards.filter(c=>c.card.type==='weapon');
+  const vahanas=cards.filter(c=>c.card.type==='vahana');
+  for(const d of deities){
+    const deity=d.card;
+    const hasWeapon=weapons.find(w=>w.card.id===deity.weapon_id);
+    const hasVahana=vahanas.find(v=>v.card.id===deity.vahana_id);
+    if(hasWeapon&&hasVahana)return{level:'supreme',deity,weapon:hasWeapon.card,vahana:hasVahana.card};
+    if(hasWeapon)return{level:'special',deity,weapon:hasWeapon.card};
+    if(hasVahana)return{level:'special',deity,vahana:hasVahana.card};
+  }
+  return{level:'normal'};
+}
+
+window.startReading=async function(){
   if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
-  const matchW=selectedWeapon.id===selectedDeity.weapon_id;
-  const matchV=selectedVahana.id===selectedDeity.vahana_id;
-  const comboCount=(matchW?1:0)+(matchV?1:0);
-  const comboNote=comboCount===2?'ไพ่ที่ได้เป็น Perfect Combo ครบเซ็ต จงเน้นพลังพิเศษทวีคูณ':comboCount===1?'ไพ่ตรงกัน 1 ใบ มีพลังพิเศษเพิ่ม':'';
-  const resultBox=document.getElementById('resultBox');
-  resultBox.classList.add('show');
-  document.getElementById('resultCardsRow').innerHTML=[{card:selectedDeity,label:'เทพ',imgFn:IMG_DEITY},{card:selectedWeapon,label:'อาวุธ',imgFn:IMG_WEAPON},{card:selectedVahana,label:'พาหนะ',imgFn:IMG_VAHANA}].map(({card,label,imgFn})=>`
-    <div class="result-card"><div class="result-card-img"><img src="${imgFn(card.id)}" onerror="this.src='${BACK}'"></div><div class="result-card-name">${card.name}</div><div class="result-card-deck">${label}</div></div>`).join('');
-  const sections=document.getElementById('resultSections');
-  sections.innerHTML=`<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">เทพกำลังส่งสาร...</div></div>`;
-  resultBox.scrollIntoView({behavior:'smooth'});
-  const cardInfo=`เทพ: ${selectedDeity.name} (${selectedDeity.meaning}) | อาวุธ: ${selectedWeapon.name} (${selectedWeapon.meaning}) | พาหนะ: ${selectedVahana.name} (${selectedVahana.meaning})`;
+  if(selected.length<MAX)return;
+  document.getElementById('readBtn').disabled=true;
+
+  const cards=selected.map(s=>s.card);
+  const special=checkSpecial(selected);
+
+  document.getElementById('resultCards').innerHTML=cards.map((c,i)=>`
+    <div class="result-card">
+      <img src="${IMG(c.id)}" onerror="this.src='${BACK}'">
+      <div class="result-card-name">${c.name}</div>
+      <div class="result-card-pos">${POS_LABELS[i]}</div>
+    </div>`).join('');
+
+  if(special.level==='supreme'){
+    document.getElementById('specialBadge').innerHTML=`<div class="special-badge badge-supreme">🌈 พลังเต็มดวง! ได้รับพรจาก${special.deity.name}อย่างสมบูรณ์ค่ะ</div>`;
+  } else if(special.level==='special'){
+    const pair=special.weapon?`${special.deity.name} + ${special.weapon.name}`:`${special.deity.name} + ${special.vahana.name}`;
+    document.getElementById('specialBadge').innerHTML=`<div class="special-badge badge-special">⚡ พลังสอดคล้อง! ${pair} เสริมพลังกันค่ะ</div>`;
+  }
+
+  ['secBody','secMind','secSoul','secSummary'].forEach(id=>{
+    document.getElementById(id).innerHTML='<div class="loading-wrap">พลังกำลังส่งสาร <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  });
+  document.getElementById('selectionWrap').style.display='none';
+  document.getElementById('resultWrap').classList.add('show');
+
+  const typeName=(t)=>t==='deity'?'เทพ':t==='weapon'?'อาวุธ':'พาหนะ';
+  const specialNote=special.level==='supreme'
+    ?`\n\n🌈 พิเศษมาก: ผู้ถามได้รับ${special.deity.name} + อาวุธ${special.weapon?.name||''} + พาหนะ${special.vahana?.name||''} ครบองค์! ในส่วนสรุปให้บอกว่านี่คือ "พลังเต็มดวง"ค่ะ`
+    :special.level==='special'
+    ?`\n\n⚡ พิเศษ: ผู้ถามได้${special.deity.name}คู่กับ${special.weapon?'อาวุธ'+special.weapon.name:'พาหนะ'+special.vahana?.name} ในส่วนสรุปให้บอกว่านี่คือ "พลังสอดคล้อง"ค่ะ`
+    :'';
+
+  const prompt=`คุณคือพริปตา ผู้ช่วย Hindu Oracle แห่ง mytarot.vip ค่ะ
+
+ผู้ถามได้รับไพ่ 3 ใบค่ะ:
+🧘 กาย: ${cards[0].name} (${typeName(cards[0].type)}) — ${cards[0].meaning}
+💜 ใจ: ${cards[1].name} (${typeName(cards[1].type)}) — ${cards[1].meaning}
+✨ จิตวิญญาณ: ${cards[2].name} (${typeName(cards[2].type)}) — ${cards[2].meaning}${specialNote}
+
+ทำนายเป็นภาษาไทย ลงท้ายด้วยค่ะ ในรูปแบบ XML:
+<BODY>ทำนายด้านกาย 2-3 ประโยค</BODY>
+<MIND>ทำนายด้านใจ 2-3 ประโยค</MIND>
+<SOUL>ทำนายด้านจิตวิญญาณ 2-3 ประโยค</SOUL>
+<SUMMARY>สรุปภาพรวม 2-3 ประโยค${special.level!=='normal'?' พร้อมระบุความพิเศษ':''}</SUMMARY>${special.level!=='normal'?'\n<SPECIAL>อธิบายความพิเศษ 1-2 ประโยค</SPECIAL>':''}`;
+
   try{
     const idToken=await currentUser.getIdToken();
-    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'hindu-oracle',model:'claude-sonnet-4-6',max_tokens:1500,
-        system:`คุณคือนักพยากรณ์เทพฮินดู ตอบเป็นภาษาไทย Gen Z เรียกผู้ถามว่า "คุณพี่" ตอบในรูปแบบ JSON เท่านั้น ห้ามมี markdown:
-{"deity":"ความหมายของเทพ 2-3 ประโยค","weapon":"ความหมายของอาวุธ 2-3 ประโยค","vahana":"ความหมายของพาหนะ 2-3 ประโยค","summary":"คำทำนายรวม 4-6 ประโยค ${comboNote}"}`,
-        messages:[{role:'user',content:cardInfo}]})});
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'hindu-oracle',model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+    });
     const nb=res.headers.get('X-New-Coin-Balance');
     if(nb!=null)updateCoinUI(parseInt(nb));
-    if(!res.ok){const err=await res.json().catch(()=>({}));if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');else alert('เกิดข้อผิดพลาดค่ะ');return;}
-    const data=await res.json();
-    const raw=data.content?.[0]?.text||'';
-    let parsed;
-    try{parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch{parsed={deity:'',weapon:'',vahana:'',summary:raw};}
-    sections.textContent='';
-    sections.innerHTML=`
-      <div class="result-section deity-sec"><div class="result-section-title">🙏 ${selectedDeity.name}</div><div class="result-section-text">${parsed.deity}</div></div>
-      <div class="result-section weapon-sec"><div class="result-section-title">⚔️ ${selectedWeapon.name}</div><div class="result-section-text">${parsed.weapon}</div></div>
-      <div class="result-section vahana-sec"><div class="result-section-title">🦚 ${selectedVahana.name}</div><div class="result-section-text">${parsed.vahana}</div></div>
-      <div class="result-section summary-sec"><div class="result-section-title">✨ คำทำนายรวม${comboCount>0?(comboCount===2?' 🌟🌟':' ✨'):''}</div><div class="result-section-text">${parsed.summary}</div></div>`;
-    await addDoc(collection(db,'users',currentUser.uid,'readings'),{type:'hindu-oracle',cards:{deity:selectedDeity.name,weapon:selectedWeapon.name,vahana:selectedVahana.name},comboCount,result:parsed,createdAt:serverTimestamp()});
-  }catch(e){sections.innerHTML=`<div class="result-section deity-sec"><div class="result-section-text">เกิดข้อผิดพลาดค่ะ</div></div>`;}
+    if(!res.ok){['secBody','secMind','secSoul','secSummary'].forEach(id=>{document.getElementById(id).textContent='เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ';});return;}
+
+    const reader=res.body.getReader();
+    const decoder=new TextDecoder();
+    let fullText='';
+    while(true){
+      const{done,value}=await reader.read();
+      if(done)break;
+      fullText+=decoder.decode(value,{stream:true});
+      parseAndRender(fullText,false,special.level);
+    }
+    parseAndRender(fullText,true,special.level);
+
+    if(currentUser){
+      try{
+        await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+          type:'Hindu Oracle',result:cards.map(c=>c.name).join(' + '),special:special.level,createdAt:serverTimestamp()
+        });
+      }catch(e){console.error(e);}
+    }
+  }catch(e){
+    console.error(e);
+    ['secBody','secMind','secSoul','secSummary'].forEach(id=>{document.getElementById(id).textContent='เกิดข้อผิดพลาดค่ะ';});
+  }
 };
 
-document.addEventListener('DOMContentLoaded',()=>{
-  renderAllDecks();
-  ['deityScroll','weaponScroll','vahanaScroll'].forEach(id=>{
-    const el=document.getElementById(id);
-    setTimeout(()=>{el.scrollTo({left:100,behavior:'smooth'});setTimeout(()=>el.scrollTo({left:0,behavior:'smooth'}),600);},500);
+function parseAndRender(text,final,specialLevel){
+  const get=(tag)=>{const m=text.match(new RegExp('<'+tag+'>([\s\S]*?)'+(final?'</'+tag+'>':'(?:</'+tag+'>|$)')));return m?m[1].trim():'';};
+  const body=get('BODY'),mind=get('MIND'),soul=get('SOUL'),summary=get('SUMMARY'),sp=get('SPECIAL');
+  if(body)document.getElementById('secBody').innerHTML=body;
+  if(mind)document.getElementById('secMind').innerHTML=mind;
+  if(soul)document.getElementById('secSoul').innerHTML=soul;
+  if(summary)document.getElementById('secSummary').innerHTML=summary;
+  if(sp&&specialLevel!=='normal'){
+    document.getElementById('secSpecialWrap').style.display='block';
+    document.getElementById('secSpecialTitle').textContent=specialLevel==='supreme'?'🌈 พลังเต็มดวงค่ะ':'⚡ พลังสอดคล้องค่ะ';
+    document.getElementById('secSpecial').innerHTML=sp;
+  }
+}
+
+window.resetAll=function(){
+  selected=[];pool=shuffle(DECK);
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('selectionWrap').style.display='block';
+  const btn=document.getElementById('readBtn');
+  btn.classList.remove('active');btn.disabled=false;
+  document.getElementById('specialBadge').innerHTML='';
+  document.getElementById('secSpecialWrap').style.display='none';
+  ['slot0','slot1','slot2'].forEach((id,i)=>{
+    const s=document.getElementById(id);
+    s.classList.remove('selected');
+    s.innerHTML='<div class="spread-card-num">'+(i+1)+'</div>';
   });
-});
+  renderDeck();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 </script>
 </body>
 </html>
