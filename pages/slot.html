@@ -269,6 +269,48 @@ function calcScores(dateStr) {
   return { scores, planetInfo };
 }
 
+// ─── SOUND ───
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTick() {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.frequency.setValueAtTime(300 + Math.random() * 200, audioCtx.currentTime);
+  osc.type = 'square';
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+}
+
+function playWin() {
+  [523, 659, 784, 1047].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    const t = audioCtx.currentTime + i * 0.12;
+    gain.gain.setValueAtTime(0.2, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    osc.start(t); osc.stop(t + 0.3);
+  });
+}
+
+function playLose() {
+  [300, 250, 200].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sawtooth';
+    const t = audioCtx.currentTime + i * 0.15;
+    gain.gain.setValueAtTime(0.15, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+    osc.start(t); osc.stop(t + 0.25);
+  });
+}
+
 // ─── SET DATE ───
 const today = new Date();
 const thYear = today.getFullYear() + 543;
@@ -316,6 +358,7 @@ window.doSpin = function() {
     document.getElementById('angelName').textContent = ZODIACS[r1].name;
     document.getElementById('demonIcon').textContent = ZODIACS[r2].icon;
     document.getElementById('demonName').textContent = ZODIACS[r2].name;
+    playTick();
     count++;
     if (count >= 25) {
       clearInterval(interval);
@@ -356,6 +399,8 @@ window.doSpin = function() {
         </div>`).join('');
 
       document.getElementById('rankSection').style.display = 'block';
+      playWin();
+      setTimeout(() => playLose(), 600);
 
       btn.textContent = '✅ ดูแล้ววันนี้ค่ะ!';
       hasSpun = true;
