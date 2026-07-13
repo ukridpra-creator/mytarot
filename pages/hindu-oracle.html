@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <script src="../js/checkin.js"></script>
-<script src="../data/oracle-hindu-data.js"></script>
+<script src="../js/oracle-hindu-data.js"></script>
 <style>
 body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%);}
 .page-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(251,146,60,0.2);background:rgba(26,5,0,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
@@ -28,8 +28,8 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
 .coin-cost{display:inline-block;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:20px;padding:6px 16px;color:#fb923c;font-size:13px;margin-top:8px;}
 .spread-label{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:12px;}
 .spread-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.spread-slot{flex:1;max-width:64px;display:flex;flex-direction:column;}
-.spread-slot-label{text-align:center;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;min-height:28px;display:flex;align-items:center;justify-content:center;}
+.spread-slot{flex:1;max-width:64px;}
+.spread-slot-label{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
 .spread-card{aspect-ratio:2/3;border-radius:12px;border:2px dashed rgba(251,146,60,0.3);background:rgba(251,146,60,0.05);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all 0.2s;position:relative;}
 .spread-card.selected{border-color:#fb923c;border-style:solid;}
 .spread-card img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
@@ -113,15 +113,18 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
     <div class="coin-cost">🪙 30 เหรียญ</div>
   </div>
   <div id="selectionWrap">
-    <div class="spread-label">✦ ตำแหน่งไพ่ที่เลือกค่ะ</div>
-    <div class="spread-row">
-      <div class="spread-slot"><div class="spread-slot-label">🧘 กาย</div><div class="spread-card" id="slot0"><div class="spread-card-num">1</div></div></div>
-      <div class="spread-slot"><div class="spread-slot-label">💜 ใจ</div><div class="spread-card" id="slot1"><div class="spread-card-num">2</div></div></div>
-      <div class="spread-slot"><div class="spread-slot-label">✨ วิญญาณ</div><div class="spread-card" id="slot2"><div class="spread-card-num">3</div></div></div>
+    <div class="slots-section">
+      <div class="slots-title">✦ ไพ่ที่เลือก (3 ใบ) ค่ะ</div>
+      <div class="slots-row">
+        <div class="slot" id="slot0"><div class="slot-num">1</div><div class="slot-label">🧘 กาย</div></div>
+        <div class="slot" id="slot1"><div class="slot-num">2</div><div class="slot-label">💜 ใจ</div></div>
+        <div class="slot" id="slot2"><div class="slot-num">3</div><div class="slot-label">✨ วิญญาณ</div></div>
+      </div>
+      <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก • กดไพ่ใน slot เพื่อเอาออก</div>
     </div>
     <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
     <div class="deck-title">✦ เลือกไพ่ 3 ใบจากกองนี้ค่ะ</div>
-    <div class="deck-grid" id="deckGrid"></div>
+    <div class="cards-scroll" id="deckGrid"></div>
   </div>
   <div class="result-wrap" id="resultWrap">
     <div class="result-cards" id="resultCards"></div>
@@ -203,12 +206,35 @@ window.pickCard=function(i){
   if(selected.length>=MAX)return;
   if(selected.find(s=>s.idx===i))return;
   selected.push({idx:i,card:pool[i]});
-  document.getElementById('dc_'+i).classList.add('selected','used');
+  document.getElementById('dc_'+i).classList.add('used');
   const slotIdx=selected.length-1;
-  const slot=document.getElementById('slot'+slotIdx);
-  slot.classList.add('selected');
-  slot.innerHTML=`<img src="${IMG(pool[i].id)}" onerror="this.src='${BACK}'" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+  updateSlot(slotIdx);
   if(selected.length===MAX) document.getElementById('readBtn').classList.add('active');
+};
+
+function updateSlot(slotIdx){
+  const s=selected.find((_,i)=>i===slotIdx);
+  const slot=document.getElementById('slot'+slotIdx);
+  if(!slot)return;
+  if(s){
+    slot.className='slot filled';
+    slot.onclick=()=>removeCard(slotIdx);
+    slot.innerHTML=`<div class="slot-remove">✕</div><img class="slot-img" src="${IMG(s.card.id)}" onerror="this.src='${BACK}'"><div class="slot-overlay"><div class="slot-pos">${['🧘 กาย','💜 ใจ','✨ วิญญาณ'][slotIdx]}</div></div>`;
+  } else {
+    slot.className='slot';slot.onclick=null;
+    slot.innerHTML=`<div class="slot-num">${slotIdx+1}</div><div class="slot-label">${['🧘 กาย','💜 ใจ','✨ วิญญาณ'][slotIdx]}</div>`;
+  }
+}
+
+window.removeCard=function(slotIdx){
+  if(!selected[slotIdx])return;
+  const removed=selected[slotIdx];
+  // unuse deck card
+  document.getElementById('dc_'+removed.idx)?.classList.remove('used');
+  selected.splice(slotIdx,1);
+  // re-render slots
+  for(let i=slotIdx;i<MAX;i++) updateSlot(i);
+  document.getElementById('readBtn').classList.remove('active');
 };
 
 renderDeck();
@@ -333,11 +359,7 @@ window.resetAll=function(){
   btn.classList.remove('active');btn.disabled=false;
   document.getElementById('specialBadge').innerHTML='';
   document.getElementById('secSpecialWrap').style.display='none';
-  ['slot0','slot1','slot2'].forEach((id,i)=>{
-    const s=document.getElementById(id);
-    s.classList.remove('selected');
-    s.innerHTML='<div class="spread-card-num">'+(i+1)+'</div>';
-  });
+  for(let i=0;i<MAX;i++) updateSlot(i);
   renderDeck();
   window.scrollTo({top:0,behavior:'smooth'});
 };
