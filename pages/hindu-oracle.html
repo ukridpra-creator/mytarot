@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hindu Oracle — ออราเคิลฮินดู | My Tarot</title>
 <meta name="description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
+<meta name="keywords" content="ไพ่ฮินดู,hindu oracle,ไพ่เทพฮินดู,ดูดวงเทพ,oracle card">
 <meta property="og:title" content="Hindu Oracle — ออราเคิลฮินดู | My Tarot">
 <meta property="og:description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
-<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
 <meta property="og:url" content="https://www.mytarot.vip/pages/hindu-oracle">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,134 +17,228 @@
 <script src="../js/checkin.js"></script>
 <script src="../js/oracle-hindu-data.js"></script>
 <style>
-body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%);}
-.page-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(251,146,60,0.2);background:rgba(26,5,0,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
-.back-btn{width:36px;height:36px;border-radius:50%;background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.3);display:flex;align-items:center;justify-content:center;color:#fb923c;font-size:16px;text-decoration:none;flex-shrink:0;}
-.page-title-text{font-size:18px;font-weight:700;color:white;}
-.page-content{padding:20px 16px 40px;}
-.hero{text-align:center;margin-bottom:24px;}
-.hero-mascot{width:100px;height:100px;object-fit:contain;margin-bottom:12px;}
-.hero-title{font-size:22px;font-weight:800;color:white;margin-bottom:4px;}
-.hero-sub{font-size:13px;color:rgba(255,255,255,0.4);}
-.coin-cost{display:inline-block;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:20px;padding:6px 16px;color:#fb923c;font-size:13px;margin-top:8px;}
-.spread-label{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:12px;}
-.spread-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.spread-slot{flex:1;max-width:64px;}
-.spread-slot-label{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
-.spread-card{aspect-ratio:2/3;border-radius:12px;border:2px dashed rgba(251,146,60,0.3);background:rgba(251,146,60,0.05);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all 0.2s;position:relative;}
-.spread-card.selected{border-color:#fb923c;border-style:solid;}
-.spread-card img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
-.spread-card-num{font-size:24px;color:rgba(251,146,60,0.3);}
-.coin-box{background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.2);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center;}
-.coin-text{font-size:13px;color:#fb923c;margin-bottom:4px;}
-.coin-hint{font-size:11px;color:rgba(255,255,255,0.3);}
-.deck-title{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:10px;}
-.deck-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
-.deck-card{width:52px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s;flex-shrink:0;}
-.deck-card img{width:100%;height:100%;object-fit:cover;}
-.deck-card.selected{border-color:#fb923c;transform:translateY(-4px);box-shadow:0 4px 16px rgba(251,146,60,0.4);}
-.deck-card.used{opacity:0.3;pointer-events:none;}
-.btn-read{width:100%;padding:16px;border-radius:16px;background:linear-gradient(135deg,#c2410c,#fb923c);border:none;color:white;font-size:16px;font-weight:800;font-family:'Sarabun',sans-serif;cursor:pointer;margin-bottom:20px;opacity:0.4;pointer-events:none;transition:all 0.2s;}
-.btn-read.active{opacity:1;pointer-events:all;}
-.btn-read:disabled{opacity:0.4;cursor:not-allowed;}
-.result-wrap{display:none;}
-.result-wrap.show{display:block;}
-.result-cards{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.result-card{flex:1;max-width:100px;text-align:center;}
-.result-card img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px;border:2px solid rgba(251,146,60,0.4);}
-.result-card-name{font-size:10px;color:#fb923c;margin-top:4px;font-weight:700;}
-.result-card-pos{font-size:9px;color:rgba(255,255,255,0.3);}
-.result-section{border-radius:14px;padding:14px 16px;margin-bottom:10px;border-left:3px solid;}
-.sec-body{background:rgba(251,146,60,0.06);border-color:#fb923c;}
-.sec-mind{background:rgba(168,85,247,0.06);border-color:#a855f7;}
-.sec-soul{background:rgba(236,72,153,0.06);border-color:#ec4899;}
-.sec-summary{background:rgba(212,175,55,0.06);border-color:#d4af37;}
-.sec-special{background:rgba(16,185,129,0.06);border-color:#10b981;}
-.result-section h3{font-size:14px;font-weight:700;margin-bottom:8px;}
-.sec-body h3{color:#fb923c;}
-.sec-mind h3{color:#a855f7;}
-.sec-soul h3{color:#ec4899;}
-.sec-summary h3{color:#d4af37;}
-.sec-special h3{color:#10b981;}
-.result-section p{font-size:14px;line-height:2;color:rgba(255,255,255,0.8);}
-.loading-wrap{text-align:center;padding:20px;color:rgba(255,255,255,0.4);font-size:13px;}
-.loading-dots span{animation:blink 1.4s infinite;display:inline-block;}
-.loading-dots span:nth-child(2){animation-delay:0.2s;}
-.loading-dots span:nth-child(3){animation-delay:0.4s;}
-@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
-.btn-reset{width:100%;padding:14px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;margin-top:8px;}
-.special-badge{text-align:center;padding:8px;margin-bottom:12px;border-radius:12px;font-size:13px;font-weight:700;}
-.badge-special{background:rgba(212,175,55,0.15);color:#d4af37;border:1px solid rgba(212,175,55,0.3);}
-.badge-supreme{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);}
+body { padding-bottom: 80px; }
+.page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: rgba(13,8,32,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+.back-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(251,146,60,0.2); border: 1px solid rgba(251,146,60,0.3); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fb923c; font-size: 16px; text-decoration: none; flex-shrink: 0; }
+.page-title { font-size: 18px; font-weight: 700; color: white; }
+.page-content { padding: 20px 20px 40px; }
+.hero { text-align: center; padding: 12px 0 20px; }
+.hero-icon { font-size: 40px; margin-bottom: 8px; }
+.hero-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
+.hero-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
+
+/* SLOTS */
+.slots-section { margin-bottom: 20px; }
+.slots-title { font-size: 13px; color: var(--dim); text-align: center; margin-bottom: 12px; }
+.slots-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
+.slot { width: 72px; aspect-ratio: 2/3; background: rgba(251,146,60,0.06); border: 2px dashed rgba(251,146,60,0.3); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s; position: relative; overflow: hidden; }
+.slot.filled { border-style: solid; border-color: rgba(251,146,60,0.6); cursor: pointer; }
+.slot-num { font-size: 10px; color: var(--dim); }
+.slot-label { font-size: 9px; color: #fb923c; margin-top: 2px; text-align: center; padding: 0 2px; line-height: 1.2; }
+.slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.slot-overlay { position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; }
+.slot-pos { font-size: 8px; color: #fb923c; text-align: center; }
+.slot-remove { position: absolute; top: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; background: rgba(239,68,68,0.9); color: white; font-size: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; z-index: 10; }
+.slots-hint { text-align: center; font-size: 11px; color: var(--dim); }
+
+/* CARDS SCROLL */
+.cards-section { margin-bottom: 24px; }
+.cards-title { font-size: 13px; color: #fb923c; font-weight: 700; margin-bottom: 12px; text-align: center; }
+.cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+.cards-scroll::-webkit-scrollbar { height: 3px; }
+.cards-scroll::-webkit-scrollbar-thumb { background: rgba(251,146,60,0.4); border-radius: 2px; }
+.card-item { width: 52px; aspect-ratio: 2/3; flex-shrink: 0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+.card-item:hover { transform: translateY(-4px); border-color: #fb923c; }
+.card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+.card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* TYPE BADGE */
+.type-section-label { font-size: 11px; color: var(--dim); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; margin-top: 16px; padding-left: 2px; }
+.type-section-label:first-of-type { margin-top: 0; }
+
+/* COIN BOX */
+.coin-box { background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.2); border-radius: 16px; padding: 14px; margin-bottom: 16px; text-align: center; }
+.coin-text { font-size: 13px; color: #fb923c; margin-bottom: 4px; }
+.coin-hint { font-size: 11px; color: var(--dim); }
+
+/* BTN READ */
+.btn-read { width: 100%; background: linear-gradient(135deg, #c2410c, #fb923c); border: none; border-radius: 16px; padding: 16px; color: white; font-size: 16px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+.btn-read:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* REVEAL OVERLAY */
+.reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.92); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+.reveal-overlay.show { display: flex; }
+.reveal-title { font-size: 16px; color: #fb923c; font-weight: 700; margin-bottom: 8px; text-align: center; }
+.reveal-subtitle { font-size: 12px; color: var(--dim); margin-bottom: 20px; text-align: center; }
+.reveal-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; align-items: center; }
+.reveal-card { text-align: center; }
+.reveal-card-wrap { width: 80px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; margin-bottom: 6px; border: 2px solid rgba(251,146,60,0.5); perspective: 600px; }
+.reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; }
+.reveal-card-inner.flipped { transform: rotateY(180deg); }
+.reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
+.reveal-card-back { transform: rotateY(0deg); }
+.reveal-card-front { transform: rotateY(180deg); }
+.reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
+.reveal-card-name { font-size: 9px; color: #fb923c; font-weight: 700; }
+.reveal-card-pos { font-size: 8px; color: var(--dim); margin-top: 1px; }
+.btn-accept { background: linear-gradient(135deg, #c2410c, #fb923c); border: none; border-radius: 16px; padding: 14px 32px; color: white; font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.btn-accept.show { opacity: 1; pointer-events: all; }
+
+/* RESULT */
+.result-box { display: none; }
+.result-box.show { display: block; }
+.result-cards-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.result-card { text-align: center; }
+.result-card-img { width: 60px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; margin-bottom: 4px; border: 1px solid rgba(251,146,60,0.4); }
+.result-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.result-card-name { font-size: 9px; color: #fb923c; font-weight: 700; line-height: 1.2; }
+.result-card-pos { font-size: 8px; color: var(--dim); }
+
+/* GREETING */
+.greeting-box { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 16px; padding: 16px 20px; background: rgba(251,146,60,0.06); border-radius: 16px; border-left: 3px solid #fb923c; display: none; }
+.greeting-box.show { display: block; }
+
+/* RESULT SECTIONS */
+.result-section { border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid; }
+.result-section h3 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.result-section p { font-size: 14px; line-height: 2; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+.sec-body { background: rgba(251,146,60,0.08); border-color: #fb923c; }
+.sec-body h3 { color: #fb923c; }
+.sec-mind { background: rgba(168,85,247,0.08); border-color: #a855f7; }
+.sec-mind h3 { color: #a855f7; }
+.sec-soul { background: rgba(236,72,153,0.08); border-color: #ec4899; }
+.sec-soul h3 { color: #ec4899; }
+.sec-summary { background: rgba(212,175,55,0.08); border-color: #d4af37; }
+.sec-summary h3 { color: #d4af37; }
+.sec-special { background: rgba(16,185,129,0.08); border-color: #10b981; display: none; }
+.sec-special.show { display: block; }
+.sec-special h3 { color: #10b981; }
+
+/* SPECIAL BADGE */
+.special-badge { text-align: center; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-bottom: 12px; display: none; }
+.special-badge.show { display: block; }
+.badge-special { background: rgba(212,175,55,0.15); color: #d4af37; border: 1px solid rgba(212,175,55,0.3); }
+.badge-supreme { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+
+/* LOADING */
+.loading-wrap { text-align: center; padding: 16px; color: var(--dim); font-size: 13px; }
+.loading-dots span { animation: blink 1.2s infinite; display: inline-block; }
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0.2}40%{opacity:1} }
+
+.btn-reset { width: 100%; padding: 14px; border-radius: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); font-size: 14px; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 8px; }
 </style>
 </head>
 <body>
+
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-title">🪔 ไพ่แห่งเทพของท่าน...</div>
+  <div class="reveal-subtitle">เทพเจ้าได้ส่งสาสน์มาแล้วค่ะ</div>
+  <div class="reveal-row" id="revealRow"></div>
+  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🪔 รับคำทำนาย</button>
+</div>
+
+<!-- HEADER -->
 <div class="page-header">
   <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title-text">🪔 Hindu Oracle</div>
+  <div class="page-title">🪔 Hindu Oracle</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
-    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
   </div>
 </div>
+
+<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
-    <div class="menu-sub">เข้าสู่ระบบเพื่อดูดวงค่ะ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
     <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
-    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
     <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
     <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
   </div>
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
-<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')" style="position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;">
-  <div style="background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid rgba(251,146,60,0.25);border-radius:24px;padding:32px 20px;width:90%;max-width:320px;text-align:center;">
-    <div style="font-size:44px;margin-bottom:12px;">🪔</div>
-    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:6px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:20px;line-height:1.6;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวงค่ะ</div>
-    <button id="loginGoogleBtn" style="width:100%;padding:14px;border-radius:14px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;"><img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google</button>
-    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;font-family:inherit;cursor:pointer;">ยกเลิก</button>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(251,146,60,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🪔</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
   </div>
 </div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
+
 <div class="page-content">
   <div class="hero">
-    <img src="../images/mascot-hindu.png" class="hero-mascot" onerror="this.style.display='none'">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-hindu.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
     <div class="hero-title">🪔 Hindu Oracle</div>
-    <div class="hero-sub">รับพลังจากเทพเจ้าฮินดูค่ะ</div>
+    <div class="hero-desc">รับพลังจากเทพเจ้าฮินดูค่ะ<br>เลือกไพ่ 3 ใบ • กาย • ใจ • จิตวิญญาณ</div>
   </div>
-  <div id="selectionWrap">
-    <div class="slots-section">
-      <div class="slots-title">✦ ไพ่ที่เลือก (3 ใบ) ค่ะ</div>
-      <div class="slots-row">
-        <div class="slot" id="slot0"><div class="slot-num">1</div><div class="slot-label">🧘 กาย</div></div>
-        <div class="slot" id="slot1"><div class="slot-num">2</div><div class="slot-label">💜 ใจ</div></div>
-        <div class="slot" id="slot2"><div class="slot-num">3</div><div class="slot-label">✨ วิญญาณ</div></div>
-      </div>
-      <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก • กดไพ่ใน slot เพื่อเอาออก</div>
+
+  <!-- SLOTS -->
+  <div class="slots-section">
+    <div class="slots-title">🪔 ไพ่ที่เลือก (3 ใบ)</div>
+    <div class="slots-row">
+      <div class="slot" id="slot0"><div class="slot-num">1</div><div class="slot-label">🧘 กาย</div></div>
+      <div class="slot" id="slot1"><div class="slot-num">2</div><div class="slot-label">💜 ใจ</div></div>
+      <div class="slot" id="slot2"><div class="slot-num">3</div><div class="slot-label">✨ วิญญาณ</div></div>
     </div>
-    <div class="deck-title">✦ ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบค่ะ</div>
-    <div class="cards-scroll" id="deckGrid"></div>
-    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
-    <div class="coin-box">
-      <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
-      <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
-    </div>
-    <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
+    <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก 3 ใบ • กดไพ่ใน slot เพื่อเอาออก</div>
   </div>
-  <div class="result-wrap" id="resultWrap">
-    <div class="result-cards" id="resultCards"></div>
-    <div id="specialBadge"></div>
+
+  <!-- CARDS -->
+  <div class="cards-section">
+    <div class="cards-title">🙏 ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบ</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+    <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:6px">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <div class="coin-box">
+    <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
+    <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🪔 รับพลังจากเทพ</button>
+
+  <!-- GREETING -->
+  <div class="greeting-box" id="greetingBox"></div>
+
+  <!-- RESULT -->
+  <div class="result-box" id="resultBox">
+    <div class="result-cards-row" id="resultRow"></div>
+    <div class="special-badge" id="specialBadge"></div>
     <div class="result-section sec-body"><h3>🧘 กาย</h3><p id="secBody"></p></div>
     <div class="result-section sec-mind"><h3>💜 ใจ</h3><p id="secMind"></p></div>
     <div class="result-section sec-soul"><h3>✨ จิตวิญญาณ</h3><p id="secSoul"></p></div>
     <div class="result-section sec-summary"><h3>🌟 สรุป</h3><p id="secSummary"></p></div>
-    <div class="result-section sec-special" id="secSpecialWrap" style="display:none;"><h3 id="secSpecialTitle"></h3><p id="secSpecial"></p></div>
+    <div class="result-section sec-special" id="secSpecial"><h3 id="secSpecialTitle">⚡ พลังพิเศษ</h3><p id="secSpecialText"></p></div>
     <button class="btn-reset" onclick="resetAll()">🔄 เริ่มใหม่อีกครั้ง</button>
   </div>
 </div>
+
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -151,229 +246,336 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
   <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, addDoc, collection, serverTimestamp }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
-const db=getFirestore(app);
-let currentUser=null;
-
-window.updateCoinUI=function(c){
-  document.getElementById('coinCount').textContent=c;
-  const cd=document.getElementById('coinDisplay');
-  if(cd)cd.textContent=c;
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
 };
-function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
-window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
-window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
-window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
-document.getElementById('loginGoogleBtn').addEventListener('click',function(){window.__ciGoogleSignIn();});
 
-onAuthStateChanged(auth,async user=>{
-  currentUser=user;
-  if(user){
-    var snap=await getDoc(doc(db,'users',user.uid));
-    var data=snap.exists()?snap.data():{};
-    updateCoinUI(data.coins||0);
-    setAvatarDisplay(data.avatar||'');
-    document.getElementById('guestView').style.display='none';
-    document.getElementById('loggedView').style.display='block';
-    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
-    document.getElementById('menuEmail').textContent=user.email;
-    if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  } else {updateCoinUI('—');setAvatarDisplay('');}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  const cd = document.getElementById('coinDisplay');
+  if (cd) cd.textContent = c;
+};
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="' + a + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.loginNow = function() { var m = document.getElementById('loginRequiredOverlay'); if (m) m.classList.add('show'); };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-const BACK='../images/bhindu.png';
-const IMG=(id)=>`../images/hindu/${id}.png`;
-const MAX=3;
-const POS_LABELS=['🧘 กาย','💜 ใจ','✨ จิตวิญญาณ'];
+// ── DATA ──
+const BACK = '../images/bhindu.png';
+const IMG = (id) => `../images/hindu/${id}.png`;
+const MAX = 3;
+const POS_LABELS = ['🧘 กาย', '💜 ใจ', '✨ วิญญาณ'];
 
-const DECK=[
-  ...HINDU_ORACLE.deities.map(c=>({...c,type:'deity'})),
-  ...HINDU_ORACLE.weapons.map(c=>({...c,type:'weapon'})),
-  ...HINDU_ORACLE.vahanas.map(c=>({...c,type:'vahana'})),
+// รวม deck จาก HINDU_ORACLE (var global จาก oracle-hindu-data.js)
+const DECK = [
+  ...HINDU_ORACLE.deities.map(c => ({ ...c, type: 'deity' })),
+  ...HINDU_ORACLE.weapons.map(c => ({ ...c, type: 'weapon' })),
+  ...HINDU_ORACLE.vahanas.map(c => ({ ...c, type: 'vahana' })),
 ];
 
-function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5);}
-let pool=shuffle(DECK);
-let selected=[];
+let shuffled = [], selectedCards = [];
 
-function renderDeck(){
-  document.getElementById('deckGrid').innerHTML=pool.map((card,i)=>`
-    <div class="deck-card" id="dc_${i}" onclick="pickCard(${i})">
-      <img src="${BACK}" alt="ไพ่" loading="lazy">
-    </div>`).join('');
+function shuffle() {
+  shuffled = [...DECK].sort(() => Math.random() - 0.5);
+  renderCards();
+  setTimeout(() => {
+    const s = document.getElementById('cardsScroll');
+    s.scrollTo({ left: 120, behavior: 'smooth' });
+    setTimeout(() => s.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+  }, 500);
 }
 
-window.pickCard=function(i){
-  if(selected.length>=MAX)return;
-  if(selected.find(s=>s.idx===i))return;
-  selected.push({idx:i,card:pool[i]});
-  document.getElementById('dc_'+i).classList.add('used');
-  const slotIdx=selected.length-1;
-  updateSlot(slotIdx);
-  if(selected.length===MAX) document.getElementById('readBtn').classList.add('active');
+function renderCards() {
+  document.getElementById('cardsScroll').innerHTML = shuffled.map((card, i) => {
+    const sel = selectedCards.find(s => s.id === card.id);
+    return `<div class="card-item ${sel ? 'selected' : ''}" onclick="selectCard(${i})">
+      <img src="${BACK}" alt="${card.name}">
+    </div>`;
+  }).join('');
+}
+
+window.selectCard = function(idx) {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  if (selectedCards.length >= MAX) return;
+  const card = shuffled[idx];
+  if (selectedCards.find(s => s.id === card.id)) return;
+  selectedCards.push(card);
+  updateSlots(); renderCards();
+  if (selectedCards.length === MAX) document.getElementById('readBtn').disabled = false;
 };
 
-function updateSlot(slotIdx){
-  const s=selected.find((_,i)=>i===slotIdx);
-  const slot=document.getElementById('slot'+slotIdx);
-  if(!slot)return;
-  if(s){
-    slot.className='slot filled';
-    slot.onclick=()=>removeCard(slotIdx);
-    slot.innerHTML=`<div class="slot-remove">✕</div><img class="slot-img" src="${IMG(s.card.id)}" onerror="this.src='${BACK}'"><div class="slot-overlay"><div class="slot-pos">${['🧘 กาย','💜 ใจ','✨ วิญญาณ'][slotIdx]}</div></div>`;
-  } else {
-    slot.className='slot';slot.onclick=null;
-    slot.innerHTML=`<div class="slot-num">${slotIdx+1}</div><div class="slot-label">${['🧘 กาย','💜 ใจ','✨ วิญญาณ'][slotIdx]}</div>`;
+window.removeCard = function(i) {
+  selectedCards.splice(i, 1);
+  updateSlots(); renderCards();
+  document.getElementById('readBtn').disabled = true;
+};
+
+function updateSlots() {
+  for (let i = 0; i < MAX; i++) {
+    const slot = document.getElementById(`slot${i}`);
+    const labels = ['🧘 กาย', '💜 ใจ', '✨ วิญญาณ'];
+    if (selectedCards[i]) {
+      slot.className = 'slot filled';
+      slot.setAttribute('onclick', `removeCard(${i})`);
+      slot.innerHTML = `<div class="slot-remove">✕</div><img class="slot-img" src="${IMG(selectedCards[i].id)}" onerror="this.src='${BACK}'"><div class="slot-overlay"><div class="slot-pos">${labels[i]}</div></div>`;
+    } else {
+      slot.className = 'slot';
+      slot.removeAttribute('onclick');
+      slot.innerHTML = `<div class="slot-num">${i + 1}</div><div class="slot-label">${labels[i]}</div>`;
+    }
   }
 }
 
-window.removeCard=function(slotIdx){
-  if(!selected[slotIdx])return;
-  const removed=selected[slotIdx];
-  // unuse deck card
-  document.getElementById('dc_'+removed.idx)?.classList.remove('used');
-  selected.splice(slotIdx,1);
-  // re-render slots
-  for(let i=slotIdx;i<MAX;i++) updateSlot(i);
-  document.getElementById('readBtn').classList.remove('active');
-};
-
-renderDeck();
-
-function checkSpecial(cards){
-  const deities=cards.filter(c=>c.card.type==='deity');
-  const weapons=cards.filter(c=>c.card.type==='weapon');
-  const vahanas=cards.filter(c=>c.card.type==='vahana');
-  for(const d of deities){
-    const deity=d.card;
-    const hasWeapon=weapons.find(w=>w.card.id===deity.weapon_id);
-    const hasVahana=vahanas.find(v=>v.card.id===deity.vahana_id);
-    if(hasWeapon&&hasVahana)return{level:'supreme',deity,weapon:hasWeapon.card,vahana:hasVahana.card};
-    if(hasWeapon)return{level:'special',deity,weapon:hasWeapon.card};
-    if(hasVahana)return{level:'special',deity,vahana:hasVahana.card};
+// ── SPECIAL CHECK ──
+function checkSpecial(cards) {
+  const deities = cards.filter(c => c.type === 'deity');
+  const weapons = cards.filter(c => c.type === 'weapon');
+  const vahanas = cards.filter(c => c.type === 'vahana');
+  for (const deity of deities) {
+    const hasWeapon = weapons.find(w => w.id === deity.weapon_id);
+    const hasVahana = vahanas.find(v => v.id === deity.vahana_id);
+    if (hasWeapon && hasVahana) return { level: 'supreme', deity, weapon: hasWeapon, vahana: hasVahana };
+    if (hasWeapon) return { level: 'special', deity, weapon: hasWeapon };
+    if (hasVahana) return { level: 'special', deity, vahana: hasVahana };
   }
-  return{level:'normal'};
+  return { level: 'normal' };
 }
 
-window.startReading=async function(){
-  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
-  if(selected.length<MAX)return;
-  document.getElementById('readBtn').disabled=true;
+// ── REVEAL ──
+window.startReading = function() {
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  if (selectedCards.length < MAX) return;
 
-  const cards=selected.map(s=>s.card);
-  const special=checkSpecial(selected);
+  const makeCard = (card, i) => `<div class="reveal-card">
+    <div class="reveal-card-wrap">
+      <div class="reveal-card-inner" id="revealInner${i}">
+        <div class="reveal-card-back"><img src="${BACK}"></div>
+        <div class="reveal-card-front"><img src="${IMG(card.id)}" onerror="this.src='${BACK}'"></div>
+      </div>
+    </div>
+    <div class="reveal-card-name" id="revealName${i}" style="opacity:0">${card.name}</div>
+    <div class="reveal-card-pos">${POS_LABELS[i]}</div>
+  </div>`;
 
-  document.getElementById('resultCards').innerHTML=cards.map((c,i)=>`
+  document.getElementById('revealRow').innerHTML = selectedCards.map((c, i) => makeCard(c, i)).join('');
+  document.getElementById('btnAccept').className = 'btn-accept';
+  document.getElementById('revealOverlay').classList.add('show');
+
+  let flipped = 0;
+  const flipNext = () => {
+    if (flipped >= MAX) {
+      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      return;
+    }
+    setTimeout(() => {
+      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+      document.getElementById(`revealName${flipped}`).style.opacity = '1';
+      flipped++; flipNext();
+    }, 600);
+  };
+  setTimeout(flipNext, 300);
+};
+
+// ── PARSE XML TAGS ──
+const SECTION_IDS = { GREETING: 'greetingBox', BODY: 'secBody', MIND: 'secMind', SOUL: 'secSoul', SUMMARY: 'secSummary', SPECIAL: 'secSpecialText' };
+const SECTION_KEYS = ['GREETING', 'BODY', 'MIND', 'SOUL', 'SUMMARY', 'SPECIAL'];
+
+function parseAndRender(text, final) {
+  SECTION_KEYS.forEach(key => {
+    const re = new RegExp('<' + key + '>([\\s\\S]*?)' + (final ? '</' + key + '>' : '(?:</' + key + '>|$)'));
+    const m = text.match(re);
+    if (!m) return;
+    const content = m[1].trim();
+    if (!content) return;
+    if (key === 'GREETING') {
+      const gb = document.getElementById('greetingBox');
+      gb.classList.add('show'); gb.textContent = content;
+    } else if (key === 'SPECIAL') {
+      // จัดการ special section แยก
+    } else {
+      const el = document.getElementById(SECTION_IDS[key]);
+      if (el) el.innerHTML = content;
+    }
+  });
+  // SPECIAL
+  const sp = text.match(new RegExp('<SPECIAL>([\\s\\S]*?)' + (final ? '</SPECIAL>' : '(?:</SPECIAL>|$)')));
+  if (sp && sp[1].trim()) {
+    document.getElementById('secSpecial').classList.add('show');
+    document.getElementById('secSpecialText').innerHTML = sp[1].trim();
+  }
+}
+
+// ── ACCEPT & CALL API ──
+window.acceptReading = async function() {
+  document.getElementById('revealOverlay').classList.remove('show');
+  if (!currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  // reset sections
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('greetingBox').textContent = '';
+  ['secBody', 'secMind', 'secSoul', 'secSummary', 'secSpecialText'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="loading-wrap">เทพกำลังส่งสาร <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  });
+  document.getElementById('secSpecial').classList.remove('show');
+  document.getElementById('specialBadge').classList.remove('show');
+
+  const special = checkSpecial(selectedCards);
+
+  // special badge
+  if (special.level === 'supreme') {
+    const b = document.getElementById('specialBadge');
+    b.className = 'special-badge badge-supreme show';
+    b.textContent = `🌈 พลังเต็มดวง! ได้รับพรจาก${special.deity.name}อย่างสมบูรณ์ค่ะ`;
+  } else if (special.level === 'special') {
+    const pair = special.weapon ? `${special.deity.name} + ${special.weapon.name}` : `${special.deity.name} + ${special.vahana.name}`;
+    const b = document.getElementById('specialBadge');
+    b.className = 'special-badge badge-special show';
+    b.textContent = `⚡ พลังสอดคล้อง! ${pair} เสริมพลังกันค่ะ`;
+  }
+
+  // result cards row
+  document.getElementById('resultRow').innerHTML = selectedCards.map((c, i) => `
     <div class="result-card">
-      <img src="${IMG(c.id)}" onerror="this.src='${BACK}'">
+      <div class="result-card-img"><img src="${IMG(c.id)}" onerror="this.src='${BACK}'"></div>
       <div class="result-card-name">${c.name}</div>
       <div class="result-card-pos">${POS_LABELS[i]}</div>
     </div>`).join('');
 
-  if(special.level==='supreme'){
-    document.getElementById('specialBadge').innerHTML=`<div class="special-badge badge-supreme">🌈 พลังเต็มดวง! ได้รับพรจาก${special.deity.name}อย่างสมบูรณ์ค่ะ</div>`;
-  } else if(special.level==='special'){
-    const pair=special.weapon?`${special.deity.name} + ${special.weapon.name}`:`${special.deity.name} + ${special.vahana.name}`;
-    document.getElementById('specialBadge').innerHTML=`<div class="special-badge badge-special">⚡ พลังสอดคล้อง! ${pair} เสริมพลังกันค่ะ</div>`;
-  }
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(() => document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' }), 100);
 
-  ['secBody','secMind','secSoul','secSummary'].forEach(id=>{
-    document.getElementById(id).innerHTML='<div class="loading-wrap">พลังกำลังส่งสาร <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
-  });
-  document.getElementById('selectionWrap').style.display='none';
-  document.getElementById('resultWrap').classList.add('show');
+  // build special note for prompt
+  const specialNote = special.level === 'supreme'
+    ? `\n\n🌈 พิเศษมาก: ผู้ถามได้รับ${special.deity.name} + อาวุธ${special.weapon.name} + พาหนะ${special.vahana.name} ครบองค์! ในส่วน SUMMARY ให้ระบุว่านี่คือ "พลังเต็มดวง" ค่ะ`
+    : special.level === 'special'
+    ? `\n\n⚡ พิเศษ: ผู้ถามได้${special.deity.name}คู่กับ${special.weapon ? 'อาวุธ' + special.weapon.name : 'พาหนะ' + special.vahana.name} ในส่วน SUMMARY ให้ระบุว่านี่คือ "พลังสอดคล้อง" ค่ะ`
+    : '';
 
-  const typeName=(t)=>t==='deity'?'เทพ':t==='weapon'?'อาวุธ':'พาหนะ';
-  const specialNote=special.level==='supreme'
-    ?`\n\n🌈 พิเศษมาก: ผู้ถามได้รับ${special.deity.name} + อาวุธ${special.weapon?.name||''} + พาหนะ${special.vahana?.name||''} ครบองค์! ในส่วนสรุปให้บอกว่านี่คือ "พลังเต็มดวง"ค่ะ`
-    :special.level==='special'
-    ?`\n\n⚡ พิเศษ: ผู้ถามได้${special.deity.name}คู่กับ${special.weapon?'อาวุธ'+special.weapon.name:'พาหนะ'+special.vahana?.name} ในส่วนสรุปให้บอกว่านี่คือ "พลังสอดคล้อง"ค่ะ`
-    :'';
+  const typeName = (t) => t === 'deity' ? 'เทพ' : t === 'weapon' ? 'อาวุธ' : 'พาหนะ';
+  const specialTitle = special.level === 'supreme' ? '🌈 พลังเต็มดวงค่ะ' : '⚡ พลังสอดคล้องค่ะ';
 
-  const prompt=`คุณคือพริปตา ผู้ช่วย Hindu Oracle แห่ง mytarot.vip ค่ะ
+  const prompt = `คุณคือพริปตา ผู้ช่วย Hindu Oracle แห่ง mytarot.vip ค่ะ
 
 ผู้ถามได้รับไพ่ 3 ใบค่ะ:
-🧘 กาย: ${cards[0].name} (${typeName(cards[0].type)}) — ${cards[0].meaning}
-💜 ใจ: ${cards[1].name} (${typeName(cards[1].type)}) — ${cards[1].meaning}
-✨ จิตวิญญาณ: ${cards[2].name} (${typeName(cards[2].type)}) — ${cards[2].meaning}${specialNote}
+🧘 กาย: ${selectedCards[0].name} (${typeName(selectedCards[0].type)}) — ${selectedCards[0].meaning}
+💜 ใจ: ${selectedCards[1].name} (${typeName(selectedCards[1].type)}) — ${selectedCards[1].meaning}
+✨ จิตวิญญาณ: ${selectedCards[2].name} (${typeName(selectedCards[2].type)}) — ${selectedCards[2].meaning}${specialNote}
 
-ทำนายเป็นภาษาไทย ลงท้ายด้วยค่ะ ในรูปแบบ XML:
-<BODY>ทำนายด้านกาย 2-3 ประโยค</BODY>
-<MIND>ทำนายด้านใจ 2-3 ประโยค</MIND>
-<SOUL>ทำนายด้านจิตวิญญาณ 2-3 ประโยค</SOUL>
-<SUMMARY>สรุปภาพรวม 2-3 ประโยค${special.level!=='normal'?' พร้อมระบุความพิเศษ':''}</SUMMARY>${special.level!=='normal'?'\n<SPECIAL>อธิบายความพิเศษ 1-2 ประโยค</SPECIAL>':''}`;
+ทำนายเป็นภาษาไทย ลงท้ายด้วยค่ะ ในรูปแบบ XML tags เท่านั้น ห้ามมีข้อความนอก tag:
+<GREETING>ทักทายผู้ถาม 1-2 ประโยค อบอุ่นและเชิญชวน</GREETING>
+<BODY>ทำนายด้านกาย ร่างกาย และพลังงาน 2-3 ประโยค</BODY>
+<MIND>ทำนายด้านจิตใจ อารมณ์ และความคิด 2-3 ประโยค</MIND>
+<SOUL>ทำนายด้านจิตวิญญาณ เส้นทางชีวิต 2-3 ประโยค</SOUL>
+<SUMMARY>สรุปภาพรวม 2-3 ประโยค${special.level !== 'normal' ? ' พร้อมระบุความพิเศษ' : ''}</SUMMARY>${special.level !== 'normal' ? `\n<SPECIAL>อธิบายความพิเศษจาก${specialTitle} 1-2 ประโยค</SPECIAL>` : ''}`;
 
-  try{
-    const idToken=await currentUser.getIdToken();
-    const res=await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'hindu-oracle',model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  try {
+    const idToken = await currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({
+        service: 'hindu-oracle',
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
     });
-    const nb=res.headers.get('X-New-Coin-Balance');
-    if(nb!=null)updateCoinUI(parseInt(nb));
-    if(!res.ok){['secBody','secMind','secSoul','secSummary'].forEach(id=>{document.getElementById(id).textContent='เหรียญไม่พอหรือเกิดข้อผิดพลาดค่ะ';});return;}
 
-    const reader=res.body.getReader();
-    const decoder=new TextDecoder();
-    let fullText='';
-    while(true){
-      const{done,value}=await reader.read();
-      if(done)break;
-      fullText+=decoder.decode(value,{stream:true});
-      parseAndRender(fullText,false,special.level);
-    }
-    parseAndRender(fullText,true,special.level);
+    const nb = res.headers.get('X-New-Coin-Balance');
+    if (nb != null) updateCoinUI(parseInt(nb));
 
-    if(currentUser){
-      try{
-        await addDoc(collection(db,'users',currentUser.uid,'readings'),{
-          type:'Hindu Oracle',result:cards.map(c=>c.name).join(' + '),special:special.level,createdAt:serverTimestamp()
-        });
-      }catch(e){console.error(e);}
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      return;
     }
-  }catch(e){
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    ['secBody', 'secMind', 'secSoul', 'secSummary', 'secSpecialText'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = '';
+    });
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      fullText += decoder.decode(value, { stream: true });
+      parseAndRender(fullText, false);
+    }
+    parseAndRender(fullText, true);
+
+    // บันทึกประวัติ
+    await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      type: 'Hindu Oracle',
+      cards: selectedCards.map(c => c.name).join(' + '),
+      special: special.level,
+      result: fullText,
+      createdAt: serverTimestamp()
+    });
+
+  } catch(e) {
     console.error(e);
-    ['secBody','secMind','secSoul','secSummary'].forEach(id=>{document.getElementById(id).textContent='เกิดข้อผิดพลาดค่ะ';});
+    ['secBody', 'secMind', 'secSoul', 'secSummary'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = 'เกิดข้อผิดพลาดค่ะ';
+    });
   }
 };
 
-function parseAndRender(text,final,specialLevel){
-  const get=(tag)=>{const m=text.match(new RegExp('<'+tag+'>([\s\S]*?)'+(final?'</'+tag+'>':'(?:</'+tag+'>|$)')));return m?m[1].trim():'';};
-  const body=get('BODY'),mind=get('MIND'),soul=get('SOUL'),summary=get('SUMMARY'),sp=get('SPECIAL');
-  if(body)document.getElementById('secBody').innerHTML=body;
-  if(mind)document.getElementById('secMind').innerHTML=mind;
-  if(soul)document.getElementById('secSoul').innerHTML=soul;
-  if(summary)document.getElementById('secSummary').innerHTML=summary;
-  if(sp&&specialLevel!=='normal'){
-    document.getElementById('secSpecialWrap').style.display='block';
-    document.getElementById('secSpecialTitle').textContent=specialLevel==='supreme'?'🌈 พลังเต็มดวงค่ะ':'⚡ พลังสอดคล้องค่ะ';
-    document.getElementById('secSpecial').innerHTML=sp;
-  }
-}
-
-window.resetAll=function(){
-  selected=[];pool=shuffle(DECK);
-  document.getElementById('resultWrap').classList.remove('show');
-  document.getElementById('selectionWrap').style.display='block';
-  const btn=document.getElementById('readBtn');
-  btn.classList.remove('active');btn.disabled=false;
-  document.getElementById('specialBadge').innerHTML='';
-  document.getElementById('secSpecialWrap').style.display='none';
-  for(let i=0;i<MAX;i++) updateSlot(i);
-  renderDeck();
-  window.scrollTo({top:0,behavior:'smooth'});
+// ── RESET ──
+window.resetAll = function() {
+  selectedCards = [];
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('greetingBox').classList.remove('show');
+  document.getElementById('specialBadge').classList.remove('show');
+  document.getElementById('secSpecial').classList.remove('show');
+  document.getElementById('readBtn').disabled = true;
+  shuffle();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+// ── INIT ──
+shuffle();
 </script>
 </body>
 </html>
