@@ -34,6 +34,9 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
 .spread-card.selected{border-color:#fb923c;border-style:solid;}
 .spread-card img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
 .spread-card-num{font-size:24px;color:rgba(251,146,60,0.3);}
+.coin-box{background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.2);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center;}
+.coin-text{font-size:13px;color:#fb923c;margin-bottom:4px;}
+.coin-hint{font-size:11px;color:rgba(255,255,255,0.3);}
 .deck-title{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:10px;}
 .deck-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
 .deck-card{width:52px;aspect-ratio:2/3;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all 0.2s;flex-shrink:0;}
@@ -110,7 +113,6 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
     <img src="../images/mascot-hindu.png" class="hero-mascot" onerror="this.style.display='none'">
     <div class="hero-title">🪔 Hindu Oracle</div>
     <div class="hero-sub">รับพลังจากเทพเจ้าฮินดูค่ะ</div>
-    <div class="coin-cost">🪙 30 เหรียญ</div>
   </div>
   <div id="selectionWrap">
     <div class="slots-section">
@@ -122,9 +124,14 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
       </div>
       <div class="slots-hint">กดไพ่ด้านล่างเพื่อเลือก • กดไพ่ใน slot เพื่อเอาออก</div>
     </div>
-    <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
-    <div class="deck-title">✦ เลือกไพ่ 3 ใบจากกองนี้ค่ะ</div>
+    <div class="deck-title">✦ ตั้งจิตอธิษฐาน แล้วเลือกไพ่ 3 ใบค่ะ</div>
     <div class="cards-scroll" id="deckGrid"></div>
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
+    <div class="coin-box">
+      <div class="coin-text">🪙 ใช้ 30 เหรียญต่อครั้งค่ะ</div>
+      <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+    </div>
+    <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
   </div>
   <div class="result-wrap" id="resultWrap">
     <div class="result-cards" id="resultCards"></div>
@@ -158,7 +165,11 @@ setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,bro
 const db=getFirestore(app);
 let currentUser=null;
 
-window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+window.updateCoinUI=function(c){
+  document.getElementById('coinCount').textContent=c;
+  const cd=document.getElementById('coinDisplay');
+  if(cd)cd.textContent=c;
+};
 function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
 window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
