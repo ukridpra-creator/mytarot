@@ -143,7 +143,7 @@ body { padding-bottom: 80px; }
 <!-- HEADER -->
 <div class="page-header">
   <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title">🪔 โอมมหาเทวา</div>
+  <div class="page-title">🪔 Hindu Oracle</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()">
@@ -193,7 +193,7 @@ body { padding-bottom: 80px; }
     <div style="margin-bottom:12px">
       <img src="../images/mascot-hindu.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
     </div>
-    <div class="hero-title">🪔 โอมมหาเทวา</div>
+    <div class="hero-title">🪔 Hindu Oracle</div>
     <div class="hero-desc">รับพลังจากเทพเจ้าฮินดูค่ะ<br>เลือกไพ่ 3 ใบ • กาย • ใจ • จิตวิญญาณ</div>
   </div>
 
@@ -299,7 +299,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ── DATA ──
-const BACK = '../images/hindu/bhindu.png';
+const BACK = '../images/bhindu.png';
 const IMG = (id) => `../images/hindu/${id}.png`;
 const MAX = 3;
 const POS_LABELS = ['🧘 กาย', '💜 ใจ', '✨ วิญญาณ'];
@@ -515,7 +515,7 @@ window.acceptReading = async function() {
       body: JSON.stringify({
         service: 'hindu-oracle',
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -547,7 +547,7 @@ window.acceptReading = async function() {
 
     // บันทึกประวัติ
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'โอมมหาเทวา',
+      type: 'Hindu Oracle',
       cards: selectedCards.map(c => c.name).join(' + '),
       special: special.level,
       result: fullText,
