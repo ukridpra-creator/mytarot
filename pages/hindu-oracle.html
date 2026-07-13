@@ -28,8 +28,8 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
 .coin-cost{display:inline-block;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.3);border-radius:20px;padding:6px 16px;color:#fb923c;font-size:13px;margin-top:8px;}
 .spread-label{font-size:12px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1px;margin-bottom:12px;}
 .spread-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;}
-.spread-slot{flex:1;max-width:64px;}
-.spread-slot-label{text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
+.spread-slot{flex:1;max-width:64px;display:flex;flex-direction:column;}
+.spread-slot-label{text-align:center;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;min-height:28px;display:flex;align-items:center;justify-content:center;}
 .spread-card{aspect-ratio:2/3;border-radius:12px;border:2px dashed rgba(251,146,60,0.3);background:rgba(251,146,60,0.05);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all 0.2s;position:relative;}
 .spread-card.selected{border-color:#fb923c;border-style:solid;}
 .spread-card img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
@@ -117,7 +117,7 @@ body{padding-bottom:80px;background:linear-gradient(160deg,#1a0500 0%,#2d0a00 50
     <div class="spread-row">
       <div class="spread-slot"><div class="spread-slot-label">🧘 กาย</div><div class="spread-card" id="slot0"><div class="spread-card-num">1</div></div></div>
       <div class="spread-slot"><div class="spread-slot-label">💜 ใจ</div><div class="spread-card" id="slot1"><div class="spread-card-num">2</div></div></div>
-      <div class="spread-slot"><div class="spread-slot-label">✨ จิตวิญญาณ</div><div class="spread-card" id="slot2"><div class="spread-card-num">3</div></div></div>
+      <div class="spread-slot"><div class="spread-slot-label">✨ วิญญาณ</div><div class="spread-card" id="slot2"><div class="spread-card-num">3</div></div></div>
     </div>
     <button class="btn-read" id="readBtn" onclick="startReading()">🪔 รับพลังจากเทพ</button>
     <div class="deck-title">✦ เลือกไพ่ 3 ใบจากกองนี้ค่ะ</div>
