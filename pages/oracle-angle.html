@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oracle แห่งโอลิมปัส — My Tarot</title>
+<meta name="description" content="รับพรจากเทพโอลิมปัส 13 องค์ เลือกไพ่ 1 ใบ รับสาส์นและพรจากเทพเจ้าค่ะ">
+<meta name="keywords" content="ไพ่เทพกรีก,oracle โอลิมปัส,ดูดวงเทพกรีก,zeus oracle,greek gods">
+<meta property="og:title" content="Oracle แห่งโอลิมปัส — My Tarot">
+<meta property="og:description" content="รับพรจากเทพโอลิมปัส 13 องค์ เลือกไพ่ 1 ใบ รับสาส์นและพรจากเทพเจ้าค่ะ">
+<meta property="og:url" content="https://www.mytarot.vip/pages/oracle-angle">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/oracle-angle-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; background: #fef9f0; color: #5c4a1e; }
+    .page-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #f0dfa8; background: rgba(254,252,245,0.97); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100; }
+    .back-btn { width: 36px; height: 36px; border-radius: 50%; background: #fef3cc; border: 1px solid #e8d080; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #b8940a; font-size: 16px; text-decoration: none; flex-shrink: 0; }
+    .page-title { font-size: 18px; font-weight: 700; color: #7a5c0a; }
+    .page-content { padding: 20px 20px 40px; }
+    .hero { text-align: center; padding: 12px 0 20px; }
+    .hero-title { font-size: 22px; font-weight: 800; color: #7a5c0a; margin-bottom: 4px; }
+    .hero-desc { font-size: 13px; color: #b09050; line-height: 1.7; }
+
+    .slot-section { margin-bottom: 20px; }
+    .slot-title { font-size: 13px; color: #b09050; text-align: center; margin-bottom: 12px; }
+    .slot-center { display: flex; justify-content: center; }
+    .slot { width: 100px; aspect-ratio: 2/3; background: #fef7e0; border: 2px dashed #e8d080; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+    .slot.filled { border: 2px solid #d4af37; padding: 0; overflow: hidden; }
+    .slot-img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+    .slot-num { font-size: 12px; color: #b09050; }
+    .slot-label { font-size: 11px; color: #b8940a; }
+
+    .cards-section { margin-bottom: 24px; }
+    .cards-title { font-size: 13px; color: #b8940a; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    .cards-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+    .cards-scroll::-webkit-scrollbar { height: 3px; }
+    .cards-scroll::-webkit-scrollbar-thumb { background: #e8d080; border-radius: 2px; }
+    .card-item { width: 52px; aspect-ratio: 2/3; flex-shrink: 0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .card-item:hover { transform: translateY(-6px); border-color: #d4af37; box-shadow: 0 8px 20px rgba(212,175,55,0.35); }
+    .card-item.selected { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+    .card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* REVEAL OVERLAY */
+    .reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(254,249,240,0.98); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
+    .reveal-overlay.show { display: flex; }
+    .reveal-title { font-size: 16px; color: #b8940a; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .reveal-subtitle { font-size: 12px; color: #b09050; margin-bottom: 24px; text-align: center; }
+    .reveal-card-wrap { width: 160px; aspect-ratio: 2/3; border-radius: 16px; overflow: hidden; border: 2px solid #e8d080; perspective: 600px; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(212,175,55,0.25); }
+    .reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s ease; }
+    .reveal-card-inner.flipped { transform: rotateY(180deg); }
+    .reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 14px; overflow: hidden; }
+    .reveal-card-back { transform: rotateY(0deg); }
+    .reveal-card-front { transform: rotateY(180deg); }
+    .reveal-card-front img, .reveal-card-back img { width: 100%; height: 100%; object-fit: cover; }
+    .reveal-name { font-size: 20px; color: #b8940a; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; opacity: 0; transition: opacity 0.3s; }
+    .reveal-name.show { opacity: 1; }
+    .reveal-blessing { font-size: 13px; color: #b09050; text-align: center; opacity: 0; transition: opacity 0.3s 0.1s; max-width: 280px; }
+    .reveal-blessing.show { opacity: 1; }
+    .btn-accept { background: linear-gradient(135deg, #c9a227, #f0d060); border: none; border-radius: 16px; padding: 14px 32px; color: #5c3d00; font-size: 15px; font-weight: 800; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 16px rgba(212,175,55,0.4); }
+    .btn-accept.show { opacity: 1; pointer-events: all; }
+
+    /* RESULT */
+    .result-box { display: none; }
+    .result-box.show { display: block; }
+    .result-card-big { border-radius: 20px; overflow: hidden; border: 1px solid #e8d080; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(212,175,55,0.2); max-width: 240px; margin-left: auto; margin-right: auto; }
+    .result-card-big img { width: 100%; display: block; }
+    .result-name { text-align: center; padding: 10px 14px 4px; background: #fef7e0; font-size: 20px; font-weight: 800; color: #b8940a; letter-spacing: 3px; border-top: 1px solid #e8d080; }
+    .result-title { text-align: center; padding: 0 14px 14px; background: #fef7e0; font-size: 11px; color: #b09050; letter-spacing: 1px; }
+    .blessing-box { background: linear-gradient(135deg, #fef7d8, #fdf2c0); border: 1px solid #e8d080; border-radius: 16px; padding: 16px 20px; margin-bottom: 16px; text-align: center; }
+    .blessing-label { font-size: 11px; letter-spacing: 2px; color: #b8940a; font-weight: 700; margin-bottom: 8px; }
+    .blessing-text { font-size: 15px; font-weight: 700; color: #5c3d00; line-height: 1.6; }
+    .message-box { background: #fffef8; border: 1px solid #f0e4a8; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    .message-label { font-size: 11px; letter-spacing: 2px; color: #b8940a; font-weight: 700; margin-bottom: 10px; }
+    .message-text { font-size: 14px; color: #6b5020; line-height: 2; }
+    .tagline { text-align: center; font-size: 12px; color: #c9a855; margin: 16px 0 24px; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-title">✨ เทพเจ้าได้เลือกเจ้าแล้ว...</div>
+  <div class="reveal-subtitle">จงรับพรนี้ไว้ด้วยใจที่เปิดกว้างค่ะ</div>
+  <div class="reveal-card-wrap">
+    <div class="reveal-card-inner" id="revealInner">
+      <div class="reveal-card-back"><img src="../images/angle/aback.png"></div>
+      <div class="reveal-card-front"><img id="revealFrontImg" src=""></div>
+    </div>
+  </div>
+  <div class="reveal-name" id="revealName"></div>
+  <div class="reveal-blessing" id="revealBlessing"></div>
+  <button class="btn-accept" id="btnAccept" onclick="acceptReading()">✨ รับพรจากเทพ</button>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">✨ Oracle แห่งโอลิมปัส</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge" style="color:#b8940a;background:#fef7d8;border:1px solid #e8d080;border-radius:50px;padding:4px 12px;font-size:13px;">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()">
+      <div class="avatar" id="avatarEl">👤</div>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติ</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info">
+      <div class="menu-avatar">👤</div>
+      <div>
+        <div class="menu-name" id="menuName">ชื่อผู้ใช้</div>
+        <div class="menu-email" id="menuEmail">email@gmail.com</div>
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-angle.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+    </div>
+    <div class="hero-title">✨ Oracle แห่งโอลิมปัส</div>
+    <div class="hero-desc">รับพรจากเทพโอลิมปัส 13 องค์<br>ได้เพียงวันละ 1 ครั้งเท่านั้นค่ะ</div>
+  </div>
+
+  <div class="slot-section" id="slotSectionWrap">
+    <div class="slot-title">✦ ไพ่ที่เลือก</div>
+    <div class="slot-center">
+      <div class="slot" id="slot0">
+        <div class="slot-num">✨</div>
+        <div class="slot-label">เลือก 1 ใบ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards-section" id="cardsSection">
+    <div class="cards-title">✨ ตั้งจิต แล้วเลือกไพ่ 1 ใบ</div>
+    <div class="cards-scroll" id="cardsScroll"></div>
+    <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:6px">← เลื่อนซ้ายขวาเพื่อดูไพ่ทั้งหมด →</div>
+  </div>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-card-big">
+      <img id="resultImg" src="" alt="">
+      <div class="result-name" id="resultName"></div>
+      <div class="result-title" id="resultTitle"></div>
+    </div>
+    <div class="blessing-box">
+      <div class="blessing-label">✦ พรจากเทพ ✦</div>
+      <div class="blessing-text" id="resultBlessing"></div>
+    </div>
+    <div class="message-box">
+      <div class="message-label">✦ สาส์นจากเทพเจ้า ✦</div>
+      <div class="message-text" id="resultMessage"></div>
+    </div>
+    <div class="tagline">จงพกพรนี้ไว้ในใจตลอดวันนะคะ...</div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain: "my-tarot67.firebaseapp.com",
+  projectId: "my-tarot67",
+  storageBucket: "my-tarot67.firebasestorage.app",
+  messagingSenderId: "33661162829",
+  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+let currentUser = null;
+
+window.updateCoinUI = function(coins) {
+  document.getElementById('coinCount').textContent = coins;
+};
+function setAvatarDisplay(avatar) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (avatar && avatar.includes('.png')) el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = avatar || '👤';
+}
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+
+const BACK = '../images/angle/aback.png';
+const IMG = (id) => `../images/angle/${id}.png`;
+
+let shuffled = [], selectedCard = null;
+
+function getTodayKey() {
+  const d = new Date();
+  return `angle_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+}
+
+function shuffle() {
+  shuffled = [...ANGLE_ORACLE].sort(() => Math.random() - 0.5);
+  renderCards();
+  setTimeout(() => {
+    const s = document.getElementById('cardsScroll');
+    s.scrollTo({ left: 120, behavior: 'smooth' });
+    setTimeout(() => s.scrollTo({ left: 0, behavior: 'smooth' }), 600);
+  }, 500);
+}
+
+function renderCards() {
+  document.getElementById('cardsScroll').innerHTML = shuffled.map((card, i) => {
+    const sel = selectedCard && selectedCard.id === card.id;
+    return `<div class="card-item ${sel ? 'selected' : ''}" onclick="selectCard(${i})">
+      <img src="${BACK}" alt="card"></div>`;
+  }).join('');
+}
+
+window.selectCard = function(idx) {
+  if (selectedCard) return;
+  const card = shuffled[idx];
+  selectedCard = card;
+  const slot = document.getElementById('slot0');
+  slot.className = 'slot filled';
+  slot.innerHTML = `<img class="slot-img" src="${BACK}">`;
+  renderCards();
+  document.getElementById('revealFrontImg').src = IMG(card.id);
+  document.getElementById('revealName').textContent = card.name;
+  document.getElementById('revealBlessing').textContent = card.blessing;
+  document.getElementById('revealOverlay').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('revealInner').classList.add('flipped');
+    setTimeout(() => {
+      document.getElementById('revealName').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('revealBlessing').classList.add('show');
+        setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      }, 200);
+    }, 600);
+  }, 400);
+};
+
+window.acceptReading = async function() {
+  document.getElementById('revealOverlay').classList.remove('show');
+  const card = selectedCard;
+  localStorage.setItem(getTodayKey(), card.id);
+  document.getElementById('slotSectionWrap').style.display = 'none';
+  document.getElementById('cardsSection').style.display = 'none';
+  showResult(card);
+
+  if (currentUser) {
+    try {
+      await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+        type: 'Oracle แห่งโอลิมปัส',
+        result: card.name + ' — ' + card.blessing,
+        createdAt: serverTimestamp()
+      });
+    } catch(e) { console.error(e); }
+  }
+};
+
+function showResult(card) {
+  document.getElementById('resultImg').src = IMG(card.id);
+  document.getElementById('resultName').textContent = card.name;
+  document.getElementById('resultTitle').textContent = card.title;
+  document.getElementById('resultBlessing').textContent = card.blessing;
+  document.getElementById('resultMessage').textContent = card.message;
+  document.getElementById('resultBox').classList.add('show');
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+  const key = getTodayKey();
+  const savedId = localStorage.getItem(key);
+  if (savedId) {
+    const card = ANGLE_ORACLE.find(c => c.id === savedId);
+    if (card) {
+      selectedCard = card;
+      const slot = document.getElementById('slot0');
+      slot.className = 'slot filled';
+      slot.innerHTML = `<img class="slot-img" src="${IMG(card.id)}">`;
+      showResult(card);
+      document.getElementById('cardsSection').style.display = 'none';
+      document.getElementById('slotSectionWrap').style.display = 'none';
+    }
+  } else {
+    shuffle();
+  }
+});
+</script>
+</body>
+</html>
