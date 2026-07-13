@@ -493,7 +493,7 @@ window.acceptReading = async function() {
   const typeName = (t) => t === 'deity' ? 'เทพ' : t === 'weapon' ? 'อาวุธ' : 'พาหนะ';
   const specialTitle = special.level === 'supreme' ? '🌈 พลังเต็มดวงค่ะ' : '⚡ พลังสอดคล้องค่ะ';
 
-  const prompt = `คุณคือพริปตา ผู้ช่วย Hindu Oracle แห่ง mytarot.vip ค่ะ
+  const prompt = `คุณคือนักพยากรณ์ สื่อกลางระหว่างเทพค่ะ แทนตัวเองว่าเรา แทนตัวผู้ถูกทำนายว่าท่าน ค่ะ
 
 ผู้ถามได้รับไพ่ 3 ใบค่ะ:
 🧘 กาย: ${selectedCards[0].name} (${typeName(selectedCards[0].type)}) — ${selectedCards[0].meaning}
