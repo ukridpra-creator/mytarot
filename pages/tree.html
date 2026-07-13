@@ -161,7 +161,7 @@
 
 <!-- HEADER -->
 <div class="page-header">
-  <a href="activity-hub.html" class="back-btn">←</a>
+  <a href="free.html" class="back-btn">←</a>
   <div class="page-title">🌳 ขอพรต้นไม้ศักดิ์สิทธิ์</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="free-badge">FREE</div>
@@ -246,18 +246,33 @@ let isShaking = false;
 let pool = [];
 const MAX_PER_DAY = 3;
 
-function getTodayKey() {
-  const d = new Date();
-  return `tree_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+// ── TREE COUNT — Firestore ──
+function getTodayStr() {
+  const d = new Date(Date.now() + 7*60*60*1000); // UTC+7
+  return d.toISOString().slice(0,10);
 }
-function getTodayCount() {
-  return parseInt(localStorage.getItem(getTodayKey()) || '0');
+
+async function getTodayCount() {
+  if(!currentUser) return 0;
+  try {
+    const snap = await getDoc(doc(db,'users',currentUser.uid));
+    const data = snap.exists() ? snap.data() : {};
+    const key = 'treeCount_' + getTodayStr();
+    return data[key] || 0;
+  } catch(e) { return 0; }
 }
-function addTodayCount() {
-  localStorage.setItem(getTodayKey(), String(getTodayCount() + 1));
+
+async function addTodayCount() {
+  if(!currentUser) return;
+  try {
+    const key = 'treeCount_' + getTodayStr();
+    await setDoc(doc(db,'users',currentUser.uid), {[key]: (await getTodayCount()) + 1}, {merge:true});
+  } catch(e) { console.error(e); }
 }
-function updateHint() {
-  const left = MAX_PER_DAY - getTodayCount();
+
+async function updateHint() {
+  const count = await getTodayCount();
+  const left = MAX_PER_DAY - count;
   const el = document.querySelector('.tap-hint span');
   if (!el) return;
   if (left <= 0) {
@@ -282,61 +297,20 @@ function renderCards(){
 
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-// ─── SOUND ───
-const _ac = new (window.AudioContext || window.webkitAudioContext)();
-
-function playShake() {
-  // เสียงเขย่าต้นไม้ — noise burst
-  for (let i = 0; i < 8; i++) {
-    setTimeout(() => {
-      const buf = _ac.createBuffer(1, _ac.sampleRate * 0.08, _ac.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let j = 0; j < data.length; j++) data[j] = (Math.random() * 2 - 1) * 0.3;
-      const src = _ac.createBufferSource();
-      const gain = _ac.createGain();
-      const filter = _ac.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 800 + Math.random() * 400;
-      src.buffer = buf;
-      src.connect(filter); filter.connect(gain); gain.connect(_ac.destination);
-      gain.gain.setValueAtTime(0.4, _ac.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, _ac.currentTime + 0.08);
-      src.start(); src.stop(_ac.currentTime + 0.08);
-    }, i * 90);
-  }
-}
-
-function playReveal() {
-  // เสียงผลทำนายออก — mystical chime
-  [440, 554, 659, 880].forEach((freq, i) => {
-    const osc = _ac.createOscillator();
-    const gain = _ac.createGain();
-    osc.connect(gain); gain.connect(_ac.destination);
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    const t = _ac.currentTime + i * 0.15;
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(0.15, t + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
-    osc.start(t); osc.stop(t + 0.6);
-  });
-}
-
 window.shakeTree = async function(){
   if(!currentUser){ document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if(isShaking) return;
-  if(getTodayCount() >= MAX_PER_DAY) {
+  const count = await getTodayCount();
+  if(count >= MAX_PER_DAY) {
     alert('คุณพี่ขอพรครบ 3 ครั้งแล้ววันนี้ค่ะ พรุ่งนี้มาใหม่นะคะ 🙏');
     return;
   }
   if(pool.length===0){ renderCards(); return; }
   isShaking = true;
-  _ac.resume();
 
   // เขย่าต้นไม้ + การ์ดไหวเร็ว
   const area = document.getElementById('treeArea');
   area.classList.add('shake');
-  playShake();
   document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('sway'); c.classList.add('fast'); });
 
   await sleep(750);
@@ -386,7 +360,7 @@ window.shakeTree = async function(){
 
   // โผล่ flip reveal กลางจอ
   addTodayCount();
-  updateHint();
+  await updateHint();
   showReveal(colorKey, data, blessing);
 };
 
@@ -408,7 +382,6 @@ function showReveal(colorKey, data, blessing){
   document.getElementById('revealCat').textContent  = isGold ? `✦ ${data.label} — ถุงทอง! ✦` : `✦ ${data.label} ✦`;
   document.getElementById('revealText').textContent = blessing;
   wrap.className = `reveal-wrap show theme-${colorKey}`;
-  playReveal();
 
   // พลิกการ์ด
   setTimeout(()=>{
@@ -482,14 +455,14 @@ window.shakeAgain = function(){
   setTimeout(()=>shakeTree(), 400);
 };
 
-document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); updateHint(); });
+document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); updateHint(); }); });
 </script>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp, setDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
