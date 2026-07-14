@@ -90,6 +90,7 @@ const SERVICE_COSTS = {
   "oracle-dream-1": TIER.T10,
   "oracle-dream-3": TIER.T20,
   "oracle-dream-5": TIER.T30,
+  "brahma": TIER.T19,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
