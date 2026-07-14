@@ -20,12 +20,8 @@
     .hero-title { font-size:20px; font-weight:800; color:#4ade80; margin-bottom:4px; text-shadow:0 0 20px rgba(74,222,128,0.4); }
     .hero-desc { font-size:13px; color:rgba(255,255,255,0.5); line-height:1.6; }
 
-    /* TREE */
     .tree-section { display:flex; flex-direction:column; align-items:center; padding:8px 20px 0; }
-    .tree-area {
-      position:relative; width:88%; max-width:360px;
-      cursor:pointer; -webkit-tap-highlight-color:transparent;
-    }
+    .tree-area { position:relative; width:88%; max-width:360px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
     .tree-img { width:100%; display:block; pointer-events:none; }
     .tree-area.shake .tree-img { animation:treeShake 0.7s ease-in-out; }
     @keyframes treeShake {
@@ -38,13 +34,8 @@
       85%{transform:rotate(1deg) translateX(2px)}
     }
 
-    /* CARDS */
     .cards-layer { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
-    .tree-card {
-      position:absolute; width:13%; aspect-ratio:1/1.6;
-      transform-origin:top center;
-      transition:opacity 0.2s;
-    }
+    .tree-card { position:absolute; width:13%; aspect-ratio:1/1.6; transform-origin:top center; transition:opacity 0.2s; }
     .tree-card img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5)); border-radius:3px; }
     .tree-card.sway { animation:cardSway 3s ease-in-out infinite; }
     .tree-card.fast  { animation:cardFast 0.35s ease-in-out infinite; }
@@ -53,7 +44,6 @@
     @keyframes cardSway { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
     @keyframes cardFast { 0%,100%{transform:rotate(-14deg)} 25%{transform:rotate(14deg)} 50%{transform:rotate(-10deg)} 75%{transform:rotate(10deg)} }
 
-    /* ตำแหน่งการ์ด — อยู่ในพุ่มต้นไม้เท่านั้น */
     .cp0 {top:12%;left:22%;animation-delay:0.0s}
     .cp1 {top:10%;left:40%;animation-delay:0.3s}
     .cp2 {top:11%;left:57%;animation-delay:0.6s}
@@ -67,41 +57,20 @@
     .cp10{top:36%;left:56%;animation-delay:1.0s}
     .cp11{top:38%;left:73%;animation-delay:0.1s}
 
-    /* HINT */
     .tap-hint { margin-top:10px; font-size:13px; color:rgba(255,255,255,0.4); text-align:center; }
     .tap-hint span { animation:pulse 2s ease-in-out infinite; display:inline-block; }
     @keyframes pulse { 0%,100%{opacity:0.35} 50%{opacity:1} }
 
-    /* FALLING CARD — JS controlled, fixed position */
-    #fallingCard {
-      position:fixed; z-index:300; pointer-events:none;
-      width:56px; display:none;
-    }
+    #fallingCard { position:fixed; z-index:300; pointer-events:none; width:56px; display:none; }
     #fallingCard img { width:100%; border-radius:6px; filter:drop-shadow(0 6px 16px rgba(0,0,0,0.6)); }
 
-    /* FLIP REVEAL — กลางจอ */
-    .reveal-wrap {
-      position:fixed; z-index:400; inset:0;
-      display:none; align-items:center; justify-content:center;
-      background:rgba(0,0,0,0.82);
-      flex-direction:column; padding:28px;
-    }
+    .reveal-wrap { position:fixed; z-index:400; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.82); flex-direction:column; padding:28px; }
     .reveal-wrap.show { display:flex; }
 
-    .flip-card-scene {
-      width:130px; aspect-ratio:1/1.6;
-      perspective:700px; margin-bottom:20px;
-    }
-    .flip-card-inner {
-      width:100%; height:100%; position:relative;
-      transform-style:preserve-3d;
-      transition:transform 0.8s ease;
-    }
+    .flip-card-scene { width:130px; aspect-ratio:1/1.6; perspective:700px; margin-bottom:20px; }
+    .flip-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.8s ease; }
     .flip-card-inner.flipped { transform:rotateY(180deg); }
-    .flip-face, .flip-back {
-      position:absolute; inset:0;
-      backface-visibility:hidden; border-radius:12px; overflow:hidden;
-    }
+    .flip-face, .flip-back { position:absolute; inset:0; backface-visibility:hidden; border-radius:12px; overflow:hidden; }
     .flip-back { transform:rotateY(0deg); }
     .flip-face { transform:rotateY(180deg); }
     .flip-back img, .flip-face img { width:100%; height:100%; object-fit:contain; }
@@ -118,15 +87,13 @@
     .theme-blue  .reveal-cat { background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); }
     .theme-green .reveal-cat { background:rgba(34,197,94,0.2);  color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
     .theme-red   .reveal-cat { background:rgba(239,68,68,0.2);  color:#f87171; border:1px solid rgba(239,68,68,0.4); }
-    .theme-yellow.reveal-cat { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid rgba(251,191,36,0.4); }
+    .theme-yellow .reveal-cat { background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid rgba(251,191,36,0.4); }
 
-    /* SPARKLES */
     .sparkle-layer { position:fixed; inset:0; pointer-events:none; z-index:410; overflow:hidden; }
     .sp { position:absolute; font-size:22px; animation:spPop 1.1s ease-out forwards; }
     @keyframes spPop { 0%{opacity:1;transform:scale(0) translateY(0)} 60%{opacity:1;transform:scale(1.4) translateY(-30px)} 100%{opacity:0;transform:scale(0.3) translateY(-80px)} }
     @keyframes treeCoinPop { 0%{opacity:1;transform:translateX(-50%) scale(0) translateY(0)} 60%{opacity:1;transform:translateX(-50%) scale(1.4) translateY(-60px)} 100%{opacity:0;transform:translateX(-50%) scale(1) translateY(-90px)} }
 
-    /* UPSELL */
     .upsell-section { padding:16px 20px 0; }
     .upsell-box { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:20px; text-align:center; }
     .upsell-title { font-size:15px; font-weight:800; color:white; margin-bottom:6px; }
@@ -136,13 +103,9 @@
 </head>
 <body>
 
-<!-- FALLING CARD (JS-animated) -->
 <div id="fallingCard"><img id="fallingCardImg" src=""></div>
-
-<!-- SPARKLES -->
 <div class="sparkle-layer" id="sparkleLayer"></div>
 
-<!-- FLIP REVEAL -->
 <div class="reveal-wrap" id="revealWrap">
   <div class="flip-card-scene">
     <div class="flip-card-inner" id="flipInner">
@@ -159,7 +122,6 @@
   </div>
 </div>
 
-<!-- HEADER -->
 <div class="page-header">
   <a href="free.html" class="back-btn">←</a>
   <div class="page-title">🌳 ขอพรต้นไม้ศักดิ์สิทธิ์</div>
@@ -170,7 +132,6 @@
   </div>
 </div>
 
-<!-- USER MENU -->
 <div class="user-menu" id="userMenu">
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
@@ -186,7 +147,6 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<!-- LOGIN MODAL -->
 <div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
   <div style="background:linear-gradient(180deg,#0d1f0a,#051005);border:1px solid rgba(34,197,94,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
     <div style="font-size:48px;margin-bottom:12px;">🌳</div>
@@ -223,7 +183,6 @@
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
   <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
@@ -246,9 +205,8 @@ let isShaking = false;
 let pool = [];
 const MAX_PER_DAY = 3;
 
-// ── TREE COUNT — Firestore ──
 function getTodayStr() {
-  const d = new Date(Date.now() + 7*60*60*1000); // UTC+7
+  const d = new Date(Date.now() + 7*60*60*1000);
   return d.toISOString().slice(0,10);
 }
 
@@ -284,9 +242,6 @@ async function updateHint() {
 
 function cardImg(color){ return `../images/tree/${color}.png`; }
 
-// หลังใบรูน ใช้เป็น back
-function backImg(color){ return cardImg(color); }
-
 function renderCards(){
   pool = [...CARD_DEFS];
   document.getElementById('cardsLayer').innerHTML = CARD_DEFS.map(c=>
@@ -308,7 +263,6 @@ window.shakeTree = async function(){
   if(pool.length===0){ renderCards(); return; }
   isShaking = true;
 
-  // เขย่าต้นไม้ + การ์ดไหวเร็ว
   const area = document.getElementById('treeArea');
   area.classList.add('shake');
   document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('sway'); c.classList.add('fast'); });
@@ -317,27 +271,22 @@ window.shakeTree = async function(){
   area.classList.remove('shake');
   document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('fast'); c.classList.add('sway'); });
 
-  // สุ่มการ์ดจาก pool
   const idx = Math.floor(Math.random()*pool.length);
   const chosen = pool.splice(idx,1)[0];
   const colorKey = chosen.color;
   const data = TREE_BLESSINGS[colorKey];
   const blessing = data.blessings[Math.floor(Math.random()*data.blessings.length)];
 
-  // หาตำแหน่งของการ์ดนั้นบนหน้าจอ
   const cardEl = document.getElementById('tc_'+chosen.id);
   const cardRect = cardEl.getBoundingClientRect();
-  const startX = cardRect.left + cardRect.width/2 - 28; // center - half of 56px
+  const startX = cardRect.left + cardRect.width/2 - 28;
   const startY = cardRect.top;
 
-  // หาตำแหน่งรากต้นไม้ (ล่างสุดของ tree area)
   const treeRect = document.getElementById('treeArea').getBoundingClientRect();
   const endY = treeRect.bottom - 20;
 
-  // ซ่อนการ์ดบนต้น
   cardEl.classList.add('gone');
 
-  // แสดง falling card
   const fc = document.getElementById('fallingCard');
   const fci = document.getElementById('fallingCardImg');
   fci.src = cardImg(colorKey);
@@ -348,7 +297,6 @@ window.shakeTree = async function(){
   fc.style.opacity = '1';
   fc.style.transform = 'rotate(-5deg)';
 
-  // animate ร่วงลงราก
   await sleep(30);
   fc.style.transition = `top 1.1s cubic-bezier(0.25,0.46,0.45,0.94), transform 1.1s ease, opacity 0.3s 0.9s`;
   fc.style.top = endY+'px';
@@ -358,7 +306,6 @@ window.shakeTree = async function(){
   await sleep(1200);
   fc.style.display = 'none';
 
-  // โผล่ flip reveal กลางจอ
   addTodayCount();
   await updateHint();
   showReveal(colorKey, data, blessing);
@@ -368,7 +315,6 @@ function showReveal(colorKey, data, blessing){
   const wrap = document.getElementById('revealWrap');
   const inner = document.getElementById('flipInner');
 
-  // reset flip
   inner.classList.remove('flipped');
   document.getElementById('flipBack').src = cardImg(colorKey);
   document.getElementById('flipFace').src = cardImg(colorKey);
@@ -383,7 +329,6 @@ function showReveal(colorKey, data, blessing){
   document.getElementById('revealText').textContent = blessing;
   wrap.className = `reveal-wrap show theme-${colorKey}`;
 
-  // พลิกการ์ด
   setTimeout(()=>{
     inner.classList.add('flipped');
     spawnSparkles(colorKey);
@@ -410,12 +355,10 @@ async function giveTreeReward(colorKey) {
     const data = await res.json();
     if (data.reward) {
       updateCoinUI(data.coins);
-      // ข้อความใน reveal
       const rewardEl = document.getElementById('revealReward');
       const bagLabel = colorKey === 'yellow' ? 'ถุงทอง' : 'ถุงนำโชค';
       rewardEl.textContent = `✦ ${bagLabel}มอบรางวัล ${data.reward} เหรียญ ✦`;
       rewardEl.style.opacity = '1';
-      // coin pop animation
       const pop = document.createElement('div');
       pop.style.cssText = 'position:fixed;left:50%;bottom:30%;font-size:26px;font-weight:800;color:#fbbf24;z-index:500;pointer-events:none;animation:treeCoinPop 1.4s ease-out forwards;white-space:nowrap;text-shadow:0 2px 8px rgba(0,0,0,0.5);';
       pop.textContent = '+' + data.reward + ' 🪙';
@@ -455,7 +398,7 @@ window.shakeAgain = function(){
   setTimeout(()=>shakeTree(), 400);
 };
 
-document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); updateHint(); }); });
+document.addEventListener('DOMContentLoaded', ()=>{ renderCards(); updateHint(); });
 </script>
 
 <script type="module">
@@ -486,6 +429,7 @@ window.saveReading=async function(colorKey,label,blessing){
   if(!window.currentUser)return;
   try{await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{type:'ขอพรต้นไม้ศักดิ์สิทธิ์',question:label,result:blessing,createdAt:serverTimestamp()});}catch(e){console.error(e);}
 };
+window.getDoc=getDoc; window.doc=doc; window.db=db; window.setDoc=setDoc;
 onAuthStateChanged(auth,async user=>{
   window.currentUser=user;
   if(user){
