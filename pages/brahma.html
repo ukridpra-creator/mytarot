@@ -148,10 +148,16 @@ body { padding-bottom: 80px; background: #0d0820; }
 
   <!-- FORM -->
   <div class="form-box" id="formBox">
-    <label class="form-label">📅 ปีเกิด (พ.ศ.)</label>
+    <label class="form-label">📅 วันเดือนปีเกิด</label>
     <div class="date-row">
+      <select class="date-select" id="selDay" onchange="checkReady()">
+        <option value="">วัน</option>
+      </select>
+      <select class="date-select" id="selMonth" onchange="checkReady()">
+        <option value="">เดือน</option>
+      </select>
       <select class="date-select" id="selYear" onchange="checkReady()">
-        <option value="">เลือกปีเกิด</option>
+        <option value="">ปี (พ.ศ.)</option>
       </select>
     </div>
     <label class="form-label">⚥ เพศ</label>
@@ -206,15 +212,16 @@ body { padding-bottom: 80px; background: #0d0820; }
 <script>
 
 
-// ── INIT YEAR DROPDOWN ──
-(function initYear() {
+// ── INIT DROPDOWNS ──
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+(function initDropdowns() {
+  const selDay = document.getElementById('selDay');
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; selDay.appendChild(o); }
+  const selMonth = document.getElementById('selMonth');
+  MONTHS_TH.forEach((m,i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; selMonth.appendChild(o); });
   const selYear = document.getElementById('selYear');
   const curYear = new Date().getFullYear();
-  for (let y = curYear - 1; y >= curYear - 90; y--) {
-    const o = document.createElement('option');
-    o.value = y; o.textContent = y + 543;
-    selYear.appendChild(o);
-  }
+  for (let y = curYear - 1; y >= curYear - 90; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y + 543; selYear.appendChild(o); }
 })();
 
 // ── LOADING ANIM ──
@@ -249,13 +256,17 @@ window.selectGender = function(g) {
 };
 
 window.checkReady = function() {
+  const d = document.getElementById('selDay').value;
+  const m = document.getElementById('selMonth').value;
   const y = document.getElementById('selYear').value;
-  document.getElementById('btnStart').disabled = !(y && selectedGender);
+  document.getElementById('btnStart').disabled = !(d && m && y && selectedGender);
 };
 
-function calcAge(year) {
+function calcAge(day, month, year) {
   const today = new Date();
-  const age = today.getFullYear() - year;
+  let age = today.getFullYear() - year;
+  const dm = today.getMonth() - (month - 1);
+  if (dm < 0 || (dm === 0 && today.getDate() < day)) age--;
   return age < 1 ? 1 : age;
 }
 
@@ -288,8 +299,10 @@ function updateCarousel(age, gender) {
 
 window.startReading = async function() {
   if (!window.currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
-  const year = parseInt(document.getElementById('selYear').value);
-  if (!year || !selectedGender) return;
+  const day   = parseInt(document.getElementById('selDay').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const year  = parseInt(document.getElementById('selYear').value);
+  if (!day || !month || !year || !selectedGender) return;
 
   // deduct coins
   const btn = document.getElementById('btnStart');
@@ -327,7 +340,7 @@ window.startReading = async function() {
   await new Promise(r=>setTimeout(r,300));
   document.getElementById('loadingOverlay').style.display = 'none';
 
-  const targetAge = calcAge(year);
+  const targetAge = calcAge(day, month, year);
 
   // build timeline
   const row = document.getElementById('timelineRow');
@@ -390,6 +403,8 @@ window.resetAll = function() {
   selectedGender = null;
   document.getElementById('btnMale').classList.remove('active');
   document.getElementById('btnFemale').classList.remove('active');
+  document.getElementById('selDay').value = '';
+  document.getElementById('selMonth').value = '';
   document.getElementById('selYear').value = '';
   document.getElementById('btnStart').disabled = true;
   document.getElementById('formBox').style.display = 'block';
