@@ -62,7 +62,7 @@ body { padding-bottom: 80px; background: #0d0820; }
 .c-card img { border-radius:12px; display:block; }
 .c-card.center img { width:150px; aspect-ratio:2/3; object-fit:cover; box-shadow:0 12px 40px rgba(212,175,55,0.3); border:2px solid rgba(212,175,55,0.5); }
 .c-card.side img { width:95px; aspect-ratio:2/3; object-fit:cover; }
-.card-name-center { font-size:17px; font-weight:800; color:#d4af37; margin-top:10px; text-shadow:0 0 12px rgba(212,175,55,0.5); letter-spacing:1px; text-align:center; }
+.card-name-center { font-size:24px; font-weight:800; color:#d4af37; margin-top:12px; text-shadow:0 0 16px rgba(212,175,55,0.6); letter-spacing:2px; text-align:center; }
 
 /* RESULT */
 .result-section { border-radius:16px; padding:16px 20px; margin-bottom:10px; border-left:3px solid rgba(212,175,55,0.5); background:rgba(212,175,55,0.05); }
@@ -156,11 +156,6 @@ body { padding-bottom: 80px; background: #0d0820; }
 
     <!-- RESULT ใต้ carousel -->
     <div class="result-wrap" id="resultWrap">
-      <div class="result-header">
-        <div class="result-emoji" id="resEmoji"></div>
-        <div class="result-name" id="resName"></div>
-        <div class="result-summary" id="resSummary"></div>
-      </div>
       <div class="result-section"><h3>🔮 ภาพรวมดวงชะตา</h3><p id="pOverview"></p></div>
       <div class="result-section"><h3>💼 การงาน</h3><p id="pWork"></p></div>
       <div class="result-section"><h3>💰 การเงิน</h3><p id="pMoney"></p></div>
@@ -182,32 +177,7 @@ body { padding-bottom: 80px; background: #0d0820; }
 </nav>
 
 <script>
-// ── AUDIO ──
-let audioCtx = null;
-function playSlide() {
-  try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.08, audioCtx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < data.length; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2) * 0.6;
-    }
-    const src = audioCtx.createBufferSource();
-    const gain = audioCtx.createGain();
-    // เพิ่ม filter ให้เป็นเสียงไม้แกรก
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 800;
-    filter.Q.value = 0.8;
-    src.buffer = buf;
-    src.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
-    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-    src.start();
-  } catch(e) {}
-}
+
 
 // ── INIT DROPDOWNS ──
 const MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -310,28 +280,21 @@ window.startReading = function() {
   document.getElementById('carouselSection').classList.add('show');
   document.getElementById('resultWrap').classList.remove('show');
 
-  // unlock audio on first interaction
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
   updateCarousel(1, selectedGender);
   let cur = 1;
 
   animInterval = setInterval(() => {
     cur++;
-    playSlide();
     updateCarousel(cur, selectedGender);
     if (cur >= targetAge) {
       clearInterval(animInterval);
       setTimeout(() => showResult(selectedGender, targetAge), 600);
     }
-  }, 500);
+  }, 250);
 };
 
 function showResult(gender, age) {
   const pos = getPos(gender, age);
-  document.getElementById('resEmoji').textContent   = pos.emoji;
-  document.getElementById('resName').textContent    = pos.name;
-  document.getElementById('resSummary').textContent = pos.summary;
   document.getElementById('resultWrap').classList.add('show');
   setTimeout(() => document.getElementById('resultWrap').scrollIntoView({ behavior:'smooth' }), 100);
 
