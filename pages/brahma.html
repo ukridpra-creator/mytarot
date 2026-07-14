@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตำราพรหมชาติ — My Tarot</title>
+<meta name="description" content="ดูดวงตำราพรหมชาติ ตำราโหราศาสตร์ไทยโบราณ นับอายุตามตำแหน่งดวงชะตาค่ะ">
+<meta name="keywords" content="พรหมชาติ,ดูดวงไทย,โหราศาสตร์ไทย,ดวงชะตา,นับอายุ">
+<meta property="og:title" content="ตำราพรหมชาติ — My Tarot">
+<meta property="og:description" content="ดูดวงตำราพรหมชาติ ตำราโหราศาสตร์ไทยโบราณ นับอายุตามตำแหน่งดวงชะตาค่ะ">
+<meta property="og:url" content="https://www.mytarot.vip/pages/brahma">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/brahma-data.js"></script>
+<style>
+body { padding-bottom: 80px; background: #0d0820; }
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title { font-size:18px; font-weight:700; color:white; }
+.page-content { padding:20px 20px 40px; }
+
+.hero { text-align:center; padding:8px 0 20px; }
+.hero-title { font-size:22px; font-weight:800; color:#d4af37; margin-bottom:6px; text-shadow:0 0 20px rgba(212,175,55,0.4); }
+.hero-desc { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.7; }
+
+/* INPUT FORM */
+.form-box { background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.2); border-radius:20px; padding:20px; margin-bottom:20px; }
+.form-row { margin-bottom:14px; }
+.form-label { font-size:13px; color:#d4af37; font-weight:700; margin-bottom:6px; display:block; }
+.form-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(212,175,55,0.25); border-radius:12px; padding:12px 16px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; box-sizing:border-box; }
+.form-input:focus { border-color:#d4af37; }
+.gender-row { display:flex; gap:10px; }
+.gender-btn { flex:1; padding:12px; border-radius:12px; border:1px solid rgba(212,175,55,0.25); background:rgba(255,255,255,0.03); color:rgba(255,255,255,0.5); font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s; }
+.gender-btn.active { background:rgba(212,175,55,0.15); border-color:#d4af37; color:#d4af37; }
+.btn-start { width:100%; background:linear-gradient(135deg,#92710a,#d4af37); border:none; border-radius:16px; padding:16px; color:#0d0820; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:4px; }
+.btn-start:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* CAROUSEL SECTION */
+.carousel-section { display:none; }
+.carousel-section.show { display:block; }
+
+.carousel-wrap { position:relative; width:100%; overflow:hidden; padding:20px 0 8px; }
+.carousel-track { display:flex; align-items:center; justify-content:center; gap:0; transition:none; }
+
+.card-slide { flex-shrink:0; display:flex; flex-direction:column; align-items:center; transition:all 0.35s ease; }
+.card-slide.center { z-index:10; }
+.card-slide.side { opacity:0.35; filter:blur(1px); }
+
+.card-img-wrap { border-radius:16px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.6); }
+.card-slide.center .card-img-wrap { width:160px; box-shadow:0 12px 40px rgba(212,175,55,0.3); border:2px solid rgba(212,175,55,0.5); }
+.card-slide.side .card-img-wrap { width:100px; }
+.card-img-wrap img { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; }
+
+.card-name { font-size:16px; font-weight:800; color:#d4af37; margin-top:10px; text-shadow:0 0 12px rgba(212,175,55,0.5); letter-spacing:1px; }
+.card-side-name { font-size:0px; } /* ซ่อนชื่อไพ่ข้าง */
+
+.age-display { text-align:center; font-size:28px; font-weight:800; color:white; margin:4px 0 16px; letter-spacing:2px; }
+.age-label { font-size:12px; color:rgba(255,255,255,0.35); }
+
+/* RESULT */
+.result-box { display:none; margin-top:8px; }
+.result-box.show { display:block; }
+
+.result-card-hero { text-align:center; margin-bottom:20px; }
+.result-card-img { width:160px; aspect-ratio:2/3; border-radius:16px; overflow:hidden; margin:0 auto 12px; border:2px solid rgba(212,175,55,0.5); box-shadow:0 12px 40px rgba(212,175,55,0.25); }
+.result-card-img img { width:100%; height:100%; object-fit:cover; }
+.result-position { font-size:24px; font-weight:800; color:#d4af37; letter-spacing:2px; text-shadow:0 0 16px rgba(212,175,55,0.5); }
+.result-emoji { font-size:36px; margin-bottom:4px; }
+.result-summary { font-size:14px; color:rgba(255,255,255,0.6); margin-top:6px; line-height:1.6; }
+
+.result-section { border-radius:16px; padding:16px 20px; margin-bottom:10px; border-left:3px solid rgba(212,175,55,0.5); background:rgba(212,175,55,0.05); }
+.result-section h3 { font-size:14px; font-weight:700; color:#d4af37; margin-bottom:8px; }
+.result-section p { font-size:14px; color:rgba(255,255,255,0.8); line-height:2; }
+
+.boost-section { border-radius:16px; padding:16px 20px; margin-bottom:10px; border-left:3px solid #10b981; background:rgba(16,185,129,0.06); }
+.boost-section h3 { font-size:14px; font-weight:700; color:#10b981; margin-bottom:8px; }
+.boost-section p { font-size:14px; color:rgba(255,255,255,0.8); line-height:2; }
+
+.protect-section { border-radius:16px; padding:16px 20px; margin-bottom:10px; border-left:3px solid #a855f7; background:rgba(168,85,247,0.06); }
+.protect-section h3 { font-size:14px; font-weight:700; color:#a855f7; margin-bottom:8px; }
+.protect-section p { font-size:14px; color:rgba(255,255,255,0.8); line-height:2; }
+
+/* STREAM */
+.streaming p { border-right:2px solid #d4af37; animation:blink 0.7s infinite; }
+@keyframes blink { 0%,100%{border-color:transparent} 50%{border-color:#d4af37} }
+
+.btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:12px; }
+
+/* YEAR TIMELINE */
+.timeline-row { display:flex; justify-content:center; gap:4px; margin-bottom:8px; flex-wrap:wrap; padding:0 10px; }
+.year-dot { width:6px; height:6px; border-radius:50%; background:rgba(212,175,55,0.2); transition:all 0.2s; }
+.year-dot.passed { background:rgba(212,175,55,0.5); }
+.year-dot.current { background:#d4af37; transform:scale(1.5); box-shadow:0 0 6px rgba(212,175,55,0.8); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="thai-hub.html" class="back-btn">←</a>
+  <div class="page-title">📖 ตำราพรหมชาติ</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">📖 ตำราพรหมชาติ</div>
+    <div class="hero-desc">ตำราโหราศาสตร์ไทยโบราณสมัยอยุธยา<br>นับอายุตามตำแหน่งดวงชะตาประจำปีค่ะ</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-box" id="formBox">
+    <div class="form-row">
+      <label class="form-label">📅 วันเดือนปีเกิด</label>
+      <input type="date" class="form-input" id="birthDate" max="2010-12-31">
+    </div>
+    <div class="form-row">
+      <label class="form-label">⚥ เพศ</label>
+      <div class="gender-row">
+        <button class="gender-btn" id="btnMale" onclick="selectGender('male')">👨 ชาย</button>
+        <button class="gender-btn" id="btnFemale" onclick="selectGender('female')">👩 หญิง</button>
+      </div>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="startReading()" disabled>✨ ดูดวงพรหมชาติ</button>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="carousel-section" id="carouselSection">
+    <div class="age-display">
+      <div class="age-label">อายุปีที่</div>
+      <div id="ageNumber">1</div>
+    </div>
+    <div class="timeline-row" id="timelineRow"></div>
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="card-slide side" id="cardLeft">
+          <div class="card-img-wrap"><img id="imgLeft" src=""></div>
+        </div>
+        <div class="card-slide center" id="cardCenter">
+          <div class="card-img-wrap"><img id="imgCenter" src=""></div>
+          <div class="card-name" id="nameCenter"></div>
+        </div>
+        <div class="card-slide side" id="cardRight">
+          <div class="card-img-wrap"><img id="imgRight" src=""></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-box" id="resultBox">
+    <div class="result-card-hero">
+      <div class="result-emoji" id="resEmoji"></div>
+      <div class="result-card-img"><img id="resImg" src=""></div>
+      <div class="result-position" id="resName"></div>
+      <div class="result-summary" id="resSummary"></div>
+    </div>
+
+    <div class="result-section" id="secOverview"><h3>🔮 ภาพรวมดวงชะตา</h3><p id="pOverview"></p></div>
+    <div class="result-section" id="secWork"><h3>💼 การงาน</h3><p id="pWork"></p></div>
+    <div class="result-section" id="secMoney"><h3>💰 การเงิน</h3><p id="pMoney"></p></div>
+    <div class="result-section" id="secLove"><h3>❤️ ความรัก</h3><p id="pLove"></p></div>
+    <div class="result-section" id="secHealth"><h3>🌿 สุขภาพ</h3><p id="pHealth"></p></div>
+    <div class="protect-section"><h3>🙏 เทพคุ้มครอง</h3><p id="pProtect"></p></div>
+    <div class="boost-section"><h3>⭐ วิธีเสริมดวง</h3><p id="pBoost"></p></div>
+
+    <button class="btn-reset" onclick="resetAll()">🔄 ดูดวงใหม่</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+let selectedGender = null;
+let currentAge = 0;
+let targetAge = 0;
+let animInterval = null;
+
+const IMG = (id) => `../images/brahma/b${id}.png`;
+
+window.selectGender = function(g) {
+  selectedGender = g;
+  document.getElementById('btnMale').classList.toggle('active', g === 'male');
+  document.getElementById('btnFemale').classList.toggle('active', g === 'female');
+  checkReady();
+};
+
+document.getElementById('birthDate').addEventListener('change', checkReady);
+
+function checkReady() {
+  const d = document.getElementById('birthDate').value;
+  document.getElementById('btnStart').disabled = !(d && selectedGender);
+}
+
+function calcAge(birthStr) {
+  const birth = new Date(birthStr);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age < 1 ? 1 : age;
+}
+
+function getPositionAtAge(gender, age) {
+  const offset = (age - 1) % 12;
+  if (gender === 'male') {
+    return BRAHMA_POSITIONS[offset];
+  } else {
+    const idx = offset === 0 ? 0 : (12 - offset);
+    return BRAHMA_POSITIONS[idx];
+  }
+}
+
+function getAdjacentPositions(gender, age) {
+  const prevAge = age <= 1 ? 12 : age - 1;
+  const nextAge = age + 1;
+  return {
+    prev: getPositionAtAge(gender, prevAge),
+    curr: getPositionAtAge(gender, age),
+    next: getPositionAtAge(gender, nextAge),
+  };
+}
+
+function updateCarousel(age) {
+  const adj = getAdjacentPositions(selectedGender, age);
+
+  // ชาย: ซ้าย=prev, ขวา=next | หญิง: สลับ
+  const left  = selectedGender === 'male' ? adj.prev : adj.next;
+  const right = selectedGender === 'male' ? adj.next : adj.prev;
+
+  document.getElementById('imgLeft').src    = IMG(left.id);
+  document.getElementById('imgCenter').src  = IMG(adj.curr.id);
+  document.getElementById('imgRight').src   = IMG(right.id);
+  document.getElementById('nameCenter').textContent = adj.curr.name;
+  document.getElementById('ageNumber').textContent  = age;
+
+  // timeline dots
+  const dots = document.querySelectorAll('.year-dot');
+  dots.forEach((d, i) => {
+    d.classList.remove('passed', 'current');
+    if (i + 1 < age) d.classList.add('passed');
+    if (i + 1 === age) d.classList.add('current');
+  });
+}
+
+window.startReading = function() {
+  const birthStr = document.getElementById('birthDate').value;
+  if (!birthStr || !selectedGender) return;
+
+  targetAge = calcAge(birthStr);
+  currentAge = 1;
+
+  // สร้าง timeline dots
+  const row = document.getElementById('timelineRow');
+  row.innerHTML = '';
+  for (let i = 0; i < targetAge; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'year-dot';
+    row.appendChild(dot);
+  }
+
+  document.getElementById('formBox').style.display = 'none';
+  document.getElementById('carouselSection').classList.add('show');
+  document.getElementById('resultBox').classList.remove('show');
+
+  updateCarousel(1);
+
+  // delay แล้วเริ่ม animate
+  setTimeout(() => {
+    animInterval = setInterval(() => {
+      currentAge++;
+      updateCarousel(currentAge);
+
+      if (currentAge >= targetAge) {
+        clearInterval(animInterval);
+        setTimeout(() => showResult(), 800);
+      }
+    }, targetAge > 30 ? 80 : 150); // เร็วขึ้นถ้าอายุเยอะ
+  }, 600);
+};
+
+function showResult() {
+  const pos = getPositionAtAge(selectedGender, targetAge);
+
+  document.getElementById('resEmoji').textContent   = pos.emoji;
+  document.getElementById('resImg').src             = IMG(pos.id);
+  document.getElementById('resName').textContent    = pos.name;
+  document.getElementById('resSummary').textContent = pos.summary;
+
+  // fake stream sections
+  const sections = [
+    { id: 'pOverview', text: pos.overview },
+    { id: 'pWork',     text: pos.work     },
+    { id: 'pMoney',    text: pos.money    },
+    { id: 'pLove',     text: pos.love     },
+    { id: 'pHealth',   text: pos.health   },
+    { id: 'pProtect',  text: pos.protect  },
+    { id: 'pBoost',    text: pos.boost    },
+  ];
+
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(() => document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' }), 100);
+
+  let si = 0;
+  function streamNext() {
+    if (si >= sections.length) return;
+    const { id, text } = sections[si];
+    const el = document.getElementById(id);
+    el.textContent = '';
+    el.parentElement.classList.add('streaming');
+    let ci = 0;
+    const t = setInterval(() => {
+      el.textContent += text[ci];
+      ci++;
+      if (ci >= text.length) {
+        clearInterval(t);
+        el.parentElement.classList.remove('streaming');
+        si++;
+        setTimeout(streamNext, 200);
+      }
+    }, 18);
+  }
+  streamNext();
+}
+
+window.resetAll = function() {
+  clearInterval(animInterval);
+  selectedGender = null;
+  document.getElementById('btnMale').classList.remove('active');
+  document.getElementById('btnFemale').classList.remove('active');
+  document.getElementById('birthDate').value = '';
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('formBox').style.display = 'block';
+  document.getElementById('carouselSection').classList.remove('show');
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+
+window.updateCoinUI = function(c) { document.getElementById('coinCount').textContent = c; };
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="' + a + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.loginNow = function() { var m = document.getElementById('loginRequiredOverlay'); if (m) m.classList.add('show'); };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0); setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+});
+</script>
+</body>
+</html>
