@@ -111,6 +111,35 @@ body { padding-bottom: 80px; background: #0d0820; }
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
+<!-- LOADING OVERLAY -->
+<div id="loadingOverlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(13,8,32,0.97);flex-direction:column;align-items:center;justify-content:center;">
+  <div style="position:relative;width:100px;height:100px;margin-bottom:24px;">
+    <div style="position:absolute;inset:0;border-radius:50%;border:3px solid transparent;border-top-color:#d4af37;border-right-color:rgba(212,175,55,0.3);animation:spin 1.2s linear infinite;"></div>
+    <div style="position:absolute;inset:12px;border-radius:50%;border:2px solid transparent;border-bottom-color:#d4af37;border-left-color:rgba(212,175,55,0.2);animation:spin 0.8s linear infinite reverse;"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;" id="loadIcon">🏯</div>
+  </div>
+  <div style="font-size:16px;font-weight:700;color:#d4af37;margin-bottom:6px;letter-spacing:1px;">กำลังเชื่อมต่อดวงชะตา</div>
+  <div style="font-size:12px;color:rgba(212,175,55,0.5);" id="loadHint">เตรียมตำราโบราณ...</div>
+  <div style="width:180px;height:3px;background:rgba(212,175,55,0.15);border-radius:99px;margin-top:20px;overflow:hidden;">
+    <div id="loadBar" style="height:100%;background:linear-gradient(90deg,#92710a,#d4af37);border-radius:99px;width:0%;transition:width 0.3s;"></div>
+  </div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">📖</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อดูดวงและบันทึกประวัติ</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show{display:flex!important}</style>
+
 <div class="page-content">
   <div class="hero">
     <div class="hero-title">📖 ตำราพรหมชาติ</div>
@@ -119,16 +148,10 @@ body { padding-bottom: 80px; background: #0d0820; }
 
   <!-- FORM -->
   <div class="form-box" id="formBox">
-    <label class="form-label">📅 วันเดือนปีเกิด</label>
+    <label class="form-label">📅 ปีเกิด (พ.ศ.)</label>
     <div class="date-row">
-      <select class="date-select" id="selDay" onchange="checkReady()">
-        <option value="">วัน</option>
-      </select>
-      <select class="date-select" id="selMonth" onchange="checkReady()">
-        <option value="">เดือน</option>
-      </select>
       <select class="date-select" id="selYear" onchange="checkReady()">
-        <option value="">ปี</option>
+        <option value="">เลือกปีเกิด</option>
       </select>
     </div>
     <label class="form-label">⚥ เพศ</label>
@@ -136,7 +159,11 @@ body { padding-bottom: 80px; background: #0d0820; }
       <button class="gender-btn" id="btnMale" onclick="selectGender('male')">👨 ชาย</button>
       <button class="gender-btn" id="btnFemale" onclick="selectGender('female')">👩 หญิง</button>
     </div>
-    <button class="btn-start" id="btnStart" onclick="startReading()" disabled>✨ ดูดวงพรหมชาติ</button>
+    <div class="coin-box" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:14px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:13px;color:#d4af37;margin-bottom:4px;">🪙 ใช้ 19 เหรียญต่อครั้งค่ะ</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="startReading()" disabled>📖 ดูดวงพรหมชาติ</button>
   </div>
 
   <!-- CAROUSEL -->
@@ -179,30 +206,35 @@ body { padding-bottom: 80px; background: #0d0820; }
 <script>
 
 
-// ── INIT DROPDOWNS ──
-const MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-
-(function initDropdowns() {
-  const selDay = document.getElementById('selDay');
-  for (let d = 1; d <= 31; d++) {
-    const o = document.createElement('option');
-    o.value = d; o.textContent = d;
-    selDay.appendChild(o);
-  }
-  const selMonth = document.getElementById('selMonth');
-  MONTHS.forEach((m, i) => {
-    const o = document.createElement('option');
-    o.value = i + 1; o.textContent = m;
-    selMonth.appendChild(o);
-  });
+// ── INIT YEAR DROPDOWN ──
+(function initYear() {
   const selYear = document.getElementById('selYear');
   const curYear = new Date().getFullYear();
   for (let y = curYear - 1; y >= curYear - 90; y--) {
     const o = document.createElement('option');
-    o.value = y; o.textContent = y + 543; // แสดงเป็น พ.ศ.
+    o.value = y; o.textContent = y + 543;
     selYear.appendChild(o);
   }
 })();
+
+// ── LOADING ANIM ──
+const LOAD_HINTS = ["เตรียมตำราโบราณ","นับวงล้อ 12 ตำแหน่ง","คำนวณดวงชะตา","เปิดประตูโชคชะตา"];
+const LOAD_ICONS = ["🏯","🐉","👑","✨"];
+let _lhIdx=0, _lhInterval=null;
+function startLoadAnim(){
+  let w=0; const bar=document.getElementById("loadBar");
+  _lhIdx=0;
+  _lhInterval=setInterval(()=>{
+    _lhIdx=(_lhIdx+1)%4;
+    document.getElementById("loadHint").textContent=LOAD_HINTS[_lhIdx]+"...";
+    document.getElementById("loadIcon").textContent=LOAD_ICONS[_lhIdx];
+    w=Math.min(w+25,90); bar.style.width=w+"%";
+  },600);
+}
+function stopLoadAnim(){
+  clearInterval(_lhInterval);
+  document.getElementById("loadBar").style.width="100%";
+}
 
 // ── STATE ──
 let selectedGender = null;
@@ -217,18 +249,13 @@ window.selectGender = function(g) {
 };
 
 window.checkReady = function() {
-  const d = document.getElementById('selDay').value;
-  const m = document.getElementById('selMonth').value;
   const y = document.getElementById('selYear').value;
-  document.getElementById('btnStart').disabled = !(d && m && y && selectedGender);
+  document.getElementById('btnStart').disabled = !(y && selectedGender);
 };
 
-function calcAge(day, month, year) {
-  const birth = new Date(year, month - 1, day);
+function calcAge(year) {
   const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const dm = today.getMonth() - birth.getMonth();
-  if (dm < 0 || (dm === 0 && today.getDate() < birth.getDate())) age--;
+  const age = today.getFullYear() - year;
   return age < 1 ? 1 : age;
 }
 
@@ -259,13 +286,48 @@ function updateCarousel(age, gender) {
   });
 }
 
-window.startReading = function() {
-  const day   = parseInt(document.getElementById('selDay').value);
-  const month = parseInt(document.getElementById('selMonth').value);
-  const year  = parseInt(document.getElementById('selYear').value);
-  if (!day || !month || !year || !selectedGender) return;
+window.startReading = async function() {
+  if (!window.currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+  const year = parseInt(document.getElementById('selYear').value);
+  if (!year || !selectedGender) return;
 
-  const targetAge = calcAge(day, month, year);
+  // deduct coins
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+  try {
+    const idToken = await window.currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({ service: 'brahma', noapi: true })
+    });
+    const nb = res.headers.get('X-New-Coin-Balance');
+    if (nb != null) { updateCoinUI(parseInt(nb)); const cd = document.getElementById('coinDisplay'); if(cd) cd.textContent = parseInt(nb); }
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false;
+      return;
+    }
+    await res.body.cancel();
+  } catch(e) { console.error(e); btn.disabled = false; return; }
+
+  // show loading overlay
+  document.getElementById('loadingOverlay').style.display = 'flex';
+  startLoadAnim();
+
+  // preload images
+  await Promise.all(Array.from({length:12},(_,i) => new Promise(r=>{
+    const img = new Image(); img.onload = img.onerror = r;
+    img.src = IMG(i);
+  })));
+
+  stopLoadAnim();
+  await new Promise(r=>setTimeout(r,300));
+  document.getElementById('loadingOverlay').style.display = 'none';
+
+  const targetAge = calcAge(year);
 
   // build timeline
   const row = document.getElementById('timelineRow');
@@ -328,8 +390,6 @@ window.resetAll = function() {
   selectedGender = null;
   document.getElementById('btnMale').classList.remove('active');
   document.getElementById('btnFemale').classList.remove('active');
-  document.getElementById('selDay').value = '';
-  document.getElementById('selMonth').value = '';
   document.getElementById('selYear').value = '';
   document.getElementById('btnStart').disabled = true;
   document.getElementById('formBox').style.display = 'block';
@@ -355,12 +415,14 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
 const db=getFirestore(app);
-window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+window.currentUser=null;
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;const cd=document.getElementById('coinDisplay');if(cd)cd.textContent=c;};
 function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
 window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
 onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
   if(user){
     var snap=await getDoc(doc(db,'users',user.uid));
     var data=snap.exists()?snap.data():{};
