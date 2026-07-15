@@ -92,6 +92,7 @@ const SERVICE_COSTS = {
   "oracle-dream-5": TIER.T30,
   "brahma": TIER.T19,
   "human-design": TIER.T49,
+  "gene-keys": TIER.T49,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
