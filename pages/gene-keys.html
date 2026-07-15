@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gene Keys — รหัสพันธุกรรมชีวิต | My Tarot</title>
+<meta name="description" content="ค้นพบรหัสพันธุกรรมจิตวิญญาณของคุณด้วย Gene Keys ศาสตร์ที่ต่อยอดจาก Human Design เพื่อปลดล็อกศักยภาพสูงสุดในตัวคุณค่ะ">
+<meta property="og:title" content="Gene Keys — รหัสพันธุกรรมชีวิต | My Tarot">
+<meta property="og:description" content="ปลดล็อกศักยภาพสูงสุดของคุณผ่านรหัสพันธุกรรมจิตวิญญาณค่ะ">
+<meta property="og:url" content="https://www.mytarot.vip/pages/gene-keys">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/genekeys-data.js"></script>
+<script src="../js/genekeys-data-2.js"></script>
+<script src="../js/genekeys-data-3.js"></script>
+<script src="../js/hd-calc.js"></script>
+<style>
+body { padding-bottom: 80px; background: #060410; }
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(168,85,247,0.2); background:rgba(6,4,16,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); display:flex; align-items:center; justify-content:center; color:#c084fc; font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title { font-size:18px; font-weight:700; color:white; }
+.page-content { padding:20px 20px 40px; }
+
+/* HERO */
+.hero { text-align:center; padding:8px 0 20px; }
+.hero-title { font-size:22px; font-weight:800; color:#c084fc; margin-bottom:6px; text-shadow:0 0 24px rgba(168,85,247,0.4); }
+.hero-desc { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+/* FORM */
+.form-box { background:rgba(168,85,247,0.06); border:1px solid rgba(168,85,247,0.2); border-radius:20px; padding:20px; margin-bottom:20px; }
+.form-label { font-size:13px; color:#c084fc; font-weight:700; margin-bottom:8px; display:block; }
+.date-row { display:flex; gap:8px; margin-bottom:14px; }
+.date-select { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(168,85,247,0.25); border-radius:12px; padding:12px 8px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; appearance:none; text-align:center; cursor:pointer; }
+.date-select:focus { border-color:#c084fc; }
+.date-select option { background:#1a0a3e; color:white; }
+.time-row { display:flex; gap:8px; margin-bottom:14px; }
+.time-input { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(168,85,247,0.25); border-radius:12px; padding:12px 14px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; }
+.time-input:focus { border-color:#c084fc; }
+.time-input::placeholder { color:rgba(255,255,255,0.25); }
+.city-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(168,85,247,0.25); border-radius:12px; padding:12px 14px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; box-sizing:border-box; margin-bottom:14px; }
+.city-input:focus { border-color:#c084fc; }
+.city-input::placeholder { color:rgba(255,255,255,0.25); }
+.coin-box { background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+.coin-text { font-size:13px; color:#c084fc; margin-bottom:4px; }
+.coin-hint { font-size:11px; color:rgba(255,255,255,0.3); }
+.btn-start { width:100%; background:linear-gradient(135deg,#6b21a8,#c084fc); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+.btn-start:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* LOADING */
+.loading-overlay { display:none; position:fixed; inset:0; z-index:300; background:rgba(6,4,16,0.97); flex-direction:column; align-items:center; justify-content:center; }
+.loading-overlay.show { display:flex; }
+.load-ring { position:relative; width:100px; height:100px; margin-bottom:24px; }
+.load-ring-1 { position:absolute; inset:0; border-radius:50%; border:3px solid transparent; border-top-color:#c084fc; animation:spinR 1.2s linear infinite; }
+.load-ring-2 { position:absolute; inset:12px; border-radius:50%; border:2px solid transparent; border-bottom-color:#9333ea; animation:spinR 0.8s linear infinite reverse; }
+@keyframes spinR { to { transform:rotate(360deg); } }
+.load-icon-el { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:30px; }
+.load-title { font-size:16px; font-weight:700; color:#c084fc; margin-bottom:6px; }
+.load-hint { font-size:12px; color:rgba(192,132,252,0.5); }
+.load-bar-wrap { width:180px; height:3px; background:rgba(168,85,247,0.15); border-radius:99px; margin-top:20px; overflow:hidden; }
+.load-bar-fill { height:100%; background:linear-gradient(90deg,#6b21a8,#c084fc); border-radius:99px; width:0%; transition:width 0.3s; }
+
+/* RESULT */
+.result-wrap { display:none; }
+.result-wrap.show { display:block; }
+
+/* HERO CARD */
+.hero-card { background:linear-gradient(135deg,#1a0a3e,#0d0820); border:1px solid rgba(168,85,247,0.3); border-radius:20px; padding:20px; margin-bottom:14px; text-align:center; }
+.hero-card-badge { display:inline-block; font-size:10px; padding:3px 12px; border-radius:99px; background:rgba(168,85,247,0.2); color:#c084fc; letter-spacing:1px; margin-bottom:10px; }
+.hero-card-title { font-size:20px; font-weight:700; color:white; margin-bottom:4px; }
+.hero-card-sub { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:16px; }
+.hero-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+.hero-stat { background:rgba(255,255,255,0.06); border-radius:10px; padding:10px 12px; text-align:left; }
+.hero-stat-l { font-size:10px; color:rgba(255,255,255,0.4); margin-bottom:2px; }
+.hero-stat-v { font-size:12px; font-weight:600; color:white; }
+
+/* KEY CARDS */
+.sec-label { font-size:11px; font-weight:700; color:#c084fc; letter-spacing:1.5px; margin:16px 0 10px; }
+.key-card { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; margin-bottom:12px; }
+.key-header { padding:14px 16px 10px; border-bottom:0.5px solid rgba(255,255,255,0.05); }
+.key-planet { font-size:10px; color:rgba(255,255,255,0.35); margin-bottom:4px; letter-spacing:1px; }
+.key-gate-title { font-size:16px; font-weight:700; color:white; }
+.key-body { padding:12px 16px 14px; }
+.level-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+.level-box { border-radius:10px; padding:10px 8px; text-align:center; }
+.lv-shadow { background:rgba(239,68,68,0.08); border:0.5px solid rgba(239,68,68,0.2); }
+.lv-gift { background:rgba(168,85,247,0.08); border:0.5px solid rgba(168,85,247,0.2); }
+.lv-siddhi { background:rgba(251,191,36,0.08); border:0.5px solid rgba(251,191,36,0.2); }
+.level-icon { font-size:16px; margin-bottom:4px; }
+.level-label { font-size:9px; font-weight:700; letter-spacing:1px; margin-bottom:3px; }
+.lv-shadow .level-label { color:rgba(239,68,68,0.7); }
+.lv-gift .level-label { color:rgba(168,85,247,0.8); }
+.lv-siddhi .level-label { color:rgba(251,191,36,0.8); }
+.level-word { font-size:13px; font-weight:700; color:white; line-height:1.3; }
+.key-desc { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.8; margin-bottom:10px; }
+.key-unlock { background:rgba(168,85,247,0.08); border-left:2px solid #9333ea; border-radius:8px; padding:10px 12px; font-size:12px; color:rgba(255,255,255,0.6); line-height:1.7; margin-bottom:8px; }
+.key-divider { height:0.5px; background:rgba(255,255,255,0.06); margin:10px 0; }
+.key-mini-label { font-size:10px; color:rgba(255,255,255,0.3); margin-bottom:4px; letter-spacing:1px; }
+.key-mini-text { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.7; margin-bottom:8px; }
+
+/* JOURNEY */
+.journey-card { background:rgba(168,85,247,0.06); border:1px solid rgba(168,85,247,0.2); border-radius:16px; padding:16px; margin-bottom:14px; }
+.journey-title { font-size:13px; font-weight:700; color:#c084fc; margin-bottom:12px; }
+.journey-step { display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+.journey-num { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px; }
+.journey-text { font-size:13px; color:rgba(255,255,255,0.65); line-height:1.7; }
+
+.btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:12px; }
+
+/* LOGIN */
+.login-required-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; }
+.login-required-overlay.show { display:flex !important; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="load-ring">
+    <div class="load-ring-1"></div>
+    <div class="load-ring-2"></div>
+    <div class="load-icon-el" id="loadIcon">🧬</div>
+  </div>
+  <div class="load-title">กำลังถอดรหัสพันธุกรรม</div>
+  <div class="load-hint" id="loadHint">คำนวณตำแหน่งดาว...</div>
+  <div class="load-bar-wrap"><div class="load-bar-fill" id="loadBar"></div></div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0a3e,#060410);border:1px solid rgba(168,85,247,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🧬</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อถอดรหัสพันธุกรรมชีวิตค่ะ</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="indian-hub.html" class="back-btn">←</a>
+  <div class="page-title">🧬 Gene Keys</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.3);color:#c084fc;">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🧬 รหัสพันธุกรรมชีวิต</div>
+    <div class="hero-desc">ค้นพบ Shadow ที่ซ่อนอยู่ Gift ที่รอปลดล็อก<br>และ Siddhi ศักยภาพสูงสุดของคุณค่ะ</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-box" id="formBox">
+    <label class="form-label">📅 วันเดือนปีเกิด</label>
+    <div class="date-row">
+      <select class="date-select" id="selDay" onchange="checkReady()"><option value="">วัน</option></select>
+      <select class="date-select" id="selMonth" onchange="checkReady()"><option value="">เดือน</option></select>
+      <select class="date-select" id="selYear" onchange="checkReady()"><option value="">ปี (พ.ศ.)</option></select>
+    </div>
+    <label class="form-label">🕐 เวลาเกิด</label>
+    <div class="time-row">
+      <input type="number" class="time-input" id="birthHour" placeholder="ชั่วโมง (0-23)" min="0" max="23" oninput="checkReady()">
+      <input type="number" class="time-input" id="birthMin" placeholder="นาที (0-59)" min="0" max="59" oninput="checkReady()">
+    </div>
+    <label class="form-label">📍 เมืองที่เกิด</label>
+    <input type="text" class="city-input" id="birthCity" placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่" oninput="checkReady()">
+    <div class="coin-box">
+      <div class="coin-text">🪙 ใช้ 49 เหรียญต่อครั้งค่ะ</div>
+      <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="startReading()" disabled>🧬 ถอดรหัสพันธุกรรมชีวิต</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-wrap" id="resultWrap">
+    <div id="heroCard"></div>
+    <div id="keysContainer"></div>
+    <div id="journeyCard"></div>
+    <button class="btn-reset" onclick="resetAll()">🔄 ถอดรหัสใหม่</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+// ── INIT DROPDOWNS ──
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+(function init() {
+  const selDay = document.getElementById('selDay');
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; selDay.appendChild(o); }
+  const selMonth = document.getElementById('selMonth');
+  MONTHS_TH.forEach((m,i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; selMonth.appendChild(o); });
+  const selYear = document.getElementById('selYear');
+  const curYear = new Date().getFullYear();
+  for (let y = curYear - 1; y >= curYear - 80; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y + 543; selYear.appendChild(o); }
+})();
+
+window.checkReady = function() {
+  const d = document.getElementById('selDay').value;
+  const m = document.getElementById('selMonth').value;
+  const y = document.getElementById('selYear').value;
+  const h = document.getElementById('birthHour').value;
+  const mi = document.getElementById('birthMin').value;
+  const c = document.getElementById('birthCity').value.trim();
+  document.getElementById('btnStart').disabled = !(d && m && y && h !== '' && mi !== '' && c);
+};
+
+// ── LOADING ──
+const HINTS = ['คำนวณตำแหน่งดาว...','ค้นหา Gates...','ถอดรหัส Shadow...','ปลดล็อก Gift...'];
+const ICONS = ['🧬','⭐','🌑','🌟'];
+let _lhIdx = 0, _lhInt = null;
+function startLoad() {
+  _lhIdx = 0; let w = 0;
+  const bar = document.getElementById('loadBar');
+  _lhInt = setInterval(() => {
+    _lhIdx = (_lhIdx+1) % 4;
+    document.getElementById('loadHint').textContent = HINTS[_lhIdx];
+    document.getElementById('loadIcon').textContent = ICONS[_lhIdx];
+    w = Math.min(w + 22, 90); bar.style.width = w + '%';
+  }, 700);
+}
+function stopLoad() {
+  clearInterval(_lhInt);
+  document.getElementById('loadBar').style.width = '100%';
+}
+
+// ── STREAM TEXT ──
+function streamText(el, text, onDone) {
+  el.textContent = '';
+  let i = 0;
+  const t = setInterval(() => {
+    el.textContent += text[i++];
+    if (i >= text.length) { clearInterval(t); if (onDone) onDone(); }
+  }, 13);
+}
+
+// ── RENDER KEY CARD ──
+function renderKeyCard(gateNum, planetLabel, data) {
+  if (!data) return '';
+  const key = GENE_KEYS[gateNum];
+  if (!key) return '';
+  return `
+    <div class="key-card">
+      <div class="key-header">
+        <div class="key-planet">${planetLabel} · Gate ${gateNum}</div>
+        <div class="key-gate-title">รหัส ${gateNum} · ${key.nameTh}</div>
+      </div>
+      <div class="key-body">
+        <div class="level-row">
+          <div class="level-box lv-shadow">
+            <div class="level-icon">🌑</div>
+            <div class="level-label">SHADOW</div>
+            <div class="level-word">${key.shadow.word}</div>
+          </div>
+          <div class="level-box lv-gift">
+            <div class="level-icon">🌟</div>
+            <div class="level-label">GIFT</div>
+            <div class="level-word">${key.gift.word}</div>
+          </div>
+          <div class="level-box lv-siddhi">
+            <div class="level-icon">☀️</div>
+            <div class="level-label">SIDDHI</div>
+            <div class="level-word">${key.siddhi.word}</div>
+          </div>
+        </div>
+        <div class="key-mini-label">SHADOW — สิ่งที่ยังติดขัดอยู่ภายใน</div>
+        <div class="key-desc" id="gk_shadow_${gateNum}"></div>
+        <div class="key-mini-label">วิธีปลดล็อก Gift</div>
+        <div class="key-unlock" id="gk_unlock_${gateNum}"></div>
+        <div class="key-mini-label">GIFT — ของขวัญเมื่อปลดล็อกแล้ว</div>
+        <div class="key-desc" id="gk_gift_${gateNum}"></div>
+        <div class="key-divider"></div>
+        <div class="key-mini-label">☀️ SIDDHI — ศักยภาพสูงสุดของคุณ</div>
+        <div class="key-desc" id="gk_siddhi_${gateNum}"></div>
+        <div class="key-divider"></div>
+        <div class="key-mini-label">💼 การงาน</div>
+        <div class="key-mini-text" id="gk_work_${gateNum}"></div>
+        <div class="key-mini-label">❤️ ความรัก</div>
+        <div class="key-mini-text" id="gk_love_${gateNum}"></div>
+        <div class="key-mini-label">🌿 สุขภาพ</div>
+        <div class="key-mini-text" id="gk_health_${gateNum}"></div>
+        <div class="key-mini-label">✨ คำแนะนำรายวัน</div>
+        <div class="key-mini-text" id="gk_daily_${gateNum}"></div>
+      </div>
+    </div>`;
+}
+
+function streamKeyCard(gateNum, delay) {
+  const key = GENE_KEYS[gateNum];
+  if (!key) return;
+  setTimeout(() => {
+    const sections = [
+      [`gk_shadow_${gateNum}`, key.shadow.desc || key.shadow.word],
+      [`gk_unlock_${gateNum}`, key.gift.howToUnlock || ''],
+      [`gk_gift_${gateNum}`, key.gift.desc || key.gift.word],
+      [`gk_siddhi_${gateNum}`, key.siddhi.desc || key.siddhi.word],
+      [`gk_work_${gateNum}`, key.work || ''],
+      [`gk_love_${gateNum}`, key.love || ''],
+      [`gk_health_${gateNum}`, key.health || ''],
+      [`gk_daily_${gateNum}`, key.daily || ''],
+    ];
+    let si = 0;
+    function next() {
+      if (si >= sections.length) return;
+      const [id, text] = sections[si++];
+      const el = document.getElementById(id);
+      if (el && text) streamText(el, text, () => setTimeout(next, 80));
+      else setTimeout(next, 50);
+    }
+    next();
+  }, delay);
+}
+
+// ── SHOW RESULTS ──
+function showResults(hdData, birthInfo) {
+  document.getElementById('resultWrap').classList.add('show');
+
+  const cGates = hdData.consciousGates || {};
+  const dGates = hdData.designGates || {};
+
+  // Hero card
+  document.getElementById('heroCard').innerHTML = `
+    <div class="hero-card">
+      <div class="hero-card-badge">🧬 GENE KEYS · รหัสพันธุกรรมชีวิต</div>
+      <div class="hero-card-title">แผนที่จิตวิญญาณของคุณ</div>
+      <div class="hero-card-sub">${birthInfo}</div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-l">☀️ Conscious Sun</div><div class="hero-stat-v">Gate ${cGates.sun?.gate || '?'} · ${GENE_KEYS[cGates.sun?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[cGates.sun?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">🌍 Conscious Earth</div><div class="hero-stat-v">Gate ${cGates.earth?.gate || '?'} · ${GENE_KEYS[cGates.earth?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[cGates.earth?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">✨ Design Sun</div><div class="hero-stat-v">Gate ${dGates.sun?.gate || '?'} · ${GENE_KEYS[dGates.sun?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.sun?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">🌍 Design Earth</div><div class="hero-stat-v">Gate ${dGates.earth?.gate || '?'} · ${GENE_KEYS[dGates.earth?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.earth?.gate]?.gift?.word || '—'}</div></div>
+      </div>
+    </div>`;
+
+  // Key cards
+  const planets = [
+    { gate: cGates.sun?.gate,   label: '☀️ ดวงอาทิตย์ตอนเกิด · แก่นแท้ของตัวตน' },
+    { gate: cGates.earth?.gate, label: '🌍 โลกตอนเกิด · รากฐานชีวิต' },
+    { gate: cGates.moon?.gate,  label: '🌙 ดวงจันทร์ตอนเกิด · โลกอารมณ์ภายใน' },
+    { gate: dGates.sun?.gate,   label: '✨ ดวงอาทิตย์ออกแบบ · ด้านที่คนอื่นมองเห็น' },
+    { gate: dGates.earth?.gate, label: '🌏 โลกออกแบบ · รากฐานจิตใต้สำนึก' },
+  ];
+
+  let html = '';
+  planets.forEach((p, i) => {
+    if (p.gate) {
+      const sec = i === 0 ? '<div class="sec-label">☀️ CONSCIOUS SUN · แก่นแท้ที่สุดของคุณ</div>' :
+                  i === 1 ? '<div class="sec-label">🌍 CONSCIOUS EARTH · รากฐานชีวิต</div>' :
+                  i === 2 ? '<div class="sec-label">🌙 CONSCIOUS MOON · โลกอารมณ์ภายใน</div>' :
+                  i === 3 ? '<div class="sec-label">✨ DESIGN SUN · ด้านที่คนอื่นเห็นในตัวคุณ</div>' :
+                            '<div class="sec-label">🌏 DESIGN EARTH · รากฐานจิตใต้สำนึก</div>';
+      html += sec + renderKeyCard(p.gate, p.label);
+    }
+  });
+  document.getElementById('keysContainer').innerHTML = html;
+
+  // Journey card
+  document.getElementById('journeyCard').innerHTML = `
+    <div class="journey-card">
+      <div class="journey-title">🗺️ เส้นทางการเติบโตของคุณ</div>
+      <div class="journey-step">
+        <div class="journey-num" style="background:rgba(239,68,68,0.15);color:#f87171;">1</div>
+        <div class="journey-text"><strong style="color:#f87171;">ตระหนักรู้ Shadow</strong> — สังเกตเมื่อไหร่ที่รู้สึก${GENE_KEYS[cGates.sun?.gate]?.shadow?.word || 'ติดขัด'} โดยไม่ตัดสินมันค่ะ นั่นคือประตูที่นำสู่การเปลี่ยนแปลงค่ะ</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-num" style="background:rgba(168,85,247,0.15);color:#c084fc;">2</div>
+        <div class="journey-text"><strong style="color:#c084fc;">ปลดล็อก Gift</strong> — เมื่อยอมรับด้านมืดแล้ว พลังงานจะเปลี่ยนเป็น${GENE_KEYS[cGates.sun?.gate]?.gift?.word || 'ของขวัญ'}เองโดยธรรมชาติค่ะ</div>
+      </div>
+      <div class="journey-step">
+        <div class="journey-num" style="background:rgba(251,191,36,0.15);color:#fbbf24;">3</div>
+        <div class="journey-text"><strong style="color:#fbbf24;">บรรลุ Siddhi</strong> — ศักยภาพสูงสุดของคุณคือ${GENE_KEYS[cGates.sun?.gate]?.siddhi?.word || 'การตื่นรู้'} ซึ่งจะผุดขึ้นมาเองเมื่อถึงเวลาค่ะ</div>
+      </div>
+    </div>`;
+
+  // Stream all key cards with delay
+  planets.forEach((p, i) => {
+    if (p.gate) streamKeyCard(p.gate, i * 1200);
+  });
+
+  setTimeout(() => document.getElementById('resultWrap').scrollIntoView({ behavior: 'smooth' }), 100);
+}
+
+// ── START READING ──
+window.startReading = async function() {
+  if (!window.currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+
+  try {
+    const idToken = await window.currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({ service: 'gene-keys', noapi: true })
+    });
+    const nb = res.headers.get('X-New-Coin-Balance');
+    if (nb != null) { updateCoinUI(parseInt(nb)); const cd = document.getElementById('coinDisplay'); if(cd) cd.textContent = parseInt(nb); }
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      alert(err.error === 'insufficient_coins' ? 'เหรียญไม่พอนะคะ 🪙' : 'เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; return;
+    }
+    await res.body.cancel();
+  } catch(e) { console.error(e); btn.disabled = false; return; }
+
+  document.getElementById('loadingOverlay').classList.add('show');
+  startLoad();
+
+  const day   = parseInt(document.getElementById('selDay').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const year  = parseInt(document.getElementById('selYear').value);
+  const hour  = parseInt(document.getElementById('birthHour').value);
+  const min   = parseInt(document.getElementById('birthMin').value);
+  const city  = document.getElementById('birthCity').value.trim();
+  const [lat, lng] = getCityCoords(city);
+
+  let hdData;
+  try {
+    const idToken2 = await window.currentUser.getIdToken();
+    const hdRes = await fetch('/api/human-design', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken2}` },
+      body: JSON.stringify({ year, month, day, hour, minute: min, lat, lng })
+    });
+    if (!hdRes.ok) throw new Error('api_error');
+    const { conscious, design } = await hdRes.json();
+    hdData = calculateHumanDesign({ conscious, design });
+  } catch(e) {
+    console.error(e);
+    // Mock fallback
+    hdData = {
+      consciousGates: { sun: { gate: 37 }, earth: { gate: 40 }, moon: { gate: 55 } },
+      designGates: { sun: { gate: 9 }, earth: { gate: 16 } }
+    };
+  }
+
+  stopLoad();
+  await new Promise(r => setTimeout(r, 300));
+  document.getElementById('loadingOverlay').classList.remove('show');
+  document.getElementById('formBox').style.display = 'none';
+
+  const monthNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const birthInfo = `${day} ${monthNames[month-1]} ${year+543} · ${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')} · ${city}`;
+  showResults(hdData, birthInfo);
+};
+
+window.resetAll = function() {
+  document.getElementById('formBox').style.display = 'block';
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('keysContainer').innerHTML = '';
+  document.getElementById('heroCard').innerHTML = '';
+  document.getElementById('journeyCard').innerHTML = '';
+  document.getElementById('selDay').value = '';
+  document.getElementById('selMonth').value = '';
+  document.getElementById('selYear').value = '';
+  document.getElementById('birthHour').value = '';
+  document.getElementById('birthMin').value = '';
+  document.getElementById('birthCity').value = '';
+  document.getElementById('btnStart').disabled = true;
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
+</script>
+
+<script type="module">
+import { initializeApp, getApps, cert } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+window.currentUser = null;
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  const cd = document.getElementById('coinDisplay'); if(cd) cd.textContent = c;
+};
+function setAvatar(a) { var el = document.getElementById('avatarEl'); if(!el) return; if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; else el.textContent=a||'👤'; }
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.loginNow = function() { document.getElementById('loginRequiredOverlay').classList.add('show'); };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins||0); setAvatar(data.avatar||'');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatar(''); }
+});
+</script>
+</body>
+</html>
