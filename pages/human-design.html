@@ -20,6 +20,7 @@
 <script src="../js/hd-profile-data.js"></script>
 <script src="../js/hd-center-data.js"></script>
 <script src="../js/hd-channel-data.js"></script>
+<script src="../js/hd-calc.js"></script>
 <style>
 body { padding-bottom: 80px; background: #080612; }
 
@@ -642,16 +643,42 @@ window.startReading = async function() {
   document.getElementById('loadingOverlay').classList.add('show');
   startLoad();
 
-  // TODO: เรียก Prokerala API และ hd-calc.js จริงๆ ที่นี่
-  // ตอนนี้ใช้ mock data ก่อนค่ะ
-  await new Promise(r => setTimeout(r, 2500));
+  // ── เรียก /api/human-design ดึงตำแหน่งดาว ──
+  let hdData;
+  try {
+    const day   = parseInt(document.getElementById('selDay').value);
+    const month = parseInt(document.getElementById('selMonth').value);
+    const year  = parseInt(document.getElementById('selYear').value);
+    const hour  = parseInt(document.getElementById('birthHour').value);
+    const min   = parseInt(document.getElementById('birthMin').value);
+    const city  = document.getElementById('birthCity').value.trim();
+    const [lat, lng] = getCityCoords(city);
+
+    const idToken2 = await window.currentUser.getIdToken();
+    const hdRes = await fetch('/api/human-design', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken2}` },
+      body: JSON.stringify({ year, month, day, hour, minute: min, lat, lng })
+    });
+
+    if (!hdRes.ok) throw new Error('api_error');
+    const { conscious, design } = await hdRes.json();
+
+    // คำนวณ Human Design จาก planet positions
+    hdData = calculateHumanDesign({ conscious, design });
+
+  } catch(e) {
+    console.error('HD calc error:', e);
+    // fallback mock ถ้า API ล้มเหลว
+    hdData = getMockHDData();
+  }
+
   stopLoad();
   await new Promise(r => setTimeout(r, 300));
   document.getElementById('loadingOverlay').classList.remove('show');
 
   document.getElementById('formBox').style.display = 'none';
-  const data = getMockHDData();
-  showResults(data);
+  showResults(hdData);
 };
 
 window.resetAll = function() {
