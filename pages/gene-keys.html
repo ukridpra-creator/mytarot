@@ -264,8 +264,7 @@ function streamText(el, text, onDone) {
 }
 
 // ── RENDER KEY CARD ──
-function renderKeyCard(gateNum, planetLabel, data) {
-  if (!data) return '';
+function renderKeyCard(gateNum, planetLabel) {
   const key = GENE_KEYS[gateNum];
   if (!key) return '';
   return `
@@ -344,8 +343,9 @@ function streamKeyCard(gateNum, delay) {
 function showResults(hdData, birthInfo) {
   document.getElementById('resultWrap').classList.add('show');
 
-  const cGates = hdData.consciousGates || {};
-  const dGates = hdData.designGates || {};
+  // calculateHumanDesign() returns consciousGates and designGates
+  const cGates = hdData.consciousGates || hdData.conscious || {};
+  const dGates = hdData.designGates || hdData.design || {};
 
   // Hero card
   document.getElementById('heroCard').innerHTML = `
