@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สีเสื้อมงคลวันนี้ แต่งตัวเสริมดวง | My Tarot</title>
+<meta name="description" content="สีเสื้อมงคลวันนี้ สีกระเป๋า สีลิปสติก แต่งตัวเสริมดวงตามวันเกิดและราศีค่ะ">
+<meta name="keywords" content="สีเสื้อมงคล,สีมงคลวันนี้,สีกระเป๋ามงคล,สีลิปสติกมงคล,แต่งตัวเสริมดวง">
+<meta property="og:title" content="สีเสื้อมงคลวันนี้ แต่งตัวเสริมดวง | My Tarot">
+<meta property="og:description" content="เช็คสีเสื้อ สีกระเป๋า สีลิปสติกมงคลเฉพาะสำหรับคุณวันนี้ค่ะ">
+<meta property="og:url" content="https://www.mytarot.vip/pages/outfit-lucky">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/outfit-lucky-data.js"></script>
+<style>
+body { padding-bottom: 80px; background: #080612; }
+
+/* HEADER */
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(236,72,153,0.2); background:rgba(8,6,18,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(236,72,153,0.15); border:1px solid rgba(236,72,153,0.3); display:flex; align-items:center; justify-content:center; color:#f9a8d4; font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title { font-size:18px; font-weight:700; color:white; }
+.page-content { padding:20px 20px 40px; }
+
+/* HERO */
+.hero { text-align:center; padding:8px 0 24px; }
+.hero-emoji { font-size:48px; margin-bottom:8px; }
+.hero-title { font-size:22px; font-weight:800; background:linear-gradient(135deg,#f9a8d4,#c084fc,#93c5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; }
+.hero-desc { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+/* FORM */
+.form-box { background:rgba(236,72,153,0.06); border:1px solid rgba(236,72,153,0.2); border-radius:20px; padding:20px; margin-bottom:16px; }
+.form-label { font-size:13px; color:#f9a8d4; font-weight:700; margin-bottom:10px; display:block; }
+
+/* GENDER */
+.gender-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.gender-btn { background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:14px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.gender-btn.active { border-color:#f9a8d4; background:rgba(236,72,153,0.12); }
+.gender-btn .g-icon { font-size:28px; margin-bottom:4px; }
+.gender-btn .g-label { font-size:13px; font-weight:700; color:white; }
+
+/* DATE */
+.date-row { display:flex; gap:8px; margin-bottom:16px; }
+.date-select { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(236,72,153,0.25); border-radius:12px; padding:12px 8px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; appearance:none; text-align:center; cursor:pointer; }
+.date-select:focus { border-color:#f9a8d4; }
+.date-select option { background:#1a0a3e; color:white; }
+
+/* ACTIVITY */
+.activity-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+.activity-btn { background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; transition:all 0.2s; }
+.activity-btn.active { border-color:#c084fc; background:rgba(168,85,247,0.12); }
+.activity-btn .a-icon { font-size:22px; margin-bottom:4px; }
+.activity-btn .a-label { font-size:11px; font-weight:600; color:rgba(255,255,255,0.7); line-height:1.3; }
+
+.btn-start { width:100%; background:linear-gradient(135deg,#be185d,#7c3aed); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+.btn-start:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* RESULT */
+.result-wrap { display:none; }
+.result-wrap.show { display:block; }
+
+/* DATE DISPLAY */
+.date-card { background:linear-gradient(135deg,rgba(236,72,153,0.15),rgba(168,85,247,0.15)); border:1px solid rgba(236,72,153,0.3); border-radius:16px; padding:16px; text-align:center; margin-bottom:14px; }
+.date-card-day { font-size:22px; font-weight:800; color:white; }
+.date-card-date { font-size:12px; color:rgba(255,255,255,0.5); margin-top:2px; }
+.date-card-energy { font-size:12px; color:#f9a8d4; margin-top:6px; }
+
+/* COLOR SECTION */
+.color-section { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:20px; padding:16px; margin-bottom:12px; }
+.color-section-title { font-size:13px; font-weight:700; color:white; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.color-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+.color-chip { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); border-radius:99px; padding:6px 12px; }
+.color-dot { width:16px; height:16px; border-radius:50%; flex-shrink:0; border:1px solid rgba(255,255,255,0.2); }
+.color-name { font-size:12px; font-weight:600; color:white; }
+.color-desc { font-size:12px; color:rgba(255,255,255,0.5); line-height:1.6; margin-top:4px; }
+
+/* AVOID */
+.avoid-section { background:rgba(239,68,68,0.06); border:0.5px solid rgba(239,68,68,0.2); border-radius:16px; padding:14px; margin-bottom:12px; }
+.avoid-title { font-size:13px; font-weight:700; color:#f87171; margin-bottom:8px; }
+.avoid-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+.avoid-chip { display:flex; align-items:center; gap:6px; background:rgba(239,68,68,0.08); border-radius:99px; padding:6px 12px; border:1px solid rgba(239,68,68,0.2); }
+.avoid-reason { font-size:12px; color:rgba(239,68,68,0.7); line-height:1.6; }
+
+/* OUTFIT */
+.outfit-card { background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(236,72,153,0.06)); border:1px solid rgba(168,85,247,0.2); border-radius:20px; padding:16px; margin-bottom:12px; }
+.outfit-title { font-size:13px; font-weight:700; color:#c084fc; margin-bottom:12px; }
+.outfit-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.outfit-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.outfit-info { flex:1; }
+.outfit-label { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:2px; letter-spacing:0.5px; }
+.outfit-value { font-size:13px; font-weight:600; color:white; line-height:1.5; }
+.outfit-color { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.08); border-radius:99px; padding:3px 10px; margin-top:4px; }
+
+/* ZODIAC */
+.zodiac-card { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px; margin-bottom:12px; }
+.zodiac-title { font-size:13px; font-weight:700; color:#93c5fd; margin-bottom:8px; }
+.zodiac-power { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+/* TIP */
+.tip-card { background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.2); border-radius:16px; padding:14px; margin-bottom:14px; }
+.tip-title { font-size:13px; font-weight:700; color:#fbbf24; margin-bottom:6px; }
+.tip-text { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.7; }
+
+.btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:4px; }
+
+/* LOGIN */
+.login-required-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; }
+.login-required-overlay.show { display:flex !important; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0a3e,#080612);border:1px solid rgba(236,72,153,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">👗</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">👗 แต่งตัวเสริมดวง</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.3);color:#f9a8d4;">FREE</div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-emoji">✨👗💄</div>
+    <div class="hero-title">แต่งตัวเสริมดวงวันนี้</div>
+    <div class="hero-desc">น้องจะบอกสีเสื้อ กระเป๋า และลิปสติก<br>ที่เหมาะกับคุณพี่โดยเฉพาะวันนี้ค่ะ</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-box" id="formBox">
+    <!-- GENDER -->
+    <label class="form-label">⚧ คุณพี่เป็นใครคะ?</label>
+    <div class="gender-row">
+      <div class="gender-btn" id="genderF" onclick="selectGender('female')">
+        <div class="g-icon">👩</div>
+        <div class="g-label">ผู้หญิง</div>
+      </div>
+      <div class="gender-btn" id="genderM" onclick="selectGender('male')">
+        <div class="g-icon">👨</div>
+        <div class="g-label">ผู้ชาย</div>
+      </div>
+    </div>
+
+    <!-- BIRTHDAY -->
+    <label class="form-label">🎂 วันเดือนเกิดคะ?</label>
+    <div class="date-row">
+      <select class="date-select" id="selDay" onchange="checkReady()"><option value="">วัน</option></select>
+      <select class="date-select" id="selMonth" onchange="checkReady()"><option value="">เดือน</option></select>
+    </div>
+
+    <!-- ACTIVITY -->
+    <label class="form-label">🎯 วันนี้คุณพี่จะไปทำอะไรคะ?</label>
+    <div class="activity-grid">
+      <div class="activity-btn" id="act_work" onclick="selectActivity('work')">
+        <div class="a-icon">💼</div>
+        <div class="a-label">ทำงาน<br>ประชุม</div>
+      </div>
+      <div class="activity-btn" id="act_date" onclick="selectActivity('date')">
+        <div class="a-icon">💕</div>
+        <div class="a-label">เดต<br>พบคนรัก</div>
+      </div>
+      <div class="activity-btn" id="act_interview" onclick="selectActivity('interview')">
+        <div class="a-icon">📋</div>
+        <div class="a-label">สัมภาษณ์<br>งาน</div>
+      </div>
+      <div class="activity-btn" id="act_party" onclick="selectActivity('party')">
+        <div class="a-icon">🎉</div>
+        <div class="a-label">ปาร์ตี้<br>สังสรรค์</div>
+      </div>
+      <div class="activity-btn" id="act_temple" onclick="selectActivity('temple')">
+        <div class="a-icon">🙏</div>
+        <div class="a-label">ทำบุญ<br>วัด</div>
+      </div>
+      <div class="activity-btn" id="act_shopping" onclick="selectActivity('shopping')">
+        <div class="a-icon">🛍️</div>
+        <div class="a-label">ช้อปปิ้ง<br>เที่ยว</div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btnStart" onclick="showResult()" disabled>✨ บอกสีมงคลของฉันเลย!</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-wrap" id="resultWrap">
+    <div id="dateCard"></div>
+    <div id="luckyColorSection"></div>
+    <div id="avoidSection"></div>
+    <div id="outfitSection"></div>
+    <div id="zodiacSection"></div>
+    <div id="tipSection"></div>
+    <button class="btn-reset" onclick="resetAll()">🔄 เช็คใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const DAYS_TH = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+let selectedGender = null;
+let selectedActivity = null;
+
+// Init dropdowns
+(function() {
+  const selDay = document.getElementById('selDay');
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; selDay.appendChild(o); }
+  const selMonth = document.getElementById('selMonth');
+  MONTHS_TH.forEach((m,i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; selMonth.appendChild(o); });
+})();
+
+function selectGender(g) {
+  selectedGender = g;
+  document.getElementById('genderF').classList.toggle('active', g === 'female');
+  document.getElementById('genderM').classList.toggle('active', g === 'male');
+  checkReady();
+}
+
+function selectActivity(a) {
+  selectedActivity = a;
+  document.querySelectorAll('.activity-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('act_' + a).classList.add('active');
+  checkReady();
+}
+
+function checkReady() {
+  const d = document.getElementById('selDay').value;
+  const m = document.getElementById('selMonth').value;
+  document.getElementById('btnStart').disabled = !(d && m && selectedGender && selectedActivity);
+}
+
+function colorChip(colorName) {
+  const hex = COLOR_HEX[colorName] || '#888';
+  return `<div class="color-chip"><div class="color-dot" style="background:${hex}"></div><span class="color-name">${colorName}</span></div>`;
+}
+
+function avoidChip(colorName) {
+  const hex = COLOR_HEX[colorName] || '#888';
+  return `<div class="avoid-chip"><div class="color-dot" style="background:${hex}"></div><span class="color-name" style="color:#fc8181">${colorName}</span></div>`;
+}
+
+function showResult() {
+  const day = parseInt(document.getElementById('selDay').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const gender = selectedGender;
+  const activity = selectedActivity;
+
+  // วันเกิด
+  const birthDate = new Date(2000, month - 1, day);
+  const birthDow = birthDate.getDay();
+
+  // วันนี้
+  const today = new Date();
+  const todayDow = today.getDay();
+  const todayStr = `${today.getDate()} ${MONTHS_TH[today.getMonth()]} ${today.getFullYear() + 543}`;
+
+  // ราศี
+  const zodiacKey = getZodiac(month, day);
+  const zodiac = ZODIAC_COLORS[zodiacKey];
+
+  // สีข้อมูล
+  const birthColors = BIRTHDAY_COLORS[birthDow];
+  const todayColors = TODAY_COLORS[todayDow];
+  const outfit = OUTFIT_GUIDE[activity][gender];
+
+  // สีที่เหมาะที่สุด = อยู่ใน birthColors.lucky และ todayColors.lucky
+  const allLucky = [...new Set([...birthColors.lucky, ...todayColors.lucky, ...zodiac.lucky])];
+  const topColors = birthColors.lucky.filter(c => !birthColors.avoid.includes(c) && !todayColors.avoid.includes(c));
+  const mainColor = topColors[0] || birthColors.lucky[0];
+  const bagColor = zodiac.lucky[0];
+  const lipColor = gender === 'female' ? (todayColors.lucky[1] || todayColors.lucky[0]) : null;
+
+  // Avoid รวม
+  const allAvoid = [...new Set([...birthColors.avoid, ...todayColors.avoid])];
+
+  // Date card
+  document.getElementById('dateCard').innerHTML = `
+    <div class="date-card">
+      <div class="date-card-day">วัน${DAYS_TH[todayDow]}</div>
+      <div class="date-card-date">${todayStr}</div>
+      <div class="date-card-energy">✨ ${todayColors.energy}</div>
+    </div>`;
+
+  // Lucky colors
+  document.getElementById('luckyColorSection').innerHTML = `
+    <div class="color-section">
+      <div class="color-section-title">✅ สีมงคลของคุณพี่วันนี้</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;letter-spacing:0.5px;">จากวันเกิดวัน${DAYS_TH[birthDow]} + วันนี้ + ราศี${zodiac.name}</div>
+      <div class="color-chips">${allLucky.slice(0,5).map(colorChip).join('')}</div>
+      <div class="color-desc">สีเหล่านี้เสริมพลังงานและดึงดูดสิ่งดีๆ มาให้คุณพี่วันนี้ค่ะ</div>
+    </div>`;
+
+  // Avoid
+  document.getElementById('avoidSection').innerHTML = `
+    <div class="avoid-section">
+      <div class="avoid-title">❌ สีที่ควรหลีกเลี่ยงวันนี้</div>
+      <div class="avoid-chips">${allAvoid.map(avoidChip).join('')}</div>
+      <div class="avoid-reason">⚠️ ${birthColors.avoidReason}</div>
+    </div>`;
+
+  // Outfit
+  const isFemale = gender === 'female';
+  document.getElementById('outfitSection').innerHTML = `
+    <div class="outfit-card">
+      <div class="outfit-title">👗 Outfit แนะนำสำหรับ${outfit.label}</div>
+      <div class="outfit-item">
+        <div class="outfit-icon">${isFemale ? '👗' : '👔'}</div>
+        <div class="outfit-info">
+          <div class="outfit-label">${isFemale ? 'เสื้อ/เดรส' : 'เสื้อ'}</div>
+          <div class="outfit-value">${outfit.styles.join(', ')}</div>
+          <div class="outfit-color">${colorChip(mainColor)}</div>
+        </div>
+      </div>
+      <div class="outfit-item">
+        <div class="outfit-icon">${isFemale ? '👜' : '👖'}</div>
+        <div class="outfit-info">
+          <div class="outfit-label">${isFemale ? 'กระเป๋า' : 'กางเกง'}</div>
+          <div class="outfit-value">${isFemale ? outfit.bag : outfit.pants}</div>
+          <div class="outfit-color">${colorChip(bagColor)}</div>
+        </div>
+      </div>
+      ${isFemale ? `
+      <div class="outfit-item">
+        <div class="outfit-icon">💄</div>
+        <div class="outfit-info">
+          <div class="outfit-label">ลิปสติก</div>
+          <div class="outfit-value">${outfit.lip}</div>
+          <div class="outfit-color">${colorChip(lipColor || 'ชมพู')}</div>
+        </div>
+      </div>
+      <div class="outfit-item">
+        <div class="outfit-icon">💅</div>
+        <div class="outfit-info">
+          <div class="outfit-label">เล็บ</div>
+          <div class="outfit-value">${outfit.nail}</div>
+        </div>
+      </div>` : `
+      <div class="outfit-item">
+        <div class="outfit-icon">👟</div>
+        <div class="outfit-info">
+          <div class="outfit-label">รองเท้า</div>
+          <div class="outfit-value">${outfit.shoes}</div>
+        </div>
+      </div>`}
+    </div>`;
+
+  // Zodiac
+  document.getElementById('zodiacSection').innerHTML = `
+    <div class="zodiac-card">
+      <div class="zodiac-title">♈ ราศี${zodiac.name} — ${zodiac.power}</div>
+      <div class="color-chips">${zodiac.lucky.map(colorChip).join('')}</div>
+      <div class="zodiac-power" style="margin-top:8px;">สีประจำราศีของคุณพี่ช่วยเสริม${zodiac.power}ค่ะ ใส่เป็นชิ้นเล็กๆ เช่น กำไล ต่างหู หรือผ้าพันคอก็ได้นะคะ</div>
+    </div>`;
+
+  // Tip
+  document.getElementById('tipSection').innerHTML = `
+    <div class="tip-card">
+      <div class="tip-title">💡 เคล็ดลับวันนี้ค่ะ</div>
+      <div class="tip-text">${outfit.tip}<br><br>
+      ไม่จำเป็นต้องใส่สีมงคลทั้งตัวค่ะ แค่มีสีนั้นอยู่ในชุดหรือเครื่องประดับชิ้นเล็กๆ ก็เพียงพอค่ะ เช่น กระเป๋า รองเท้า สร้อย หรือผ้าพันคอค่ะ ✨</div>
+    </div>`;
+
+  document.getElementById('formBox').style.display = 'none';
+  document.getElementById('resultWrap').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetAll() {
+  selectedGender = null;
+  selectedActivity = null;
+  document.getElementById('genderF').classList.remove('active');
+  document.getElementById('genderM').classList.remove('active');
+  document.querySelectorAll('.activity-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('selDay').value = '';
+  document.getElementById('selMonth').value = '';
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('formBox').style.display = 'block';
+  document.getElementById('resultWrap').classList.remove('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.loginNow = function() { document.getElementById('loginRequiredOverlay').classList.add('show'); };
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+window.currentUser = null;
+window.updateCoinUI = function(c) {};
+function setAvatar(a) { var el = document.getElementById('avatarEl'); if(!el) return; if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; else el.textContent=a||'👤'; }
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    setAvatar(data.avatar||'');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { setAvatar(''); }
+});
+</script>
+</body>
+</html>
