@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์ความรัก — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ทาโรต์ความรัก เปิดไพ่รู้ดวงความรัก คู่รัก ความสัมพันธ์ เนื้อคู่ค่ะ">
-<meta name="keywords" content="ไพ่ทาโรต์ความรัก,ดูดวงความรัก,ไพ่ทาโรต์คู่รัก,เนื้อคู่,ดูดวงรัก">
+  <title>ดูดวงไพ่ยิปซีความรัก ไพ่ทาโรต์ความรัก เนื้อคู่ คู่รัก | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ยิปซีความรัก ไพ่ทาโรต์ความรัก เปิดไพ่รู้ดวงความรัก คู่รัก เนื้อคู่ ความสัมพันธ์ ด้วย AI ภาษาไทยค่ะ">
+<meta name="keywords" content="ไพ่ยิปซีความรัก,ไพ่ทาโรต์ความรัก,ดูดวงความรัก,เนื้อคู่,คนรักเก่าจะกลับมาไหม,ดูดวงคู่รัก,ไพ่ยิปซีเนื้อคู่">
 <meta property="og:title" content="ไพ่ทาโรต์ความรัก — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ทาโรต์ความรัก เปิดไพ่รู้ดวงความรัก คู่รัก ความสัมพันธ์ เนื้อคู่ค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/tarot-love">
@@ -468,16 +468,22 @@ window.startReading=function(){
   document.getElementById('revealRow2').innerHTML=selectedCards.slice(3,5).map((c,i)=>makeCard(c,i+3)).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const imgUrls = selectedCards.map(c=>c.img);
+  Promise.all(imgUrls.map(url=>new Promise(res=>{
+    const img=new Image(); img.onload=res; img.onerror=res; img.src=url;
+  }))).then(()=>{
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 window.acceptReading=async function(){
@@ -618,5 +624,12 @@ window.askFollowup=async function(){
 
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซีความรัก ไพ่ทาโรต์ความรัก เนื้อคู่ คู่รัก | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ดูดวงไพ่ยิปซีความรัก ไพ่ทาโรต์ตอบคำถามเรื่องรักได้ทุกเรื่องค่ะ ไม่ว่าจะเป็น คนรักเก่าจะกลับมาไหม เราจะมีแฟนเมื่อไหร่ ความสัมพันธ์ตอนนี้เป็นอย่างไร เนื้อคู่แท้จริงเป็นอย่างไร ไพ่ยิปซีหรือไพ่ทาโรต์จะช่วยเปิดเผยความจริงและแนวทางในความรักให้คุณพี่ค่ะ</p>
+</div>
+
 </body>
 </html>

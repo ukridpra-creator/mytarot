@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์ถามทั่วไป — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ทาโรต์ถามทั่วไป เปิดไพ่ตอบคำถามทุกเรื่องที่อยากรู้ค่ะ">
-<meta name="keywords" content="ไพ่ทาโรต์ถามทั่วไป,ดูดวงไพ่,ไพ่ทาโรต์คำถาม,ดูดวงออนไลน์">
+  <title>ไพ่ยิปซีถามทั่วไป ไพ่ทาโรต์ถามได้ทุกเรื่อง | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ยิปซีถามทั่วไป ไพ่ทาโรต์ตอบได้ทุกคำถาม เปิดไพ่รู้คำตอบทุกเรื่องที่อยากรู้ด้วย AI ภาษาไทยค่ะ">
+<meta name="keywords" content="ไพ่ยิปซีถามได้,ไพ่ทาโรต์ถามทั่วไป,ดูดวงถามคำถาม,ไพ่ยิปซีตอบคำถาม,ดูดวงออนไลน์ฟรี">
 <meta property="og:title" content="ไพ่ทาโรต์ถามทั่วไป — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ทาโรต์ถามทั่วไป เปิดไพ่ตอบคำถามทุกเรื่องที่อยากรู้ค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/tarot-ask">
@@ -432,16 +432,22 @@ window.startReading=function(){
   document.getElementById('revealRow1').innerHTML=selectedCards.map((c,i)=>makeCard(c,i)).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const imgUrls = selectedCards.map(c=>c.img);
+  Promise.all(imgUrls.map(url=>new Promise(res=>{
+    const img=new Image(); img.onload=res; img.onerror=res; img.src=url;
+  }))).then(()=>{
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 window.acceptReading=async function(){
@@ -582,5 +588,12 @@ window.askFollowup=async function(){
 
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ยิปซีถามทั่วไป ไพ่ทาโรต์ถามได้ทุกเรื่อง | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ยิปซีถามทั่วไป ไพ่ทาโรต์ตอบได้ทุกคำถามค่ะ ไม่ว่าจะเป็นเรื่องความรัก การงาน การเงิน สุขภาพ หรือเรื่องส่วนตัว เพียงตั้งคำถามที่อยากรู้แล้วเปิดไพ่ยิปซี AI จะวิเคราะห์ไพ่ทาโรต์และตอบคำถามเป็นภาษาไทยให้คุณพี่เข้าใจง่ายค่ะ</p>
+</div>
+
 </body>
 </html>

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์สุขภาพ — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ทาโรต์สุขภาพ เปิดไพ่รู้ดวงสุขภาพร่างกายและจิตใจ โรคภัยไข้เจ็บค่ะ">
-<meta name="keywords" content="ไพ่ทาโรต์สุขภาพ,ดูดวงสุขภาพ,ไพ่ทาโรต์โรค,ดูดวงร่างกาย">
+  <title>ดูดวงไพ่ยิปซีสุขภาพ ไพ่ทาโรต์สุขภาพ โรคภัย ร่างกาย | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ยิปซีสุขภาพ ไพ่ทาโรต์สุขภาพ เปิดไพ่รู้ดวงสุขภาพร่างกายและจิตใจ ด้วย AI ภาษาไทยค่ะ">
+<meta name="keywords" content="ไพ่ยิปซีสุขภาพ,ไพ่ทาโรต์สุขภาพ,ดูดวงสุขภาพ,ดูดวงโรคภัย,สุขภาพจิต,ไพ่ยิปซีร่างกาย">
 <meta property="og:title" content="ไพ่ทาโรต์สุขภาพ — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ทาโรต์สุขภาพ เปิดไพ่รู้ดวงสุขภาพร่างกายและจิตใจ โรคภัยไข้เจ็บค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/tarot-health">
@@ -375,16 +375,22 @@ window.startReading=function(){
   document.getElementById('revealRow1').innerHTML=selectedCards.map((c,i)=>makeCard(c,i)).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const imgUrls = selectedCards.map(c=>c.img);
+  Promise.all(imgUrls.map(url=>new Promise(res=>{
+    const img=new Image(); img.onload=res; img.onerror=res; img.src=url;
+  }))).then(()=>{
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 window.acceptReading=async function(){
@@ -502,5 +508,12 @@ window.askFollowup=async function(){
 
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซีสุขภาพ ไพ่ทาโรต์สุขภาพ โรคภัย ร่างกาย | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ดูดวงไพ่ยิปซีสุขภาพ ไพ่ทาโรต์ช่วยบอกแนวทางการดูแลสุขภาพได้ค่ะ สุขภาพตอนนี้เป็นอย่างไร ควรระวังเรื่องอะไร จิตใจตอนนี้เป็นอย่างไร ไพ่ยิปซีหรือไพ่ทาโรต์ไม่ได้วินิจฉัยโรค แต่ช่วยให้คุณพี่ใส่ใจสุขภาพและดูแลตัวเองได้ดีขึ้นค่ะ</p>
+</div>
+
 </body>
 </html>

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์ใช่หรือไม่ — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ทาโรต์ Yes or No เปิดไพ่ตอบใช่หรือไม่ใช่ ฟรีค่ะ">
-<meta name="keywords" content="ไพ่ทาโรต์ yesno,ไพ่ทาโรต์ใช่ไม่ใช่,tarot yes no,ดูดวงไพ่ฟรี">
+  <title>ไพ่ยิปซีใช่หรือไม่ ไพ่ทาโรต์ Yes No ตอบคำถามฟรี | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ยิปซีใช่หรือไม่ ไพ่ทาโรต์ Yes or No เปิดไพ่ตอบคำถามทันทีว่าใช่หรือไม่ใช่ ฟรีค่ะ">
+<meta name="keywords" content="ไพ่ยิปซีใช่หรือไม่,ไพ่ทาโรต์ yes no,ดูดวงใช่หรือไม่,ไพ่ยิปซีตอบคำถาม,tarot yes no ภาษาไทย">
 <meta property="og:title" content="ไพ่ทาโรต์ใช่หรือไม่ — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ทาโรต์ Yes or No เปิดไพ่ตอบใช่หรือไม่ใช่ ฟรีค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/tarot-yesno">
@@ -335,13 +335,18 @@ window.askCard = function() {
   if (!q) { alert('พิมคำถามก่อนนะคะ คุณพี่ 🙏'); return; }
   currentCard = CARDS[Math.floor(Math.random() * CARDS.length)];
   flipped = false;
-  document.getElementById('cardImg').src = currentCard.img;
   document.getElementById('cardInner').classList.remove('flipped');
   document.getElementById('cardArea').classList.add('show');
   document.getElementById('resultBox').classList.remove('show');
   document.getElementById('btnAsk').disabled = true;
   setTimeout(() => document.getElementById('cardArea').scrollIntoView({ behavior:'smooth' }), 100);
-  setTimeout(() => flipCard(), 600);
+  // preload รูปก่อน flip
+  const img = new Image();
+  img.onload = img.onerror = () => {
+    document.getElementById('cardImg').src = currentCard.img;
+    setTimeout(() => flipCard(), 600);
+  };
+  img.src = currentCard.img;
 };
 
 window.flipCard = function() {
@@ -381,5 +386,12 @@ window.resetAll = function() {
   window.scrollTo({ top:0, behavior:'smooth' });
 };
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ยิปซีใช่หรือไม่ ไพ่ทาโรต์ Yes No ตอบคำถามฟรี | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ยิปซีใช่หรือไม่ หรือ Tarot Yes No เป็นวิธีดูดวงที่ง่ายและรวดเร็วที่สุดค่ะ เพียงตั้งคำถามในใจแล้วเปิดไพ่ ไพ่ยิปซีจะตอบว่าใช่หรือไม่ใช่ เหมาะสำหรับคำถามที่ต้องการคำตอบชัดเจนและรวดเร็วค่ะ ใช้ฟรีไม่จำกัดค่ะ</p>
+</div>
+
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เจาะลึกการงาน — My Tarot</title>
+  <title>ดูดวงไพ่ยิปซีการงาน ไพ่ทาโรต์การงาน เปลี่ยนงาน เลื่อนตำแหน่ง | My Tarot</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
@@ -395,16 +395,22 @@ window.startReading=function(){
   document.getElementById('revealRow2').innerHTML=selectedCards.slice(3,5).map((c,i)=>makeCard(c,i+3)).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const imgUrls = selectedCards.map(c=>c.img);
+  Promise.all(imgUrls.map(url=>new Promise(res=>{
+    const img=new Image(); img.onload=res; img.onerror=res; img.src=url;
+  }))).then(()=>{
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 window.acceptReading=async function(){
@@ -528,5 +534,12 @@ window.askFollowup=async function(){
 
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซีการงาน ไพ่ทาโรต์การงาน เปลี่ยนงาน เลื่อนตำแหน่ง | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ดูดวงไพ่ยิปซีการงาน ไพ่ทาโรต์บอกแนวทางการงานและอาชีพได้ค่ะ ไม่ว่าจะเป็น ปีนี้จะได้เปลี่ยนงานไหม ควรเปลี่ยนงานหรือทนต่อไป จะได้เลื่อนตำแหน่งเมื่อไหร่ ธุรกิจที่ทำอยู่จะเป็นอย่างไร ไพ่ยิปซีหรือไพ่ทาโรต์จะช่วยให้คุณพี่มองเห็นเส้นทางการงานได้ชัดขึ้นค่ะ</p>
+</div>
+
 </body>
 </html>

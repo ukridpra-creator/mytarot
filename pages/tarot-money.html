@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ทาโรต์การเงิน — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ทาโรต์การเงิน เปิดไพ่รู้ดวงเงินทอง ทรัพย์สิน การลงทุน โชคลาภค่ะ">
-<meta name="keywords" content="ไพ่ทาโรต์การเงิน,ดูดวงการเงิน,ไพ่ทาโรต์เงินทอง,ดูดวงโชคลาภ">
+  <title>ดูดวงไพ่ยิปซีการเงิน ไพ่ทาโรต์การเงิน โชคลาภ เงินทอง | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ยิปซีการเงิน ไพ่ทาโรต์การเงิน เปิดไพ่รู้ดวงเงินทอง โชคลาภ ทรัพย์สิน การลงทุน ด้วย AI ภาษาไทยค่ะ">
+<meta name="keywords" content="ไพ่ยิปซีการเงิน,ไพ่ทาโรต์การเงิน,ดูดวงการเงิน,โชคลาภ,เงินทอง,ดูดวงเงิน,ไพ่ยิปซีเงิน">
 <meta property="og:title" content="ไพ่ทาโรต์การเงิน — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ทาโรต์การเงิน เปิดไพ่รู้ดวงเงินทอง ทรัพย์สิน การลงทุน โชคลาภค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/tarot-money">
@@ -390,16 +390,22 @@ window.startReading=function(){
   document.getElementById('revealRow2').innerHTML=selectedCards.slice(2,4).map((c,i)=>makeCard(c,i+2)).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const imgUrls = selectedCards.map(c=>c.img);
+  Promise.all(imgUrls.map(url=>new Promise(res=>{
+    const img=new Image(); img.onload=res; img.onerror=res; img.src=url;
+  }))).then(()=>{
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=MAX_CARDS){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).style.opacity='1';setTimeout(flipNext,300);},400);
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 window.acceptReading=async function(){
@@ -521,5 +527,12 @@ window.askFollowup=async function(){
 
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซีการเงิน ไพ่ทาโรต์การเงิน โชคลาภ เงินทอง | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ดูดวงไพ่ยิปซีการเงิน ไพ่ทาโรต์ทำนายดวงเงินทองและโชคลาภได้ค่ะ ช่วงไหนจะมีเงินเข้า จะได้โชคลาภเมื่อไหร่ การลงทุนตอนนี้ดีไหม หนี้สินจะหมดเมื่อไหร่ ไพ่ยิปซีหรือไพ่ทาโรต์จะช่วยให้คุณพี่วางแผนการเงินได้ดีขึ้นค่ะ</p>
+</div>
+
 </body>
 </html>
