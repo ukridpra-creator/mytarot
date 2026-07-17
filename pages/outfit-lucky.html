@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/style.css">
 <script src="../js/checkin.js"></script>
-<script src="../js/outfit-lucky-data.js"></script>
+<script src="../js/outfit-lucky-data-v2.js"></script>
 <style>
 :root {
   --bg: #0D0418;
@@ -274,10 +274,10 @@ body { background: var(--bg); font-family: 'Sarabun', sans-serif; color: white; 
   <!-- TODAY -->
   <div class="today-header" id="todayHeader"></div>
 
-  <!-- SHIRT COLOR -->
+  <!-- 1. สีเสื้อมงคล -->
   <div class="result-card" id="shirtCard">
     <div class="result-card-header">
-      <div class="result-card-icon">👗</div>
+      <div class="result-card-icon">🎨</div>
       <div>
         <div class="result-card-title">สีเสื้อมงคลวันนี้</div>
         <div class="result-card-sub" id="shirtSub"></div>
@@ -289,26 +289,7 @@ body { background: var(--bg); font-family: 'Sarabun', sans-serif; color: white; 
     </div>
   </div>
 
-  <!-- BAG COLOR -->
-  <div class="result-card" id="bagCard">
-    <div class="result-card-header">
-      <div class="result-card-icon">👜</div>
-      <div>
-        <div class="result-card-title">สีกระเป๋ามงคล</div>
-        <div class="result-card-sub">coordinate กับสีเสื้อค่ะ</div>
-      </div>
-    </div>
-    <div class="result-card-body" id="bagBody"></div>
-  </div>
-
-  <!-- AVOID -->
-  <div class="avoid-card" id="avoidCard">
-    <div class="avoid-title">❌ สีกาลกิณีวันนี้ ห้ามใส่!</div>
-    <div class="swatch-row" id="avoidSwatches"></div>
-    <div class="avoid-reason" id="avoidReason"></div>
-  </div>
-
-  <!-- OUTFIT -->
+  <!-- 2. OUTFIT -->
   <div class="result-card" id="outfitCard">
     <div class="result-card-header">
       <div class="result-card-icon">✨</div>
@@ -322,7 +303,19 @@ body { background: var(--bg); font-family: 'Sarabun', sans-serif; color: white; 
     </div>
   </div>
 
-  <!-- SHOES -->
+  <!-- 3. กระเป๋า -->
+  <div class="result-card" id="bagCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">👜</div>
+      <div>
+        <div class="result-card-title">กระเป๋าแนะนำ</div>
+        <div class="result-card-sub">ทรงและสีที่เข้ากับชุดวันนี้ค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body" id="bagBody"></div>
+  </div>
+
+  <!-- 4. รองเท้า -->
   <div class="result-card" id="shoesCard">
     <div class="result-card-header">
       <div class="result-card-icon">👟</div>
@@ -336,22 +329,38 @@ body { background: var(--bg); font-family: 'Sarabun', sans-serif; color: white; 
     </div>
   </div>
 
-  <!-- BEAUTY (ผญ) -->
+  <!-- 5. ลิป/เล็บ (ผญ) -->
   <div class="result-card" id="beautyCard" style="display:none;">
     <div class="result-card-header">
       <div class="result-card-icon">💄</div>
       <div>
-        <div class="result-card-title">ลิปสติก & เล็บมงคล</div>
+        <div class="result-card-title">ลิปสติก & เล็บ</div>
         <div class="result-card-sub">เสริมเสน่ห์ให้คุณพี่ค่ะ</div>
       </div>
     </div>
     <div class="result-card-body" id="beautyBody"></div>
   </div>
 
-  <!-- ZODIAC -->
-  <div class="zodiac-strip" id="zodiacStrip"></div>
+  <!-- 6. เครื่องประดับ -->
+  <div class="result-card" id="accessoryCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">💍</div>
+      <div>
+        <div class="result-card-title">เครื่องประดับเสริมดวง</div>
+        <div class="result-card-sub">ชิ้นเล็กๆ ที่เพิ่มพลังมงคลค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body" id="accessoryBody"></div>
+  </div>
 
-  <!-- TIP -->
+  <!-- 7. กาลกิณี -->
+  <div class="avoid-card" id="avoidCard">
+    <div class="avoid-title">❌ สีที่ควรหลีกเลี่ยงวันนี้</div>
+    <div class="swatch-row" id="avoidSwatches"></div>
+    <div class="avoid-reason" id="avoidReason"></div>
+  </div>
+
+  <!-- 8. เคล็ดลับ -->
   <div class="tip-strip" id="tipStrip"></div>
 
   <button class="btn-reset" onclick="resetAll()">🔄 เช็คใหม่อีกครั้ง</button>
@@ -440,12 +449,12 @@ function showResult() {
   // TODAY HEADER
   document.getElementById('todayHeader').innerHTML = `
     <div class="today-day">วัน${DAYS_TH[result.todayDow]}</div>
-    <div class="today-date">${todayStr} · เกิดวัน${DAYS_TH[result.birthDow]}</div>
+    <div class="today-date">${todayStr}</div>
     <div class="today-energy">✨ ${result.todayEnergy}</div>`;
 
   // SHIRT
-  document.getElementById('shirtSub').textContent = result.activityInfo.purpose;
-  document.getElementById('shirtPurpose').textContent = `สีเหล่านี้เสริม${result.activityInfo.purpose} เลือกสีใดก็ได้ค่ะ`;
+  document.getElementById('shirtSub').textContent = `เสริมดวงสำหรับ${result.activityInfo.label}ค่ะ`;
+  document.getElementById('shirtPurpose').textContent = `สีเหล่านี้ช่วย${result.activityInfo.purpose} เลือกสีที่ชอบได้เลยค่ะ`;
   const safeColors = result.safeColors.slice(0,4);
   document.getElementById('shirtSwatches').innerHTML = safeColors.map(c=>makeSwatch(c)).join('');
 
@@ -521,19 +530,31 @@ function showResult() {
       </div>`;
   }
 
-  // ZODIAC
-  document.getElementById('zodiacStrip').innerHTML = `
-    <div class="zodiac-name">♈ ราศี${zodiac.name} — เสริมพิเศษค่ะ</div>
-    <div class="zodiac-power">สีประจำราศีของคุณพี่ ใส่เป็นชิ้นเล็กๆ เช่น กำไล ต่างหู ผ้าพันคอ หรือเครื่องประดับค่ะ</div>
-    <div class="zodiac-colors">${zodiac.lucky.map(c=>makeSwatch(c)).join('')}</div>`;
+  // ACCESSORIES
+  const accessoryByActivity = {
+    work:      { items: ['นาฬิกาหน้าปัดสีเรียบ', 'ต่างหูทองหรือเงิน', 'แหวนเรียบ'], tip: 'เครื่องประดับน้อยแต่ดูดีกว่าค่ะ เน้น minimal และ classic ค่ะ' },
+    date:      { items: ['ต่างหูห้อยสวยๆ', 'สร้อยคอบางๆ', 'แหวนน่ารัก', 'กำไลเส้นเล็ก'], tip: 'เลือกเครื่องประดับที่มีความหมายหรือน่ารักค่ะ ดึงดูดสายตาได้ดีค่ะ' },
+    interview: { items: ['ต่างหูตุ้มเล็กๆ', 'นาฬิกาดูสุภาพ', 'สร้อยคอเรียบ'], tip: 'น้อยแต่มาก เน้นความสุภาพและเป็นมืออาชีพค่ะ หลีกเลี่ยงเครื่องประดับใหญ่หรือเสียงดังค่ะ' },
+    party:     { items: ['ต่างหูใหญ่โดดเด่น', 'สร้อยคอหลายชั้น', 'แหวนหลายวง', 'กำไลเสียง'], tip: 'ปาร์ตี้คือวันที่ใส่เครื่องประดับจัดได้เต็มที่ค่ะ เลือกชิ้นที่โดดเด่นที่สุดมาเลยค่ะ' },
+    temple:    { items: ['ต่างหูเล็กสุภาพ', 'สร้อยพระหรือสร้อยเรียบ'], tip: 'เครื่องประดับน้อยๆ สุภาพค่ะ สร้อยพระหรือเครื่องรางมงคลเหมาะมากค่ะ' },
+    shopping:  { items: ['ต่างหูเล็กน้ารัก', 'กำไลหรือสร้อยข้อมือ', 'แว่นตาแฟชั่น'], tip: 'เครื่องประดับที่ไม่หนักเกินไปค่ะ เพราะต้องเดินนานค่ะ เน้นสบายและน่ารักค่ะ' },
+  };
+  const acc = accessoryByActivity[activity];
+  const accColors = result.safeColors.slice(0,2);
+  document.getElementById('accessoryBody').innerHTML = `
+    <div style="font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:12px;">เลือกสีเครื่องประดับให้ match กับ outfit ค่ะ สีทอง เงิน หรือ rose gold เข้ากับทุกสีค่ะ</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+      ${acc.items.map(item=>`<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:14px;">💍</span><span style="font-size:13px;color:white;">${item}</span></div>`).join('')}
+    </div>
+    <div style="background:rgba(201,149,108,0.08);border-left:2px solid var(--rose);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--dim);line-height:1.7;">${acc.tip}</div>`;
 
   // TIP
   const actInfo = ACTIVITY_LUCKY_COLORS[activity];
   document.getElementById('tipStrip').innerHTML = `
-    <div class="tip-title">💡 เคล็ดลับสำหรับ${actInfo.label}ค่ะ</div>
-    <div class="tip-text">${actInfo.purpose}<br><br>
-    ✨ ไม่จำเป็นต้องใส่สีมงคลทั้งตัวค่ะ แค่มีสีนั้นอยู่ในชิ้นเล็กๆ เช่น กระเป๋า รองเท้า สร้อย หรือผ้าพันคอก็เพียงพอค่ะ<br><br>
-    ⚡ หลีกเลี่ยงสีกาลกิณีโดยเฉพาะชิ้นหลัก เช่น เสื้อตัวใหญ่หรือกางเกงค่ะ แต่เครื่องประดับเล็กๆ ไม่มีผลมากนักค่ะ</div>`;
+    <div class="tip-title">💡 เคล็ดลับวันนี้ค่ะ</div>
+    <div class="tip-text">✨ ไม่จำเป็นต้องใส่สีมงคลทั้งตัวค่ะ แค่มีสีนั้นอยู่ในชิ้นใดชิ้นหนึ่ง ไม่ว่าจะเป็นเสื้อ กระเป๋า รองเท้า หรือเครื่องประดับ ก็เพียงพอแล้วค่ะ<br><br>
+    ⚡ หลีกเลี่ยงสีที่ระบุว่าควรเลี่ยงโดยเฉพาะชิ้นหลักค่ะ แต่ถ้าชอบมากก็ใส่เป็นชิ้นเล็กๆ ได้ค่ะ ไม่ถึงกับห้ามเด็ดขาดค่ะ<br><br>
+    🌟 สำคัญที่สุดคือแต่งตัวในแบบที่ทำให้รู้สึกมั่นใจที่สุดค่ะ ความมั่นใจคือเครื่องประดับที่สวยที่สุดค่ะ</div>`;
 
   document.getElementById('formWrap').style.display = 'none';
   document.getElementById('resultWrap').classList.add('show');
