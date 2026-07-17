@@ -271,21 +271,21 @@ window.selectCard = function(idx) {
   const _preImg = new Image();
   _preImg.onload = _preImg.onerror = () => {
     document.getElementById('revealFrontImg').src = IMG(card.id);
-  document.getElementById('revealName').textContent = card.name;
-  document.getElementById('revealBlessing').textContent = card.blessing;
-  document.getElementById('revealOverlay').classList.add('show');
+    document.getElementById('revealName').textContent = card.name;
+    document.getElementById('revealBlessing').textContent = card.blessing;
+    document.getElementById('revealOverlay').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('revealInner').classList.add('flipped');
+      setTimeout(() => {
+        document.getElementById('revealName').classList.add('show');
+        setTimeout(() => {
+          document.getElementById('revealBlessing').classList.add('show');
+          setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+        }, 200);
+      }, 600);
+    }, 400);
   };
   _preImg.src = IMG(card.id);
-  setTimeout(() => {
-    document.getElementById('revealInner').classList.add('flipped');
-    setTimeout(() => {
-      document.getElementById('revealName').classList.add('show');
-      setTimeout(() => {
-        document.getElementById('revealBlessing').classList.add('show');
-        setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
-      }, 200);
-    }, 600);
-  }, 400);
 };
 
 window.acceptReading = async function() {

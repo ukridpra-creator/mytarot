@@ -287,17 +287,17 @@ window.selectCard = function(idx) {
   const _preImg = new Image();
   _preImg.onload = _preImg.onerror = () => {
     document.getElementById('revealFrontImg').src = `../images/demon/${card.id}.png`;
-  document.getElementById('revealName').textContent = card.name;
-  document.getElementById('revealOverlay').classList.add('show');
+    document.getElementById('revealName').textContent = card.name;
+    document.getElementById('revealOverlay').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('revealInner').classList.add('flipped');
+      setTimeout(() => {
+        document.getElementById('revealName').classList.add('show');
+        setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+      }, 600);
+    }, 400);
   };
   _preImg.src = `../images/demon/${card.id}.png`;
-  setTimeout(() => {
-    document.getElementById('revealInner').classList.add('flipped');
-    setTimeout(() => {
-      document.getElementById('revealName').classList.add('show');
-      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
-    }, 600);
-  }, 400);
 };
 
 window.acceptReading = async function() {

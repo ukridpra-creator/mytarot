@@ -518,7 +518,7 @@ window.startReading=function(){
   document.getElementById('revealOverlay').classList.add('show');
 
   // preload รูปไพ่ก่อน flip
-  const _imgUrls = selectedCards.map(c => c.img);
+  const _imgUrls = selected.map(c => c.img);
   Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
     const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
   }))).then(() => {
