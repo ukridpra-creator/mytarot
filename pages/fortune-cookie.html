@@ -232,6 +232,30 @@ const FORTUNES = [
 let clicks = 3;
 let isLocked = false;
 
+function getTodayKey() {
+  const d = new Date();
+  return `fortune_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
+}
+
+function checkDailyDone() {
+  const saved = localStorage.getItem(getTodayKey());
+  if (!saved) return;
+  // ทุบไปแล้ววันนี้ → โชว์ผลเดิม
+  const rand = JSON.parse(saved);
+  const wrap = document.getElementById('cookieWrap');
+  wrap.style.display = 'none';
+  document.getElementById('tapHint').style.display = 'none';
+  document.getElementById('hpBar').style.width = '0%';
+  const paper = document.getElementById('fortunePaper');
+  paper.style.display = 'block';
+  setTimeout(() => paper.classList.add('show'), 50);
+  document.getElementById('fortuneText').textContent = rand.text;
+  document.getElementById('luckyNum').textContent = rand.num;
+  document.getElementById('luckyColor').textContent = rand.color;
+  document.getElementById('resetBtn').classList.add('show');
+  isLocked = true;
+}
+
 const _ac = new (window.AudioContext || window.webkitAudioContext)();
 
 function playReveal() {
@@ -304,6 +328,7 @@ function explode() {
 
 function showFortune() {
   const rand = FORTUNES[Math.floor(Math.random()*FORTUNES.length)];
+  localStorage.setItem(getTodayKey(), JSON.stringify(rand));
   const paper = document.getElementById('fortunePaper');
   paper.style.display = 'block';
   setTimeout(()=>{ paper.classList.add('show'); playReveal(); }, 50);
@@ -332,6 +357,10 @@ function showFortune() {
 }
 
 window.resetCookie = function() {
+  if (localStorage.getItem(getTodayKey())) {
+    alert('วันนี้ทุบคุกกี้ไปแล้วนะคะ 🍪 พรุ่งนี้ค่อยมาใหม่ได้เลยค่ะ ✨');
+    return;
+  }
   clicks = 3;
   isLocked = false;
 
@@ -354,6 +383,8 @@ window.resetCookie = function() {
 
   document.getElementById('resetBtn').classList.remove('show');
 };
+// เช็คเมื่อโหลดหน้า
+checkDailyDone();
 </script>
 </body>
 </html>
