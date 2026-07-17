@@ -425,8 +425,15 @@ function showResult() {
   const gender = selGender;
   const activity = selActivity;
 
-  const result = calculateOutfit(day, month, yearCE, activity, gender);
-  const zodiac = getZodiac(month, day);
+  let result, zodiac;
+  try {
+    result = calculateOutfit(day, month, yearCE, activity, gender);
+    zodiac = getZodiac(month, day);
+  } catch(e) {
+    console.error('error:', e);
+    alert('เกิดข้อผิดพลาดค่ะ ลองใหม่อีกครั้งนะคะ');
+    return;
+  }
   const today = new Date();
   const todayStr = `${today.getDate()} ${MONTHS_TH[today.getMonth()]} ${today.getFullYear()+543}`;
 
