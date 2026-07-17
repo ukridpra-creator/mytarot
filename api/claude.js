@@ -60,7 +60,7 @@ const SERVICE_COSTS = {
   "gunghap":        TIER.T39,
   "gunghap-read":   TIER.FREE,
   "tojung": TIER.T29,
-  "numerology": TIER.T39,
+  "numerology": TIER.T49,
   "mole-reading": TIER.T10,
   "voice-reading": TIER.T49,
   "nakshatras": TIER.T19,
