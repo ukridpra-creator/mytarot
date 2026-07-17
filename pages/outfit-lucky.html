@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สีเสื้อมงคลวันนี้ แต่งตัวเสริมดวง สีกระเป๋า สีลิปสติก | My Tarot</title>
+<meta name="description" content="เช็คสีเสื้อมงคลวันนี้ สีกระเป๋ามงคล สีลิปสติกเสริมเสน่ห์ รองเท้ามงคล แต่งตัวเสริมดวงตามวันเกิดและราศีค่ะ ฟรี ไม่ต้องสมัครสมาชิกค่ะ">
+<meta name="keywords" content="สีเสื้อมงคลวันนี้,สีมงคลวันนี้,สีกระเป๋ามงคล,สีลิปสติกมงคล,แต่งตัวเสริมดวง,สีเสื้อตามวันเกิด,สีมงคลตามราศี,เสื้อผ้ามงคล,แต่งตัวมงคล,สีเสื้อวันจันทร์,สีเสื้อวันศุกร์">
+<meta property="og:title" content="สีเสื้อมงคลวันนี้ แต่งตัวเสริมดวง | My Tarot">
+<meta property="og:description" content="เช็คสีเสื้อ กระเป๋า ลิปสติก รองเท้ามงคลเฉพาะสำหรับคุณวันนี้ค่ะ ตามวันเกิดและราศีค่ะ">
+<meta property="og:url" content="https://www.mytarot.vip/pages/outfit-lucky">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-outfit.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.mytarot.vip/pages/outfit-lucky">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/outfit-lucky-data-v2.js"></script>
+<style>
+:root {
+  --bg: #0D0418;
+  --bg2: #160825;
+  --rose: #C9956C;
+  --blush: #F9A8D4;
+  --plum: #9D174D;
+  --magenta: #DB2777;
+  --cream: #FEF3C7;
+  --dim: rgba(255,255,255,0.4);
+  --border: rgba(201,149,108,0.2);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: 'Sarabun', sans-serif; color: white; padding-bottom: 90px; }
+
+/* HEADER */
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,4,24,0.97); backdrop-filter:blur(16px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(201,149,108,0.15); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--rose); font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title { font-size:17px; font-weight:800; color:white; letter-spacing:0.3px; }
+.free-badge { background:linear-gradient(135deg,#9D174D,#DB2777); color:white; font-size:11px; font-weight:800; padding:4px 12px; border-radius:99px; letter-spacing:1px; }
+
+/* HERO */
+.hero { padding:32px 20px 28px; text-align:center; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(201,149,108,0.12) 0%, transparent 70%); pointer-events:none; }
+.hero-eyebrow { font-size:10px; font-weight:700; color:var(--rose); letter-spacing:3px; margin-bottom:10px; text-transform:uppercase; }
+.hero-title { font-size:28px; font-weight:800; line-height:1.2; margin-bottom:10px; }
+.hero-title span { background:linear-gradient(135deg,var(--blush),var(--rose),#fbbf24); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-desc { font-size:13px; color:var(--dim); line-height:1.8; max-width:320px; margin:0 auto 20px; }
+.hero-tags { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.hero-tag { font-size:10px; padding:3px 10px; border-radius:99px; background:rgba(201,149,108,0.1); border:1px solid var(--border); color:var(--rose); }
+
+/* FORM */
+.form-wrap { padding:0 16px; }
+.form-section { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:18px; margin-bottom:12px; }
+.form-section-title { font-size:12px; font-weight:700; color:var(--rose); letter-spacing:1px; margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+
+/* GENDER */
+.gender-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.gender-btn { border:1.5px solid rgba(255,255,255,0.1); border-radius:16px; padding:16px 12px; text-align:center; cursor:pointer; transition:all 0.25s; background:rgba(255,255,255,0.03); }
+.gender-btn:active { transform:scale(0.97); }
+.gender-btn.active { border-color:var(--magenta); background:rgba(219,39,119,0.1); }
+.gender-btn .g-icon { font-size:32px; margin-bottom:6px; }
+.gender-btn .g-label { font-size:14px; font-weight:700; color:white; }
+.gender-btn .g-sub { font-size:10px; color:var(--dim); margin-top:2px; }
+
+/* DATE */
+.date-row { display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:8px; }
+.date-select { background:rgba(255,255,255,0.05); border:1px solid rgba(201,149,108,0.25); border-radius:12px; padding:12px 8px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; appearance:none; text-align:center; cursor:pointer; width:100%; }
+.date-select:focus { border-color:var(--rose); }
+.date-select option { background:#160825; color:white; }
+
+/* ACTIVITY */
+.activity-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.activity-btn { border:1.5px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 6px; text-align:center; cursor:pointer; transition:all 0.2s; background:rgba(255,255,255,0.03); }
+.activity-btn:active { transform:scale(0.96); }
+.activity-btn.active { border-color:var(--rose); background:rgba(201,149,108,0.1); }
+.activity-btn .a-icon { font-size:24px; margin-bottom:5px; }
+.activity-btn .a-label { font-size:11px; font-weight:700; color:rgba(255,255,255,0.75); line-height:1.4; }
+
+/* CTA */
+.btn-start { width:100%; background:linear-gradient(135deg,#9D174D,#DB2777,#C9956C); border:none; border-radius:16px; padding:17px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:14px; letter-spacing:0.5px; transition:opacity 0.2s; }
+.btn-start:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-start:not(:disabled):active { opacity:0.85; }
+
+/* ── RESULT ── */
+.result-wrap { display:none; padding:0 16px; }
+.result-wrap.show { display:block; }
+
+/* TODAY HEADER */
+.today-header { background:linear-gradient(135deg,rgba(157,23,77,0.2),rgba(201,149,108,0.15)); border:1px solid rgba(201,149,108,0.3); border-radius:20px; padding:18px 20px; margin-bottom:14px; text-align:center; position:relative; overflow:hidden; }
+.today-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,rgba(249,168,212,0.08),transparent 70%); }
+.today-day { font-size:26px; font-weight:800; color:white; margin-bottom:2px; }
+.today-date { font-size:12px; color:var(--dim); margin-bottom:8px; }
+.today-energy { font-size:12px; color:var(--blush); line-height:1.6; }
+
+/* SECTION CARD */
+.result-card { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:20px; overflow:hidden; margin-bottom:12px; }
+.result-card-header { padding:14px 16px 0; display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.result-card-icon { font-size:20px; }
+.result-card-title { font-size:14px; font-weight:800; color:white; }
+.result-card-sub { font-size:11px; color:var(--dim); margin-top:1px; }
+.result-card-body { padding:0 16px 16px; }
+
+/* COLOR SWATCH */
+.swatch-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.swatch { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); border:0.5px solid rgba(255,255,255,0.1); border-radius:99px; padding:6px 12px 6px 6px; animation:fadeSlideIn 0.4s ease both; }
+@keyframes fadeSlideIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
+.swatch-dot { width:20px; height:20px; border-radius:50%; flex-shrink:0; border:1.5px solid rgba(255,255,255,0.2); }
+.swatch-name { font-size:12px; font-weight:700; color:white; }
+.swatch-avoid { background:rgba(239,68,68,0.08); border-color:rgba(239,68,68,0.2); }
+.swatch-avoid .swatch-name { color:#fca5a5; }
+
+/* OUTFIT ITEMS */
+.outfit-list { display:flex; flex-direction:column; gap:12px; }
+.outfit-item { display:flex; gap:12px; align-items:flex-start; padding:12px; background:rgba(255,255,255,0.03); border-radius:14px; border:0.5px solid rgba(255,255,255,0.07); }
+.outfit-item-icon { font-size:24px; flex-shrink:0; width:40px; height:40px; background:rgba(201,149,108,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+.outfit-item-info { flex:1; }
+.outfit-item-label { font-size:10px; color:var(--rose); font-weight:700; letter-spacing:1px; margin-bottom:3px; }
+.outfit-item-type { font-size:13px; font-weight:700; color:white; margin-bottom:4px; line-height:1.4; }
+.outfit-item-color { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.07); border-radius:99px; padding:4px 10px 4px 4px; margin-bottom:4px; }
+.outfit-item-why { font-size:11px; color:var(--dim); line-height:1.6; }
+
+/* SHOES */
+.shoes-list { display:flex; flex-direction:column; gap:8px; }
+.shoes-item { padding:12px; background:rgba(255,255,255,0.03); border-radius:14px; border:0.5px solid rgba(255,255,255,0.07); border-left:2px solid var(--rose); }
+.shoes-rank { font-size:10px; color:var(--rose); font-weight:700; letter-spacing:1px; margin-bottom:3px; }
+.shoes-style { font-size:13px; font-weight:700; color:white; margin-bottom:3px; }
+.shoes-color-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.shoes-color-label { font-size:10px; color:var(--dim); }
+.shoes-why { font-size:11px; color:var(--dim); line-height:1.6; }
+
+/* AVOID SECTION */
+.avoid-card { background:rgba(239,68,68,0.05); border:1px solid rgba(239,68,68,0.2); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
+.avoid-title { font-size:13px; font-weight:800; color:#f87171; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.avoid-reason { font-size:12px; color:rgba(239,68,68,0.7); line-height:1.7; margin-top:8px; }
+
+/* LIP/NAIL */
+.beauty-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.beauty-card { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:14px; padding:12px; }
+.beauty-label { font-size:10px; color:var(--rose); font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+.beauty-colors { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
+.beauty-dot { width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); }
+.beauty-tip { font-size:11px; color:var(--dim); line-height:1.6; }
+
+/* ZODIAC */
+.zodiac-strip { background:linear-gradient(135deg,rgba(201,149,108,0.08),rgba(249,168,212,0.06)); border:1px solid var(--border); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
+.zodiac-name { font-size:14px; font-weight:800; color:var(--cream); margin-bottom:4px; }
+.zodiac-power { font-size:12px; color:var(--dim); line-height:1.6; margin-bottom:10px; }
+.zodiac-colors { display:flex; gap:6px; }
+
+/* TIP */
+.tip-strip { background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.2); border-radius:16px; padding:14px 16px; margin-bottom:16px; }
+.tip-title { font-size:13px; font-weight:800; color:#fbbf24; margin-bottom:6px; }
+.tip-text { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.8; }
+
+.btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+/* SEO TEXT */
+.seo-section { padding:24px 20px; border-top:1px solid rgba(255,255,255,0.06); margin-top:8px; }
+.seo-title { font-size:15px; font-weight:700; color:rgba(255,255,255,0.6); margin-bottom:8px; }
+.seo-text { font-size:12px; color:rgba(255,255,255,0.3); line-height:1.9; }
+
+/* LOGIN */
+.login-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.75); display:none; align-items:center; justify-content:center; }
+.login-overlay.show { display:flex !important; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="loginOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#160825,#0D0418);border:1px solid rgba(201,149,108,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">👗</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">เข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เพื่อบันทึกผลการแต่งตัวมงคลของคุณค่ะ</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">👗 แต่งตัวเสริมดวง</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="free-badge">FREE</div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติค่ะ</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">✦ COLOR FORTUNE ✦</div>
+  <h1 class="hero-title">แต่งตัว<span>เสริมดวง</span><br>วันนี้</h1>
+  <p class="hero-desc">สีเสื้อ กระเป๋า รองเท้า ลิปสติก<br>มงคลเฉพาะสำหรับคุณพี่วันนี้ค่ะ<br>คำนวณจากวันเกิด + ราศี + กิจกรรมค่ะ</p>
+  <div class="hero-tags">
+    <span class="hero-tag">สีเสื้อมงคล</span>
+    <span class="hero-tag">สีกระเป๋า</span>
+    <span class="hero-tag">สีลิปสติก</span>
+    <span class="hero-tag">รองเท้ามงคล</span>
+    <span class="hero-tag">ตามวันเกิด</span>
+    <span class="hero-tag">ตามราศี</span>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrap" id="formWrap">
+  <!-- GENDER -->
+  <div class="form-section">
+    <div class="form-section-title">⚧ คุณพี่เป็นใครคะ?</div>
+    <div class="gender-row">
+      <div class="gender-btn" id="gF" onclick="selectGender('female')">
+        <div class="g-icon">👩</div>
+        <div class="g-label">ผู้หญิง</div>
+        <div class="g-sub">เสื้อ กระเป๋า ลิป เล็บ</div>
+      </div>
+      <div class="gender-btn" id="gM" onclick="selectGender('male')">
+        <div class="g-icon">👨</div>
+        <div class="g-label">ผู้ชาย</div>
+        <div class="g-sub">เสื้อ กางเกง รองเท้า</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BIRTHDAY -->
+  <div class="form-section">
+    <div class="form-section-title">🎂 วันเดือนปีเกิดคะ?</div>
+    <div class="date-row">
+      <select class="date-select" id="selDay" onchange="checkReady()"><option value="">วัน</option></select>
+      <select class="date-select" id="selMonth" onchange="checkReady()"><option value="">เดือน</option></select>
+      <select class="date-select" id="selYear" onchange="checkReady()"><option value="">ปี (พ.ศ.)</option></select>
+    </div>
+  </div>
+
+  <!-- ACTIVITY -->
+  <div class="form-section">
+    <div class="form-section-title">🎯 วันนี้จะไปทำอะไรคะ?</div>
+    <div class="activity-grid">
+      <div class="activity-btn" id="act_work" onclick="selectAct('work')"><div class="a-icon">💼</div><div class="a-label">ทำงาน<br>ประชุม</div></div>
+      <div class="activity-btn" id="act_date" onclick="selectAct('date')"><div class="a-icon">💕</div><div class="a-label">เดต<br>พบคนรัก</div></div>
+      <div class="activity-btn" id="act_interview" onclick="selectAct('interview')"><div class="a-icon">📋</div><div class="a-label">สัมภาษณ์<br>งาน</div></div>
+      <div class="activity-btn" id="act_party" onclick="selectAct('party')"><div class="a-icon">🎉</div><div class="a-label">ปาร์ตี้<br>สังสรรค์</div></div>
+      <div class="activity-btn" id="act_temple" onclick="selectAct('temple')"><div class="a-icon">🙏</div><div class="a-label">ทำบุญ<br>ไหว้พระ</div></div>
+      <div class="activity-btn" id="act_shopping" onclick="selectAct('shopping')"><div class="a-icon">🛍️</div><div class="a-label">ช้อปปิ้ง<br>เที่ยว</div></div>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+    <button class="btn-start" id="btnStart" onclick="showResult()" disabled>✨ บอกสีมงคลของฉันเลย!</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result-wrap" id="resultWrap">
+
+  <!-- TODAY -->
+  <div class="today-header" id="todayHeader"></div>
+
+  <!-- SHIRT COLOR -->
+  <div class="result-card" id="shirtCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">👗</div>
+      <div>
+        <div class="result-card-title">สีเสื้อมงคลวันนี้</div>
+        <div class="result-card-sub" id="shirtSub"></div>
+      </div>
+    </div>
+    <div class="result-card-body">
+      <div class="swatch-row" id="shirtSwatches"></div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.7;" id="shirtPurpose"></div>
+    </div>
+  </div>
+
+  <!-- BAG COLOR -->
+  <div class="result-card" id="bagCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">👜</div>
+      <div>
+        <div class="result-card-title">สีกระเป๋ามงคล</div>
+        <div class="result-card-sub">coordinate กับสีเสื้อค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body" id="bagBody"></div>
+  </div>
+
+  <!-- AVOID -->
+  <div class="avoid-card" id="avoidCard">
+    <div class="avoid-title">❌ สีกาลกิณีวันนี้ ห้ามใส่!</div>
+    <div class="swatch-row" id="avoidSwatches"></div>
+    <div class="avoid-reason" id="avoidReason"></div>
+  </div>
+
+  <!-- OUTFIT -->
+  <div class="result-card" id="outfitCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">✨</div>
+      <div>
+        <div class="result-card-title" id="outfitTitle"></div>
+        <div class="result-card-sub">Outfit แนะนำสำหรับวันนี้ค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body">
+      <div class="outfit-list" id="outfitList"></div>
+    </div>
+  </div>
+
+  <!-- SHOES -->
+  <div class="result-card" id="shoesCard">
+    <div class="result-card-header">
+      <div class="result-card-icon">👟</div>
+      <div>
+        <div class="result-card-title">รองเท้าแนะนำ</div>
+        <div class="result-card-sub">เรียงตามความเหมาะสมค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body">
+      <div class="shoes-list" id="shoesList"></div>
+    </div>
+  </div>
+
+  <!-- BEAUTY (ผญ) -->
+  <div class="result-card" id="beautyCard" style="display:none;">
+    <div class="result-card-header">
+      <div class="result-card-icon">💄</div>
+      <div>
+        <div class="result-card-title">ลิปสติก & เล็บมงคล</div>
+        <div class="result-card-sub">เสริมเสน่ห์ให้คุณพี่ค่ะ</div>
+      </div>
+    </div>
+    <div class="result-card-body" id="beautyBody"></div>
+  </div>
+
+  <!-- ZODIAC -->
+  <div class="zodiac-strip" id="zodiacStrip"></div>
+
+  <!-- TIP -->
+  <div class="tip-strip" id="tipStrip"></div>
+
+  <button class="btn-reset" onclick="resetAll()">🔄 เช็คใหม่อีกครั้ง</button>
+</div>
+
+<!-- SEO TEXT -->
+<div class="seo-section">
+  <div class="seo-title">สีเสื้อมงคลวันนี้คืออะไร?</div>
+  <div class="seo-text">การเลือกสีเสื้อมงคลตามวันเกิดและราศีเป็นศาสตร์ที่รวมหลักโหราศาสตร์ไทย (ทักษาปกรณ์) และโหราศาสตร์ตะวันตกเข้าด้วยกัน โดยแต่ละวันเกิดมีสีมงคลและสีกาลกิณีที่แตกต่างกัน การใส่สีที่เหมาะสมกับวันนั้นๆ และกิจกรรมที่จะทำจะช่วยเสริมพลังงานบวกและดึงดูดสิ่งดีๆ เข้ามาในชีวิตค่ะ ไม่ว่าจะเป็น สีเสื้อวันจันทร์ สีเสื้อวันศุกร์ หรือสีกระเป๋ามงคล สีลิปสติกเสริมเสน่ห์ ล้วนมีความหมายและพลังงานที่แตกต่างกันค่ะ</div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const DAYS_TH = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const RANK_LABEL = ['🥇 แนะนำที่สุด','🥈 ตัวเลือกที่ 2','🥉 ตัวเลือกที่ 3'];
+
+let selGender = null, selActivity = null;
+
+// Init dropdowns
+(function() {
+  const sd = document.getElementById('selDay');
+  for (let d=1;d<=31;d++) { const o=document.createElement('option');o.value=d;o.textContent=d;sd.appendChild(o); }
+  const sm = document.getElementById('selMonth');
+  MONTHS_TH.forEach((m,i)=>{ const o=document.createElement('option');o.value=i+1;o.textContent=m;sm.appendChild(o); });
+  const sy = document.getElementById('selYear');
+  const cur = new Date().getFullYear();
+  for (let y=cur-1;y>=cur-80;y--) { const o=document.createElement('option');o.value=y;o.textContent=y+543;sy.appendChild(o); }
+})();
+
+function selectGender(g) {
+  selGender = g;
+  document.getElementById('gF').classList.toggle('active', g==='female');
+  document.getElementById('gM').classList.toggle('active', g==='male');
+  checkReady();
+}
+function selectAct(a) {
+  selActivity = a;
+  document.querySelectorAll('.activity-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('act_'+a).classList.add('active');
+  checkReady();
+}
+function checkReady() {
+  const d=document.getElementById('selDay').value;
+  const m=document.getElementById('selMonth').value;
+  const y=document.getElementById('selYear').value;
+  document.getElementById('btnStart').disabled = !(d&&m&&y&&selGender&&selActivity);
+}
+
+function makeSwatch(name, avoid=false) {
+  const hex = COLOR_HEX[name] || '#888';
+  const cls = avoid ? 'swatch swatch-avoid' : 'swatch';
+  return `<div class="${cls}" style="animation-delay:${Math.random()*0.3}s">
+    <div class="swatch-dot" style="background:${hex}"></div>
+    <span class="swatch-name">${name}</span>
+  </div>`;
+}
+
+function showResult() {
+  const day   = parseInt(document.getElementById('selDay').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const yearBE = parseInt(document.getElementById('selYear').value);
+  const yearCE = yearBE - 543;
+  const gender = selGender;
+  const activity = selActivity;
+
+  const result = calculateOutfit(day, month, yearCE, activity, gender);
+  const zodiac = getZodiac(month, day);
+  const today = new Date();
+  const todayStr = `${today.getDate()} ${MONTHS_TH[today.getMonth()]} ${today.getFullYear()+543}`;
+
+  // TODAY HEADER
+  document.getElementById('todayHeader').innerHTML = `
+    <div class="today-day">วัน${DAYS_TH[result.todayDow]}</div>
+    <div class="today-date">${todayStr} · เกิดวัน${DAYS_TH[result.birthDow]}</div>
+    <div class="today-energy">✨ ${result.todayEnergy}</div>`;
+
+  // SHIRT
+  document.getElementById('shirtSub').textContent = result.activityInfo.purpose;
+  document.getElementById('shirtPurpose').textContent = `สีเหล่านี้เสริม${result.activityInfo.purpose} เลือกสีใดก็ได้ค่ะ`;
+  const safeColors = result.safeColors.slice(0,4);
+  document.getElementById('shirtSwatches').innerHTML = safeColors.map(c=>makeSwatch(c)).join('');
+
+  // BAG
+  const bag = result.bag;
+  document.getElementById('bagBody').innerHTML = `
+    <div class="outfit-item">
+      <div class="outfit-item-icon">👜</div>
+      <div class="outfit-item-info">
+        <div class="outfit-item-label">ทรงกระเป๋าแนะนำ</div>
+        <div class="outfit-item-type">${bag.style}</div>
+        <div class="outfit-item-color">
+          <div class="swatch-dot" style="background:${COLOR_HEX[bag.color]||'#888'}"></div>
+          <span style="font-size:12px;font-weight:700">${bag.color}</span>
+        </div>
+        <div class="outfit-item-why">หรือจะเลือก <strong>${bag.alt}</strong> เป็นสีสำรองก็สวยค่ะ</div>
+      </div>
+    </div>`;
+
+  // AVOID
+  document.getElementById('avoidSwatches').innerHTML = result.avoid.map(c=>makeSwatch(c,true)).join('');
+  document.getElementById('avoidReason').textContent = BIRTHDAY_COLORS[result.birthDow].avoidReason;
+
+  // OUTFIT
+  const actLabel = ACTIVITY_LUCKY_COLORS[activity].label;
+  document.getElementById('outfitTitle').textContent = `Outfit สำหรับ${actLabel}`;
+  const mainColor = safeColors[0];
+  const isFemale = gender === 'female';
+
+  let outfitHTML = '';
+  if (isFemale) {
+    const styles = { work:'บลาวส์ / เดรสทำงาน / เซ็ตสูท', date:'เดรสสวย / crop + กระโปรง / เซ็ตน่ารัก', interview:'เดรสทางการ / สูทผู้หญิง / กระโปรงสวม', party:'เดรสเปิดไหล่ / เซ็ตเก๋ / เสื้อแฟชั่น', temple:'เสื้อแขนยาว / เซ็ตผ้าไทย / เดรสสุภาพ', shopping:'เสื้อยืดน่ารัก + กระโปรง / เดรสลำลอง' };
+    outfitHTML += `<div class="outfit-item"><div class="outfit-item-icon">👗</div><div class="outfit-item-info"><div class="outfit-item-label">เสื้อ/ชุด</div><div class="outfit-item-type">${styles[activity]}</div><div class="outfit-item-color"><div class="swatch-dot" style="background:${COLOR_HEX[mainColor]||'#888'}"></div><span style="font-size:12px;font-weight:700">${mainColor}</span></div></div></div>`;
+  } else {
+    const styles = { work:'เสื้อเชิ้ต / โปโล / สูทลำลอง', date:'เสื้อเชิ้ตลำลอง / เดนิม / เสื้อยืดเรียบ', interview:'เสื้อเชิ้ตทางการ / สูท', party:'เสื้อเชิ้ตสีสวย / นิตเวียร์ / เสื้อแฟชั่น', temple:'เสื้อเชิ้ตสุภาพ / โปโลสีอ่อน', shopping:'เสื้อยืด / ฮูดลำลอง' };
+    const pants = { work:'กางเกงสแล็ค / ชิโน', date:'ยีนส์ / ชิโน', interview:'กางเกงสแล็คทางการ', party:'ยีนส์หรือชิโนสีสวย', temple:'กางเกงขายาวสีเรียบ', shopping:'ยีนส์ / กางเกงลำลอง' };
+    outfitHTML += `<div class="outfit-item"><div class="outfit-item-icon">👔</div><div class="outfit-item-info"><div class="outfit-item-label">เสื้อ</div><div class="outfit-item-type">${styles[activity]}</div><div class="outfit-item-color"><div class="swatch-dot" style="background:${COLOR_HEX[mainColor]||'#888'}"></div><span style="font-size:12px;font-weight:700">${mainColor}</span></div></div></div>`;
+    outfitHTML += `<div class="outfit-item"><div class="outfit-item-icon">👖</div><div class="outfit-item-info"><div class="outfit-item-label">กางเกง</div><div class="outfit-item-type">${pants[activity]}</div><div class="outfit-item-color"><div class="swatch-dot" style="background:${COLOR_HEX[bag.color]||'#888'}"></div><span style="font-size:12px;font-weight:700">${bag.color}</span></div></div></div>`;
+  }
+  document.getElementById('outfitList').innerHTML = outfitHTML;
+
+  // SHOES
+  const shoes = result.shoes;
+  document.getElementById('shoesList').innerHTML = shoes.slice(0,3).map((s,i)=>`
+    <div class="shoes-item">
+      <div class="shoes-rank">${RANK_LABEL[i]}</div>
+      <div class="shoes-style">${s.style}</div>
+      <div class="shoes-color-row">
+        <div class="swatch-dot" style="background:${COLOR_HEX[s.color.split('หรือ')[0].trim()]||'#888'};width:14px;height:14px;"></div>
+        <span class="shoes-color-label">สี${s.color}</span>
+      </div>
+      <div class="shoes-why">${s.why}</div>
+    </div>`).join('');
+
+  // BEAUTY (ผญ)
+  if (isFemale) {
+    document.getElementById('beautyCard').style.display = 'block';
+    const lip = result.lip;
+    const nail = result.nail;
+    document.getElementById('beautyBody').innerHTML = `
+      <div class="beauty-grid">
+        <div class="beauty-card">
+          <div class="beauty-label">💄 ลิปสติก</div>
+          <div class="beauty-colors">${lip.colors.map(c=>`<div class="beauty-dot" style="background:${COLOR_HEX[c]||'#888'}" title="${c}"></div>`).join('')}</div>
+          <div style="font-size:12px;font-weight:600;color:white;margin-bottom:4px;">${lip.colors.join(' / ')}</div>
+          <div class="beauty-tip">${lip.tip}</div>
+        </div>
+        <div class="beauty-card">
+          <div class="beauty-label">💅 เล็บ</div>
+          <div style="font-size:12px;font-weight:600;color:white;margin-bottom:6px;">${nail.style}</div>
+          <div class="beauty-tip">${nail.tip}</div>
+        </div>
+      </div>`;
+  }
+
+  // ZODIAC
+  document.getElementById('zodiacStrip').innerHTML = `
+    <div class="zodiac-name">♈ ราศี${zodiac.name} — เสริมพิเศษค่ะ</div>
+    <div class="zodiac-power">สีประจำราศีของคุณพี่ ใส่เป็นชิ้นเล็กๆ เช่น กำไล ต่างหู ผ้าพันคอ หรือเครื่องประดับค่ะ</div>
+    <div class="zodiac-colors">${zodiac.lucky.map(c=>makeSwatch(c)).join('')}</div>`;
+
+  // TIP
+  const actInfo = ACTIVITY_LUCKY_COLORS[activity];
+  document.getElementById('tipStrip').innerHTML = `
+    <div class="tip-title">💡 เคล็ดลับสำหรับ${actInfo.label}ค่ะ</div>
+    <div class="tip-text">${actInfo.purpose}<br><br>
+    ✨ ไม่จำเป็นต้องใส่สีมงคลทั้งตัวค่ะ แค่มีสีนั้นอยู่ในชิ้นเล็กๆ เช่น กระเป๋า รองเท้า สร้อย หรือผ้าพันคอก็เพียงพอค่ะ<br><br>
+    ⚡ หลีกเลี่ยงสีกาลกิณีโดยเฉพาะชิ้นหลัก เช่น เสื้อตัวใหญ่หรือกางเกงค่ะ แต่เครื่องประดับเล็กๆ ไม่มีผลมากนักค่ะ</div>`;
+
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('resultWrap').classList.add('show');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function resetAll() {
+  selGender = null; selActivity = null;
+  ['gF','gM'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.querySelectorAll('.activity-btn').forEach(b=>b.classList.remove('active'));
+  ['selDay','selMonth','selYear'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('beautyCard').style.display = 'none';
+  document.getElementById('formWrap').style.display = 'block';
+  document.getElementById('resultWrap').classList.remove('show');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+window.loginNow = function() { document.getElementById('loginOverlay').classList.add('show'); };
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const cfg = { apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM", authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67", storageBucket:"my-tarot67.firebasestorage.app", messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304" };
+const app=initializeApp(cfg); const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+window.updateCoinUI=function(){};
+function setAv(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var s=await getDoc(doc(db,'users',user.uid)); var d=s.exists()?s.data():{};
+    setAv(d.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=d.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else { setAv(''); }
+});
+</script>
+</body>
+</html>

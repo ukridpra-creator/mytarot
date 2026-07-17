@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Design — พิมพ์เขียวชีวิต | My Tarot</title>
+<meta name="description" content="ค้นพบพิมพ์เขียวชีวิตของคุณด้วย Human Design ศาสตร์ผสมผสานที่วิเคราะห์พลังงานและธรรมชาติที่แท้จริงของคุณค่ะ">
+<meta name="keywords" content="human design,พิมพ์เขียวชีวิต,ดูดวง,generator,projector,manifestor,reflector">
+<meta property="og:title" content="Human Design — พิมพ์เขียวชีวิต | My Tarot">
+<meta property="og:description" content="ค้นพบพิมพ์เขียวชีวิตของคุณด้วย Human Design">
+<meta property="og:url" content="https://www.mytarot.vip/pages/human-design">
+<meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/checkin.js"></script>
+<script src="../js/hd-type-data.js"></script>
+<script src="../js/hd-authority-data.js"></script>
+<script src="../js/hd-profile-data.js"></script>
+<script src="../js/hd-center-data.js"></script>
+<script src="../js/hd-channel-data.js"></script>
+<script src="../js/hd-calc.js"></script>
+<style>
+body { padding-bottom: 80px; background: #080612; }
+
+/* HEADER */
+.page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(139,92,246,0.2); background:rgba(8,6,18,0.95); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+.back-btn { width:36px; height:36px; border-radius:50%; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3); display:flex; align-items:center; justify-content:center; color:#a78bfa; font-size:16px; text-decoration:none; flex-shrink:0; }
+.page-title { font-size:18px; font-weight:700; color:white; }
+.page-content { padding:20px 20px 40px; }
+
+/* HERO */
+.hero { text-align:center; padding:8px 0 20px; }
+.hero-title { font-size:22px; font-weight:800; color:#a78bfa; margin-bottom:6px; text-shadow:0 0 24px rgba(139,92,246,0.4); }
+.hero-desc { font-size:13px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+/* FORM */
+.form-box { background:rgba(139,92,246,0.06); border:1px solid rgba(139,92,246,0.2); border-radius:20px; padding:20px; margin-bottom:20px; }
+.form-label { font-size:13px; color:#a78bfa; font-weight:700; margin-bottom:8px; display:block; }
+.form-row { margin-bottom:14px; }
+.date-row { display:flex; gap:8px; }
+.date-select { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(139,92,246,0.25); border-radius:12px; padding:12px 8px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; appearance:none; text-align:center; cursor:pointer; }
+.date-select:focus { border-color:#a78bfa; }
+.date-select option { background:#1a0a3e; color:white; }
+.time-row { display:flex; gap:8px; }
+.time-input { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(139,92,246,0.25); border-radius:12px; padding:12px 14px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; }
+.time-input:focus { border-color:#a78bfa; }
+.time-input::placeholder { color:rgba(255,255,255,0.25); }
+.city-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(139,92,246,0.25); border-radius:12px; padding:12px 14px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; box-sizing:border-box; }
+.city-input:focus { border-color:#a78bfa; }
+.city-input::placeholder { color:rgba(255,255,255,0.25); }
+
+.coin-box { background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
+.coin-text { font-size:13px; color:#a78bfa; margin-bottom:4px; }
+.coin-hint { font-size:11px; color:rgba(255,255,255,0.3); }
+
+.btn-start { width:100%; background:linear-gradient(135deg,#5b21b6,#a78bfa); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+.btn-start:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* LOADING */
+.loading-overlay { display:none; position:fixed; inset:0; z-index:300; background:rgba(8,6,18,0.97); flex-direction:column; align-items:center; justify-content:center; }
+.loading-overlay.show { display:flex; }
+.load-ring { position:relative; width:100px; height:100px; margin-bottom:24px; }
+.load-ring-1 { position:absolute; inset:0; border-radius:50%; border:3px solid transparent; border-top-color:#a78bfa; border-right-color:rgba(167,139,250,0.3); animation:spinR 1.2s linear infinite; }
+.load-ring-2 { position:absolute; inset:12px; border-radius:50%; border:2px solid transparent; border-bottom-color:#7c3aed; border-left-color:rgba(124,58,237,0.2); animation:spinR 0.8s linear infinite reverse; }
+@keyframes spinR { to { transform:rotate(360deg); } }
+.load-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:30px; }
+.load-title { font-size:16px; font-weight:700; color:#a78bfa; margin-bottom:6px; letter-spacing:1px; }
+.load-hint { font-size:12px; color:rgba(167,139,250,0.5); min-height:16px; }
+.load-bar-wrap { width:180px; height:3px; background:rgba(139,92,246,0.15); border-radius:99px; margin-top:20px; overflow:hidden; }
+.load-bar { height:100%; background:linear-gradient(90deg,#5b21b6,#a78bfa); border-radius:99px; width:0%; transition:width 0.3s; }
+
+/* RESULT */
+.result-wrap { display:none; }
+.result-wrap.show { display:block; }
+
+/* CARD SYSTEM */
+.hd-card { background:rgba(255,255,255,0.03); border:0.5px solid rgba(255,255,255,0.08); border-radius:20px; overflow:hidden; margin-bottom:14px; }
+.hd-card-hero { padding:20px; }
+.hd-card-body { padding:0 18px 18px; }
+
+/* TYPE HERO */
+.type-badge { display:inline-block; font-size:10px; font-weight:700; padding:3px 12px; border-radius:99px; letter-spacing:1px; margin-bottom:10px; }
+.type-name-th { font-size:20px; font-weight:700; color:white; margin-bottom:2px; }
+.type-name-en { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:16px; }
+.type-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+.type-stat { background:rgba(255,255,255,0.06); border-radius:10px; padding:10px 12px; }
+.type-stat-l { font-size:10px; color:rgba(255,255,255,0.4); margin-bottom:3px; }
+.type-stat-v { font-size:12px; font-weight:600; color:white; line-height:1.4; }
+
+/* SECTION LABEL */
+.sec-label { font-size:10px; font-weight:700; color:rgba(255,255,255,0.35); letter-spacing:1.5px; margin:16px 0 6px; }
+.sec-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.8; margin-bottom:12px; }
+
+/* SIG ROW */
+.sig-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+.sig-good { background:rgba(16,185,129,0.1); border-radius:10px; padding:10px; }
+.sig-bad { background:rgba(239,68,68,0.1); border-radius:10px; padding:10px; }
+.sig-tl { font-size:10px; font-weight:700; margin-bottom:3px; }
+.sig-good .sig-tl { color:#34d399; }
+.sig-bad .sig-tl { color:#f87171; }
+.sig-v { font-size:12px; color:rgba(255,255,255,0.8); line-height:1.4; }
+
+/* DIVIDER */
+.hd-divider { height:0.5px; background:rgba(255,255,255,0.06); margin:12px 0; }
+
+/* TAG ROW */
+.tag-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
+.tag-p { font-size:11px; padding:3px 10px; border-radius:99px; background:rgba(139,92,246,0.15); color:#a78bfa; }
+.tag-w { font-size:11px; padding:3px 10px; border-radius:99px; background:rgba(239,68,68,0.1); color:#f87171; }
+
+/* ACCENT BAR ROW */
+.ab-row { display:flex; gap:10px; margin-bottom:8px; align-items:flex-start; }
+.ab { width:3px; border-radius:2px; background:#7c3aed; flex-shrink:0; margin-top:3px; min-height:14px; }
+.ab-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.7; }
+
+/* CENTERS */
+.center-row { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px; }
+.center-def { font-size:11px; padding:4px 10px; border-radius:99px; background:#5b21b6; color:white; }
+.center-undef { font-size:11px; padding:4px 10px; border-radius:99px; background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.4); border:0.5px solid rgba(255,255,255,0.1); }
+
+/* CHANNELS */
+.ch-item { background:rgba(255,255,255,0.03); border-radius:10px; padding:10px 12px; margin-bottom:6px; border-left:2px solid #7c3aed; }
+.ch-name { font-size:12px; font-weight:600; color:#a78bfa; margin-bottom:3px; }
+.ch-gates { font-size:10px; color:rgba(255,255,255,0.3); margin-bottom:4px; }
+.ch-desc { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+/* SECTION CARDS */
+.sec-card { background:rgba(255,255,255,0.03); border-radius:16px; border-left:3px solid; padding:14px 16px; margin-bottom:10px; }
+.sec-card h3 { font-size:14px; font-weight:700; margin-bottom:8px; }
+.sec-card p { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.9; }
+.sec-work { border-color:#f59e0b; background:rgba(245,158,11,0.05); }
+.sec-work h3 { color:#fbbf24; }
+.sec-love { border-color:#ec4899; background:rgba(236,72,153,0.05); }
+.sec-love h3 { color:#f472b6; }
+.sec-health { border-color:#10b981; background:rgba(16,185,129,0.05); }
+.sec-health h3 { color:#34d399; }
+.sec-life { border-color:#a78bfa; background:rgba(139,92,246,0.05); }
+.sec-life h3 { color:#a78bfa; }
+
+/* CARD HEADER */
+.card-header { display:flex; align-items:center; gap:10px; padding:14px 18px 0; margin-bottom:2px; }
+.card-header-icon { font-size:18px; }
+.card-header-title { font-size:14px; font-weight:700; color:white; }
+
+/* STREAMING */
+.streaming-cursor::after { content:'|'; animation:blink 0.7s infinite; color:#a78bfa; }
+@keyframes blink { 0%,100%{opacity:0} 50%{opacity:1} }
+
+.btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:12px; }
+
+/* LOGIN MODAL */
+.login-required-overlay { position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; }
+.login-required-overlay.show { display:flex !important; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="load-ring">
+    <div class="load-ring-1"></div>
+    <div class="load-ring-2"></div>
+    <div class="load-icon" id="loadIcon">🧬</div>
+  </div>
+  <div class="load-title">กำลังค้นหาพิมพ์เขียวชีวิต</div>
+  <div class="load-hint" id="loadHint">คำนวณตำแหน่งดาว...</div>
+  <div class="load-bar-wrap"><div class="load-bar" id="loadBar"></div></div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0a3e,#080612);border:1px solid rgba(139,92,246,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🧬</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อดูพิมพ์เขียวชีวิตของคุณค่ะ</div>
+    <button onclick="window.__ciGoogleSignIn()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="indian-hub.html" class="back-btn">←</a>
+  <div class="page-title">🧬 Human Design</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.3);color:#a78bfa;">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<!-- USER MENU -->
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🧬 พิมพ์เขียวชีวิต</div>
+    <div class="hero-desc">ค้นพบธรรมชาติที่แท้จริงของคุณ<br>ผ่านศาสตร์ที่ผสมผสาน โหราศาสตร์ อี้จิง จักระ และฟิสิกส์ควอนตัมค่ะ</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-box" id="formBox">
+    <div class="form-row">
+      <label class="form-label">📅 วันเดือนปีเกิด</label>
+      <div class="date-row">
+        <select class="date-select" id="selDay" onchange="checkReady()"><option value="">วัน</option></select>
+        <select class="date-select" id="selMonth" onchange="checkReady()"><option value="">เดือน</option></select>
+        <select class="date-select" id="selYear" onchange="checkReady()"><option value="">ปี (พ.ศ.)</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">🕐 เวลาเกิด</label>
+      <div class="time-row">
+        <input type="number" class="time-input" id="birthHour" placeholder="ชั่วโมง (0-23)" min="0" max="23" oninput="checkReady()">
+        <input type="number" class="time-input" id="birthMin" placeholder="นาที (0-59)" min="0" max="59" oninput="checkReady()">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">📍 เมืองที่เกิด</label>
+      <input type="text" class="city-input" id="birthCity" placeholder="เช่น กรุงเทพมหานคร, เชียงใหม่" oninput="checkReady()">
+    </div>
+    <div class="coin-box">
+      <div class="coin-text">🪙 ใช้ 49 เหรียญต่อครั้งค่ะ</div>
+      <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="startReading()" disabled>🧬 ค้นหาพิมพ์เขียวชีวิต</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-wrap" id="resultWrap">
+
+    <!-- TYPE CARD -->
+    <div class="hd-card" id="cardType" style="display:none;">
+      <div class="hd-card-hero" id="typeHero"></div>
+      <div class="hd-card-body" id="typeBody"></div>
+    </div>
+
+    <!-- AUTHORITY CARD -->
+    <div class="hd-card" id="cardAuthority" style="display:none;">
+      <div class="card-header"><div class="card-header-icon">🧭</div><div class="card-header-title">วิธีตัดสินใจที่เหมาะกับคุณ</div></div>
+      <div class="hd-card-body" id="authorityBody" style="padding-top:12px;"></div>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="hd-card" id="cardProfile" style="display:none;">
+      <div class="card-header"><div class="card-header-icon">🎭</div><div class="card-header-title">บทบาทในชีวิต</div></div>
+      <div class="hd-card-body" id="profileBody" style="padding-top:12px;"></div>
+    </div>
+
+    <!-- CENTERS CARD -->
+    <div class="hd-card" id="cardCenters" style="display:none;">
+      <div class="card-header"><div class="card-header-icon">⚡</div><div class="card-header-title">ศูนย์กลางพลังงานของคุณ</div></div>
+      <div class="hd-card-body" id="centersBody" style="padding-top:12px;"></div>
+    </div>
+
+    <!-- CHANNELS CARD -->
+    <div class="hd-card" id="cardChannels" style="display:none;">
+      <div class="card-header"><div class="card-header-icon">🌟</div><div class="card-header-title">เส้นพลังงานที่โดดเด่นในตัวคุณ</div></div>
+      <div class="hd-card-body" id="channelsBody" style="padding-top:12px;"></div>
+    </div>
+
+    <!-- WORK -->
+    <div class="sec-card sec-work" id="cardWork" style="display:none;">
+      <h3>💼 การงานและความสำเร็จ</h3>
+      <p id="workText"></p>
+    </div>
+
+    <!-- LOVE -->
+    <div class="sec-card sec-love" id="cardLove" style="display:none;">
+      <h3>❤️ ความรักและความสัมพันธ์</h3>
+      <p id="loveText"></p>
+    </div>
+
+    <!-- HEALTH -->
+    <div class="sec-card sec-health" id="cardHealth" style="display:none;">
+      <h3>🌿 สุขภาพและพลังงานร่างกาย</h3>
+      <p id="healthText"></p>
+    </div>
+
+    <!-- LIFE -->
+    <div class="sec-card sec-life" id="cardLife" style="display:none;">
+      <h3>✨ แนวทางชีวิตที่เหมาะกับคุณ</h3>
+      <p id="lifeText"></p>
+    </div>
+
+    <button class="btn-reset" onclick="resetAll()">🔄 ดูพิมพ์เขียวใหม่</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+// ── INIT DROPDOWNS ──
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+(function init() {
+  const selDay = document.getElementById('selDay');
+  for (let d = 1; d <= 31; d++) { const o = document.createElement('option'); o.value = d; o.textContent = d; selDay.appendChild(o); }
+  const selMonth = document.getElementById('selMonth');
+  MONTHS_TH.forEach((m,i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; selMonth.appendChild(o); });
+  const selYear = document.getElementById('selYear');
+  const curYear = new Date().getFullYear();
+  for (let y = curYear - 1; y >= curYear - 80; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y + 543; selYear.appendChild(o); }
+})();
+
+window.checkReady = function() {
+  const d = document.getElementById('selDay').value;
+  const m = document.getElementById('selMonth').value;
+  const y = document.getElementById('selYear').value;
+  const h = document.getElementById('birthHour').value;
+  const mi = document.getElementById('birthMin').value;
+  const c = document.getElementById('birthCity').value.trim();
+  document.getElementById('btnStart').disabled = !(d && m && y && h !== '' && mi !== '' && c);
+};
+
+// ── LOADING ANIM ──
+const HINTS = ['คำนวณตำแหน่งดาว...','วิเคราะห์ศูนย์กลางพลังงาน...','หาเส้นพลังงาน...','ค้นพบบทบาทชีวิต...'];
+const ICONS = ['🧬','⭐','🌟','✨'];
+let _lhIdx = 0, _lhInt = null;
+function startLoad() {
+  _lhIdx = 0; let w = 0;
+  const bar = document.getElementById('loadBar');
+  _lhInt = setInterval(() => {
+    _lhIdx = (_lhIdx+1) % 4;
+    document.getElementById('loadHint').textContent = HINTS[_lhIdx];
+    document.getElementById('loadIcon').textContent = ICONS[_lhIdx];
+    w = Math.min(w + 22, 90); bar.style.width = w + '%';
+  }, 700);
+}
+function stopLoad() {
+  clearInterval(_lhInt);
+  document.getElementById('loadBar').style.width = '100%';
+}
+
+// ── MOCK DATA (จะถูกแทนที่ด้วย hd-calc.js จริงๆ) ──
+function getMockHDData() {
+  return {
+    type: 'manifesting_generator',
+    authority: 'sacral',
+    profile: '3_5',
+    definition: 'Split Definition',
+    definedCenters: ['throat', 'solar_plexus', 'sacral', 'root'],
+    undefinedCenters: ['head', 'ajna', 'g_center', 'heart', 'splenic'],
+    channels: ['ch_20_34', 'ch_35_36', 'ch_42_53'],
+    incarnationCross: 'Right Angle Cross of Planning'
+  };
+}
+
+// ── RENDER FUNCTIONS ──
+function renderType(data) {
+  const t = HD_TYPES[data.type];
+  if (!t) return;
+  const colors = {
+    generator: '#1D9E75', manifesting_generator: '#7C3AED',
+    projector: '#185FA5', manifestor: '#D85A30', reflector: '#639922'
+  };
+  const c = colors[data.type] || '#7C3AED';
+  document.getElementById('typeHero').innerHTML = `
+    <div style="background:${c}22;border-radius:12px;padding:16px;margin-bottom:0;">
+      <div class="type-badge" style="background:${c}33;color:${c};">ประเภทพลังงาน · ${t.percent} ของโลก</div>
+      <div class="type-name-th">${t.name}</div>
+      <div class="type-name-en">${t.nameEn}</div>
+      <div class="type-stats">
+        <div class="type-stat"><div class="type-stat-l">วิธีดำเนินชีวิต</div><div class="type-stat-v">${t.strategy}</div></div>
+        <div class="type-stat"><div class="type-stat-l">ออร่า</div><div class="type-stat-v">${t.aura}</div></div>
+        <div class="type-stat"><div class="type-stat-l">นิยาม</div><div class="type-stat-v">${data.definition}</div></div>
+        <div class="type-stat"><div class="type-stat-l">Incarnation Cross</div><div class="type-stat-v">${data.incarnationCross}</div></div>
+      </div>
+    </div>`;
+  const body = document.getElementById('typeBody');
+  body.innerHTML = '';
+  fakeStream(body, [
+    { label: 'คุณเป็นคนแบบไหน', text: t.who },
+    { label: 'จุดแข็งของคุณ', tags: t.strengths },
+    { label: null, divider: true },
+    { label: 'วิธีดำเนินชีวิตที่เหมาะกับคุณ', steps: t.strategySteps },
+    { label: null, warn: t.strategyWarning },
+    { label: null, divider: true },
+    { sig: true, good: t.signature, bad: t.notSelf }
+  ]);
+}
+
+function renderAuthority(data) {
+  const a = HD_AUTHORITIES[data.authority];
+  if (!a) return;
+  const body = document.getElementById('authorityBody');
+  body.innerHTML = '';
+  fakeStream(body, [
+    { label: a.name, text: a.who },
+    { label: 'วิธีตัดสินใจ', text: a.howToDecide },
+    { label: 'ขั้นตอน', steps: a.steps },
+    { label: null, divider: true },
+    { label: 'ในชีวิตประจำวัน', text: a.dailyLife },
+    { label: null, warn: a.warning },
+    { label: null, tip: a.tip }
+  ]);
+}
+
+function renderProfile(data) {
+  const p = HD_PROFILES[data.profile];
+  if (!p) return;
+  const body = document.getElementById('profileBody');
+  body.innerHTML = '';
+  fakeStream(body, [
+    { label: p.name, text: p.who },
+    { label: p.lines.conscious, text: p.conscious },
+    { label: p.lines.unconscious, text: p.unconscious },
+    { label: 'จุดแข็ง', tags: p.strengths },
+    { label: 'สิ่งที่ต้องระวัง', tags: p.challenges, warn: true },
+    { label: null, tip: p.tip }
+  ]);
+}
+
+function renderCenters(data) {
+  const body = document.getElementById('centersBody');
+  body.innerHTML = '';
+  const centerNames = {
+    head: 'Head · ความคิด', ajna: 'Ajna · วิเคราะห์', throat: 'Throat · สื่อสาร',
+    g_center: 'G Center · ตัวตน', heart: 'Heart · มุ่งมั่น',
+    splenic: 'Spleen · สัญชาตญาณ', solar_plexus: 'Solar Plexus · อารมณ์',
+    sacral: 'Sacral · พลังชีวิต', root: 'Root · แรงผลักดัน'
+  };
+  let html = '<div class="sec-label">พลังงานที่คุณมีสม่ำเสมอ</div>';
+  html += '<div class="center-row">';
+  data.definedCenters.forEach(c => { html += `<span class="center-def">${centerNames[c] || c}</span>`; });
+  html += '</div>';
+  html += '<div class="sec-text" id="defCenterDesc">กำลังวิเคราะห์...</div>';
+  html += '<div class="hd-divider"></div>';
+  html += '<div class="sec-label">พลังงานที่รับจากคนรอบข้าง</div>';
+  html += '<div class="center-row">';
+  data.undefinedCenters.forEach(c => { html += `<span class="center-undef">${centerNames[c] || c}</span>`; });
+  html += '</div>';
+  html += '<div class="sec-text" id="undefCenterDesc">กำลังวิเคราะห์...</div>';
+  body.innerHTML = html;
+
+  const defDesc = data.definedCenters.map(c => {
+    const cd = HD_CENTERS[c];
+    return cd ? cd.defined.desc : '';
+  }).filter(Boolean).join(' ');
+  const undefDesc = data.undefinedCenters.map(c => {
+    const cd = HD_CENTERS[c];
+    return cd ? cd.undefined.challenge : '';
+  }).filter(Boolean).join(' ');
+
+  streamText(document.getElementById('defCenterDesc'), defDesc, () => {
+    streamText(document.getElementById('undefCenterDesc'), undefDesc);
+  });
+}
+
+function renderChannels(data) {
+  const body = document.getElementById('channelsBody');
+  body.innerHTML = '';
+  if (!data.channels || data.channels.length === 0) {
+    body.innerHTML = '<div class="sec-text">ไม่มีเส้นพลังงานที่กำหนดค่ะ</div>';
+    return;
+  }
+  let html = '<div class="sec-text">เส้นพลังงานเหล่านี้คือพรสวรรค์และธีมพลังงานที่โดดเด่นที่สุดในตัวคุณค่ะ</div>';
+  data.channels.forEach(chId => {
+    const ch = HD_CHANNELS.find(c => c.id === chId);
+    if (!ch) return;
+    html += `<div class="ch-item">
+      <div class="ch-name">${ch.name}</div>
+      <div class="ch-gates">Gates ${ch.gates} · ${ch.centers}</div>
+      <div class="ch-desc" id="ch_${chId}">กำลังวิเคราะห์...</div>
+    </div>`;
+  });
+  body.innerHTML = html;
+  data.channels.forEach((chId, i) => {
+    const ch = HD_CHANNELS.find(c => c.id === chId);
+    if (!ch) return;
+    setTimeout(() => streamText(document.getElementById('ch_' + chId), ch.desc), i * 600);
+  });
+}
+
+function renderWork(data) {
+  const t = HD_TYPES[data.type];
+  if (!t) return;
+  let text = t.work.desc + '\n\n';
+  text += '💡 งานที่เหมาะ: ' + t.work.suitable.join(', ') + '\n\n';
+  text += '⚠️ ระวัง: ' + t.work.warning + '\n\n';
+  text += '✨ เคล็ดลับ: ' + t.work.tip;
+  streamText(document.getElementById('workText'), text);
+}
+
+function renderLove(data) {
+  const t = HD_TYPES[data.type];
+  if (!t) return;
+  let text = t.love.desc + '\n\n';
+  text += '💕 คู่ชีวิตที่เหมาะ: ' + t.love.suitable + '\n\n';
+  text += '⚠️ ระวัง: ' + t.love.warning + '\n\n';
+  text += '✨ เคล็ดลับ: ' + t.love.tip;
+  streamText(document.getElementById('loveText'), text);
+}
+
+function renderHealth(data) {
+  const t = HD_TYPES[data.type];
+  if (!t) return;
+  let text = t.health.desc + '\n\n';
+  text += '💚 วิธีดูแล: ' + t.health.tips.join(' / ') + '\n\n';
+  text += '⚠️ ระวัง: ' + t.health.warning;
+  streamText(document.getElementById('healthText'), text);
+}
+
+function renderLife(data) {
+  const t = HD_TYPES[data.type];
+  if (!t) return;
+  let text = t.life.desc + '\n\n';
+  text += t.life.tips.join('\n\n');
+  streamText(document.getElementById('lifeText'), text);
+}
+
+// ── FAKE STREAM ──
+function streamText(el, text, onDone) {
+  el.textContent = '';
+  let i = 0;
+  const t = setInterval(() => {
+    el.textContent += text[i++];
+    if (i >= text.length) { clearInterval(t); if (onDone) onDone(); }
+  }, 14);
+}
+
+function fakeStream(container, sections) {
+  let si = 0;
+  function next() {
+    if (si >= sections.length) return;
+    const s = sections[si++];
+    let el;
+    if (s.divider) { el = document.createElement('div'); el.className = 'hd-divider'; container.appendChild(el); setTimeout(next, 100); return; }
+    if (s.label) { el = document.createElement('div'); el.className = 'sec-label'; el.textContent = s.label; container.appendChild(el); }
+    if (s.text) {
+      el = document.createElement('div'); el.className = 'sec-text'; el.textContent = '';
+      container.appendChild(el);
+      let i = 0;
+      const t = setInterval(() => {
+        el.textContent += s.text[i++];
+        if (i >= s.text.length) { clearInterval(t); setTimeout(next, 150); }
+      }, 13);
+      return;
+    }
+    if (s.tags) {
+      el = document.createElement('div'); el.className = 'tag-row';
+      s.tags.forEach(tag => { const span = document.createElement('span'); span.className = s.warn ? 'tag-w' : 'tag-p'; span.textContent = tag; el.appendChild(span); });
+      container.appendChild(el);
+    }
+    if (s.steps) {
+      s.steps.forEach(step => {
+        const row = document.createElement('div'); row.className = 'ab-row';
+        row.innerHTML = `<div class="ab"></div><div class="ab-text">${step}</div>`;
+        container.appendChild(row);
+      });
+    }
+    if (s.warn) {
+      const box = document.createElement('div'); box.style.cssText = 'background:rgba(239,68,68,0.08);border-left:2px solid #f87171;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;';
+      box.textContent = '⚠️ ' + s.warn; container.appendChild(box);
+    }
+    if (s.tip) {
+      const box = document.createElement('div'); box.style.cssText = 'background:rgba(139,92,246,0.08);border-left:2px solid #7c3aed;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;';
+      box.textContent = '✨ ' + s.tip; container.appendChild(box);
+    }
+    if (s.sig) {
+      const row = document.createElement('div'); row.className = 'sig-row';
+      row.innerHTML = `<div class="sig-good"><div class="sig-tl">สัญญาณว่าอยู่บนเส้นทางที่ถูก</div><div class="sig-v">${s.good}</div></div><div class="sig-bad"><div class="sig-tl">สัญญาณเตือนว่าออกนอกทาง</div><div class="sig-v">${s.bad}</div></div>`;
+      container.appendChild(row);
+    }
+    setTimeout(next, 100);
+  }
+  next();
+}
+
+// ── SHOW ALL RESULTS ──
+function showResults(data) {
+  document.getElementById('resultWrap').classList.add('show');
+
+  const cards = [
+    { id: 'cardType', fn: () => renderType(data), delay: 0 },
+    { id: 'cardAuthority', fn: () => renderAuthority(data), delay: 800 },
+    { id: 'cardProfile', fn: () => renderProfile(data), delay: 1600 },
+    { id: 'cardCenters', fn: () => renderCenters(data), delay: 2400 },
+    { id: 'cardChannels', fn: () => renderChannels(data), delay: 3200 },
+    { id: 'cardWork', fn: () => renderWork(data), delay: 4000 },
+    { id: 'cardLove', fn: () => renderLove(data), delay: 4800 },
+    { id: 'cardHealth', fn: () => renderHealth(data), delay: 5600 },
+    { id: 'cardLife', fn: () => renderLife(data), delay: 6400 },
+  ];
+
+  cards.forEach(({ id, fn, delay }) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.style.display = 'block';
+      fn();
+      if (delay === 0) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+    }, delay);
+  });
+}
+
+// ── START ──
+window.startReading = async function() {
+  if (!window.currentUser) { document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
+
+  const btn = document.getElementById('btnStart');
+  btn.disabled = true;
+
+  // Deduct coins
+  try {
+    const idToken = await window.currentUser.getIdToken();
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+      body: JSON.stringify({ service: 'human-design', noapi: true })
+    });
+    const nb = res.headers.get('X-New-Coin-Balance');
+    if (nb != null) { updateCoinUI(parseInt(nb)); const cd = document.getElementById('coinDisplay'); if(cd) cd.textContent = parseInt(nb); }
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled = false; return;
+    }
+    await res.body.cancel();
+  } catch(e) { console.error(e); btn.disabled = false; return; }
+
+  document.getElementById('loadingOverlay').classList.add('show');
+  startLoad();
+
+  // ── เรียก /api/human-design ดึงตำแหน่งดาว ──
+  let hdData;
+  try {
+    const day   = parseInt(document.getElementById('selDay').value);
+    const month = parseInt(document.getElementById('selMonth').value);
+    const year  = parseInt(document.getElementById('selYear').value);
+    const hour  = parseInt(document.getElementById('birthHour').value);
+    const min   = parseInt(document.getElementById('birthMin').value);
+    const city  = document.getElementById('birthCity').value.trim();
+    const [lat, lng] = getCityCoords(city);
+
+    const idToken2 = await window.currentUser.getIdToken();
+    const hdRes = await fetch('/api/human-design', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken2}` },
+      body: JSON.stringify({ year, month, day, hour, minute: min, lat, lng })
+    });
+
+    if (!hdRes.ok) throw new Error('api_error');
+    const { conscious, design } = await hdRes.json();
+
+    // คำนวณ Human Design จาก planet positions
+    hdData = calculateHumanDesign({ conscious, design });
+
+  } catch(e) {
+    console.error('HD calc error:', e);
+    // fallback mock ถ้า API ล้มเหลว
+    hdData = getMockHDData();
+  }
+
+  stopLoad();
+  await new Promise(r => setTimeout(r, 300));
+  document.getElementById('loadingOverlay').classList.remove('show');
+
+  document.getElementById('formBox').style.display = 'none';
+  showResults(hdData);
+};
+
+window.resetAll = function() {
+  document.getElementById('formBox').style.display = 'block';
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('selDay').value = '';
+  document.getElementById('selMonth').value = '';
+  document.getElementById('selYear').value = '';
+  document.getElementById('birthHour').value = '';
+  document.getElementById('birthMin').value = '';
+  document.getElementById('birthCity').value = '';
+  document.getElementById('btnStart').disabled = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+window.currentUser = null;
+window.updateCoinUI = function(c) {
+  document.getElementById('coinCount').textContent = c;
+  const cd = document.getElementById('coinDisplay'); if(cd) cd.textContent = c;
+};
+function setAvatar(a) { var el = document.getElementById('avatarEl'); if(!el) return; if(a&&a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; else el.textContent = a||'👤'; }
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.loginNow = function() { document.getElementById('loginRequiredOverlay').classList.add('show'); };
+window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db,'users',user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins||0); setAvatar(data.avatar||'');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin==='function') setupCheckin(user,'../');
+  } else { updateCoinUI('—'); setAvatar(''); }
+});
+</script>
+</body>
+</html>

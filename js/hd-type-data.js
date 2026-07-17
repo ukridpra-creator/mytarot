@@ -195,4 +195,8 @@ var HD_TYPES = {
     }
   }
 
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 5fa1ff45baea6606fd20bc7a900d11a0cb44d86b
