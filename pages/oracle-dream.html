@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ไพ่ความฝัน Dream Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ความฝันออราเคิล ตีความความฝัน รับสารจากจิตใต้สำนึกค่ะ">
-<meta name="keywords" content="ไพ่ความฝัน,dream oracle,ดูดวงความฝัน,ตีความฝัน,ไพ่ออราเคิลฝัน">
+<title>ไพ่ออราเคิลความฝัน Dream Oracle ดูดวงจากความฝัน | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลความฝัน Dream Oracle เปิดไพ่รับข้อความจากความฝันและจิตใต้สำนึกค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลความฝัน,dream oracle,ไพ่ออราเคิล,ดูดวงความฝัน,ไพ่ความฝัน,จิตใต้สำนึก">
 <meta property="og:title" content="ไพ่ความฝัน Dream Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ความฝันออราเคิล ตีความความฝัน รับสารจากจิตใต้สำนึกค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-dream">
@@ -397,16 +397,22 @@ window.startReading=function(){
     </div>`).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=currentMode){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    const idx=flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
-      setTimeout(()=>{document.getElementById('revealName'+idx).classList.add('show');setTimeout(flipNext,400);},400);
-    },700);
-  };
-  setTimeout(flipNext,400);
+  // preload รูปไพ่ก่อน flip
+  const _imgUrls = selectedCards.map(c => c.img);
+  Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
+    const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
+  }))).then(() => {
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=currentMode){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      const idx=flipped++;
+      setTimeout(()=>{
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{document.getElementById('revealName'+idx).classList.add('show');setTimeout(flipNext,400);},400);
+      },700);
+    };
+    setTimeout(flipNext,400);
+  });
 };
 
 window.acceptReading=async function(){
@@ -567,5 +573,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   },800);
 });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลความฝัน Dream Oracle ดูดวงจากความฝัน | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลความฝัน (Dream Oracle) เป็นไพ่ทำนายที่เชื่อมต่อกับพลังงานของความฝันและจิตใต้สำนึกค่ะ ไพ่ออราเคิลความฝันแต่ละใบส่งสารจากโลกแห่งความฝันมาสู่ความเป็นจริงค่ะ ช่วยให้คุณพี่เข้าใจความหมายที่ซ่อนอยู่ในชีวิต รับคำแนะนำจากจิตใต้สำนึก และมองเห็นสัญญาณที่จักรวาลส่งมาผ่านความฝันค่ะ</p>
+</div>
+
 </body>
 </html>

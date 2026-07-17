@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่จักรวาล Cosmic Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่จักรวาลออราเคิล รับสารจากจักรวาลและพลังงานสูงค่ะ">
-<meta name="keywords" content="ไพ่จักรวาล,cosmic oracle,ไพ่ออราเคิลจักรวาล,ดูดวงจักรวาล">
+  <title>ไพ่ออราเคิลจักรวาล Cosmic Oracle ดูดวงพลังจักรวาล | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลจักรวาล Cosmic Oracle เปิดไพ่รับพลังงานและคำทำนายจากจักรวาลค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลจักรวาล,cosmic oracle,ไพ่ออราเคิล,ดูดวงจักรวาล,ไพ่จักรวาล,พลังจักรวาล">
 <meta property="og:title" content="ไพ่จักรวาล Cosmic Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่จักรวาลออราเคิล รับสารจากจักรวาลและพลังงานสูงค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-cosmic">
@@ -396,16 +396,22 @@ window.startReading = function() {
     </div>`).join('');
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=3){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
-    setTimeout(()=>{
-      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
-      document.getElementById(`revealName${flipped}`).style.opacity='1';
-      flipped++;flipNext();
-    },600);
-  };
-  setTimeout(flipNext,300);
+  // preload รูปไพ่ก่อน flip
+  const _imgUrls = (typeof selectedCards !== 'undefined' ? selectedCards : cards || []).map(c => c.img || (typeof IMG !== 'undefined' ? IMG(c.id) : ''));
+  Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
+    const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
+  }))).then(() => {
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=3){setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);return;}
+      setTimeout(()=>{
+        document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+        document.getElementById(`revealName${flipped}`).style.opacity='1';
+        flipped++;flipNext();
+      },600);
+    };
+    setTimeout(flipNext,300);
+  });
 };
 
 // PARSE DELIMITER
@@ -558,5 +564,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลจักรวาล Cosmic Oracle ดูดวงพลังจักรวาล | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลจักรวาล (Cosmic Oracle) เป็นไพ่ทำนายที่เชื่อมต่อกับพลังงานของจักรวาลและดวงดาวค่ะ ไพ่ออราเคิลจักรวาลแต่ละใบส่งสารจากจักรวาลถึงคุณพี่โดยตรงค่ะ ช่วยให้มองเห็นเส้นทางชีวิต ความรัก การงาน และการเงินจากมุมมองของจักรวาลอันกว้างใหญ่ค่ะ</p>
+</div>
+
 </body>
 </html>

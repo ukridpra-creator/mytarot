@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hindu Oracle — ออราเคิลฮินดู | My Tarot</title>
-<meta name="description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
-<meta name="keywords" content="ไพ่ฮินดู,hindu oracle,ไพ่เทพฮินดู,ดูดวงเทพ,oracle card">
+<title>ไพ่ออราเคิลฮินดู Hindu Oracle ดูดวงเทพเจ้าฮินดู | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลฮินดู Hindu Oracle เปิดไพ่รับพลังงานและคำทำนายจากเทพเจ้าฮินดูค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลฮินดู,hindu oracle,ไพ่ออราเคิล,ดูดวงเทพฮินดู,ไพ่เทพเจ้า,ดูดวงออราเคิล">
 <meta property="og:title" content="Hindu Oracle — ออราเคิลฮินดู | My Tarot">
 <meta property="og:description" content="ดูดวงออราเคิลฮินดู รับพลังจากเทพเจ้าฮินดู เลือกไพ่ 3 ใบ กาย ใจ จิตวิญญาณค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/hindu-oracle">
@@ -399,19 +399,25 @@ window.startReading = function() {
   document.getElementById('btnAccept').className = 'btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
 
-  let flipped = 0;
-  const flipNext = () => {
-    if (flipped >= MAX) {
-      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
-      return;
-    }
-    setTimeout(() => {
-      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
-      document.getElementById(`revealName${flipped}`).style.opacity = '1';
-      flipped++; flipNext();
-    }, 600);
-  };
-  setTimeout(flipNext, 300);
+  // preload รูปไพ่ก่อน flip
+  const _imgUrls = (typeof selectedCards !== 'undefined' ? selectedCards : cards || []).map(c => c.img || (typeof IMG !== 'undefined' ? IMG(c.id) : ''));
+  Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
+    const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
+  }))).then(() => {
+    let flipped = 0;
+    const flipNext = () => {
+      if (flipped >= MAX) {
+        setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+        return;
+      }
+      setTimeout(() => {
+        document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+        document.getElementById(`revealName${flipped}`).style.opacity = '1';
+        flipped++; flipNext();
+      }, 600);
+    };
+    setTimeout(flipNext, 300);
+  });
 };
 
 // ── PARSE XML TAGS ──
@@ -578,5 +584,12 @@ window.resetAll = function() {
 // ── INIT ──
 shuffle();
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลฮินดู Hindu Oracle ดูดวงเทพเจ้าฮินดู | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลฮินดู (Hindu Oracle) เป็นไพ่ทำนายที่ได้รับแรงบันดาลใจจากเทพเจ้าและปรัชญาของศาสนาฮินดูค่ะ แต่ละใบไพ่ออราเคิลฮินดูแสดงถึงพลังงานของเทพเจ้าองค์ต่างๆ เช่น พระพิฆเนศ พระลักษมี พระวิษณุ ช่วยให้คุณพี่รับพลังงานและคำแนะนำจากเทพเจ้าได้ค่ะ</p>
+</div>
+
 </body>
 </html>

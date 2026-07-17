@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ธรรมชาติ Nature Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ธรรมชาติออราเคิล รับสารจากวิญญาณแห่งธรรมชาติและสิ่งมีชีวิตค่ะ">
+  <title>ไพ่ออราเคิลธรรมชาติ Nature Oracle ดูดวงวิญญาณธรรมชาติ | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลธรรมชาติ Nature Oracle รับสารจากวิญญาณแห่งธรรมชาติ สัตว์ป่า พืชพรรณ และพลังงานโลกค่ะ">
 <meta name="keywords" content="ไพ่ธรรมชาติ,nature oracle,ไพ่ออราเคิลธรรมชาติ,ดูดวงธรรมชาติ,ไพ่ออราเคิล">
 <meta property="og:title" content="ไพ่ธรรมชาติ Nature Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ธรรมชาติออราเคิล รับสารจากวิญญาณแห่งธรรมชาติและสิ่งมีชีวิตค่ะ">
@@ -446,20 +446,26 @@ window.startReading = function() {
   document.getElementById('revealRow').innerHTML = cards[0]+cards[1]+cards[2]+'<div class="reveal-divider"></div>'+cards[3];
   document.getElementById('btnAccept').className = 'btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
-  let flipped = 0;
-  const flipNext = () => {
-    if (flipped >= 3) {
-      document.getElementById('revealName3').style.opacity = '1';
-      setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
-      return;
-    }
-    setTimeout(() => {
-      document.getElementById(`revealInner${flipped}`).classList.add('flipped');
-      document.getElementById(`revealName${flipped}`).style.opacity = '1';
-      flipped++; flipNext();
-    }, 600);
-  };
-  setTimeout(flipNext, 300);
+  // preload รูปไพ่ก่อน flip
+  const _imgUrls = selectedCards.map(c => c.img);
+  Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
+    const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
+  }))).then(() => {
+    let flipped = 0;
+    const flipNext = () => {
+      if (flipped >= 3) {
+        document.getElementById('revealName3').style.opacity = '1';
+        setTimeout(() => document.getElementById('btnAccept').classList.add('show'), 300);
+        return;
+      }
+      setTimeout(() => {
+        document.getElementById(`revealInner${flipped}`).classList.add('flipped');
+        document.getElementById(`revealName${flipped}`).style.opacity = '1';
+        flipped++; flipNext();
+      }, 600);
+    };
+    setTimeout(flipNext, 300);
+  });
 };
 
 // PARSE DELIMITER
@@ -635,5 +641,12 @@ window.openSecret = async function() {
 
 document.addEventListener('DOMContentLoaded', () => { shuffle(); });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลธรรมชาติคืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลธรรมชาติ (Nature Oracle) เป็นไพ่ทำนายที่เชื่อมต่อกับพลังงานของธรรมชาติ วิญญาณสัตว์ป่า พืชพรรณ ดิน น้ำ ลม และไฟค่ะ ไพ่ออราเคิลธรรมชาติแต่ละใบส่งสารจากโลกธรรมชาติมาถึงคุณพี่ค่ะ ช่วยให้เชื่อมต่อกับพลังงานของแผ่นดิน รับคำแนะนำจากธรรมชาติ และค้นพบความสมดุลในชีวิตค่ะ</p>
+</div>
+
 </body>
 </html>

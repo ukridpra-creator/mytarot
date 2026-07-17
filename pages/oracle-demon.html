@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่ปีศาจ Demon Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ปีศาจออราเคิล รับสารจากปีศาจและพลังงานมืด เปิดเผยความจริงที่ซ่อนอยู่ค่ะ">
-<meta name="keywords" content="ไพ่ปีศาจ,demon oracle,ไพ่ออราเคิลปีศาจ,ดูดวงปีศาจ">
+  <title>ไพ่ออราเคิลปีศาจ Demon Oracle ดูดวงพลังมืด | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลปีศาจ Demon Oracle เปิดไพ่รับสารจากพลังงานมืดและความจริงที่ซ่อนอยู่ค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลปีศาจ,demon oracle,ไพ่ออราเคิล,ดูดวงปีศาจ,ไพ่ปีศาจ,dark oracle">
 <meta property="og:title" content="ไพ่ปีศาจ Demon Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ปีศาจออราเคิล รับสารจากปีศาจและพลังงานมืด เปิดเผยความจริงที่ซ่อนอยู่ค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-demon">
@@ -283,9 +283,14 @@ window.selectCard = function(idx) {
   slot.className = 'slot filled';
   slot.innerHTML = `<img class="slot-img" src="${BACK}">`;
   renderCards();
-  document.getElementById('revealFrontImg').src = `../images/demon/${card.id}.png`;
+  // preload รูปไพ่ก่อน flip
+  const _preImg = new Image();
+  _preImg.onload = _preImg.onerror = () => {
+    document.getElementById('revealFrontImg').src = `../images/demon/${card.id}.png`;
   document.getElementById('revealName').textContent = card.name;
   document.getElementById('revealOverlay').classList.add('show');
+  };
+  _preImg.src = `../images/demon/${card.id}.png`;
   setTimeout(() => {
     document.getElementById('revealInner').classList.add('flipped');
     setTimeout(() => {
@@ -344,5 +349,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลปีศาจ Demon Oracle ดูดวงพลังมืด | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลปีศาจ (Demon Oracle) เป็นไพ่ทำนายที่เปิดเผยความจริงที่ซ่อนอยู่และพลังงานที่อยู่เบื้องหลังสถานการณ์ต่างๆ ค่ะ ไพ่ออราเคิลปีศาจไม่ได้น่ากลัว แต่เป็นกระจกสะท้อนความจริงที่เราไม่อยากมองค่ะ ช่วยให้คุณพี่เผชิญกับความจริงและก้าวผ่านอุปสรรคได้ค่ะ</p>
+</div>
+
 </body>
 </html>

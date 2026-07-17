@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oracle แห่งโอลิมปัส — My Tarot</title>
-<meta name="description" content="รับพรจากเทพโอลิมปัส 13 องค์ เลือกไพ่ 1 ใบ รับสาส์นและพรจากเทพเจ้าค่ะ">
-<meta name="keywords" content="ไพ่เทพกรีก,oracle โอลิมปัส,ดูดวงเทพกรีก,zeus oracle,greek gods">
+  <title>ไพ่ออราเคิลเทวดา Oracle แห่งโอลิมปัส ดูดวงเทพกรีก | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลเทวดา Oracle แห่งโอลิมปัส เปิดไพ่รับพลังงานและคำทำนายจากเทพเจ้ากรีกค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลเทวดา,oracle โอลิมปัส,ไพ่ออราเคิล,ดูดวงเทพกรีก,angel oracle,ไพ่เทพเจ้ากรีก">
 <meta property="og:title" content="Oracle แห่งโอลิมปัส — My Tarot">
 <meta property="og:description" content="รับพรจากเทพโอลิมปัส 13 องค์ เลือกไพ่ 1 ใบ รับสาส์นและพรจากเทพเจ้าค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-angle">
@@ -267,10 +267,15 @@ window.selectCard = function(idx) {
   slot.className = 'slot filled';
   slot.innerHTML = `<img class="slot-img" src="${BACK}">`;
   renderCards();
-  document.getElementById('revealFrontImg').src = IMG(card.id);
+  // preload รูปไพ่ก่อน flip
+  const _preImg = new Image();
+  _preImg.onload = _preImg.onerror = () => {
+    document.getElementById('revealFrontImg').src = IMG(card.id);
   document.getElementById('revealName').textContent = card.name;
   document.getElementById('revealBlessing').textContent = card.blessing;
   document.getElementById('revealOverlay').classList.add('show');
+  };
+  _preImg.src = IMG(card.id);
   setTimeout(() => {
     document.getElementById('revealInner').classList.add('flipped');
     setTimeout(() => {
@@ -332,5 +337,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลเทวดา Oracle แห่งโอลิมปัส ดูดวงเทพกรีก | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลแห่งโอลิมปัส เป็นไพ่ทำนายที่ได้รับแรงบันดาลใจจากเทพเจ้ากรีกโบราณค่ะ ไพ่ออราเคิลแต่ละใบแสดงถึงพลังงานและบทเรียนจากเทพเจ้าโอลิมปัส เช่น ซุส อธีน่า อพอลโล ช่วยให้คุณพี่รับคำทำนายและแนวทางชีวิตจากปัญญาของเทพเจ้าได้ค่ะ</p>
+</div>
+
 </body>
 </html>

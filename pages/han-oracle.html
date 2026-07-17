@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ไพ่ฮันออราเคิล Han Oracle — My Tarot</title>
-<meta name="description" content="ดูดวงไพ่ฮันออราเคิล ไพ่สไตล์เกาหลี รับสารจากพลังงานแห่งตะวันออกค่ะ">
-<meta name="keywords" content="ไพ่ฮัน,han oracle,ไพ่เกาหลี,ออราเคิลเกาหลี,ดูดวงไพ่เกาหลี">
+<title>ไพ่ออราเคิลฮัน ไพ่ฮันออราเคิล ดูดวงไพ่จีนโบราณ | My Tarot</title>
+<meta name="description" content="ดูดวงไพ่ออราเคิลฮัน ไพ่ฮันออราเคิลจากจีนโบราณ เปิดไพ่รับพลังงานและคำทำนายจากอักษรฮั่นค่ะ">
+<meta name="keywords" content="ไพ่ออราเคิลฮัน,ไพ่ฮันออราเคิล,ไพ่ออราเคิล,ดูดวงไพ่จีน,han oracle,ไพ่ทำนายจีน">
 <meta property="og:title" content="ไพ่ฮันออราเคิล Han Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ฮันออราเคิล ไพ่สไตล์เกาหลี รับสารจากพลังงานแห่งตะวันออกค่ะ">
 <meta property="og:url" content="https://www.mytarot.vip/pages/han-oracle">
@@ -517,24 +517,29 @@ window.startReading=function(){
   document.getElementById('btnAccept').className='btn-accept';
   document.getElementById('revealOverlay').classList.add('show');
 
-  // flip ทีละใบ พร้อมชื่อโผล่
-  let flipped=0;
-  const flipNext=()=>{
-    if(flipped>=currentMode){
-      setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);
-      return;
-    }
-    const idx=flipped;
-    flipped++;
-    setTimeout(()=>{
-      document.getElementById('revealInner'+idx).classList.add('flipped');
+  // preload รูปไพ่ก่อน flip
+  const _imgUrls = selectedCards.map(c => c.img);
+  Promise.all(_imgUrls.filter(Boolean).map(url => new Promise(res => {
+    const i = new Image(); i.onload = res; i.onerror = res; i.src = url;
+  }))).then(() => {
+    let flipped=0;
+    const flipNext=()=>{
+      if(flipped>=currentMode){
+        setTimeout(()=>document.getElementById('btnAccept').classList.add('show'),300);
+        return;
+      }
+      const idx=flipped;
+      flipped++;
       setTimeout(()=>{
-        document.getElementById('revealName'+idx).classList.add('show');
-        setTimeout(flipNext,400);
-      },400);
-    },700);
-  };
-  setTimeout(flipNext,400);
+        document.getElementById('revealInner'+idx).classList.add('flipped');
+        setTimeout(()=>{
+          document.getElementById('revealName'+idx).classList.add('show');
+          setTimeout(flipNext,400);
+        },400);
+      },700);
+    };
+    setTimeout(flipNext,400);
+  });
 };
 
 // ── ACCEPT → API ──
@@ -691,5 +696,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   },800);
 });
 </script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ไพ่ออราเคิลฮัน ไพ่ฮันออราเคิล ดูดวงไพ่จีนโบราณ | My Tarot</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ออราเคิลฮัน (Han Oracle) คือไพ่ทำนายที่ได้รับแรงบันดาลใจจากอักษรและปรัชญาจีนโบราณค่ะ ไพ่ออราเคิลฮันแต่ละใบมีความหมายเชื่อมโยงกับพลังงานและปัญญาของอารยธรรมฮั่น ใช้สำหรับทำนายชีวิต ความรัก การงาน และรับคำแนะนำจากภูมิปัญญาโบราณค่ะ</p>
+</div>
+
 </body>
 </html>
