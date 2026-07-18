@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ปีชง 2569 เช็คปีนักษัตร พร้อมวิธีแก้ชง | My Tarot</title>
-  <meta name="description" content="เช็คปีชง 2569 ปีนักษัตรไหนชงตรง ชงร่วม พร้อมคำอธิบายแต่ละแบบ วิธีแก้ชง สถานที่แนะนำ และวิธีรับมือฟรีค่ะ">
-  <meta name="keywords" content="ปีชง,ปีชง2569,แก้ชง,ปีคัก,ปีเฮ้ง,ปีผั่ว,ไท้ส่วยเอี๊ย">
-  <meta property="og:title" content="ปีชง 2569 — My Tarot">
-  <meta property="og:description" content="เช็คปีชง 2569 ของคุณ พร้อมวิธีแก้ชงและสถานที่แนะนำค่ะ">
+  <title>ปีชง เช็คปีนักษัตรที่ชงปีนี้ พร้อมวิธีแก้ชง | My Tarot</title>
+  <meta name="description" content="เช็คปีชงปีนี้ ปีนักษัตรไหนชงตรง ชงร่วม พร้อมคำอธิบายแต่ละแบบ วิธีแก้ชง สถานที่แนะนำ และวิธีรับมือฟรีค่ะ">
+  <meta name="keywords" content="ปีชง,แก้ชง,ปีคัก,ปีเฮ้ง,ปีผั่ว,ไท้ส่วยเอี๊ย">
+  <meta property="og:title" content="ปีชง — My Tarot">
+  <meta property="og:description" content="เช็คปีชงของคุณ พร้อมวิธีแก้ชงและสถานที่แนะนำค่ะ">
   <meta property="og:url" content="https://www.mytarot.vip/pages/pichong">
   <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
   <meta property="og:type" content="website">
@@ -76,7 +76,7 @@
 
 <div class="page-header">
   <a href="chinese-hub.html" class="back-btn">←</a>
-  <div class="page-title">🧧 ปีชง 2569</div>
+  <div class="page-title">🧧 ปีชง</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -103,7 +103,7 @@
     <div style="margin-bottom:12px">
       <img src="../images/mascot-pichong.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>🧧</div>')">
     </div>
-    <div class="hero-title">🧧 ปีชง 2569</div>
+    <div class="hero-title" id="heroTitle">🧧 ปีชง</div>
     <div class="hero-desc">เช็คปีนักษัตรที่ชงในปีนี้ พร้อมคำอธิบาย<br>วิธีแก้ชง และการรับมือแบบละเอียดค่ะ</div>
     <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
   </div>
@@ -198,12 +198,16 @@ window.__pichongSave = async function(label, zodiac){
 </script>
 
 <script>
+// คำนวณปีปัจจุบัน (พ.ศ.) จริงจากวันที่วันนี้ — เปลี่ยนอัตโนมัติทุกปีไม่ต้องแก้โค้ด
+const CURRENT_YEAR_BE = new Date().getFullYear() + 543;
+const CHONG_DATA = buildChongData(CURRENT_YEAR_BE);
+document.getElementById('heroTitle').textContent = `🧧 ปีชง ${CURRENT_YEAR_BE}`;
+
 // dropdown ปีเกิด
 (function(){
   const sy = document.getElementById('inYear');
-  const curYearBE = new Date().getFullYear() + 543;
   const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='เลือกปีเกิด (พ.ศ.)'; sy.appendChild(opt0);
-  for (let y = curYearBE; y >= curYearBE - 100; y--) {
+  for (let y = CURRENT_YEAR_BE; y >= CURRENT_YEAR_BE - 100; y--) {
     const o = document.createElement('option'); o.value = y; o.textContent = y; sy.appendChild(o);
   }
 })();
@@ -213,7 +217,7 @@ window.checkMyChong = function(){
   const box = document.getElementById('myResult');
   if (!yearBE) { alert('เลือกปีเกิดก่อนนะคะ'); return; }
 
-  const type = getChongType(yearBE);
+  const type = getChongType(yearBE, CURRENT_YEAR_BE);
   box.classList.add('show');
   if (type) {
     box.className = 'my-result show';
@@ -234,10 +238,10 @@ window.checkMyChong = function(){
   setTimeout(()=>box.scrollIntoView({behavior:'smooth', block:'center'}), 100);
 };
 
-// ตารางรวมทั้ง 4 ประเภท
+// ตารางรวมทั้ง 4 ประเภท — คำนวณสดจากปีปัจจุบัน
 (function(){
   const list = document.getElementById('typeList');
-  list.innerHTML = Object.values(CHONG_TYPES).map(t => `
+  list.innerHTML = Object.values(CHONG_DATA).map(t => `
     <div class="type-card" style="border-color:${t.color}55;background:${t.color}0f;">
       <div class="type-header">
         <span class="type-emoji">${t.emoji}</span>
@@ -288,7 +292,7 @@ window.checkMyChong = function(){
 <!-- SEO TEXT -->
 <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
   <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ปีชงคืออะไร?</h2>
-  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ปีชงเป็นความเชื่อทางโหราศาสตร์จีนที่ว่าในแต่ละปีจะมีปีนักษัตรบางกลุ่มที่ "ปะทะ" หรือขัดแย้งกับพลังงานของปีปัจจุบันตามหลักธาตุทั้ง 5 และปรัชญายินหยาง แบ่งเป็นชงตรง (ปะทะเต็มที่ 100%) และชงร่วมอีก 3 แบบคือ ปีคัก ปีเฮ้ง และปีผั่ว ปี 2569 ตรงกับปีมะเมีย ผู้ที่เกิดปีชวด มะเมีย เถาะ และระกา จะได้รับผลกระทบในระดับต่างกัน ที่ My Tarot คุณพี่สามารถเช็คได้ฟรีว่าปีนี้ตัวเองชงหรือไม่ พร้อมคำแนะนำวิธีแก้ชงและการรับมือค่ะ</p>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ปีชงเป็นความเชื่อทางโหราศาสตร์จีนที่ว่าในแต่ละปีจะมีปีนักษัตรบางกลุ่มที่ "ปะทะ" หรือขัดแย้งกับพลังงานของปีปัจจุบันตามหลักธาตุทั้ง 5 และปรัชญายินหยาง แบ่งเป็นชงตรง (ปะทะเต็มที่ 100%) และชงร่วมอีก 3 แบบคือ ปีคัก ปีเฮ้ง และปีผั่ว ตำแหน่งของนักษัตรที่ชงกันจะหมุนเปลี่ยนไปทุกปีตามวงล้อ 12 นักษัตรค่ะ ที่ My Tarot คุณพี่สามารถเช็คได้ฟรีว่าปีนี้ตัวเองชงหรือไม่ พร้อมคำแนะนำวิธีแก้ชงและการรับมือค่ะ</p>
 </div>
 
 </body>
