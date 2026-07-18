@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ปีชง 2569 เช็คปีนักษัตร พร้อมวิธีแก้ชง | My Tarot</title>
+  <meta name="description" content="เช็คปีชง 2569 ปีนักษัตรไหนชงตรง ชงร่วม พร้อมคำอธิบายแต่ละแบบ วิธีแก้ชง สถานที่แนะนำ และวิธีรับมือฟรีค่ะ">
+  <meta name="keywords" content="ปีชง,ปีชง2569,แก้ชง,ปีคัก,ปีเฮ้ง,ปีผั่ว,ไท้ส่วยเอี๊ย">
+  <meta property="og:title" content="ปีชง 2569 — My Tarot">
+  <meta property="og:description" content="เช็คปีชง 2569 ของคุณ พร้อมวิธีแก้ชงและสถานที่แนะนำค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/pichong">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/pichong-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .free-badge-inline { display:inline-block; margin-top:10px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px; }
+
+    .check-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:20px; }
+    .check-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+    .check-row { display:flex; gap:8px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { background:#1a1535; }
+    .btn-check { width:100%; margin-top:12px; background:linear-gradient(135deg,#dc2626,#f59e0b); border:none; border-radius:14px; padding:14px; color:white; font-size:14px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+    .my-result { display:none; border-radius:18px; padding:18px; margin-bottom:20px; text-align:center; border:1.5px solid; }
+    .my-result.show { display:block; }
+    .my-result-emoji { font-size:36px; margin-bottom:6px; }
+    .my-result-title { font-size:17px; font-weight:800; color:white; margin-bottom:4px; }
+    .my-result-sub { font-size:12px; color:rgba(255,255,255,0.6); }
+    .my-result.safe { border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.08); }
+
+    .section-label { font-size:14px; font-weight:800; color:white; margin:24px 0 12px; display:flex; align-items:center; gap:6px; }
+
+    .type-card { border-radius:18px; padding:18px; margin-bottom:12px; border:1.5px solid; }
+    .type-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .type-emoji { font-size:28px; }
+    .type-name { font-size:15px; font-weight:800; color:white; }
+    .type-zodiac { font-size:11px; color:rgba(255,255,255,0.5); }
+    .type-badge { margin-left:auto; font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px; background:rgba(255,255,255,0.1); color:white; flex-shrink:0; }
+    .type-years { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:10px; line-height:1.6; }
+    .type-desc { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.8; margin-bottom:8px; }
+    .type-effect { font-size:12px; color:rgba(255,255,255,0.5); line-height:1.8; background:rgba(255,255,255,0.03); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
+    .type-tip { font-size:12px; color:#10b981; line-height:1.7; }
+
+    .step-card { display:flex; gap:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:10px; }
+    .step-icon { font-size:22px; flex-shrink:0; }
+    .step-title { font-size:13px; font-weight:700; color:white; margin-bottom:4px; }
+    .step-desc { font-size:12px; color:rgba(255,255,255,0.55); line-height:1.7; }
+
+    .place-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:10px; border-left:3px solid var(--gold); }
+    .place-name { font-size:13px; font-weight:700; color:white; margin-bottom:2px; }
+    .place-area { font-size:11px; color:var(--gold); margin-bottom:6px; }
+    .place-note { font-size:12px; color:rgba(255,255,255,0.5); line-height:1.7; }
+
+    .coping-list { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px 18px; }
+    .coping-item { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.9; padding-left:18px; position:relative; margin-bottom:6px; }
+    .coping-item::before { content:'✓'; position:absolute; left:0; color:#10b981; font-weight:700; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="chinese-hub.html" class="back-btn">←</a>
+  <div class="page-title">🧧 ปีชง 2569</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-pichong.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>🧧</div>')">
+    </div>
+    <div class="hero-title">🧧 ปีชง 2569</div>
+    <div class="hero-desc">เช็คปีนักษัตรที่ชงในปีนี้ พร้อมคำอธิบาย<br>วิธีแก้ชง และการรับมือแบบละเอียดค่ะ</div>
+    <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
+  </div>
+
+  <!-- เช็คด่วน -->
+  <div class="check-card">
+    <label class="check-label">📅 เช็คปีเกิดของคุณพี่</label>
+    <div class="check-row">
+      <select class="sel" id="inYear"></select>
+    </div>
+    <button class="btn-check" onclick="checkMyChong()">🔍 เช็คว่าฉันชงไหม</button>
+  </div>
+
+  <div class="my-result" id="myResult"></div>
+
+  <!-- ตารางรวมทั้ง 4 ประเภท -->
+  <div class="section-label">📋 ปีชง 2569 มีใครบ้าง</div>
+  <div id="typeList"></div>
+
+  <!-- วิธีแก้ชง -->
+  <div class="section-label">🙏 วิธีแก้ชง</div>
+  <div id="stepList"></div>
+
+  <!-- สถานที่แนะนำ -->
+  <div class="section-label">📍 สถานที่แนะนำสำหรับแก้ชง</div>
+  <div id="placeList"></div>
+
+  <!-- คำแนะนำการรับมือ -->
+  <div class="section-label">💡 วิธีรับมือปีชง</div>
+  <div class="coping-list" id="copingList"></div>
+
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+window.__pichongSave = async function(label, zodiac){
+  if(!window.currentUser) return;
+  try{
+    await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+      type:'ปีชง 2569',
+      question:'เช็คปีชง',
+      result:`${label} — ปี${zodiac}`,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
+</script>
+
+<script>
+// dropdown ปีเกิด
+(function(){
+  const sy = document.getElementById('inYear');
+  const curYearBE = new Date().getFullYear() + 543;
+  const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='เลือกปีเกิด (พ.ศ.)'; sy.appendChild(opt0);
+  for (let y = curYearBE; y >= curYearBE - 100; y--) {
+    const o = document.createElement('option'); o.value = y; o.textContent = y; sy.appendChild(o);
+  }
+})();
+
+window.checkMyChong = function(){
+  const yearBE = parseInt(document.getElementById('inYear').value);
+  const box = document.getElementById('myResult');
+  if (!yearBE) { alert('เลือกปีเกิดก่อนนะคะ'); return; }
+
+  const type = getChongType(yearBE);
+  box.classList.add('show');
+  if (type) {
+    box.className = 'my-result show';
+    box.style.borderColor = type.color;
+    box.style.background = type.color + '14';
+    box.innerHTML = `
+      <div class="my-result-emoji">${type.emoji}</div>
+      <div class="my-result-title">คุณพี่ตกอยู่ในกลุ่ม "${type.label}"</div>
+      <div class="my-result-sub">ปีนักษัตร${type.zodiac} — เลื่อนลงไปดูคำอธิบายและวิธีแก้ชงด้านล่างได้เลยค่ะ</div>`;
+    if (typeof window.__pichongSave === 'function') window.__pichongSave(type.label, type.zodiac);
+  } else {
+    box.className = 'my-result show safe';
+    box.innerHTML = `
+      <div class="my-result-emoji">✨</div>
+      <div class="my-result-title">ปีนี้คุณพี่ไม่ชงค่ะ</div>
+      <div class="my-result-sub">สบายใจได้ค่ะ แต่ก็ยังสามารถไหว้เสริมดวงได้ตามปกตินะคะ</div>`;
+  }
+  setTimeout(()=>box.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+};
+
+// ตารางรวมทั้ง 4 ประเภท
+(function(){
+  const list = document.getElementById('typeList');
+  list.innerHTML = Object.values(CHONG_TYPES).map(t => `
+    <div class="type-card" style="border-color:${t.color}55;background:${t.color}0f;">
+      <div class="type-header">
+        <span class="type-emoji">${t.emoji}</span>
+        <div>
+          <div class="type-name">${t.label} — ปี${t.zodiac}</div>
+          <div class="type-zodiac">${t.years.length} รุ่นปีเกิดที่ได้รับผล</div>
+        </div>
+        <span class="type-badge" style="background:${t.color}33;color:${t.color};">${t.badge}</span>
+      </div>
+      <div class="type-years">เกิดปี พ.ศ.: ${t.years.join(', ')}</div>
+      <div class="type-desc">${t.desc}</div>
+      <div class="type-effect">📌 ${t.effect}</div>
+      <div class="type-tip">💡 ${t.tip}</div>
+    </div>`).join('');
+})();
+
+// วิธีแก้ชง
+(function(){
+  const list = document.getElementById('stepList');
+  list.innerHTML = FIX_STEPS.map(s => `
+    <div class="step-card">
+      <div class="step-icon">${s.icon}</div>
+      <div>
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>
+    </div>`).join('');
+})();
+
+// สถานที่แนะนำ
+(function(){
+  const list = document.getElementById('placeList');
+  list.innerHTML = PLACES.map(p => `
+    <div class="place-card">
+      <div class="place-name">${p.name}</div>
+      <div class="place-area">📍 ${p.area}</div>
+      <div class="place-note">${p.note}</div>
+    </div>`).join('');
+})();
+
+// คำแนะนำการรับมือ
+(function(){
+  const list = document.getElementById('copingList');
+  list.innerHTML = COPING_TIPS.map(t => `<div class="coping-item">${t}</div>`).join('');
+})();
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ปีชงคืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ปีชงเป็นความเชื่อทางโหราศาสตร์จีนที่ว่าในแต่ละปีจะมีปีนักษัตรบางกลุ่มที่ "ปะทะ" หรือขัดแย้งกับพลังงานของปีปัจจุบันตามหลักธาตุทั้ง 5 และปรัชญายินหยาง แบ่งเป็นชงตรง (ปะทะเต็มที่ 100%) และชงร่วมอีก 3 แบบคือ ปีคัก ปีเฮ้ง และปีผั่ว ปี 2569 ตรงกับปีมะเมีย ผู้ที่เกิดปีชวด มะเมีย เถาะ และระกา จะได้รับผลกระทบในระดับต่างกัน ที่ My Tarot คุณพี่สามารถเช็คได้ฟรีว่าปีนี้ตัวเองชงหรือไม่ พร้อมคำแนะนำวิธีแก้ชงและการรับมือค่ะ</p>
+</div>
+
+</body>
+</html>
