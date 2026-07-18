@@ -1,4 +1,4 @@
-// ganesh-day-data.js — ชุด "พระพิฆเนศปางประจำวันเกิด" (สไตล์ชิบิน่ารัก)
+// wallpaper-ganesh-data.js — ชุด "พระพิฆเนศปางประจำวันเกิด" (สไตล์ชิบิน่ารัก)
 
 var GANESH_DAYS = [
   { key: 'sunday', label: 'วันอาทิตย์', poseName: 'ปางพระวีระ คณปติ', colorHex: '#dc2626', emoji: '👑',
