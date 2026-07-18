@@ -27,9 +27,10 @@ function getMoonSign(year, month, day, hour, minute) {
   var date = new Date(Date.UTC(year, month-1, day, hour-7, minute, 0));
 
   try {
-    // ecliptic longitude (tropical)
-    var lon = Astronomy.EclipticLongitude(Astronomy.Body.Moon, date);
-    lon = ((lon % 360) + 360) % 360;
+    // ตำแหน่งจันทร์แบบ geocentric (เทียบกับโลกโดยตรง) — ใช้ EclipticGeoMoon ไม่ใช่ EclipticLongitude
+    // (EclipticLongitude ออกแบบมาสำหรับดาวเคราะห์ที่โคจรรอบดวงอาทิตย์ ไม่เหมาะกับดวงจันทร์)
+    var moonPos = Astronomy.EclipticGeoMoon(date);
+    var lon = ((moonPos.lon % 360) + 360) % 360;
 
     // แปลง tropical → sidereal (Lahiri)
     var ayn = getLahiriAyanamsa(year, month, day);
