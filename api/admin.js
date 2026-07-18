@@ -14,6 +14,20 @@ if (!getApps().length) {
 const db = getFirestore();
 const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'conaniscowsboy';
 
+// แปลงค่า createdAt ให้เป็น JS Date อย่างปลอดภัย ไม่ว่าจะเป็น Firestore Timestamp,
+// string, number, Date object หรือรูปแบบอื่น — ถ้าแปลงไม่ได้จะ return null แทนที่จะ throw error
+function toJSDate(value) {
+  if (!value) return null;
+  if (typeof value.toDate === 'function') return value.toDate();
+  if (value instanceof Date) return value;
+  if (typeof value.seconds === 'number') return new Date(value.seconds * 1000);
+  if (typeof value === 'string' || typeof value === 'number') {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -43,7 +57,8 @@ export default async function handler(req, res) {
       const data = userDoc.data();
 
       // ยูสใหม่วันนี้
-      if (data.createdAt?.toDate() >= todayStart) newToday++;
+      const userCreated = toJSDate(data.createdAt);
+      if (userCreated && userCreated >= todayStart) newToday++;
 
       // transactions
       const txSnap = await db.collection('users').doc(userDoc.id).collection('transactions').get();
@@ -52,7 +67,8 @@ export default async function handler(req, res) {
         const amt = (t.amount || 0) / 100;
         totalRevenue += amt;
         totalCoins += (t.coins || 0);
-        if (t.createdAt?.toDate() >= todayStart) todayRevenue += amt;
+        const txCreated = toJSDate(t.createdAt);
+        if (txCreated && txCreated >= todayStart) todayRevenue += amt;
         allTx.push({ ...t, userId: userDoc.id });
         const label = t.label || 'unknown';
         pkgCount[label] = (pkgCount[label] || 0) + 1;
@@ -80,14 +96,21 @@ export default async function handler(req, res) {
 
     // Recent transactions
     const recentTx = allTx
-      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+      .sort((a, b) => {
+        const aDate = toJSDate(a.createdAt);
+        const bDate = toJSDate(b.createdAt);
+        return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
+      })
       .slice(0, 8)
-      .map(t => ({
-        label: t.label || '—',
-        amount: (t.amount || 0) / 100,
-        coins: t.coins || 0,
-        createdAt: t.createdAt?.toDate()?.toISOString() || null,
-      }));
+      .map(t => {
+        const d = toJSDate(t.createdAt);
+        return {
+          label: t.label || '—',
+          amount: (t.amount || 0) / 100,
+          coins: t.coins || 0,
+          createdAt: d ? d.toISOString() : null,
+        };
+      });
 
     return res.status(200).json({
       totalUsers,
