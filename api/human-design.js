@@ -91,10 +91,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const [consciousRaw, designRaw] = await Promise.all([
-      fetchPlanets(birthDate),
-      fetchPlanets(designDate),
-    ]);
+    const consciousRaw = await fetchPlanets(birthDate);
+    // หน่วง 1 วินาที เพื่อหลีกเลี่ยง rate limit ของ FreeAstroAPI
+    await new Promise(r => setTimeout(r, 1000));
+    const designRaw = await fetchPlanets(designDate);
 
     console.log('birthDate:', birthDate.toISOString());
     console.log('designDate:', designDate.toISOString());
