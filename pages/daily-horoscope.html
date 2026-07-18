@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ดวงรายวัน เช็กดวงวันนี้ตามราศี | My Tarot</title>
+  <meta name="description" content="เช็กดวงรายวันวันนี้ตามราศี คำนวณจากตำแหน่งดวงจันทร์จริง การงาน การเงิน ความรัก สุขภาพ อัปเดตทุกวันฟรีค่ะ">
+  <meta name="keywords" content="ดวงรายวัน,ดวงวันนี้,ดูดวงราศีวันนี้,horoscope today">
+  <meta property="og:title" content="ดวงรายวัน — My Tarot">
+  <meta property="og:description" content="เช็กดวงวันนี้ตามราศี คำนวณจากตำแหน่งดวงจันทร์จริงค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/daily-horoscope">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/astronomy.browser.min.js"></script>
+  <script src="../js/daily-horoscope-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .today-date { font-size:12px; color:var(--gold); margin-top:8px; }
+    .free-badge-inline { display:inline-block; margin-top:8px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px; }
+
+    .zodiac-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:8px; }
+    .zodiac-btn { background:rgba(255,255,255,0.03); border:1.5px solid var(--border); border-radius:16px; padding:14px 6px; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .zodiac-btn:active { transform:scale(0.95); border-color:var(--purple-light); background:rgba(124,58,237,0.12); }
+    .zodiac-btn .z-icon { font-size:24px; margin-bottom:4px; }
+    .zodiac-btn .z-label { font-size:11px; font-weight:700; color:rgba(255,255,255,0.7); }
+
+    .result-box { display:none; margin-top:20px; }
+    .result-box.show { display:block; }
+
+    .today-header { background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(168,85,247,0.1)); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:20px; margin-bottom:16px; text-align:center; }
+    .today-sign { font-size:36px; margin-bottom:4px; }
+    .today-sign-name { font-size:18px; font-weight:800; color:white; margin-bottom:6px; }
+    .today-moon { font-size:12px; color:var(--dim); margin-bottom:10px; }
+    .today-stars { font-size:20px; letter-spacing:2px; }
+
+    .cat-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:10px; opacity:0; transform:translateY(10px); transition:all 0.35s ease; }
+    .cat-card.visible { opacity:1; transform:translateY(0); }
+    .cat-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .cat-icon { font-size:18px; }
+    .cat-name { font-size:13px; font-weight:700; color:white; }
+    .cat-text { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.8; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="western-hub.html" class="back-btn">←</a>
+  <div class="page-title">🌙 ดวงรายวัน</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-daily.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>🌙</div>')">
+    </div>
+    <div class="hero-title">🌙 ดวงรายวัน</div>
+    <div class="hero-desc">แตะราศีของคุณพี่ ดูดวงวันนี้ได้เลยค่ะ<br>คำนวณจากตำแหน่งดวงจันทร์จริงวันนี้</div>
+    <div class="today-date" id="todayDate"></div>
+    <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
+  </div>
+
+  <div class="zodiac-grid" id="zodiacGrid"></div>
+
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+window.__dailySave = async function(sign, aspect){
+  if(!window.currentUser) return;
+  try{
+    await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+      type:'ดวงรายวัน',
+      question:sign,
+      result:aspect,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
+</script>
+
+<script>
+const MONTH_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const DAY_TH = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+(function(){
+  const today = new Date();
+  document.getElementById('todayDate').textContent =
+    `📅 วัน${DAY_TH[today.getDay()]}ที่ ${today.getDate()} ${MONTH_TH[today.getMonth()]} ${today.getFullYear()+543}`;
+
+  const grid = document.getElementById('zodiacGrid');
+  grid.innerHTML = ZODIAC_TH.map((name, i) => `
+    <div class="zodiac-btn" onclick="showToday(${i})">
+      <div class="z-icon">${ZODIAC_EMOJI[i]}</div>
+      <div class="z-label">${name}</div>
+    </div>`).join('');
+})();
+
+window.showToday = async function(signIdx){
+  const r = getDailyHoroscope(signIdx, new Date());
+  const box = document.getElementById('resultBox');
+  box.classList.add('show');
+
+  const starStr = '⭐'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+
+  box.innerHTML = `
+    <div class="today-header">
+      <div class="today-sign">${r.userSignEmoji}</div>
+      <div class="today-sign-name">ราศี${r.userSign}</div>
+      <div class="today-moon">🌙 จันทร์วันนี้อยู่ราศี${r.moonSign} — ${r.aspectName}</div>
+      <div class="today-stars">${starStr}</div>
+    </div>
+    <div id="catList">
+      <div class="cat-card"><div class="cat-header"><span class="cat-icon">💼</span><span class="cat-name">การงาน</span></div><div class="cat-text">${r.work}</div></div>
+      <div class="cat-card"><div class="cat-header"><span class="cat-icon">💰</span><span class="cat-name">การเงิน</span></div><div class="cat-text">${r.money}</div></div>
+      <div class="cat-card"><div class="cat-header"><span class="cat-icon">💕</span><span class="cat-name">ความรัก</span></div><div class="cat-text">${r.love}</div></div>
+      <div class="cat-card"><div class="cat-header"><span class="cat-icon">🩺</span><span class="cat-name">สุขภาพ</span></div><div class="cat-text">${r.health}</div></div>
+    </div>
+    <button class="btn-reset" onclick="resetView()">🔄 เลือกราศีอื่น</button>`;
+
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+  const cards = box.querySelectorAll('.cat-card');
+  for (let i=0;i<cards.length;i++){ await sleep(120); cards[i].classList.add('visible'); }
+
+  if (typeof window.__dailySave === 'function') window.__dailySave('ราศี'+r.userSign, r.aspectName);
+};
+
+window.resetView = function(){
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+};
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดวงรายวันคำนวณจากอะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ดวงรายวันของ My Tarot คำนวณจากตำแหน่งดวงจันทร์จริงทางดาราศาสตร์ในแต่ละวันค่ะ เนื่องจากดวงจันทร์เคลื่อนที่ผ่านราศีต่างๆ เร็วที่สุดในบรรดาดวงดาว (ประมาณ 2-3 วันต่อราศี) จึงเหมาะกับการใช้กำหนดพลังงานประจำวันตามหลักโหราศาสตร์ตะวันตก ระบบจะเทียบมุมสัมพันธ์ระหว่างราศีที่ดวงจันทร์โคจรผ่านวันนี้กับราศีเกิดของคุณพี่ เพื่อให้คำทำนายด้านการงาน การเงิน ความรัก และสุขภาพที่เปลี่ยนแปลงไปตามตำแหน่งดาวจริงในแต่ละวันค่ะ</p>
+</div>
+
+</body>
+</html>
