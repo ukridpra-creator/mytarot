@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ฮวงจุ้ยส่วนบุคคล เลขกัว ทิศมงคลจัดห้อง | My Tarot</title>
+  <meta name="description" content="คำนวณเลขกัว (Kua Number) และทิศมงคลส่วนบุคคลจากวันเกิด พร้อมคำแนะนำจัดห้องนอน ห้องรับแขก ห้องทำงาน ห้องครัวตามฮวงจุ้ยของคุณฟรีค่ะ">
+  <meta name="keywords" content="ฮวงจุ้ย,เลขกัว,kua number,ทิศมงคล,จัดห้องตามฮวงจุ้ย,ฮวงจุ้ยส่วนบุคคล">
+  <meta property="og:title" content="ฮวงจุ้ยส่วนบุคคล — My Tarot">
+  <meta property="og:description" content="คำนวณเลขกัวและทิศมงคลของคุณ พร้อมคำแนะนำจัดห้องเฉพาะบุคคลค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/fengshui">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/fengshui-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 24px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .free-badge-inline { display:inline-block; margin-top:10px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px; }
+
+    .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .input-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:10px; display:block; }
+
+    .gender-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px; }
+    .gender-btn { border:1.5px solid rgba(255,255,255,0.1); border-radius:16px; padding:14px 10px; text-align:center; cursor:pointer; transition:all 0.25s; background:rgba(255,255,255,0.03); }
+    .gender-btn.active { border-color:#7c3aed; background:rgba(124,58,237,0.12); }
+    .gender-btn .g-icon { font-size:26px; margin-bottom:4px; }
+    .gender-btn .g-label { font-size:13px; font-weight:700; color:white; }
+
+    .date-row { display:flex; gap:8px; margin-top:16px; }
+    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel:focus { border-color:var(--purple-light); }
+    .sel option { background:#1a1535; }
+
+    .btn-read { width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; border-radius:16px; padding:16px; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+    .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
+
+    .result-box { display:none; }
+    .result-box.show { display:block; }
+
+    .kua-card { background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(168,85,247,0.08)); border:1px solid rgba(124,58,237,0.3); border-radius:20px; padding:22px; margin-bottom:16px; text-align:center; }
+    .kua-emoji { font-size:40px; margin-bottom:6px; }
+    .kua-number { font-size:28px; font-weight:800; color:white; margin-bottom:4px; }
+    .kua-sub { font-size:13px; color:var(--gold); }
+
+    .section-label { font-size:13px; font-weight:700; color:var(--gold); margin:20px 0 12px; letter-spacing:1px; }
+
+    .dir-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px; }
+    .dir-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:14px; opacity:0; transform:translateY(10px); transition:all 0.4s ease; }
+    .dir-card.visible { opacity:1; transform:translateY(0); }
+    .dir-icon { font-size:20px; margin-bottom:4px; }
+    .dir-name { font-size:11px; color:var(--dim); margin-bottom:2px; }
+    .dir-value { font-size:14px; font-weight:700; color:white; }
+
+    .unlucky-box { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:14px; padding:14px 16px; margin-bottom:8px; font-size:12px; color:rgba(239,68,68,0.75); line-height:1.8; }
+
+    .room-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; opacity:0; transform:translateY(10px); transition:all 0.4s ease; }
+    .room-card.visible { opacity:1; transform:translateY(0); }
+    .room-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .room-icon { font-size:22px; }
+    .room-name { font-size:14px; font-weight:700; color:white; }
+    .room-text { font-size:12px; color:rgba(255,255,255,0.6); line-height:1.8; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="chinese-hub.html" class="back-btn">←</a>
+  <div class="page-title">🧭 ฮวงจุ้ยส่วนบุคคล</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">🧭 ฮวงจุ้ยส่วนบุคคล</div>
+    <div class="hero-desc">คำนวณเลขกัวและทิศมงคลของคุณพี่<br>พร้อมคำแนะนำจัดห้องเฉพาะบุคคลค่ะ</div>
+    <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
+  </div>
+
+  <div class="input-card">
+    <label class="input-label">⚧ คุณพี่เป็นใครคะ?</label>
+    <div class="gender-row">
+      <div class="gender-btn" id="gM" onclick="selectGender('male')">
+        <div class="g-icon">👨</div>
+        <div class="g-label">ผู้ชาย</div>
+      </div>
+      <div class="gender-btn" id="gF" onclick="selectGender('female')">
+        <div class="g-icon">👩</div>
+        <div class="g-label">ผู้หญิง</div>
+      </div>
+    </div>
+
+    <label class="input-label" style="margin-top:16px">📅 วันเดือนปีเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inDay" onchange="checkReady()"></select>
+      <select class="sel" id="inMonth" onchange="checkReady()"></select>
+      <select class="sel" id="inYear" onchange="checkReady()"></select>
+    </div>
+  </div>
+
+  <button class="btn-read" id="readBtn" onclick="startReading()" disabled>🧭 ดูฮวงจุ้ยของฉันเลยค่ะ</button>
+
+  <div class="result-box" id="resultBox">
+
+    <div class="kua-card">
+      <div class="kua-emoji" id="kuaEmoji"></div>
+      <div class="kua-number" id="kuaNumber"></div>
+      <div class="kua-sub" id="kuaSub"></div>
+    </div>
+
+    <div class="section-label">✨ ทิศมงคล 4 ทิศของคุณพี่</div>
+    <div class="dir-grid" id="dirGrid"></div>
+    <div class="unlucky-box" id="unluckyBox"></div>
+
+    <div class="section-label">🏠 คำแนะนำจัดห้องเฉพาะบุคคล</div>
+    <div id="roomList"></div>
+
+    <button class="btn-reset" onclick="resetAll()">🔄 เช็คใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+window.__fengshuiSave = async function(kua, group, element){
+  if(!window.currentUser) return;
+  try{
+    await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+      type:'ฮวงจุ้ยส่วนบุคคล',
+      question:`เลขกัว ${kua}`,
+      result:`เลขกัว ${kua} | กลุ่ม${group} | ธาตุ${element}`,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
+</script>
+
+<script>
+const MONTHS_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const DIR_ICON = { wealth:'💰', health:'🩺', love:'💕', growth:'🌱' };
+const DIR_LABEL = { wealth:'ทิศทรัพย์', health:'ทิศสุขภาพ', love:'ทิศความรัก', growth:'ทิศเติบโต' };
+
+let selGender = null;
+
+(function(){
+  const sd = document.getElementById('inDay');
+  for (let d=1;d<=31;d++){ const o=document.createElement('option'); o.value=d; o.textContent=d; sd.appendChild(o); }
+  const sm = document.getElementById('inMonth');
+  MONTHS_TH.forEach((m,i)=>{ const o=document.createElement('option'); o.value=i+1; o.textContent=m; sm.appendChild(o); });
+  const sy = document.getElementById('inYear');
+  const curY = new Date().getFullYear();
+  for (let y=curY;y>=curY-100;y--){ const o=document.createElement('option'); o.value=y; o.textContent=y+543; sy.appendChild(o); }
+})();
+
+window.selectGender = function(g){
+  selGender = g;
+  document.getElementById('gM').classList.toggle('active', g==='male');
+  document.getElementById('gF').classList.toggle('active', g==='female');
+  checkReady();
+};
+
+window.checkReady = function(){
+  const d = document.getElementById('inDay').value;
+  const m = document.getElementById('inMonth').value;
+  const y = document.getElementById('inYear').value;
+  document.getElementById('readBtn').disabled = !(d && m && y && selGender);
+};
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+window.startReading = async function(){
+  const day = parseInt(document.getElementById('inDay').value);
+  const month = parseInt(document.getElementById('inMonth').value);
+  const yearBE = parseInt(document.getElementById('inYear').value);
+  const yearCE = yearBE - 543;
+
+  const result = calcFengshui(day, month, yearCE, selGender);
+
+  document.getElementById('kuaEmoji').textContent = result.emoji;
+  document.getElementById('kuaNumber').textContent = `เลขกัว ${result.kua}`;
+  document.getElementById('kuaSub').textContent = `กลุ่ม${result.group} · ธาตุ${result.element}`;
+
+  const dirGrid = document.getElementById('dirGrid');
+  dirGrid.innerHTML = '';
+  Object.keys(result.lucky).forEach(key=>{
+    const card = document.createElement('div');
+    card.className = 'dir-card';
+    card.innerHTML = `
+      <div class="dir-icon">${DIR_ICON[key]}</div>
+      <div class="dir-name">${DIR_LABEL[key]}</div>
+      <div class="dir-value">${({N:'เหนือ',S:'ใต้',E:'ตะวันออก',W:'ตะวันตก',NE:'ต.อ.เฉียงเหนือ',SE:'ต.อ.เฉียงใต้',SW:'ต.ต.เฉียงใต้',NW:'ต.ต.เฉียงเหนือ'})[result.lucky[key]]}</div>`;
+    dirGrid.appendChild(card);
+  });
+
+  const unluckyNames = Object.values(result.unlucky).map(dir=>({N:'เหนือ',S:'ใต้',E:'ตะวันออก',W:'ตะวันตก',NE:'ตะวันออกเฉียงเหนือ',SE:'ตะวันออกเฉียงใต้',SW:'ตะวันตกเฉียงใต้',NW:'ตะวันตกเฉียงเหนือ'}[dir]));
+  document.getElementById('unluckyBox').innerHTML = `⚠️ <strong>ทิศควรเลี่ยง:</strong> ${unluckyNames.join(', ')}`;
+
+  const roomList = document.getElementById('roomList');
+  roomList.innerHTML = result.rooms.map(r => `
+    <div class="room-card">
+      <div class="room-header"><span class="room-icon">${r.icon}</span><span class="room-name">${r.room}</span></div>
+      <div class="room-text">${r.text}</div>
+    </div>`).join('');
+
+  document.getElementById('resultBox').classList.add('show');
+  setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+
+  const dirCards = dirGrid.querySelectorAll('.dir-card');
+  for (let i=0;i<dirCards.length;i++){ await sleep(120); dirCards[i].classList.add('visible'); }
+  const roomCards = roomList.querySelectorAll('.room-card');
+  for (let i=0;i<roomCards.length;i++){ await sleep(150); roomCards[i].classList.add('visible'); }
+
+  if (typeof window.__fengshuiSave === 'function') window.__fengshuiSave(result.kua, result.group, result.element);
+};
+
+window.resetAll = function(){
+  selGender = null;
+  document.getElementById('gM').classList.remove('active');
+  document.getElementById('gF').classList.remove('active');
+  document.getElementById('inDay').value = '';
+  document.getElementById('inMonth').value = '';
+  document.getElementById('inYear').value = '';
+  document.getElementById('readBtn').disabled = true;
+  document.getElementById('resultBox').classList.remove('show');
+  window.scrollTo({ top:0, behavior:'smooth' });
+};
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ฮวงจุ้ยส่วนบุคคลคืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ฮวงจุ้ยส่วนบุคคลคำนวณจากเลขกัว (Kua Number) ซึ่งเป็นแก่นสำคัญของศาสตร์ Eight Mansions ในฮวงจุ้ยจีนค่ะ คำนวณจากปีเกิดและเพศของคุณพี่ เพื่อบอกทิศมงคล 4 ทิศ ได้แก่ ทิศทรัพย์ ทิศสุขภาพ ทิศความรัก และทิศเติบโต รวมถึงทิศที่ควรหลีกเลี่ยง ที่ My Tarot คุณพี่จะได้รับคำแนะนำการจัดห้องนอน ห้องรับแขก ห้องทำงาน และห้องครัว ที่ปรับให้เข้ากับทิศมงคลของคุณพี่โดยเฉพาะ ไม่ใช่คำแนะนำทั่วไป ฟรีไม่เสียเหรียญค่ะ</p>
+</div>
+
+</body>
+</html>
