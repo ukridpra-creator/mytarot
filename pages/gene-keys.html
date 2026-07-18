@@ -461,7 +461,10 @@ window.startReading = async function() {
       body: JSON.stringify({ year, month, day, hour, minute: min, lat, lng })
     });
     if (!hdRes.ok) throw new Error('api_error');
-    const { conscious, design } = await hdRes.json();
+    const apiResp = await hdRes.json();
+    console.log('API response:', JSON.stringify(apiResp));
+    const { conscious, design } = apiResp;
+    console.log('design raw:', JSON.stringify(design));
     hdData = calculateHumanDesign({ conscious, design });
   } catch(e) {
     console.error(e);
