@@ -96,6 +96,10 @@ export default async function handler(req, res) {
       fetchPlanets(designDate),
     ]);
 
+    console.log('consciousRaw planets:', JSON.stringify(consciousRaw?.planets?.length));
+    console.log('designRaw planets:', JSON.stringify(designRaw?.planets?.length));
+    console.log('designRaw full:', JSON.stringify(designRaw));
+
     // แปลง planets array → { sun: longitude, moon: longitude, ... }
     function parsePlanets(raw) {
       const planets = {};
