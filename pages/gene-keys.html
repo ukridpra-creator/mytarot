@@ -350,6 +350,8 @@ function showResults(hdData, birthInfo) {
   // calculateHumanDesign() returns consciousGates and designGates
   const cGates = hdData.consciousGates || hdData.conscious || {};
   const dGates = hdData.designGates || hdData.design || {};
+  console.log('cGates:', JSON.stringify(cGates));
+  console.log('dGates:', JSON.stringify(dGates));
 
   // Hero card
   document.getElementById('heroCard').innerHTML = `
@@ -360,8 +362,10 @@ function showResults(hdData, birthInfo) {
       <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-l">☀️ Conscious Sun</div><div class="hero-stat-v">Gate ${cGates.sun?.gate || '?'} · ${GENE_KEYS[cGates.sun?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[cGates.sun?.gate]?.gift?.word || '—'}</div></div>
         <div class="hero-stat"><div class="hero-stat-l">🌍 Conscious Earth</div><div class="hero-stat-v">Gate ${cGates.earth?.gate || '?'} · ${GENE_KEYS[cGates.earth?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[cGates.earth?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">🌙 Conscious Moon</div><div class="hero-stat-v">Gate ${cGates.moon?.gate || '?'} · ${GENE_KEYS[cGates.moon?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[cGates.moon?.gate]?.gift?.word || '—'}</div></div>
         <div class="hero-stat"><div class="hero-stat-l">✨ Design Sun</div><div class="hero-stat-v">Gate ${dGates.sun?.gate || '?'} · ${GENE_KEYS[dGates.sun?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.sun?.gate]?.gift?.word || '—'}</div></div>
-        <div class="hero-stat"><div class="hero-stat-l">🌍 Design Earth</div><div class="hero-stat-v">Gate ${dGates.earth?.gate || '?'} · ${GENE_KEYS[dGates.earth?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.earth?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">🌏 Design Earth</div><div class="hero-stat-v">Gate ${dGates.earth?.gate || '?'} · ${GENE_KEYS[dGates.earth?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.earth?.gate]?.gift?.word || '—'}</div></div>
+        <div class="hero-stat"><div class="hero-stat-l">🌙 Design Moon</div><div class="hero-stat-v">Gate ${dGates.moon?.gate || '?'} · ${GENE_KEYS[dGates.moon?.gate]?.shadow?.word || '—'} → ${GENE_KEYS[dGates.moon?.gate]?.gift?.word || '—'}</div></div>
       </div>
     </div>`;
 
