@@ -252,6 +252,47 @@ function renderCards(){
 
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
+
+// ── SOUNDS ──
+function playShakeSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // เสียงเขย่า — noise burst
+    [0, 80, 160, 240, 320].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180 + Math.random()*120, ctx.currentTime + delay/1000);
+      osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + delay/1000 + 0.15);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime + delay/1000);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay/1000 + 0.15);
+      osc.start(ctx.currentTime + delay/1000);
+      osc.stop(ctx.currentTime + delay/1000 + 0.15);
+    });
+  } catch(e) {}
+}
+
+function playRevealSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // เสียงทำนาย — magical chime
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.15 + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.6);
+      osc.start(ctx.currentTime + i * 0.15);
+      osc.stop(ctx.currentTime + i * 0.15 + 0.6);
+    });
+  } catch(e) {}
+}
+
 window.shakeTree = async function(){
   if(!currentUser){ document.getElementById('loginRequiredOverlay').classList.add('show'); return; }
   if(isShaking) return;
@@ -264,6 +305,7 @@ window.shakeTree = async function(){
   isShaking = true;
 
   const area = document.getElementById('treeArea');
+  playShakeSound();
   area.classList.add('shake');
   document.querySelectorAll('.tree-card').forEach(c=>{ c.classList.remove('sway'); c.classList.add('fast'); });
 
@@ -329,6 +371,7 @@ function showReveal(colorKey, data, blessing){
   document.getElementById('revealText').textContent = blessing;
   wrap.className = `reveal-wrap show theme-${colorKey}`;
 
+  playRevealSound();
   setTimeout(()=>{
     inner.classList.add('flipped');
     spawnSparkles(colorKey);
