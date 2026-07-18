@@ -350,8 +350,6 @@ function showResults(hdData, birthInfo) {
   // calculateHumanDesign() returns consciousGates and designGates
   const cGates = hdData.consciousGates || hdData.conscious || {};
   const dGates = hdData.designGates || hdData.design || {};
-  console.log('cGates:', JSON.stringify(cGates));
-  console.log('dGates:', JSON.stringify(dGates));
 
   // Hero card
   document.getElementById('heroCard').innerHTML = `
@@ -376,6 +374,7 @@ function showResults(hdData, birthInfo) {
     { gate: cGates.moon?.gate,  label: '🌙 ดวงจันทร์ตอนเกิด · โลกอารมณ์ภายใน' },
     { gate: dGates.sun?.gate,   label: '✨ ดวงอาทิตย์ออกแบบ · ด้านที่คนอื่นมองเห็น' },
     { gate: dGates.earth?.gate, label: '🌏 โลกออกแบบ · รากฐานจิตใต้สำนึก' },
+    { gate: dGates.moon?.gate,  label: '🌙 ดวงจันทร์ออกแบบ · จิตใต้สำนึกลึก' },
   ];
 
   let html = '';
@@ -385,7 +384,8 @@ function showResults(hdData, birthInfo) {
                   i === 1 ? '<div class="sec-label">🌍 CONSCIOUS EARTH · รากฐานชีวิต</div>' :
                   i === 2 ? '<div class="sec-label">🌙 CONSCIOUS MOON · โลกอารมณ์ภายใน</div>' :
                   i === 3 ? '<div class="sec-label">✨ DESIGN SUN · ด้านที่คนอื่นเห็นในตัวคุณ</div>' :
-                            '<div class="sec-label">🌏 DESIGN EARTH · รากฐานจิตใต้สำนึก</div>';
+                  i === 4 ? '<div class="sec-label">🌏 DESIGN EARTH · รากฐานจิตใต้สำนึก</div>' :
+                            '<div class="sec-label">🌙 DESIGN MOON · จิตใต้สำนึกลึก</div>';
       html += sec + renderKeyCard(p.gate, p.label);
     }
   });
@@ -461,10 +461,7 @@ window.startReading = async function() {
       body: JSON.stringify({ year, month, day, hour, minute: min, lat, lng })
     });
     if (!hdRes.ok) throw new Error('api_error');
-    const apiResp = await hdRes.json();
-    console.log('API response:', JSON.stringify(apiResp));
-    const { conscious, design } = apiResp;
-    console.log('design raw:', JSON.stringify(design));
+    const { conscious, design } = await hdRes.json();
     hdData = calculateHumanDesign({ conscious, design });
   } catch(e) {
     console.error(e);

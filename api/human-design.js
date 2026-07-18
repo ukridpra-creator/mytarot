@@ -96,13 +96,6 @@ export default async function handler(req, res) {
     await new Promise(r => setTimeout(r, 1000));
     const designRaw = await fetchPlanets(designDate);
 
-    console.log('birthDate:', birthDate.toISOString());
-    console.log('designDate:', designDate.toISOString());
-    console.log('consciousRaw planets count:', consciousRaw?.planets?.length);
-    console.log('designRaw planets count:', designRaw?.planets?.length);
-    console.log('consciousRaw full:', JSON.stringify(consciousRaw));
-    console.log('designRaw full:', JSON.stringify(designRaw));
-
     // แปลง planets array → { sun: longitude, moon: longitude, ... }
     function parsePlanets(raw) {
       const planets = {};
