@@ -210,22 +210,28 @@ async function findAuspiciousDays(ev){
 
   const today = new Date();
   const results = [];
-  for (let i = 0; i < 90 && results.length < 10; i++) {
+  for (let i = 0; i < 180 && results.length < 10; i++) {
     const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+
+    // เช็คเงื่อนไขวันในสัปดาห์ก่อน (ถ้ามีกำหนดไว้)
+    if (ev.allowedWeekdays && ev.allowedWeekdays.indexOf(d.getDay()) === -1) continue;
+    if (ev.excludedWeekdays && ev.excludedWeekdays.indexOf(d.getDay()) !== -1) continue;
+
     const moon = getMoonSign(d.getFullYear(), d.getMonth()+1, d.getDate(), 6, 0);
-    if (moon && moon.nakshatra.auspicious) {
+    // กรองเฉพาะหมวดฤกษ์ที่ตรงกับเรื่องนี้โดยเฉพาะ ไม่ใช่ "มงคลรวม" ทั้ง 4 หมวด
+    if (moon && ev.bestGroups.indexOf(moon.nakshatra.group) >= 0) {
       results.push({
         date: d,
         weekday: DAY_TH[d.getDay()],
         nakshatra: moon.nakshatra.name,
         group: moon.nakshatra.group,
-        isBest: ev.bestGroups.indexOf(moon.nakshatra.group) >= 0
+        isBest: moon.nakshatra.group === ev.bestGroups[0]
       });
     }
   }
 
   if (results.length === 0) {
-    listEl.innerHTML = '<div class="loading-box">ไม่พบวันฤกษ์ดีในช่วง 90 วันข้างหน้าค่ะ ลองใหม่อีกครั้งนะคะ</div>';
+    listEl.innerHTML = '<div class="loading-box">ไม่พบวันฤกษ์ดีในช่วง 180 วันข้างหน้าค่ะ ลองใหม่อีกครั้งนะคะ</div>';
     return;
   }
 
