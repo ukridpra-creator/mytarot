@@ -12,7 +12,7 @@ if (!getApps().length) {
 }
 
 const db = getFirestore();
-const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'conaniscowsboy';
+const ADMIN_PASS = process.env.ADMIN_PASSWORD;
 
 // แปลงค่า createdAt ให้เป็น JS Date อย่างปลอดภัย ไม่ว่าจะเป็น Firestore Timestamp,
 // string, number, Date object หรือรูปแบบอื่น — ถ้าแปลงไม่ได้จะ return null แทนที่จะ throw error
@@ -28,14 +28,51 @@ function toJSDate(value) {
   return null;
 }
 
+const ALLOWED_ORIGIN = 'https://www.mytarot.vip';
+const MAX_ATTEMPTS = 5;       // จำนวนครั้งที่พิมพ์รหัสผิดได้ก่อนถูกล็อก
+const LOCKOUT_MINUTES = 15;   // ระยะเวลาที่ถูกล็อกหลังพิมพ์ผิดครบจำนวน
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
+  if (!ADMIN_PASS) {
+    console.error('admin error: ADMIN_PASSWORD is not configured in environment variables');
+    return res.status(500).json({ error: 'server_misconfigured' });
+  }
+
+  // ระบุตัวตนผู้เรียกด้วย IP เพื่อกันการสุ่มรหัสผ่าน (brute-force)
+  const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').toString().split(',')[0].trim();
+  const attemptRef = db.collection('_adminLoginAttempts').doc(ip);
+
+  const attemptSnap = await attemptRef.get();
+  const now = Date.now();
+  if (attemptSnap.exists) {
+    const a = attemptSnap.data();
+    const lockedUntil = (a.lockedUntil || 0);
+    if (lockedUntil > now) {
+      const waitMin = Math.ceil((lockedUntil - now) / 60000);
+      return res.status(429).json({ error: 'too_many_attempts', message: `ลองผิดหลายครั้งเกินไป กรุณารออีก ${waitMin} นาทีค่ะ` });
+    }
+  }
+
   const { password } = req.body;
-  if (password !== ADMIN_PASS) return res.status(401).json({ error: 'unauthorized' });
+  if (password !== ADMIN_PASS) {
+    const prev = attemptSnap.exists ? attemptSnap.data() : { count: 0 };
+    const newCount = (prev.count || 0) + 1;
+    const update = { count: newCount, lastAttempt: now };
+    if (newCount >= MAX_ATTEMPTS) {
+      update.lockedUntil = now + LOCKOUT_MINUTES * 60000;
+      update.count = 0; // รีเซ็ตตัวนับหลังล็อก รอบถัดไปเริ่มนับใหม่
+    }
+    await attemptRef.set(update, { merge: true });
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
+  // เข้าสำเร็จ — เคลียร์ประวัติความพยายามที่ผิดของ IP นี้
+  if (attemptSnap.exists) await attemptRef.delete();
 
   try {
     const todayStart = new Date();

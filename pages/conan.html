@@ -173,24 +173,33 @@
 window.checkPw=function(){
   const v=document.getElementById('pwInput').value;
   if(!v){return;}
-  // ส่งไปเช็คฝั่ง server เลย ไม่มี password ใน client
+  document.getElementById('gateErr').textContent='';
   fetch('/api/admin',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({password:v})
-  }).then(res=>{
+  }).then(async res=>{
     if(res.ok){
       document.getElementById('gate').style.display='none';
       document.getElementById('dash').style.display='block';
       window._adminPass=v;
       loadDash();
       startClock();
-    } else {
-      document.getElementById('gateErr').textContent='รหัสผ่านไม่ถูกต้องค่ะ';
-      document.getElementById('pwInput').value='';
+      return;
     }
+    const data = await res.json().catch(()=>({}));
+    if (res.status === 429) {
+      document.getElementById('gateErr').textContent = data.message || 'ลองผิดหลายครั้งเกินไป กรุณารอสักครู่ค่ะ';
+    } else if (res.status === 401) {
+      document.getElementById('gateErr').textContent = 'รหัสผ่านไม่ถูกต้องค่ะ';
+    } else if (res.status === 500 && data.error === 'server_misconfigured') {
+      document.getElementById('gateErr').textContent = 'ระบบยังไม่ได้ตั้งค่ารหัสผ่านฝั่งเซิร์ฟเวอร์ค่ะ';
+    } else {
+      document.getElementById('gateErr').textContent = 'เกิดข้อผิดพลาดฝั่งเซิร์ฟเวอร์ค่ะ (รหัส '+res.status+') ลองใหม่อีกครั้งนะคะ';
+    }
+    document.getElementById('pwInput').value='';
   }).catch(()=>{
-    document.getElementById('gateErr').textContent='เกิดข้อผิดพลาดค่ะ';
+    document.getElementById('gateErr').textContent='เชื่อมต่อไม่ได้ค่ะ ลองเช็คอินเทอร์เน็ตแล้วลองใหม่นะคะ';
   });
 };
 
