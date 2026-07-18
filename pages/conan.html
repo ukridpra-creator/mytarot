@@ -62,6 +62,11 @@
     .rank-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--gold));}
     .rank-count{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gold);width:36px;text-align:right;flex-shrink:0;}
 
+    /* TIME PERIOD TABS */
+    .period-tabs{display:flex;gap:6px;margin-bottom:10px;}
+    .period-tab{flex:1;text-align:center;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--dim);font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;transition:all 0.15s;}
+    .period-tab.active{background:rgba(124,58,237,0.2);border-color:var(--purple);color:white;font-weight:700;}
+
     /* PACKAGES */
     .pkg-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
     .pkg-item:last-child{border-bottom:none;}
@@ -139,6 +144,12 @@
 
     <!-- TOP PAGES -->
     <div class="sec-title">🔥 หน้าที่เล่นเยอะสุด</div>
+    <div class="period-tabs" id="periodTabs">
+      <div class="period-tab active" data-period="today" onclick="switchPeriod('today')">วันนี้</div>
+      <div class="period-tab" data-period="week" onclick="switchPeriod('week')">สัปดาห์นี้</div>
+      <div class="period-tab" data-period="month" onclick="switchPeriod('month')">เดือนนี้</div>
+      <div class="period-tab" data-period="all" onclick="switchPeriod('all')">ตลอดกาล</div>
+    </div>
     <div class="card" id="topPages">
       <div class="skel"></div><div class="skel"></div><div class="skel"></div>
     </div>
@@ -189,6 +200,30 @@ function startClock(){
   update(); setInterval(update,60000);
 }
 
+let currentPeriod = 'today';
+let topPagesData = null; // เก็บข้อมูลทั้ง 4 ช่วงเวลาไว้ สลับแท็บไม่ต้องยิง fetch ใหม่
+
+function renderTopPages(period){
+  if (!topPagesData) return;
+  const list = topPagesData[period] || [];
+  const maxCount = list[0]?.count || 1;
+  document.getElementById('topPages').innerHTML = list.length ? list.map((p,i)=>`
+    <div class="rank-item">
+      <div class="rank-num">${i+1}</div>
+      <div class="rank-name">${p.name}</div>
+      <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(p.count/maxCount*100)}%"></div></div>
+      <div class="rank-count">${p.count}</div>
+    </div>`).join('') : '<div class="loading">ยังไม่มีข้อมูลช่วงนี้ค่ะ</div>';
+}
+
+window.switchPeriod=function(period){
+  currentPeriod = period;
+  document.querySelectorAll('.period-tab').forEach(el=>{
+    el.classList.toggle('active', el.dataset.period === period);
+  });
+  renderTopPages(period);
+};
+
 window.loadDash=async function(){
   try{
     const res=await fetch('/api/admin',{
@@ -206,15 +241,9 @@ window.loadDash=async function(){
     document.getElementById('mRevenueToday').textContent='วันนี้ ฿'+d.todayRevenue;
     document.getElementById('mCoins').textContent=d.totalCoins.toLocaleString();
 
-    // TOP PAGES
-    const maxCount=d.topPages[0]?.count||1;
-    document.getElementById('topPages').innerHTML=d.topPages.length?d.topPages.map((p,i)=>`
-      <div class="rank-item">
-        <div class="rank-num">${i+1}</div>
-        <div class="rank-name">${p.name}</div>
-        <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(p.count/maxCount*100)}%"></div></div>
-        <div class="rank-count">${p.count}</div>
-      </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
+    // TOP PAGES — เก็บทั้ง 4 ช่วงเวลาไว้ แล้วโชว์ตามแท็บที่เลือกอยู่
+    topPagesData = d.topPages;
+    renderTopPages(currentPeriod);
 
     // TOP PACKAGES
     document.getElementById('topPkgs').innerHTML=d.topPkgs.length?d.topPkgs.map(p=>`
