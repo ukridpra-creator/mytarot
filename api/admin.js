@@ -41,6 +41,14 @@ export default async function handler(req, res) {
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
+    // จุดเริ่มต้นสัปดาห์นี้ (จันทร์) และเดือนนี้ (วันที่ 1)
+    const weekStart = new Date(todayStart);
+    const dayOfWeek = weekStart.getDay(); // 0=อาทิตย์...6=เสาร์
+    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    weekStart.setDate(weekStart.getDate() - diffToMonday);
+
+    const monthStart = new Date(todayStart.getFullYear(), todayStart.getMonth(), 1);
+
     // ดึง users ทั้งหมด
     const usersSnap = await db.collection('users').get();
     const totalUsers = usersSnap.size;
@@ -50,7 +58,10 @@ export default async function handler(req, res) {
     let totalRevenue = 0;
     let todayRevenue = 0;
     let totalCoins = 0;
-    const pageCount = {};
+    const pageCountAll = {};
+    const pageCountToday = {};
+    const pageCountWeek = {};
+    const pageCountMonth = {};
     const pkgCount = {};
 
     for (const userDoc of usersSnap.docs) {
@@ -77,16 +88,29 @@ export default async function handler(req, res) {
       // readings
       const rSnap = await db.collection('users').doc(userDoc.id).collection('readings').get();
       rSnap.forEach(r => {
-        const type = r.data().type || 'unknown';
-        pageCount[type] = (pageCount[type] || 0) + 1;
+        const rd = r.data();
+        const type = rd.type || 'unknown';
+        const readingDate = toJSDate(rd.createdAt);
+
+        pageCountAll[type] = (pageCountAll[type] || 0) + 1;
+        if (readingDate && readingDate >= monthStart) pageCountMonth[type] = (pageCountMonth[type] || 0) + 1;
+        if (readingDate && readingDate >= weekStart) pageCountWeek[type] = (pageCountWeek[type] || 0) + 1;
+        if (readingDate && readingDate >= todayStart) pageCountToday[type] = (pageCountToday[type] || 0) + 1;
       });
     }
 
-    // Top pages
-    const topPages = Object.entries(pageCount)
+    // Top pages — แยกตามช่วงเวลา
+    const buildTopPages = (countObj) => Object.entries(countObj)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
       .map(([name, count]) => ({ name, count }));
+
+    const topPages = {
+      all: buildTopPages(pageCountAll),
+      today: buildTopPages(pageCountToday),
+      week: buildTopPages(pageCountWeek),
+      month: buildTopPages(pageCountMonth),
+    };
 
     // Top packages
     const topPkgs = Object.entries(pkgCount)
