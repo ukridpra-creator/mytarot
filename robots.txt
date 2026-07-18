@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /pages/login.html
+Disallow: /pages/coins.html
+Disallow: /pages/profile.html
+Disallow: /pages/history.html
+Disallow: /pages/conan.html
 
 Sitemap: https://www.mytarot.vip/sitemap.xml
