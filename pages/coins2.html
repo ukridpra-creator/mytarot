@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เติมเหรียญ — My Tarot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; background:#080614; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:12px 16px 20px; }
+
+    .balance-row { display:flex; align-items:center; justify-content:space-between; background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(124,58,237,0.1)); border:1px solid rgba(212,175,55,0.25); border-radius:16px; padding:12px 16px; margin-bottom:12px; }
+    .balance-left { display:flex; align-items:center; gap:10px; }
+    .balance-icon { font-size:28px; }
+    .balance-label { font-size:11px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+    .balance-amount { font-size:24px; font-weight:800; color:#d4af37; line-height:1; }
+    .balance-rate { font-size:11px; color:rgba(255,255,255,0.3); }
+
+    .pkg-label { font-size:12px; color:rgba(255,255,255,0.4); font-weight:700; letter-spacing:1px; margin-bottom:8px; }
+    .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+    .pkg-card { border-radius:14px; padding:10px 6px; text-align:center; border:2px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); cursor:pointer; transition:all 0.2s; position:relative; }
+    .pkg-card:active { transform:scale(0.96); }
+    .pkg-card.selected { border-color:#d4af37; background:rgba(212,175,55,0.12); box-shadow:0 0 16px rgba(212,175,55,0.2); }
+    .pkg-card.popular { border-color:rgba(168,85,247,0.4); }
+    .popular-tag { position:absolute; top:-8px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#7c3aed,#a855f7); color:white; font-size:9px; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+    .pkg-coins { font-size:18px; font-weight:800; color:#d4af37; line-height:1.2; }
+    .pkg-bonus { font-size:9px; color:#10b981; font-weight:700; min-height:13px; }
+    .pkg-price { font-size:12px; font-weight:700; color:white; background:rgba(255,255,255,0.08); border-radius:8px; padding:3px 8px; display:inline-block; margin-top:4px; }
+    .pkg-card.selected .pkg-price { background:rgba(212,175,55,0.2); color:#d4af37; }
+
+    .selected-info { display:none; background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.2); border-radius:14px; padding:10px 14px; margin-bottom:12px; }
+    .selected-info.show { display:flex; align-items:center; justify-content:space-between; }
+    .sel-coins { font-size:15px; font-weight:800; color:#d4af37; }
+    .sel-price { font-size:13px; color:rgba(255,255,255,0.5); }
+    .sel-total { font-size:11px; color:#10b981; }
+
+    .btn-pay { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:14px; padding:15px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:8px; opacity:0.4; pointer-events:none; transition:all 0.2s; }
+    .btn-pay.active { opacity:1; pointer-events:all; }
+    .btn-pay:active { transform:scale(0.98); }
+
+    /* QR OVERLAY */
+    .qr-overlay { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,0.92); display:none; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px 16px; overflow-y:auto; }
+    .qr-overlay.show { display:flex; }
+    .qr-card { background:white; border-radius:24px; padding:20px; width:100%; max-width:320px; text-align:center; margin-bottom:12px; }
+    .qr-logo { font-size:24px; margin-bottom:2px; }
+    .qr-title { font-size:14px; font-weight:800; color:#1a1a1a; margin-bottom:2px; }
+    .qr-amount { font-size:20px; font-weight:800; color:#7c3aed; margin-bottom:12px; }
+    .qr-image-wrap { width:200px; height:200px; margin:0 auto 12px; }
+    .qr-image-wrap img { width:100%; height:100%; border-radius:8px; }
+    .qr-loading { width:200px; height:200px; margin:0 auto 12px; background:#f5f5f5; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px; border:2px dashed #ddd; }
+
+    /* bank info */
+    .bank-info { background:#f9f4ff; border-radius:12px; padding:12px 14px; margin-bottom:12px; text-align:left; }
+    .bank-info-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:13px; }
+    .bank-info-label { color:#666; }
+    .bank-info-val { font-weight:700; color:#1a1a1a; }
+    .bank-info-acct { display:flex; align-items:center; gap:6px; }
+    .btn-copy { background:#7c3aed; color:white; border:none; border-radius:6px; padding:3px 8px; font-size:11px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+
+    /* upload slip */
+    .slip-section { background:#fff8e6; border-radius:12px; padding:14px; margin-bottom:8px; }
+    .slip-title { font-size:13px; font-weight:700; color:#92400e; margin-bottom:8px; }
+    .slip-upload-area { border:2px dashed #d97706; border-radius:10px; padding:16px; text-align:center; cursor:pointer; background:white; transition:all 0.2s; }
+    .slip-upload-area:active { background:#fffbf0; }
+    .slip-preview { width:100%; border-radius:8px; margin-top:8px; display:none; }
+    .btn-verify { width:100%; background:linear-gradient(135deg,#d97706,#f59e0b); border:none; border-radius:12px; padding:13px; color:white; font-size:15px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; display:none; }
+    .btn-verify:disabled { opacity:0.5; }
+    .verify-status { font-size:12px; color:#92400e; margin-top:6px; text-align:center; min-height:18px; }
+
+    .btn-cancel-qr { width:100%; max-width:320px; padding:13px; border-radius:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<!-- QR + SLIP OVERLAY -->
+<div class="qr-overlay" id="qrOverlay">
+  <div class="qr-card">
+    <div class="qr-logo">🔮</div>
+    <div class="qr-title">My Tarot</div>
+    <div class="qr-amount" id="qrAmount"></div>
+
+    <!-- QR Code -->
+    <div class="qr-loading" id="qrLoading">
+      <div style="font-size:28px">⏳</div>
+      <div style="font-size:12px;color:#999">กำลังสร้าง QR</div>
+    </div>
+    <div class="qr-image-wrap" id="qrImageWrap" style="display:none">
+      <img id="qrImage" alt="PromptPay QR">
+    </div>
+
+    <!-- ข้อมูลบัญชี -->
+    <div class="bank-info">
+      <div class="bank-info-row">
+        <span class="bank-info-label">ธนาคาร</span>
+        <span class="bank-info-val">กสิกรไทย (KBank)</span>
+      </div>
+      <div class="bank-info-row">
+        <span class="bank-info-label">ชื่อบัญชี</span>
+        <span class="bank-info-val">อุกฤษฎ์ ประเสริฐ</span>
+      </div>
+      <div class="bank-info-row">
+        <span class="bank-info-label">เลขบัญชี</span>
+        <div class="bank-info-acct">
+          <span class="bank-info-val" id="acctNum">021-369024-8</span>
+          <button class="btn-copy" onclick="copyAcct()">ก็อป</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- อัพโหลดสลิป -->
+    <div class="slip-section">
+      <div class="slip-title">📎 แนบสลิปหลังโอนเงินค่ะ</div>
+      <div class="slip-upload-area" onclick="document.getElementById('slipInput').click()">
+        <div id="slipPlaceholder">
+          <div style="font-size:28px;margin-bottom:4px">🧾</div>
+          <div style="font-size:13px;color:#92400e;font-weight:700">แตะเพื่อเลือกรูปสลิป</div>
+          <div style="font-size:11px;color:#b45309;margin-top:2px">รองรับ JPG, PNG</div>
+        </div>
+        <img class="slip-preview" id="slipPreview">
+      </div>
+      <input type="file" id="slipInput" accept="image/*" style="display:none" onchange="onSlipSelected(this)">
+      <button class="btn-verify" id="btnVerify" onclick="verifySlip()">✅ ยืนยันการชำระเงิน</button>
+      <div class="verify-status" id="verifyStatus"></div>
+    </div>
+  </div>
+
+  <button class="btn-cancel-qr" onclick="closeQR()">← กลับไปเลือกแพ็กเกจ</button>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <a href="../index.html" class="back-btn">←</a>
+  <div class="page-title">🪙 เติมเหรียญ</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อเติมเหรียญค่ะ</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="balance-row">
+    <div class="balance-left">
+      <div class="balance-icon">🪙</div>
+      <div>
+        <div class="balance-label">เหรียญคงเหลือ</div>
+        <div class="balance-amount" id="balanceAmount">—</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="balance-rate">1 เหรียญ = 0.50 ฿</div>
+    </div>
+  </div>
+
+  <div class="pkg-label">✦ เลือกแพ็กเกจค่ะ</div>
+  <div class="packages-grid">
+    <div class="pkg-card" id="pkg_50" onclick="selectPackage(50,0,'50',25)">
+      <div class="pkg-coins">50</div>
+      <div class="pkg-bonus"> </div>
+      <div class="pkg-price">25฿</div>
+    </div>
+    <div class="pkg-card" id="pkg_100" onclick="selectPackage(100,0,'100',50)">
+      <div class="pkg-coins">100</div>
+      <div class="pkg-bonus"> </div>
+      <div class="pkg-price">50฿</div>
+    </div>
+    <div class="pkg-card popular" id="pkg_300" onclick="selectPackage(300,30,'300',150)">
+      <div class="popular-tag">⭐ ฮิต</div>
+      <div class="pkg-coins">300</div>
+      <div class="pkg-bonus">+30 ฟรี</div>
+      <div class="pkg-price">150฿</div>
+    </div>
+    <div class="pkg-card" id="pkg_500" onclick="selectPackage(500,75,'500',250)">
+      <div class="pkg-coins">500</div>
+      <div class="pkg-bonus">+75 ฟรี</div>
+      <div class="pkg-price">250฿</div>
+    </div>
+    <div class="pkg-card" id="pkg_1000" onclick="selectPackage(1000,200,'1000',500)">
+      <div class="pkg-coins">1,000</div>
+      <div class="pkg-bonus">+200 ฟรี🎉</div>
+      <div class="pkg-price">500฿</div>
+    </div>
+    <div class="pkg-card" id="pkg_2000" onclick="selectPackage(2000,500,'2000',1000)">
+      <div class="pkg-coins">2,000</div>
+      <div class="pkg-bonus">+500 ฟรี👑</div>
+      <div class="pkg-price">1,000฿</div>
+    </div>
+  </div>
+
+  <div class="selected-info" id="selectedInfo">
+    <div>
+      <div class="sel-coins" id="selCoinsText">🪙 — เหรียญ</div>
+      <div class="sel-total" id="selTotalText"></div>
+    </div>
+    <div class="sel-price" id="selPriceText">— ฿</div>
+  </div>
+
+  <button class="btn-pay" id="btnPay" onclick="openQR()">🪙 ชำระเงินเลยค่ะ</button>
+  <div style="margin-top:16px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.8;text-align:center;">
+    บริการนี้เป็นความเชื่อส่วนบุคคลและเพื่อความบันเทิงเท่านั้น<br>
+    ทางระบบขอสงวนสิทธิ์ไม่คืนเงินทุกกรณีหลังจากที่ได้รับคำทำนายแล้ว
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item active"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+// ── STATE ──
+let selCoins = 0, selBonus = 0, selPkgId = '', selPrice = 0;
+let slipFile = null;
+let currentOrderId = null;
+
+// ── QR Generator (PromptPay) ──
+// เลขบัญชี KBank → PromptPay QR via promptpay.io
+const ACCOUNT_NO = '0213690248'; // ไม่มี dash
+const ACCOUNT_DISPLAY = '021-369024-8';
+const ACCOUNT_NAME = 'อุกฤษฎ์ ประเสริฐ';
+const BANK_NAME = 'กสิกรไทย (KBank)';
+
+function generateQR(amount) {
+  // ใช้ promptpay.io สร้าง QR จากเลขบัญชี + จำนวนเงิน
+  return `https://promptpay.io/${ACCOUNT_NO}/${amount}.png`;
+}
+
+window.selectPackage = function(coins, bonus, pkgId, price) {
+  selCoins = coins; selBonus = bonus; selPkgId = pkgId; selPrice = price;
+  ['50','100','300','500','1000','2000'].forEach(k => {
+    document.getElementById('pkg_'+k).classList.remove('selected');
+  });
+  document.getElementById('pkg_'+coins).classList.add('selected');
+  const total = coins + bonus;
+  document.getElementById('selCoinsText').textContent = '🪙 ' + total.toLocaleString() + ' เหรียญ';
+  document.getElementById('selTotalText').textContent = bonus > 0 ? `(${coins.toLocaleString()} + ${bonus.toLocaleString()} โบนัส)` : '';
+  document.getElementById('selPriceText').textContent = price.toLocaleString() + ' ฿';
+  document.getElementById('selectedInfo').classList.add('show');
+  document.getElementById('btnPay').classList.add('active');
+};
+
+window.openQR = function() {
+  if (!selCoins) return;
+  const total = selCoins + selBonus;
+  document.getElementById('qrAmount').textContent = '🪙 ' + total.toLocaleString() + ' เหรียญ — ' + selPrice.toLocaleString() + '฿';
+
+  // reset slip
+  slipFile = null;
+  document.getElementById('slipPreview').style.display = 'none';
+  document.getElementById('slipPlaceholder').style.display = 'block';
+  document.getElementById('btnVerify').style.display = 'none';
+  document.getElementById('verifyStatus').textContent = '';
+  document.getElementById('slipInput').value = '';
+
+  // แสดง overlay
+  document.getElementById('qrOverlay').classList.add('show');
+
+  // โหลด QR
+  document.getElementById('qrLoading').style.display = 'flex';
+  document.getElementById('qrImageWrap').style.display = 'none';
+  const img = document.getElementById('qrImage');
+  img.onload = () => {
+    document.getElementById('qrLoading').style.display = 'none';
+    document.getElementById('qrImageWrap').style.display = 'block';
+  };
+  img.onerror = () => {
+    document.getElementById('qrLoading').innerHTML = '<div style="font-size:12px;color:#999;padding:8px">ไม่สามารถโหลด QR ได้<br>กรุณาใช้เลขบัญชีด้านล่างค่ะ</div>';
+  };
+  img.src = generateQR(selPrice);
+};
+
+window.closeQR = function() {
+  document.getElementById('qrOverlay').classList.remove('show');
+};
+
+window.copyAcct = function() {
+  navigator.clipboard.writeText(ACCOUNT_NO).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅';
+    setTimeout(() => btn.textContent = 'ก็อป', 1500);
+  });
+};
+
+window.onSlipSelected = function(input) {
+  if (!input.files[0]) return;
+  slipFile = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('slipPreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('slipPlaceholder').style.display = 'none';
+    document.getElementById('btnVerify').style.display = 'block';
+  };
+  reader.readAsDataURL(slipFile);
+};
+
+window.verifySlip = async function() {
+  if (!slipFile || !window.currentUser) return;
+  const btn = document.getElementById('btnVerify');
+  const status = document.getElementById('verifyStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังตรวจสอบ...';
+  status.textContent = 'กำลังส่งสลิปให้ระบบตรวจสอบค่ะ...';
+
+  try {
+    const idToken = await window.currentUser.getIdToken();
+    const formData = new FormData();
+    formData.append('slip', slipFile);
+    formData.append('coins', selCoins);
+    formData.append('bonus', selBonus);
+    formData.append('price', selPrice);
+    formData.append('pkgId', selPkgId);
+
+    const res = await fetch('/api/verify-slip', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + idToken },
+      body: formData
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      closeQR();
+      if (window.updateCoinUI) updateCoinUI(data.newCoins);
+      document.getElementById('balanceAmount').textContent = data.newCoins;
+      alert('✅ เติมเหรียญสำเร็จค่ะ! ได้รับ 🪙 ' + (selCoins + selBonus).toLocaleString() + ' เหรียญค่ะ');
+    } else {
+      status.textContent = '❌ ' + (data.message || 'ไม่สามารถยืนยันได้ค่ะ กรุณาลองใหม่');
+      btn.disabled = false;
+      btn.textContent = '✅ ยืนยันการชำระเงิน';
+    }
+  } catch(e) {
+    status.textContent = '❌ เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
+    btn.disabled = false;
+    btn.textContent = '✅ ยืนยันการชำระเงิน';
+  }
+};
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
+const db = getFirestore(app);
+
+window.updateCoinUI = function(c) {
+  document.getElementById('balanceAmount').textContent = c;
+};
+
+function setAvatarDisplay(a) {
+  var el = document.getElementById('avatarEl');
+  if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
+}
+
+window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.loginNow = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
+
+onAuthStateChanged(auth, async user => {
+  window.currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0);
+    setAvatarDisplay(data.avatar || '');
+    document.getElementById('guestView').style.display = 'none';
+    document.getElementById('loggedView').style.display = 'block';
+    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
+    document.getElementById('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
+  } else {
+    updateCoinUI('—');
+    setAvatarDisplay('');
+  }
+});
+</script>
+</body>
+</html>
