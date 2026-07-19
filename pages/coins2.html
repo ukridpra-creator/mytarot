@@ -96,17 +96,17 @@
     <!-- ข้อมูลบัญชี -->
     <div class="bank-info">
       <div class="bank-info-row">
-        <span class="bank-info-label">ธนาคาร</span>
-        <span class="bank-info-val">กสิกรไทย (KBank)</span>
+        <span class="bank-info-label">ช่องทาง</span>
+        <span class="bank-info-val">พร้อมเพย์ (PromptPay)</span>
       </div>
       <div class="bank-info-row">
         <span class="bank-info-label">ชื่อบัญชี</span>
         <span class="bank-info-val">อุกฤษฎ์ ประเสริฐ</span>
       </div>
       <div class="bank-info-row">
-        <span class="bank-info-label">เลขบัญชี</span>
+        <span class="bank-info-label">เบอร์พร้อมเพย์</span>
         <div class="bank-info-acct">
-          <span class="bank-info-val" id="acctNum">021-369024-8</span>
+          <span class="bank-info-val" id="acctNum">081-534-1515</span>
           <button class="btn-copy" onclick="copyAcct()">ก็อป</button>
         </div>
       </div>
@@ -234,14 +234,14 @@ let slipFile = null;
 let currentOrderId = null;
 
 // ── QR Generator (PromptPay) ──
-// เลขบัญชี KBank → PromptPay QR via promptpay.io
-const ACCOUNT_NO = '0213690248'; // ไม่มี dash
-const ACCOUNT_DISPLAY = '021-369024-8';
+// เบอร์พร้อมเพย์ → PromptPay QR via promptpay.io
+const ACCOUNT_NO = '0815341515'; // เบอร์พร้อมเพย์ ไม่มีขีด
+const ACCOUNT_DISPLAY = '081-534-1515';
 const ACCOUNT_NAME = 'อุกฤษฎ์ ประเสริฐ';
-const BANK_NAME = 'กสิกรไทย (KBank)';
+const BANK_NAME = 'พร้อมเพย์ (PromptPay)';
 
 function generateQR(amount) {
-  // ใช้ promptpay.io สร้าง QR จากเลขบัญชี + จำนวนเงิน
+  // ใช้ promptpay.io สร้าง QR จากเบอร์พร้อมเพย์ + จำนวนเงิน
   return `https://promptpay.io/${ACCOUNT_NO}/${amount}.png`;
 }
 
