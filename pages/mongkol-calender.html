@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ปฏิทินวันมงคล วันไหนควรไหว้เทพองค์ไหน | My Tarot</title>
+  <meta name="description" content="ปฏิทินวันมงคลประจำสัปดาห์ เช็กว่าวันนี้ควรบูชาเทพองค์ไหน พร้อมลิงก์บทสวดคาถาครบทุกองค์ ฟรีค่ะ">
+  <meta name="keywords" content="ปฏิทินวันมงคล,วันไหว้เทพ,วันบูชาพระตรีมูรติ,วันบูชาพระแม่ลักษมี,วันไหว้พระราหู">
+  <meta property="og:title" content="ปฏิทินวันมงคล — My Tarot">
+  <meta property="og:description" content="เช็กว่าวันนี้ควรบูชาเทพองค์ไหน พร้อมลิงก์บทสวดคาถาครบทุกองค์ค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/mongkol-calendar">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .section-label { font-size:14px; font-weight:800; color:white; margin:24px 0 12px; display:flex; align-items:center; gap:6px; }
+    .section-label:first-of-type { margin-top:0; }
+
+    /* Today highlight */
+    .today-card { background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); border-radius:20px; padding:20px; margin-bottom:8px; }
+    .today-label { font-size:11px; font-weight:700; color:#f59e0b; letter-spacing:1px; margin-bottom:6px; }
+    .today-day { font-size:20px; font-weight:800; color:white; margin-bottom:12px; }
+    .today-deities { display:flex; flex-direction:column; gap:8px; }
+    .today-deity-link { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); border-radius:14px; padding:10px 14px; text-decoration:none; color:white; font-size:13px; font-weight:600; transition:all 0.2s; }
+    .today-deity-link:hover { background:rgba(255,255,255,0.1); }
+    .today-deity-emoji { font-size:20px; }
+    .today-deity-time { margin-left:auto; font-size:11px; color:rgba(255,255,255,0.5); font-weight:400; }
+
+    /* Weekly table */
+    .week-list { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+    .week-row { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:12px 14px; }
+    .week-row.is-today { border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.06); }
+    .week-day { font-size:12px; font-weight:700; color:white; width:64px; flex-shrink:0; }
+    .week-deities { display:flex; flex-wrap:wrap; gap:6px; flex:1; }
+    .week-chip { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); border-radius:20px; padding:4px 10px; font-size:11px; color:rgba(255,255,255,0.75); text-decoration:none; }
+    .week-chip:hover { background:rgba(255,255,255,0.12); }
+    .week-chip.empty { color:rgba(255,255,255,0.3); background:none; padding:4px 0; }
+
+    /* Anytime section */
+    .anytime-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .anytime-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:10px 12px; text-decoration:none; color:rgba(255,255,255,0.75); font-size:12px; }
+    .anytime-item:hover { border-color:rgba(124,58,237,0.4); }
+    .anytime-emoji { font-size:18px; flex-shrink:0; }
+
+    .note-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:14px 16px; margin-top:8px; font-size:11.5px; color:rgba(255,255,255,0.5); line-height:1.8; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="mantra-hub.html" class="back-btn">←</a>
+  <div class="page-title">📅 ปฏิทินวันมงคล</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div class="hero-title">📅 ปฏิทินวันมงคล</div>
+    <div class="hero-desc">เช็กว่าวันนี้ควรบูชาเทพองค์ไหน<br>พร้อมลิงก์บทสวดคาถาครบทุกองค์ค่ะ</div>
+  </div>
+
+  <!-- วันนี้ -->
+  <div class="section-label">✨ วันนี้ควรไหว้องค์ไหน</div>
+  <div class="today-card">
+    <div class="today-label">วันนี้คือ</div>
+    <div class="today-day" id="todayDayName">—</div>
+    <div class="today-deities" id="todayDeities"></div>
+  </div>
+
+  <!-- ตารางประจำสัปดาห์ -->
+  <div class="section-label">🗓️ วันมงคลเฉพาะองค์</div>
+  <div class="week-list" id="weekList"></div>
+
+  <!-- ไหว้ได้ทุกวัน -->
+  <div class="section-label">💫 บูชาได้ทุกวัน ไม่จำกัดวัน</div>
+  <div class="anytime-grid">
+    <a href="bucha-ganesh.html" class="anytime-item"><span class="anytime-emoji">🐘</span>พระพิฆเนศ</a>
+    <a href="bucha-wessuwan.html" class="anytime-item"><span class="anytime-emoji">👹</span>ท้าวเวสสุวรรณ</a>
+    <a href="bucha-naga.html" class="anytime-item"><span class="anytime-emoji">🐍</span>พญานาคราช</a>
+    <a href="bucha-nangkwak.html" class="anytime-item"><span class="anytime-emoji">🙋‍♀️</span>แม่นางกวัก</a>
+    <a href="bucha-sivali.html" class="anytime-item"><span class="anytime-emoji">🧡</span>พระสีวลี</a>
+    <a href="bucha-umadevi.html" class="anytime-item"><span class="anytime-emoji">🔱</span>พระแม่อุมาเทวี</a>
+    <a href="bucha-chatulokabal.html" class="anytime-item"><span class="anytime-emoji">🛡️</span>ท้าวจตุโลกบาล</a>
+    <a href="bucha-aikhai.html" class="anytime-item"><span class="anytime-emoji">🧨</span>ไอ้ไข่ วัดเจดีย์</a>
+    <a href="night-prayer.html" class="anytime-item"><span class="anytime-emoji">🙏</span>บทสวดก่อนนอน</a>
+    <a href="bucha-yanang.html" class="anytime-item"><span class="anytime-emoji">🚗</span>แม่ย่านางรถ</a>
+  </div>
+
+  <div class="note-box">
+    แม่ย่านางรถนิยมไหว้ในวันสงกรานต์ วันปีใหม่ วันตรุษจีน หรือวันขึ้น 15 ค่ำ มากกว่าผูกกับวันในสัปดาห์ค่ะ ส่วนองค์อื่นๆ ที่ไม่มีวันมงคลเฉพาะ สามารถบูชาได้ทุกวันด้วยใจศรัทธาเช่นกัน
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script>
+// วันมงคลเฉพาะองค์ (index 0 = อาทิตย์ ... 6 = เสาร์)
+const weekData = [
+  { day: "อาทิตย์", deities: [] },
+  { day: "จันทร์", deities: [] },
+  { day: "อังคาร", deities: [] },
+  { day: "พุธ (กลางคืน)", deities: [
+      { name: "พระราหู", emoji: "🌑", href: "bucha-rahu.html", time: "หลัง 18:00 น." }
+    ] },
+  { day: "พฤหัสบดี", deities: [
+      { name: "พระตรีมูรติ", emoji: "💞", href: "bucha-trimurti.html", time: "09:30 / 21:30 น." }
+    ] },
+  { day: "ศุกร์", deities: [
+      { name: "พระแม่ลักษมี", emoji: "🪷", href: "bucha-lakshmi.html", time: "ทั้งวัน" }
+    ] },
+  { day: "เสาร์", deities: [] }
+];
+
+const dayNamesFull = ["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"];
+
+function renderWeekList() {
+  const todayIdx = new Date().getDay();
+  const listEl = document.getElementById('weekList');
+  listEl.innerHTML = '';
+  weekData.forEach((row, idx) => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'week-row' + (idx === todayIdx ? ' is-today' : '');
+    const dayEl = document.createElement('div');
+    dayEl.className = 'week-day';
+    dayEl.textContent = row.day;
+    rowEl.appendChild(dayEl);
+    const deitiesEl = document.createElement('div');
+    deitiesEl.className = 'week-deities';
+    if (row.deities.length === 0) {
+      const span = document.createElement('span');
+      span.className = 'week-chip empty';
+      span.textContent = 'ไม่มีวันมงคลเฉพาะ';
+      deitiesEl.appendChild(span);
+    } else {
+      row.deities.forEach(d => {
+        const a = document.createElement('a');
+        a.className = 'week-chip';
+        a.href = d.href;
+        a.textContent = d.emoji + ' ' + d.name;
+        deitiesEl.appendChild(a);
+      });
+    }
+    rowEl.appendChild(deitiesEl);
+    listEl.appendChild(rowEl);
+  });
+}
+
+function renderToday() {
+  const todayIdx = new Date().getDay();
+  document.getElementById('todayDayName').textContent = dayNamesFull[todayIdx];
+  const deities = weekData[todayIdx].deities;
+  const container = document.getElementById('todayDeities');
+  container.innerHTML = '';
+  if (deities.length === 0) {
+    const p = document.createElement('div');
+    p.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;';
+    p.textContent = 'วันนี้ไม่มีองค์เทพที่มีวันมงคลเฉพาะ แต่บูชาองค์ใดก็ได้ด้วยใจศรัทธาค่ะ 🙏';
+    container.appendChild(p);
+  } else {
+    deities.forEach(d => {
+      const a = document.createElement('a');
+      a.className = 'today-deity-link';
+      a.href = d.href;
+      a.innerHTML = '<span class="today-deity-emoji">' + d.emoji + '</span><span>บูชา' + d.name + '</span><span class="today-deity-time">' + d.time + '</span>';
+      container.appendChild(a);
+    });
+  }
+}
+
+renderWeekList();
+renderToday();
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+</script>
+
+</body>
+</html>
