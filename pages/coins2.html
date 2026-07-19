@@ -71,6 +71,8 @@
     .btn-verify { width:100%; background:linear-gradient(135deg,#d97706,#f59e0b); border:none; border-radius:12px; padding:13px; color:white; font-size:15px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; display:none; }
     .btn-verify:disabled { opacity:0.5; }
     .verify-status { font-size:12px; color:#92400e; margin-top:6px; text-align:center; min-height:18px; }
+    .btn-line-report { display:none; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:10px; padding:12px; border-radius:14px; background:#06C755; border:none; color:white; font-size:13px; font-weight:700; font-family:'Sarabun',sans-serif; text-decoration:none; }
+    .btn-line-report.show { display:flex; }
 
     .btn-cancel-qr { width:100%; max-width:320px; padding:13px; border-radius:12px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
   </style>
@@ -126,6 +128,7 @@
       <input type="file" id="slipInput" accept="image/*" style="display:none" onchange="onSlipSelected(this)">
       <button class="btn-verify" id="btnVerify" onclick="verifySlip()">✅ ยืนยันการชำระเงิน</button>
       <div class="verify-status" id="verifyStatus"></div>
+      <a class="btn-line-report" id="btnLineReport" href="#" target="_blank" rel="noopener">💬 แจ้งปัญหาทาง LINE ให้แอดมินช่วยตรวจสอบค่ะ</a>
     </div>
   </div>
 
@@ -273,6 +276,7 @@ window.openQR = function() {
   document.getElementById('btnVerify').style.display = 'none';
   document.getElementById('verifyStatus').textContent = '';
   document.getElementById('slipInput').value = '';
+  document.getElementById('btnLineReport').classList.remove('show');
 
   // แสดง overlay
   document.getElementById('qrOverlay').classList.add('show');
@@ -321,6 +325,8 @@ window.verifySlip = async function() {
   if (!slipFile || !window.currentUser) return;
   const btn = document.getElementById('btnVerify');
   const status = document.getElementById('verifyStatus');
+  const lineBtn = document.getElementById('btnLineReport');
+  lineBtn.classList.remove('show'); // ซ่อนปุ่มแจ้งปัญหาไว้ก่อนทุกครั้งที่เริ่มตรวจสอบใหม่
   btn.disabled = true;
   btn.textContent = '⏳ กำลังตรวจสอบ...';
   status.textContent = 'กำลังส่งสลิปให้ระบบตรวจสอบค่ะ...';
@@ -347,9 +353,16 @@ window.verifySlip = async function() {
       document.getElementById('balanceAmount').textContent = data.newCoins;
       alert('✅ เติมเหรียญสำเร็จค่ะ! ได้รับ 🪙 ' + (selCoins + selBonus).toLocaleString() + ' เหรียญค่ะ');
     } else {
-      status.textContent = '❌ ' + (data.message || 'ไม่สามารถยืนยันได้ค่ะ กรุณาลองใหม่');
+      const reason = data.message || 'ไม่สามารถยืนยันได้ค่ะ กรุณาลองใหม่';
+      status.textContent = '❌ ' + reason;
       btn.disabled = false;
       btn.textContent = '✅ ยืนยันการชำระเงิน';
+
+      // โผล่ปุ่มแจ้งปัญหาทาง LINE พร้อมข้อความเตรียมไว้ให้ลูกค้ากดส่งเองได้เลย
+      const email = (window.currentUser && window.currentUser.email) || '-';
+      const lineMsg = `แจ้งปัญหาการเติมเหรียญค่ะ\nเหตุผลจากระบบ: ${reason}\nแพ็กเกจ: ${selCoins}+${selBonus} เหรียญ (${selPrice} บาท)\nอีเมลบัญชี: ${email}\n(แนบรูปสลิปเพิ่มในแชทนี้ได้เลยค่ะ)`;
+      lineBtn.href = 'https://line.me/R/oaMessage/@240zavaq/?' + encodeURIComponent(lineMsg);
+      lineBtn.classList.add('show');
     }
   } catch(e) {
     status.textContent = '❌ เกิดข้อผิดพลาด กรุณาลองใหม่ค่ะ';
