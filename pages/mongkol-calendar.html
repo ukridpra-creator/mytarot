@@ -120,7 +120,8 @@
   </div>
 
   <div class="note-box">
-    แม่ย่านางรถนิยมไหว้ในวันสงกรานต์ วันปีใหม่ วันตรุษจีน หรือวันขึ้น 15 ค่ำ มากกว่าผูกกับวันในสัปดาห์ค่ะ ส่วนองค์อื่นๆ ที่ไม่มีวันมงคลเฉพาะ สามารถบูชาได้ทุกวันด้วยใจศรัทธาเช่นกัน
+    * = วันแนะนำตามความเชื่อทั่วไป ส่วนพระราหู พระตรีมูรติ และพระแม่ลักษมี มีวันมงคลที่ระบุชัดเจนตามตำรา<br><br>
+    แม่ย่านางรถนิยมไหว้ในวันสงกรานต์ วันปีใหม่ วันตรุษจีน หรือวันขึ้น 15 ค่ำ มากกว่าผูกกับวันในสัปดาห์ค่ะ ทุกองค์ที่ปรากฏในตารางสามารถบูชาได้ทุกวันด้วยใจศรัทธาเช่นกัน ไม่จำเป็นต้องรอให้ตรงวัน
   </div>
 </div>
 
@@ -134,20 +135,29 @@
 
 <script>
 // วันมงคลเฉพาะองค์ (index 0 = อาทิตย์ ... 6 = เสาร์)
+// confirmed:true = มีแหล่งอ้างอิงวันชัดเจน, confirmed:false = วันแนะนำตามความเชื่อทั่วไป
 const weekData = [
-  { day: "อาทิตย์", deities: [] },
-  { day: "จันทร์", deities: [] },
-  { day: "อังคาร", deities: [] },
+  { day: "อาทิตย์", deities: [
+      { name: "ท้าวจตุโลกบาล", emoji: "🛡️", href: "bucha-chatulokabal.html", time: "ทั้งวัน", confirmed: false }
+    ] },
+  { day: "จันทร์", deities: [
+      { name: "ท้าวเวสสุวรรณ", emoji: "👹", href: "bucha-wessuwan.html", time: "ทั้งวัน", confirmed: false }
+    ] },
+  { day: "อังคาร", deities: [
+      { name: "ไอ้ไข่ วัดเจดีย์", emoji: "🧨", href: "bucha-aikhai.html", time: "ทั้งวัน", confirmed: false }
+    ] },
   { day: "พุธ (กลางคืน)", deities: [
-      { name: "พระราหู", emoji: "🌑", href: "bucha-rahu.html", time: "หลัง 18:00 น." }
+      { name: "พระราหู", emoji: "🌑", href: "bucha-rahu.html", time: "หลัง 18:00 น.", confirmed: true }
     ] },
   { day: "พฤหัสบดี", deities: [
-      { name: "พระตรีมูรติ", emoji: "💞", href: "bucha-trimurti.html", time: "09:30 / 21:30 น." }
+      { name: "พระตรีมูรติ", emoji: "💞", href: "bucha-trimurti.html", time: "09:30 / 21:30 น.", confirmed: true }
     ] },
   { day: "ศุกร์", deities: [
-      { name: "พระแม่ลักษมี", emoji: "🪷", href: "bucha-lakshmi.html", time: "ทั้งวัน" }
+      { name: "พระแม่ลักษมี", emoji: "🪷", href: "bucha-lakshmi.html", time: "ทั้งวัน", confirmed: true }
     ] },
-  { day: "เสาร์", deities: [] }
+  { day: "เสาร์", deities: [
+      { name: "พญานาคราช", emoji: "🐍", href: "bucha-naga.html", time: "ทั้งวัน", confirmed: false }
+    ] }
 ];
 
 const dayNamesFull = ["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"];
@@ -165,20 +175,13 @@ function renderWeekList() {
     rowEl.appendChild(dayEl);
     const deitiesEl = document.createElement('div');
     deitiesEl.className = 'week-deities';
-    if (row.deities.length === 0) {
-      const span = document.createElement('span');
-      span.className = 'week-chip empty';
-      span.textContent = 'ไม่มีวันมงคลเฉพาะ';
-      deitiesEl.appendChild(span);
-    } else {
-      row.deities.forEach(d => {
-        const a = document.createElement('a');
-        a.className = 'week-chip';
-        a.href = d.href;
-        a.textContent = d.emoji + ' ' + d.name;
-        deitiesEl.appendChild(a);
-      });
-    }
+    row.deities.forEach(d => {
+      const a = document.createElement('a');
+      a.className = 'week-chip';
+      a.href = d.href;
+      a.textContent = d.emoji + ' ' + d.name + (d.confirmed ? '' : ' *');
+      deitiesEl.appendChild(a);
+    });
     rowEl.appendChild(deitiesEl);
     listEl.appendChild(rowEl);
   });
@@ -190,20 +193,14 @@ function renderToday() {
   const deities = weekData[todayIdx].deities;
   const container = document.getElementById('todayDeities');
   container.innerHTML = '';
-  if (deities.length === 0) {
-    const p = document.createElement('div');
-    p.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;';
-    p.textContent = 'วันนี้ไม่มีองค์เทพที่มีวันมงคลเฉพาะ แต่บูชาองค์ใดก็ได้ด้วยใจศรัทธาค่ะ 🙏';
-    container.appendChild(p);
-  } else {
-    deities.forEach(d => {
-      const a = document.createElement('a');
-      a.className = 'today-deity-link';
-      a.href = d.href;
-      a.innerHTML = '<span class="today-deity-emoji">' + d.emoji + '</span><span>บูชา' + d.name + '</span><span class="today-deity-time">' + d.time + '</span>';
-      container.appendChild(a);
-    });
-  }
+  deities.forEach(d => {
+    const a = document.createElement('a');
+    a.className = 'today-deity-link';
+    a.href = d.href;
+    const badge = d.confirmed ? '' : '<span style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:400;"> (แนะนำ)</span>';
+    a.innerHTML = '<span class="today-deity-emoji">' + d.emoji + '</span><span>บูชา' + d.name + badge + '</span><span class="today-deity-time">' + d.time + '</span>';
+    container.appendChild(a);
+  });
 }
 
 renderWeekList();
