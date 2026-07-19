@@ -1,6 +1,6 @@
 // api/verify-slip.js
-// ตรวจสอบสลิปด้วย EasySlip API แล้วเติมเหรียญใน Firestore
-// ป้องกัน: สลิปปลอม, สลิปซ้ำ, โอนเข้าบัญชีอื่น, race condition
+// ตรวจสอบสลิปด้วย EasySlip API v2 แล้วเติมเหรียญใน Firestore
+// ป้องกัน: สลิปปลอม, สลิปซ้ำ, โอนเข้าบัญชีอื่น, race condition, brute-force
 
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
@@ -20,10 +20,11 @@ export const config = {
   api: { bodyParser: false }, // ต้องปิด bodyParser เพราะรับ multipart/form-data
 };
 
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
+const ALLOWED_ORIGIN = 'https://www.mytarot.vip'; // บังคับเจาะจงโดเมนเสมอ ไม่ใช้ '*'
+const MAX_ATTEMPTS_PER_HOUR = 10; // กันสแปมยิงสลิปมั่วๆ เปลืองโควต้า EasySlip
 
 // ── ข้อมูลบัญชีเรา ──
-const OUR_ACCOUNT = '0213690248'; // เลขบัญชี KBank ไม่มี dash
+const OUR_PHONE = '0815341515'; // เบอร์พร้อมเพย์ผู้รับเงิน
 
 // ── คำนวณเหรียญจากยอดโอนจริง ──
 function amountToCoins(amount) {
@@ -43,6 +44,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
+  if (!process.env.EASYSLIP_API_KEY) {
+    console.error('verify-slip error: EASYSLIP_API_KEY is not configured');
+    return res.status(500).json({ error: 'server_misconfigured' });
+  }
+
   // ── Auth ──
   const authHeader = req.headers.authorization || '';
   const idToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -54,6 +60,30 @@ export default async function handler(req, res) {
     uid = decoded.uid;
   } catch (e) {
     return res.status(401).json({ error: 'invalid_token' });
+  }
+
+  const db = getFirestore();
+
+  // ── กัน brute-force / สแปม: จำกัดจำนวนครั้งต่อชั่วโมงต่อ user ──
+  const rateRef = db.collection('_slipRateLimit').doc(uid);
+  const rateSnap = await rateRef.get();
+  const now = Date.now();
+  if (rateSnap.exists) {
+    const r = rateSnap.data();
+    const windowStart = r.windowStart || 0;
+    const withinWindow = now - windowStart < 60 * 60 * 1000;
+    if (withinWindow && (r.count || 0) >= MAX_ATTEMPTS_PER_HOUR) {
+      return res.status(429).json({
+        error: 'too_many_attempts',
+        message: 'ส่งสลิปตรวจสอบบ่อยเกินไปค่ะ กรุณารอสักครู่แล้วลองใหม่ค่ะ'
+      });
+    }
+    await rateRef.set({
+      count: withinWindow ? FieldValue.increment(1) : 1,
+      windowStart: withinWindow ? windowStart : now,
+    }, { merge: true });
+  } else {
+    await rateRef.set({ count: 1, windowStart: now });
   }
 
   // ── Parse multipart form ──
@@ -69,14 +99,15 @@ export default async function handler(req, res) {
 
   if (!slipBuffer) return res.status(400).json({ error: 'no_slip', message: 'กรุณาแนบสลิปค่ะ' });
 
-  // ── เรียก EasySlip API ──
+  // ── เรียก EasySlip API v2 ──
   let slipData;
   try {
     const formData = new FormData();
     const blob = new Blob([slipBuffer], { type: slipMime });
-    formData.append('files', blob, 'slip.jpg');
+    formData.append('image', blob, 'slip.jpg'); // v2 ใช้ field ชื่อ 'image' ไม่ใช่ 'files'
+    formData.append('checkDuplicate', 'true');   // ให้ EasySlip ช่วยเช็คสลิปซ้ำอีกชั้นด้วย
 
-    const easyRes = await fetch('https://api.easyslip.app/api/v1/verification', {
+    const easyRes = await fetch('https://api.easyslip.com/v2/verify/bank', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.EASYSLIP_API_KEY}`,
@@ -87,25 +118,60 @@ export default async function handler(req, res) {
     const easyData = await easyRes.json();
     console.log('EasySlip response:', JSON.stringify(easyData));
 
-    if (!easyRes.ok || easyData.status !== 200) {
+    // v2 ตอบกลับด้วย { success: true/false, data: {...}, message } ไม่ใช่ { status: 200 }
+    if (!easyRes.ok || !easyData.success) {
+      const code = easyData?.error?.code;
+      if (code === 'SLIP_PENDING') {
+        return res.status(400).json({
+          error: 'slip_pending',
+          message: 'สลิปธนาคารกรุงเทพที่เพิ่งโอนอาจยังตรวจสอบไม่ได้ค่ะ กรุณารอสักครู่แล้วลองใหม่นะคะ'
+        });
+      }
+      if (code === 'SLIP_NOT_FOUND') {
+        return res.status(400).json({
+          error: 'slip_not_found',
+          message: 'ไม่พบ QR Code ในรูปสลิปค่ะ กรุณาถ่ายให้เห็น QR ชัดเจนแล้วลองใหม่นะคะ'
+        });
+      }
       return res.status(400).json({
         error: 'slip_invalid',
         message: 'ไม่สามารถตรวจสอบสลิปได้ค่ะ กรุณาลองใหม่หรือส่งสลิปที่ชัดขึ้นค่ะ'
       });
     }
 
-    slipData = easyData.data;
+    // ข้อมูลสลิปจริงอยู่ใน data.rawSlip ไม่ใช่ data ตรงๆ
+    slipData = easyData.data?.rawSlip;
+    if (!slipData) {
+      return res.status(400).json({ error: 'slip_invalid', message: 'อ่านข้อมูลสลิปไม่ได้ค่ะ กรุณาลองใหม่ค่ะ' });
+    }
+
+    // ถ้า EasySlip เจอว่าสลิปนี้เคยถูกส่งมาแล้ว (checkDuplicate) ให้ปฏิเสธตั้งแต่ตรงนี้
+    if (easyData.data?.isDuplicate) {
+      return res.status(400).json({
+        error: 'slip_already_used',
+        message: 'สลิปนี้ถูกใช้แล้วค่ะ กรุณาใช้สลิปใหม่ค่ะ'
+      });
+    }
   } catch (e) {
     console.error('EasySlip error:', e);
     return res.status(500).json({ error: 'easyslip_error', message: 'ระบบตรวจสอบขัดข้องค่ะ กรุณาลองใหม่ค่ะ' });
   }
 
   // ── ตรวจสอบ receiver account ──
-  const receiverAcct = (slipData?.receiver?.account?.value || '').replace(/[-\s]/g, '');
-  if (!receiverAcct.includes(OUR_ACCOUNT.slice(-8))) {
+  // โอนผ่านพร้อมเพย์เบอร์มือถือ: บางธนาคารจะโชว์เลขบัญชีจริงที่ผูกกับเบอร์ (receiver.account.bank.account)
+  // บางธนาคารอาจโชว์เบอร์โทรที่ใช้โอนไว้ใน receiver.account.proxy.account แทน จึงเช็คทั้ง 2 ทางเพื่อความชัวร์
+  const receiverBankAcct = (slipData?.receiver?.account?.bank?.account || '').replace(/[-\sx]/gi, '');
+  const receiverProxy = (slipData?.receiver?.account?.proxy?.account || '').replace(/[-\sx]/gi, '');
+  const ourPhoneTail = OUR_PHONE.slice(-4); // เทียบ 4 ตัวท้ายของเบอร์ เพราะข้อมูลอาจถูก mask บางส่วน
+
+  const matchedByBank = receiverBankAcct && receiverBankAcct.endsWith(ourPhoneTail);
+  const matchedByProxy = receiverProxy && receiverProxy.endsWith(ourPhoneTail);
+
+  if (!matchedByBank && !matchedByProxy) {
+    console.log('receiver mismatch, rawSlip.receiver:', JSON.stringify(slipData?.receiver));
     return res.status(400).json({
       error: 'wrong_receiver',
-      message: 'สลิปนี้โอนเข้าบัญชีอื่นค่ะ กรุณาโอนเข้าบัญชีกสิกรไทย 021-369024-8 ค่ะ'
+      message: 'สลิปนี้โอนเข้าบัญชีอื่นค่ะ กรุณาโอนผ่านพร้อมเพย์เบอร์ 081-534-1515 ค่ะ'
     });
   }
 
@@ -133,7 +199,7 @@ export default async function handler(req, res) {
   }
 
   // ── ตรวจสอบ transRef ซ้ำ + เติมเหรียญ (Firestore Transaction) ──
-  const transRef = slipData?.transRef || slipData?.transactionId || slipData?.ref;
+  const transRef = slipData?.transRef;
   if (!transRef) {
     return res.status(400).json({
       error: 'no_transref',
@@ -141,31 +207,23 @@ export default async function handler(req, res) {
     });
   }
 
-  const db = getFirestore();
   const slipRef = db.collection('used_slips').doc(transRef);
   const userRef = db.collection('users').doc(uid);
   const totalCoins = pkg.total;
 
   try {
-    let newCoins;
     await db.runTransaction(async (t) => {
-      // เช็คสลิปซ้ำ
+      // เช็คสลิปซ้ำ (กันเผื่อกรณี checkDuplicate ของ EasySlip พลาด)
       const slipSnap = await t.get(slipRef);
       if (slipSnap.exists) {
         throw new Error('SLIP_USED');
       }
-
-      // อ่าน coins ปัจจุบัน
-      const userSnap = await t.get(userRef);
-      const currentCoins = userSnap.exists ? (userSnap.data().coins || 0) : 0;
-      newCoins = currentCoins + totalCoins;
 
       // เขียน atomic
       t.set(slipRef, {
         uid,
         transRef,
         amount: slipAmount,
-        pkgId,
         coinsAdded: totalCoins,
         usedAt: new Date(),
         slipDate: slipDate || null,
@@ -189,7 +247,7 @@ export default async function handler(req, res) {
 
     // อ่าน coins ล่าสุดหลัง transaction
     const updatedSnap = await userRef.get();
-    newCoins = updatedSnap.data()?.coins || totalCoins;
+    const newCoins = updatedSnap.data()?.coins || totalCoins;
 
     return res.status(200).json({
       success: true,
@@ -210,7 +268,7 @@ export default async function handler(req, res) {
   }
 }
 
-// ── Parse multipart/form-data ──
+// ── Parse multipart/form-data (เขียนเอง ไม่ใช้ library ตามที่ต้องการ) ──
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
