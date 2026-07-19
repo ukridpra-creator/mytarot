@@ -5,6 +5,7 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
+import { createHash } from 'crypto';
 
 if (!getApps().length) {
   initializeApp({
@@ -22,6 +23,7 @@ export const config = {
 
 const ALLOWED_ORIGIN = 'https://www.mytarot.vip'; // บังคับเจาะจงโดเมนเสมอ ไม่ใช้ '*'
 const MAX_ATTEMPTS_PER_HOUR = 10; // กันสแปมยิงสลิปมั่วๆ เปลืองโควต้า EasySlip
+const HASH_CACHE_HOURS = 24; // จำผลลัพธ์ของรูปเดิมไว้กี่ชั่วโมง (กันเปลือง EasySlip call ถ้ากดซ้ำ)
 
 // ── ข้อมูลบัญชีเรา ──
 const OUR_PHONE = '0815341515'; // เบอร์พร้อมเพย์ผู้รับเงิน
@@ -99,6 +101,46 @@ export default async function handler(req, res) {
 
   if (!slipBuffer) return res.status(400).json({ error: 'no_slip', message: 'กรุณาแนบสลิปค่ะ' });
 
+  // ── คำนวณ hash ของรูปภาพ แล้วเช็คว่าเคยส่งรูปนี้มาก่อนไหม ──
+  // กันกรณีลูกค้ากดซ้ำ (เน็ตช้า/error) ด้วยรูปเดิม จะได้ไม่ต้องเสีย EasySlip call ซ้ำอีก
+  const imageHash = createHash('sha256').update(slipBuffer).digest('hex');
+  const hashRef = db.collection('_slipHashCache').doc(imageHash);
+
+  // helper: ตอบกลับ + บันทึกผลลัพธ์ไว้ในแคชของ hash นี้ (ใช้กับทุก error/success)
+  async function respond(status, body) {
+    try {
+      await hashRef.set({
+        status: body.success ? 'success' : 'failed',
+        response: body,
+        httpStatus: status,
+        uid,
+        cachedAt: Date.now(),
+      });
+    } catch (e) {
+      console.error('hash cache write error:', e);
+    }
+    return res.status(status).json(body);
+  }
+
+  const hashSnap = await hashRef.get();
+  if (hashSnap.exists) {
+    const cached = hashSnap.data();
+    const ageHours = (Date.now() - (cached.cachedAt || 0)) / (1000 * 60 * 60);
+    if (ageHours < HASH_CACHE_HOURS) {
+      if (cached.status === 'processing') {
+        return res.status(409).json({
+          error: 'already_processing',
+          message: 'สลิปนี้กำลังถูกตรวจสอบอยู่ค่ะ กรุณารอสักครู่นะคะ'
+        });
+      }
+      // เคยเห็นรูปนี้มาก่อนแล้ว (ไม่ว่าจะสำเร็จหรือล้มเหลว) — ตอบกลับจากแคชทันที ไม่ยิง EasySlip ซ้ำ
+      console.log('duplicate image hash, returning cached result:', imageHash);
+      return res.status(cached.httpStatus || 400).json(cached.response);
+    }
+  }
+  // ล็อกไว้ก่อนว่ากำลังประมวลผล กันกรณี 2 request เข้ามาพร้อมกันด้วยรูปเดียวกัน
+  await hashRef.set({ status: 'processing', uid, cachedAt: Date.now() });
+
   // ── เรียก EasySlip API v2 ──
   let slipData;
   try {
@@ -122,18 +164,18 @@ export default async function handler(req, res) {
     if (!easyRes.ok || !easyData.success) {
       const code = easyData?.error?.code;
       if (code === 'SLIP_PENDING') {
-        return res.status(400).json({
+        return respond(400, {
           error: 'slip_pending',
           message: 'สลิปธนาคารกรุงเทพที่เพิ่งโอนอาจยังตรวจสอบไม่ได้ค่ะ กรุณารอสักครู่แล้วลองใหม่นะคะ'
         });
       }
       if (code === 'SLIP_NOT_FOUND') {
-        return res.status(400).json({
+        return respond(400, {
           error: 'slip_not_found',
           message: 'ไม่พบ QR Code ในรูปสลิปค่ะ กรุณาถ่ายให้เห็น QR ชัดเจนแล้วลองใหม่นะคะ'
         });
       }
-      return res.status(400).json({
+      return respond(400, {
         error: 'slip_invalid',
         message: 'ไม่สามารถตรวจสอบสลิปได้ค่ะ กรุณาลองใหม่หรือส่งสลิปที่ชัดขึ้นค่ะ'
       });
@@ -142,18 +184,20 @@ export default async function handler(req, res) {
     // ข้อมูลสลิปจริงอยู่ใน data.rawSlip ไม่ใช่ data ตรงๆ
     slipData = easyData.data?.rawSlip;
     if (!slipData) {
-      return res.status(400).json({ error: 'slip_invalid', message: 'อ่านข้อมูลสลิปไม่ได้ค่ะ กรุณาลองใหม่ค่ะ' });
+      return respond(400, { error: 'slip_invalid', message: 'อ่านข้อมูลสลิปไม่ได้ค่ะ กรุณาลองใหม่ค่ะ' });
     }
 
     // ถ้า EasySlip เจอว่าสลิปนี้เคยถูกส่งมาแล้ว (checkDuplicate) ให้ปฏิเสธตั้งแต่ตรงนี้
     if (easyData.data?.isDuplicate) {
-      return res.status(400).json({
+      return respond(400, {
         error: 'slip_already_used',
         message: 'สลิปนี้ถูกใช้แล้วค่ะ กรุณาใช้สลิปใหม่ค่ะ'
       });
     }
   } catch (e) {
     console.error('EasySlip error:', e);
+    // error ฝั่งเราเอง (เช่น network) ไม่ต้อง cache เป็น failed ถาวร ลบ lock ออกให้ลองใหม่ได้
+    await hashRef.delete().catch(() => {});
     return res.status(500).json({ error: 'easyslip_error', message: 'ระบบตรวจสอบขัดข้องค่ะ กรุณาลองใหม่ค่ะ' });
   }
 
@@ -169,7 +213,7 @@ export default async function handler(req, res) {
 
   if (!matchedByBank && !matchedByProxy) {
     console.log('receiver mismatch, rawSlip.receiver:', JSON.stringify(slipData?.receiver));
-    return res.status(400).json({
+    return respond(400, {
       error: 'wrong_receiver',
       message: 'สลิปนี้โอนเข้าบัญชีอื่นค่ะ กรุณาโอนผ่านพร้อมเพย์เบอร์ 081-534-1515 ค่ะ'
     });
@@ -179,7 +223,7 @@ export default async function handler(req, res) {
   const slipAmount = parseFloat(slipData?.amount?.amount || 0);
   const pkg = amountToCoins(slipAmount);
   if (!pkg) {
-    return res.status(400).json({
+    return respond(400, {
       error: 'amount_too_low',
       message: `ยอดโอน ${slipAmount.toLocaleString()} ฿ น้อยเกินไปค่ะ ขั้นต่ำ 25 ฿ ค่ะ`
     });
@@ -191,7 +235,7 @@ export default async function handler(req, res) {
     const diffMs = Date.now() - slipDate.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
     if (diffHours > 2) {
-      return res.status(400).json({
+      return respond(400, {
         error: 'slip_expired',
         message: 'สลิปหมดอายุแล้วค่ะ กรุณาใช้สลิปที่โอนภายใน 2 ชั่วโมงค่ะ'
       });
@@ -201,7 +245,7 @@ export default async function handler(req, res) {
   // ── ตรวจสอบ transRef ซ้ำ + เติมเหรียญ (Firestore Transaction) ──
   const transRef = slipData?.transRef;
   if (!transRef) {
-    return res.status(400).json({
+    return respond(400, {
       error: 'no_transref',
       message: 'ไม่พบรหัสธุรกรรมในสลิปค่ะ กรุณาส่งสลิปที่ชัดขึ้นค่ะ'
     });
@@ -249,7 +293,7 @@ export default async function handler(req, res) {
     const updatedSnap = await userRef.get();
     const newCoins = updatedSnap.data()?.coins || totalCoins;
 
-    return res.status(200).json({
+    return respond(200, {
       success: true,
       newCoins,
       coinsAdded: totalCoins,
@@ -258,12 +302,14 @@ export default async function handler(req, res) {
 
   } catch (e) {
     if (e.message === 'SLIP_USED') {
-      return res.status(400).json({
+      return respond(400, {
         error: 'slip_already_used',
         message: 'สลิปนี้ถูกใช้แล้วค่ะ กรุณาใช้สลิปใหม่ค่ะ'
       });
     }
     console.error('Transaction error:', e);
+    // error ฝั่งเราเอง (Firestore ล่ม ฯลฯ) ไม่ควร cache ถาวร ลบ lock ออกให้ลองใหม่ได้
+    await hashRef.delete().catch(() => {});
     return res.status(500).json({ error: 'transaction_failed', message: 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่ค่ะ' });
   }
 }
