@@ -241,8 +241,10 @@ const ACCOUNT_NAME = 'อุกฤษฎ์ ประเสริฐ';
 const BANK_NAME = 'พร้อมเพย์ (PromptPay)';
 
 function generateQR(amount) {
-  // ใช้ promptpay.io สร้าง QR จากเบอร์พร้อมเพย์ + จำนวนเงิน
-  return `https://promptpay.io/${ACCOUNT_NO}/${amount}.png`;
+  // สร้าง QR เองผ่าน /api/generate-qr แทนการพึ่งบริการภายนอก promptpay.io
+  // (promptpay.io สร้าง QR ที่ไม่ผ่านมาตรฐาน EMVCo เต็มรูปแบบ ทำให้บางแอปธนาคารสแกนไม่ผ่าน)
+  const formattedAmount = Number(amount).toFixed(2);
+  return `/api/generate-qr?amount=${formattedAmount}`;
 }
 
 window.selectPackage = function(coins, bonus, pkgId, price) {
