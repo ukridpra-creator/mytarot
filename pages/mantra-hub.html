@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>บทสวดมนต์เสริมดวง คาถามงคล | My Tarot</title>
-  <meta name="description" content="รวมบทสวดมนต์เสริมดวง คาถาบูชาเทพต่างๆ พร้อมวิธีบูชาที่ถูกต้อง ฟรีค่ะ">
-  <meta name="keywords" content="บทสวดมนต์เสริมดวง,คาถามงคล,วิธีบูชาเทพ,บทสวดบูชา">
-  <meta property="og:title" content="บทสวดมนต์เสริมดวง — My Tarot">
-  <meta property="og:description" content="รวมบทสวดมนต์เสริมดวง คาถาบูชาเทพต่างๆ พร้อมวิธีบูชาที่ถูกต้องค่ะ">
-  <meta property="og:url" content="https://www.mytarot.vip/pages/mantra-hub">
+  <title>ปฏิทินวันมงคล วันไหนควรไหว้เทพองค์ไหน | My Tarot</title>
+  <meta name="description" content="ปฏิทินวันมงคลประจำสัปดาห์ เช็กว่าวันนี้ควรบูชาเทพองค์ไหน พร้อมลิงก์บทสวดคาถาครบทุกองค์ ฟรีค่ะ">
+  <meta name="keywords" content="ปฏิทินวันมงคล,วันไหว้เทพ,วันบูชาพระตรีมูรติ,วันบูชาพระแม่ลักษมี,วันไหว้พระราหู">
+  <meta property="og:title" content="ปฏิทินวันมงคล — My Tarot">
+  <meta property="og:description" content="เช็กว่าวันนี้ควรบูชาเทพองค์ไหน พร้อมลิงก์บทสวดคาถาครบทุกองค์ค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/mongkol-calendar">
   <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -22,32 +22,49 @@
     .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
     .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
     .page-title { font-size:18px; font-weight:700; color:white; }
-    .page-content { padding:24px 20px 40px; }
-    .reading-hero { text-align:center; padding:16px 0 28px; }
-    .reading-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
-    .reading-desc { font-size:13px; color:var(--dim); line-height:1.7; }
-    .menu-list { display:flex; flex-direction:column; gap:12px; }
-    .menu-card { display:flex; align-items:center; gap:16px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; cursor:pointer; text-decoration:none; transition:all 0.3s; position:relative; overflow:hidden; }
-    .menu-card:hover { border-color:rgba(124,58,237,0.5); transform:translateY(-2px); box-shadow:0 8px 24px rgba(124,58,237,0.15); }
-    .menu-card.coming-soon { opacity:0.5; cursor:not-allowed; pointer-events:none; }
-    .menu-icon { width:52px; height:52px; border-radius:16px; flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-    .menu-icon img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
-    .menu-info { flex:1; }
-    .menu-name { font-size:16px; font-weight:700; color:white; margin-bottom:4px; }
-    .menu-desc { font-size:12px; color:var(--dim); line-height:1.5; }
-    .menu-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; flex-shrink:0; background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
-    .menu-badge.free { background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); }
-    .menu-badge.soon { background:rgba(100,100,100,0.15); color:#9ca3af; border:1px solid rgba(100,100,100,0.3); }
-    .menu-arrow { font-size:18px; color:var(--dim); flex-shrink:0; }
-    .section-title { font-size:12px; color:var(--dim); font-weight:700; letter-spacing:1px; margin-bottom:12px; margin-top:20px; padding-left:4px; }
-    .section-title:first-of-type { margin-top:0; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+
+    .section-label { font-size:14px; font-weight:800; color:white; margin:24px 0 12px; display:flex; align-items:center; gap:6px; }
+    .section-label:first-of-type { margin-top:0; }
+
+    /* Today highlight */
+    .today-card { background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(217,119,6,0.08)); border:1px solid rgba(245,158,11,0.35); border-radius:20px; padding:20px; margin-bottom:8px; }
+    .today-label { font-size:11px; font-weight:700; color:#f59e0b; letter-spacing:1px; margin-bottom:6px; }
+    .today-day { font-size:20px; font-weight:800; color:white; margin-bottom:12px; }
+    .today-deities { display:flex; flex-direction:column; gap:8px; }
+    .today-deity-link { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); border-radius:14px; padding:10px 14px; text-decoration:none; color:white; font-size:13px; font-weight:600; transition:all 0.2s; }
+    .today-deity-link:hover { background:rgba(255,255,255,0.1); }
+    .today-deity-emoji { font-size:20px; }
+    .today-deity-time { margin-left:auto; font-size:11px; color:rgba(255,255,255,0.5); font-weight:400; }
+
+    /* Weekly table */
+    .week-list { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+    .week-row { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:12px 14px; }
+    .week-row.is-today { border-color:rgba(245,158,11,0.4); background:rgba(245,158,11,0.06); }
+    .week-day { font-size:12px; font-weight:700; color:white; width:64px; flex-shrink:0; }
+    .week-deities { display:flex; flex-wrap:wrap; gap:6px; flex:1; }
+    .week-chip { display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); border-radius:20px; padding:4px 10px; font-size:11px; color:rgba(255,255,255,0.75); text-decoration:none; }
+    .week-chip:hover { background:rgba(255,255,255,0.12); }
+    .week-chip.empty { color:rgba(255,255,255,0.3); background:none; padding:4px 0; }
+
+    /* Anytime section */
+    .anytime-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .anytime-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:10px 12px; text-decoration:none; color:rgba(255,255,255,0.75); font-size:12px; }
+    .anytime-item:hover { border-color:rgba(124,58,237,0.4); }
+    .anytime-emoji { font-size:18px; flex-shrink:0; }
+
+    .note-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:14px 16px; margin-top:8px; font-size:11.5px; color:rgba(255,255,255,0.5); line-height:1.8; }
   </style>
 </head>
 <body>
 
 <div class="page-header">
-  <a href="activity-hub.html" class="back-btn">←</a>
-  <div class="page-title">📿 บทสวดมนต์เสริมดวง</div>
+  <a href="mantra-hub.html" class="back-btn">←</a>
+  <div class="page-title">📅 ปฏิทินวันมงคล</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -61,7 +78,7 @@
     <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
-    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName">ชื่อผู้ใช้</div><div class="menu-email" id="menuEmail">email@gmail.com</div></div></div>
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
     <div class="menu-divider"></div>
     <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
     <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
@@ -70,185 +87,41 @@
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
 <div class="page-content">
-  <div class="reading-hero">
-    <div style="margin-bottom:12px"><img src="../images/mascot-mantra.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
-    <div class="reading-title">📿 บทสวดมนต์เสริมดวง</div>
-    <div class="reading-desc">รวมบทสวดมนต์และคาถาบูชาเทพต่างๆ<br>พร้อมวิธีบูชาที่ถูกต้องค่ะ</div>
+  <div class="hero">
+    <div class="hero-title">📅 ปฏิทินวันมงคล</div>
+    <div class="hero-desc">เช็กว่าวันนี้ควรบูชาเทพองค์ไหน<br>พร้อมลิงก์บทสวดคาถาครบทุกองค์ค่ะ</div>
   </div>
 
-  <!-- ปฏิทิน -->
-  <div class="section-title">📅 ปฏิทิน</div>
-  <div class="menu-list" style="margin-bottom:8px;">
-    <a href="mongkol-calendar.html" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.3);">
-      <div class="menu-icon" style="background:rgba(245,158,11,0.2);">
-        <span style="font-size:26px">📅</span>
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">ปฏิทินวันมงคล</div>
-        <div class="menu-desc">เช็กว่าวันนี้ควรไหว้องค์ไหน พร้อมลิงก์บทสวดค่ะ</div>
-      </div>
-      <div class="menu-arrow">›</div>
-    </a>
+  <!-- วันนี้ -->
+  <div class="section-label">✨ วันนี้ควรไหว้องค์ไหน</div>
+  <div class="today-card">
+    <div class="today-label">วันนี้คือ</div>
+    <div class="today-day" id="todayDayName">—</div>
+    <div class="today-deities" id="todayDeities"></div>
   </div>
 
-  <!-- ฟรี -->
-  <div class="section-title">✨ ฟรี</div>
-  <div class="menu-list">
-    <a href="bucha-ganesh.html" class="menu-card" style="border-left:3px solid #f97316;background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(217,119,6,0.05));border-color:rgba(249,115,22,0.25);">
-      <div class="menu-icon" style="background:rgba(249,115,22,0.2);">
-        <img src="../images/icon-ganesh.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🐘</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระพิฆเนศ</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ และเคล็ดลับเสริมความสำเร็จค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
+  <!-- ตารางประจำสัปดาห์ -->
+  <div class="section-label">🗓️ วันมงคลเฉพาะองค์</div>
+  <div class="week-list" id="weekList"></div>
 
-    <a href="night-prayer.html" class="menu-card" style="border-left:3px solid #60a5fa;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(37,99,235,0.05));border-color:rgba(96,165,250,0.25);">
-      <div class="menu-icon" style="background:rgba(96,165,250,0.2);">
-        <img src="../images/icon-nightprayer.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🙏</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บทสวดมนต์ก่อนนอน</div>
-        <div class="menu-desc">บทสวดมนต์พุทธไทยเสริมสิริมงคลก่อนนอนค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
+  <!-- ไหว้ได้ทุกวัน -->
+  <div class="section-label">💫 บูชาได้ทุกวัน ไม่จำกัดวัน</div>
+  <div class="anytime-grid">
+    <a href="bucha-ganesh.html" class="anytime-item"><span class="anytime-emoji">🐘</span>พระพิฆเนศ</a>
+    <a href="bucha-wessuwan.html" class="anytime-item"><span class="anytime-emoji">👹</span>ท้าวเวสสุวรรณ</a>
+    <a href="bucha-naga.html" class="anytime-item"><span class="anytime-emoji">🐍</span>พญานาคราช</a>
+    <a href="bucha-nangkwak.html" class="anytime-item"><span class="anytime-emoji">🙋‍♀️</span>แม่นางกวัก</a>
+    <a href="bucha-sivali.html" class="anytime-item"><span class="anytime-emoji">🧡</span>พระสีวลี</a>
+    <a href="bucha-umadevi.html" class="anytime-item"><span class="anytime-emoji">🔱</span>พระแม่อุมาเทวี</a>
+    <a href="bucha-chatulokabal.html" class="anytime-item"><span class="anytime-emoji">🛡️</span>ท้าวจตุโลกบาล</a>
+    <a href="bucha-aikhai.html" class="anytime-item"><span class="anytime-emoji">🧨</span>ไอ้ไข่ วัดเจดีย์</a>
+    <a href="night-prayer.html" class="anytime-item"><span class="anytime-emoji">🙏</span>บทสวดก่อนนอน</a>
+    <a href="bucha-yanang.html" class="anytime-item"><span class="anytime-emoji">🚗</span>แม่ย่านางรถ</a>
+  </div>
 
-    <a href="bucha-wessuwan.html" class="menu-card" style="border-left:3px solid #8b5cf6;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(109,40,217,0.05));border-color:rgba(139,92,246,0.25);">
-      <div class="menu-icon" style="background:rgba(139,92,246,0.2);">
-        <img src="../images/icon-wessuwan.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>👹</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาท้าวเวสสุวรรณ</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ และเคล็ดลับเสริมโชคลาภค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-lakshmi.html" class="menu-card" style="border-left:3px solid #ec4899;background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(219,39,119,0.05));border-color:rgba(236,72,153,0.25);">
-      <div class="menu-icon" style="background:rgba(236,72,153,0.2);">
-        <img src="../images/icon-lakshmi.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🪷</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระแม่ลักษมี</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ และเคล็ดลับเสริมโชคลาภความรักค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-naga.html" class="menu-card" style="border-left:3px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));border-color:rgba(16,185,129,0.25);">
-      <div class="menu-icon" style="background:rgba(16,185,129,0.2);">
-        <img src="../images/icon-naga.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🐍</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพญานาคราช</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ และเคล็ดลับเสริมโชคลาภค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-trimurti.html" class="menu-card" style="border-left:3px solid #f43f5e;background:linear-gradient(135deg,rgba(244,63,94,0.08),rgba(225,29,72,0.05));border-color:rgba(244,63,94,0.25);">
-      <div class="menu-icon" style="background:rgba(244,63,94,0.2);">
-        <img src="../images/icon-trimurti.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>💞</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระตรีมูรติ</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เทพแห่งความรักสมหวังค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-rahu.html" class="menu-card" style="border-left:3px solid #64748b;background:linear-gradient(135deg,rgba(100,116,139,0.08),rgba(51,65,85,0.05));border-color:rgba(100,116,139,0.25);">
-      <div class="menu-icon" style="background:rgba(100,116,139,0.2);">
-        <img src="../images/icon-rahu.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🌑</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระราหู</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้สีดำ พลิกเคราะห์เป็นโชคค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-nangkwak.html" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.25);">
-      <div class="menu-icon" style="background:rgba(245,158,11,0.2);">
-        <img src="../images/icon-nangkwak.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🙋‍♀️</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาแม่นางกวัก</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เรียกทรัพย์เรียกลูกค้าค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-sivali.html" class="menu-card" style="border-left:3px solid #f97316;background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(194,65,12,0.05));border-color:rgba(249,115,22,0.25);">
-      <div class="menu-icon" style="background:rgba(249,115,22,0.2);">
-        <img src="../images/icon-sivali.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🧡</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระสีวลี</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เทพแห่งลาภสักการะค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-umadevi.html" class="menu-card" style="border-left:3px solid #f43f5e;background:linear-gradient(135deg,rgba(190,18,60,0.08),rgba(159,18,57,0.05));border-color:rgba(190,18,60,0.25);">
-      <div class="menu-icon" style="background:rgba(190,18,60,0.2);">
-        <img src="../images/icon-umadevi.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔱</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาพระแม่อุมาเทวี</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เสริมความรักการงานค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-yanang.html" class="menu-card" style="border-left:3px solid #14b8a6;background:linear-gradient(135deg,rgba(20,184,166,0.08),rgba(15,118,110,0.05));border-color:rgba(20,184,166,0.25);">
-      <div class="menu-icon" style="background:rgba(20,184,166,0.2);">
-        <img src="../images/icon-yanang.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🚗</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาแม่ย่านางรถ</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เดินทางปลอดภัยค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-chatulokabal.html" class="menu-card" style="border-left:3px solid #2563eb;background:linear-gradient(135deg,rgba(37,99,235,0.08),rgba(29,78,216,0.05));border-color:rgba(37,99,235,0.25);">
-      <div class="menu-icon" style="background:rgba(37,99,235,0.2);">
-        <img src="../images/icon-chatulokabal.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🛡️</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาท้าวจตุโลกบาล</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เสริมอำนาจบารมีค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
-
-    <a href="bucha-aikhai.html" class="menu-card" style="border-left:3px solid #ea580c;background:linear-gradient(135deg,rgba(234,88,12,0.08),rgba(194,65,12,0.05));border-color:rgba(234,88,12,0.25);">
-      <div class="menu-icon" style="background:rgba(234,88,12,0.2);">
-        <img src="../images/icon-aikhai.png" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🧨</span>'">
-      </div>
-      <div class="menu-info">
-        <div class="menu-name">บูชาไอ้ไข่ วัดเจดีย์</div>
-        <div class="menu-desc">บทสวด วิธีบูชา ของไหว้ เสริมโชคลาภค้าขายค่ะ</div>
-      </div>
-      <div class="menu-badge free">ฟรี</div>
-      <div class="menu-arrow">›</div>
-    </a>
+  <div class="note-box">
+    * = วันแนะนำตามความเชื่อทั่วไป ส่วนพระราหู พระตรีมูรติ และพระแม่ลักษมี มีวันมงคลที่ระบุชัดเจนตามตำรา<br><br>
+    แม่ย่านางรถนิยมไหว้ในวันสงกรานต์ วันปีใหม่ วันตรุษจีน หรือวันขึ้น 15 ค่ำ มากกว่าผูกกับวันในสัปดาห์ค่ะ ทุกองค์ที่ปรากฏในตารางสามารถบูชาได้ทุกวันด้วยใจศรัทธาเช่นกัน ไม่จำเป็นต้องรอให้ตรงวัน
   </div>
 </div>
 
@@ -260,6 +133,80 @@
   <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
 </nav>
 
+<script>
+// วันมงคลเฉพาะองค์ (index 0 = อาทิตย์ ... 6 = เสาร์)
+// confirmed:true = มีแหล่งอ้างอิงวันชัดเจน, confirmed:false = วันแนะนำตามความเชื่อทั่วไป
+const weekData = [
+  { day: "อาทิตย์", deities: [
+      { name: "ท้าวจตุโลกบาล", emoji: "🛡️", href: "bucha-chatulokabal.html", time: "ทั้งวัน", confirmed: false }
+    ] },
+  { day: "จันทร์", deities: [
+      { name: "ท้าวเวสสุวรรณ", emoji: "👹", href: "bucha-wessuwan.html", time: "ทั้งวัน", confirmed: false }
+    ] },
+  { day: "อังคาร", deities: [
+      { name: "ไอ้ไข่ วัดเจดีย์", emoji: "🧨", href: "bucha-aikhai.html", time: "ทั้งวัน", confirmed: false }
+    ] },
+  { day: "พุธ (กลางคืน)", deities: [
+      { name: "พระราหู", emoji: "🌑", href: "bucha-rahu.html", time: "หลัง 18:00 น.", confirmed: true }
+    ] },
+  { day: "พฤหัสบดี", deities: [
+      { name: "พระตรีมูรติ", emoji: "💞", href: "bucha-trimurti.html", time: "09:30 / 21:30 น.", confirmed: true }
+    ] },
+  { day: "ศุกร์", deities: [
+      { name: "พระแม่ลักษมี", emoji: "🪷", href: "bucha-lakshmi.html", time: "ทั้งวัน", confirmed: true }
+    ] },
+  { day: "เสาร์", deities: [
+      { name: "พญานาคราช", emoji: "🐍", href: "bucha-naga.html", time: "ทั้งวัน", confirmed: false }
+    ] }
+];
+
+const dayNamesFull = ["วันอาทิตย์","วันจันทร์","วันอังคาร","วันพุธ","วันพฤหัสบดี","วันศุกร์","วันเสาร์"];
+
+function renderWeekList() {
+  const todayIdx = new Date().getDay();
+  const listEl = document.getElementById('weekList');
+  listEl.innerHTML = '';
+  weekData.forEach((row, idx) => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'week-row' + (idx === todayIdx ? ' is-today' : '');
+    const dayEl = document.createElement('div');
+    dayEl.className = 'week-day';
+    dayEl.textContent = row.day;
+    rowEl.appendChild(dayEl);
+    const deitiesEl = document.createElement('div');
+    deitiesEl.className = 'week-deities';
+    row.deities.forEach(d => {
+      const a = document.createElement('a');
+      a.className = 'week-chip';
+      a.href = d.href;
+      a.textContent = d.emoji + ' ' + d.name + (d.confirmed ? '' : ' *');
+      deitiesEl.appendChild(a);
+    });
+    rowEl.appendChild(deitiesEl);
+    listEl.appendChild(rowEl);
+  });
+}
+
+function renderToday() {
+  const todayIdx = new Date().getDay();
+  document.getElementById('todayDayName').textContent = dayNamesFull[todayIdx];
+  const deities = weekData[todayIdx].deities;
+  const container = document.getElementById('todayDeities');
+  container.innerHTML = '';
+  deities.forEach(d => {
+    const a = document.createElement('a');
+    a.className = 'today-deity-link';
+    a.href = d.href;
+    const badge = d.confirmed ? '' : '<span style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:400;"> (แนะนำ)</span>';
+    a.innerHTML = '<span class="today-deity-emoji">' + d.emoji + '</span><span>บูชา' + d.name + badge + '</span><span class="today-deity-time">' + d.time + '</span>';
+    container.appendChild(a);
+  });
+}
+
+renderWeekList();
+renderToday();
+</script>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
@@ -268,48 +215,35 @@ import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
-  authDomain: "my-tarot67.firebaseapp.com",
-  projectId: "my-tarot67",
-  storageBucket: "my-tarot67.firebasestorage.app",
-  messagingSenderId: "33661162829",
-  appId: "1:33661162829:web:9e06a7cd5a00d613785304"
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
-const db = getFirestore(app);
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
 
-window.updateCoinUI = function(coins) { document.getElementById('coinCount').textContent = coins; };
-function setAvatarDisplay(avatar) {
-  var el = document.getElementById('avatarEl'); if (!el) return;
-  if (avatar && avatar.includes('.png')) {
-    el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-  } else { el.textContent = avatar || '👤'; }
-}
-window.loginNow  = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
-window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
-onAuthStateChanged(auth, async user => {
-  if (user) {
-    var snap = await getDoc(doc(db, 'users', user.uid));
-    var data = snap.exists() ? snap.data() : {};
-    updateCoinUI(data.coins || 0);
-    setAvatarDisplay(data.avatar || '');
-    document.getElementById('guestView').style.display = 'none';
-    document.getElementById('loggedView').style.display = 'block';
-    document.getElementById('menuName').textContent = data.displayName || user.displayName || '';
-    document.getElementById('menuEmail').textContent = user.email;
-    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
-  } else { updateCoinUI('—'); setAvatarDisplay(''); }
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
 });
 </script>
-
-<!-- SEO TEXT -->
-<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
-  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">บทสวดมนต์เสริมดวงคืออะไร?</h2>
-  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">บทสวดมนต์และคาถาบูชาเป็นเครื่องมือเสริมสิริมงคลที่คนไทยนิยมปฏิบัติกันมานานค่ะ ที่ My Tarot คุณพี่สามารถค้นหาบทสวดบูชาเทพต่างๆ พร้อมวิธีบูชาที่ถูกต้อง ของไหว้ที่ควรเตรียม และเคล็ดลับการสวดขอพรได้ฟรีค่ะ เริ่มต้นด้วยการบูชาพระพิฆเนศ เทพแห่งความสำเร็จ และจะมีบทสวดเทพองค์อื่นๆ เพิ่มเข้ามาเรื่อยๆ ค่ะ</p>
-</div>
 
 </body>
 </html>
