@@ -93,6 +93,10 @@ const SERVICE_COSTS = {
   "brahma": TIER.T19,
   "human-design": TIER.T49,
   "gene-keys": TIER.T49,
+  "dragon-oracle-1": TIER.T10,
+  "dragon-oracle-3": TIER.T20,
+  "dragon-oracle-5": TIER.T30,
+  "dragon-oracle-followup": 5,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
