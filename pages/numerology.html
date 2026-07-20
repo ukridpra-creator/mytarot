@@ -6,6 +6,8 @@
   <meta name="keywords" content="เลขศาสตร์,ดูดวงเลขศาสตร์,เลขวันเกิด,เลขมงคล,numerology,เลขชีวิต,ดูดวงตัวเลข,เลขกาลกิณี">
 <meta name="description" content="ดูดวงเลขศาสตร์จากวันเกิด คำนวณเลขชีวิต เลขมงคล เลขกาลกิณี ทำนายบุคลิก การงาน ความรัก และโชคชะตาด้วย AI ค่ะ">
 <title>ดูดวงเลขศาสตร์ เลขวันเกิด เลขมงคล ทำนายชีวิต | My Tarot</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
@@ -411,7 +413,7 @@ window.startReading = async function() {
       body: JSON.stringify({
         service: 'numerology',
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: `คุณคือหมอดูเลขศาสตร์ อ้างอิงตำรา Pythagorean และ Chaldean Numerology เรียกลูกค้าว่า "คุณพี่" เรียกตัวเองว่า "น้อง" พูดแบบ Gen Z อบอุ่น ต้องใช้ tag [GREETING][LIFE][EXPRESS][SOUL][PERSONA][CAREER][MONEY][LOVE][YEAR][LUCKY][AVOID][DAY][COLOR][WARNING] นำหน้าแต่ละ section เสมอ ห้ามใช้ markdown ห้ามใช้เลขไทย เขียนให้จบสมบูรณ์`,
         messages: [{ role:'user', content: prompt }]
       })
