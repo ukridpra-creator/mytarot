@@ -302,13 +302,39 @@ window.startReading = async function() {
   renderSummary(counts);
 
   try {
-    var summaryTxt = document.getElementById('summaryText').innerText;
-    var meaningsTxt = document.getElementById('meaningsList').innerText;
-    var arrowsWrapEl = document.getElementById('arrowsWrap');
-    var arrowsTxt = (arrowsWrapEl.style.display !== 'none') ? document.getElementById('arrowsList').innerText : '';
-    var fullResult = '📊 สรุปภาพรวม\n' + summaryTxt +
-      (arrowsTxt ? '\n\n⚡ เส้นพลังงานพิเศษ\n' + arrowsTxt : '') +
-      '\n\n🔢 ความหมายเลขแต่ละตัว\n' + meaningsTxt;
+    var strongList=[], missingList=[];
+    for(var n=1;n<=9;n++){ if(counts[n]===0) missingList.push(n); else if(counts[n]>=3) strongList.push(n); }
+    var activeArrowsForSave = LO_SHU_ARROWS.filter(function(a){
+      return a.numbers.every(function(nn){ return counts[nn]>0; });
+    });
+
+    var summaryLines = [];
+    if(strongList.length) summaryLines.push('✦ เลขเด่นในชะตา: '+strongList.join(', ')+' — พลังงานเหล่านี้ส่งผลต่อชีวิตอย่างมาก ทั้งด้านบวกและต้องระมัดระวัง');
+    if(missingList.length) summaryLines.push('✦ เลขที่ขาดหาย: '+missingList.join(', ')+' — ด้านชีวิตที่ต้องพัฒนาและให้ความสนใจเป็นพิเศษ');
+    if(!missingList.length) summaryLines.push('✦ ชะตาของคุณมีเลขครบทุกตัว 1-9 ถือว่าดวงสมบูรณ์แบบ มีพลังงานหลากหลายด้าน');
+    if(activeArrowsForSave.length) summaryLines.push('✦ มีเส้นพลังงานพิเศษ '+activeArrowsForSave.length+' เส้น: '+activeArrowsForSave.map(function(a){return a.nameTH;}).join(', '));
+    summaryLines.push('✦ จำนวนตัวเลขทั้งหมดในชะตา: '+Object.values(counts).reduce(function(a,b){return a+b;})+' ตัว');
+
+    var arrowsLines = activeArrowsForSave.map(function(a){
+      return a.nameTH+' ('+a.name+' · '+a.direction+' · เลข '+a.numbers.join('-')+')\n'+a.meaning;
+    });
+
+    var meaningLines = [];
+    for(var mn=1;mn<=9;mn++){
+      var mCount = counts[mn];
+      var mInfo  = LO_SHU_CELL[mn];
+      var mm     = LO_SHU_MEANINGS[mn];
+      var mLevel = getCountLevel(mCount);
+      var mData  = mm[mLevel];
+      var mMiss  = mCount===0;
+      var mLabel = mMiss?'⚠️ ไม่มีในชะตา': mCount+' ครั้ง'+(mCount>=3?' (เด่นมาก)':'');
+      meaningLines.push('เลข '+mn+' — '+mData.title+'\n'+mLabel+' · '+mInfo.keyword+' · ทิศ '+mInfo.dir+'\n'+mData.text);
+    }
+
+    var fullResult = '📊 สรุปภาพรวม\n' + summaryLines.join('\n') +
+      (arrowsLines.length ? '\n\n⚡ เส้นพลังงานพิเศษ\n' + arrowsLines.join('\n\n') : '') +
+      '\n\n🔢 ความหมายเลขแต่ละตัว\n' + meaningLines.join('\n\n');
+
     await window.saveReading('ผังลั่วซู', day+'/'+month+'/'+year, fullResult);
   } catch(e) {}
 
