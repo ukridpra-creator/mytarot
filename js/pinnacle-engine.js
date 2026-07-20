@@ -12,6 +12,13 @@ function reduceKeepMaster(n) {
   return n;
 }
 
+function reduceToSingleDigit(n) {
+  while (n > 9) {
+    n = String(n).split('').reduce(function(a, b) { return a + parseInt(b); }, 0);
+  }
+  return n;
+}
+
 function reduceYear(year) {
   var sum = String(year).split('').reduce(function(a, b) { return a + parseInt(b); }, 0);
   return reduceKeepMaster(sum);
@@ -65,7 +72,7 @@ function calcPersonalYear(day, month, targetYear) {
   var d = reduceKeepMaster(day);
   var m = reduceKeepMaster(month);
   var y = reduceYear(targetYear);
-  return reduceKeepMaster(d + m + y);
+  return reduceToSingleDigit(d + m + y);
 }
 
 function calcChallenges(day, month, year) {
