@@ -179,7 +179,7 @@
   <div class="greeting-box" id="greetingBox"></div>
 
   <div id="resultBox">
-    <div class="result-section sec-identity"><h3>✦ ตัวตนและบุคลิกภาพ</h3><p id="secIdentity"><div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div></p></div>
+    <div class="result-section sec-identity"><h3>✦ ตัวตนและบุคลิกภาพ</h3><p id="secIdentity"></p></div>
     <div class="result-section sec-mind"><h3>✦ จิตใจและอารมณ์</h3><p id="secMind"></p></div>
     <div class="result-section sec-love"><h3>✦ ความรักและความสัมพันธ์</h3><p id="secLove"></p></div>
     <div class="result-section sec-career"><h3>✦ การงานและเป้าหมายชีวิต</h3><p id="secCareer"></p></div>
@@ -326,7 +326,7 @@ window.startReading=async function(){
   btn.disabled=true;btn.textContent='⏳ กำลังวิเคราะห์...';
   document.getElementById('greetingBox').classList.remove('show');
   document.getElementById('greetingBox').textContent='';
-  Object.values(ASTRO_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='<div class="loading"><div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">กำลังวิเคราะห์...</div></div>';});
+  Object.values(ASTRO_IDS).forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
   const resultBox=document.getElementById('resultBox');
   resultBox.classList.add('show');
   setTimeout(()=>resultBox.scrollIntoView({behavior:'smooth'}),100);
