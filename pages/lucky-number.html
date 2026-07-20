@@ -189,6 +189,7 @@ const LIFE_NUMBERS = {
   9:{name:'นักให้ — เลขแห่งมนุษยธรรม',desc:'คุณพี่มีพลังงานของผู้ให้ค่ะ มีจิตใจกว้างขวาง รักมนุษยชาติ และพร้อมช่วยเหลือทุกคน',luckyNums:[9,18,27,36,45],luckyColor:'ทอง',luckyDay:'พฤหัส',traits:[{icon:'🌟',text:'มีจิตใจที่กว้างขวางและเมตตากรุณา พร้อมช่วยเหลือทุกคนเสมอ'},{icon:'🌍',text:'มีวิสัยทัศน์กว้างไกล มองเห็นภาพรวมและต้องการทำให้โลกดีขึ้น'},{icon:'🎭',text:'มีพรสวรรค์ด้านศิลปะและความคิดสร้างสรรค์ในระดับสูง'},{icon:'⚡',text:'ต้องระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลตัวเอง'}]},
   11:{name:'นักส่องแสง — เลขมาสเตอร์แห่งแรงบันดาลใจ',desc:'คุณพี่มีเลขมาสเตอร์ 11 ค่ะ! มีพลังงานสูงมาก มีสัญชาตญาณและความสามารถพิเศษที่โดดเด่นกว่าใคร',luckyNums:[11,22,33,44,55],luckyColor:'เงิน',luckyDay:'จันทร์',traits:[{icon:'✨',text:'มีพลังจิตและสัญชาตญาณที่แข็งแกร่งเป็นพิเศษ รับรู้สิ่งที่คนอื่นไม่รับรู้'},{icon:'💫',text:'เป็นแรงบันดาลใจให้คนรอบข้าง มีพลังงานที่ดึงดูดคนเข้ามาหา'},{icon:'🔮',text:'มีความสามารถด้านจิตวิญญาณและความเข้าใจในระดับที่ลึกกว่าปกติ'},{icon:'⚡',text:'ต้องระวังความเครียดสูงและความรู้สึกไวเกินไปต่อพลังงานรอบข้าง'}]},
   22:{name:'นักสร้างใหญ่ — เลขมาสเตอร์แห่งการสร้างสรรค์',desc:'คุณพี่มีเลขมาสเตอร์ 22 ค่ะ! เลขที่ทรงพลังที่สุด มีความสามารถสร้างสิ่งยิ่งใหญ่ที่ส่งผลต่อโลกได้จริงๆ',luckyNums:[22,4,44,13,31],luckyColor:'ทอง',luckyDay:'เสาร์',traits:[{icon:'🏛️',text:'มีความสามารถในการสร้างสิ่งที่ยิ่งใหญ่และยั่งยืนที่ส่งผลต่อคนหมู่มาก'},{icon:'🌐',text:'มีวิสัยทัศน์ระดับโลก มองเห็นภาพที่ใหญ่กว่าคนอื่น'},{icon:'💪',text:'มีพลังและความอดทนในระดับที่เกินกว่าคนทั่วไป'},{icon:'⚡',text:'ต้องระวังความกดดันที่สูงมากและความคาดหวังจากตัวเองและคนอื่น'}]},
+  33:{name:'นักบำเพ็ญ — เลขมาสเตอร์แห่งความรักไร้เงื่อนไข',desc:'คุณพี่มีเลขมาสเตอร์ 33 ค่ะ! เลขที่หายากที่สุดในบรรดาเลขมาสเตอร์ทั้งหมด มีพลังแห่งความรักและการเยียวยาที่ยิ่งใหญ่มากค่ะ',luckyNums:[33,6,15,24,42],luckyColor:'เขียวมรกต',luckyDay:'พฤหัสบดี',traits:[{icon:'💚',text:'มีพลังแห่งความรักและความเมตตาที่ยิ่งใหญ่ พร้อมเยียวยาและช่วยเหลือผู้อื่นเสมอ'},{icon:'🕊️',text:'เป็นครูทางจิตวิญญาณโดยธรรมชาติ คนรอบข้างมักมาขอคำปรึกษาจากคุณพี่'},{icon:'🌈',text:'มีความสามารถในการสร้างแรงบันดาลใจและความหวังให้ผู้คนรอบข้าง'},{icon:'⚡',text:'ต้องระวังการเสียสละตัวเองมากเกินไปจนลืมดูแลความต้องการของตัวเองค่ะ'}]},
 };
 
 // dropdowns
@@ -225,7 +226,7 @@ window.calculate = function() {
   document.getElementById('traitsList').innerHTML=data.traits.map(t=>`<div class="trait-row"><div class="trait-icon">${t.icon}</div><div class="trait-text">${t.text}</div></div>`).join('');
   document.getElementById('resultBox').classList.add('show');
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
-  saveReading(day,month,year,lifeNum,data.name);
+  saveReading(day,month,year,lifeNum,data);
 };
 
 window.resetCalc = function() {
@@ -278,12 +279,19 @@ window.logoutNow = async function() {
   await signOut(auth); window.location.href = '../index.html';
 };
 
-window.saveReading = async function(day, month, year, lifeNum, name) {
+window.saveReading = async function(day, month, year, lifeNum, data) {
   if (!window.currentUser) return;
   try {
+    const traitsText = data.traits.map(t => t.icon + ' ' + t.text).join('\n');
     await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
       type: 'เลขนำโชค', question: `${day}/${month}/${year}`,
-      result: `เลขชีวิต ${lifeNum} — ${name}`, createdAt: serverTimestamp()
+      result: `เลขชีวิต ${lifeNum} — ${data.name}`
+        + `\n\n${data.desc}`
+        + `\n\n🎲 เลขนำโชค: ${data.luckyNums.join(', ')}`
+        + `\n🎨 สีมงคล: ${data.luckyColor}`
+        + `\n📅 วันมงคล: วัน${data.luckyDay}`
+        + `\n\n✨ จุดเด่นของคุณ:\n${traitsText}`,
+      createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
 };
