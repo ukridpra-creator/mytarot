@@ -510,10 +510,10 @@ window.acceptReading = async function() {
 
 ทำนายเป็นภาษาไทย ลงท้ายด้วยค่ะ ในรูปแบบ XML tags เท่านั้น ห้ามมีข้อความนอก tag:
 <GREETING>ทักทายผู้ถาม 1-2 ประโยค อบอุ่นและเชิญชวน</GREETING>
-<BODY>ทำนายด้านกาย ร่างกาย และพลังงาน 2-3 ประโยค</BODY>
-<MIND>ทำนายด้านจิตใจ อารมณ์ และความคิด 2-3 ประโยค</MIND>
-<SOUL>ทำนายด้านจิตวิญญาณ เส้นทางชีวิต 2-3 ประโยค</SOUL>
-<SUMMARY>สรุปภาพรวม 2-3 ประโยค${special.level !== 'normal' ? ' พร้อมระบุความพิเศษ' : ''}</SUMMARY>${special.level !== 'normal' ? `\n<SPECIAL>อธิบายความพิเศษจาก${specialTitle} 1-2 ประโยค</SPECIAL>` : ''}`;
+<BODY>ทำนายด้านกาย ร่างกาย และพลังงาน 3-4 ประโยค</BODY>
+<MIND>ทำนายด้านจิตใจ อารมณ์ และความคิด 3-4 ประโยค</MIND>
+<SOUL>ทำนายด้านจิตวิญญาณ เส้นทางชีวิต 3-4 ประโยค</SOUL>
+<SUMMARY>สรุปภาพรวม 3-4 ประโยค${special.level !== 'normal' ? ' พร้อมระบุความพิเศษ' : ''}</SUMMARY>${special.level !== 'normal' ? `\n<SPECIAL>อธิบายความพิเศษจาก${specialTitle} 1-2 ประโยค</SPECIAL>` : ''}`;
 
   try {
     const idToken = await currentUser.getIdToken();
