@@ -484,10 +484,13 @@ ${aspectSummary ? '\nPlanetary Aspects:\n'+aspectSummary : ''}
     keys.forEach(function(k){if(final[k])updateSection(k,final[k]);});
 
     // save
+    const sectionLabels={overall:'✦ ภาพรวมความเข้ากัน',strength:'💪 จุดแข็งของคู่นี้',challenge:'⚠️ จุดที่ต้องระวัง',love:'💕 ความรักและความสัมพันธ์',future:'🔮 อนาคตของคู่นี้'};
+    const fullResult = `คะแนนความเข้ากัน ${score}% | ${profileA.element} × ${profileB.element}\n\n` +
+      keys.map(function(k){ return sectionLabels[k]+'\n'+(final[k]||''); }).join('\n\n');
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Synastry ดวงคู่รัก',
       question:`${profileA.sign} + ${profileB.sign}`,
-      result:`คะแนน ${score}% | ${profileA.element} × ${profileB.element}`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
 
