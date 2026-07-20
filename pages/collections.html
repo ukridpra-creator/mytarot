@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คอลเลกชันไพ่ทั้งหมด สะสมไพ่ทุกสำรับ | My Tarot</title>
+  <meta name="description" content="รวมคอลเลกชันไพ่ออราเคิลทุกสำรับที่ My Tarot ดูความคืบหน้าการสะสมของแต่ละชุดได้ที่นี่ค่ะ">
+  <meta name="keywords" content="คอลเลกชันไพ่,สะสมไพ่ออราเคิลทุกชุด">
+  <meta property="og:title" content="คอลเลกชันไพ่ทั้งหมด — My Tarot">
+  <meta property="og:description" content="รวมคอลเลกชันไพ่ออราเคิลทุกสำรับค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/collections">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/collection.js"></script>
+  <script src="../js/decks-config.js"></script>
+  <script src="../js/dragon-data.js"></script>
+  <script src="../js/han-data.js"></script>
+  <script src="../js/nature-data.js"></script>
+  <script src="../js/oracle-angle-data.js"></script>
+  <script src="../js/demon-data.js"></script>
+  <script src="../js/oracle-dream-data.js"></script>
+  <script src="../js/oracle-hindu-data.js"></script>
+  <script src="../js/cosmic-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; background:radial-gradient(ellipse at top,#1a0d24 0%,#0a0510 55%,#050308 100%); overflow-x:hidden; }
+    .stars { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .stars span { position:absolute; width:2px; height:2px; background:#f5d576; border-radius:50%; opacity:0; animation:twinkle 4s ease-in-out infinite; }
+    @keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.5);} 50%{opacity:0.9;transform:scale(1.4);} }
+
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(212,175,55,0.2); background:rgba(10,5,16,0.85); backdrop-filter:blur(14px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 16px 40px; position:relative; z-index:1; }
+
+    .hub-hero { text-align:center; padding:14px 0 22px; }
+    .hub-hero-title { font-family:'Cinzel',serif; font-size:23px; font-weight:900; letter-spacing:2px; background:linear-gradient(135deg,#f5d576,#d4af37,#f5d576); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 30px rgba(212,175,55,0.35); margin-bottom:4px; }
+    .hub-hero-desc { font-size:12px; color:rgba(255,255,255,0.4); }
+
+    .overall-card { background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(124,45,18,0.06)); border:1px solid rgba(212,175,55,0.3); border-radius:22px; padding:18px 20px; margin-bottom:20px; text-align:center; }
+    .overall-count { font-family:'Cinzel',serif; font-size:30px; font-weight:900; color:#f5d576; }
+    .overall-count small { font-size:14px; color:rgba(255,255,255,0.4); font-family:'Sarabun',sans-serif; font-weight:400; }
+    .overall-label { font-size:11px; color:rgba(255,255,255,0.35); margin-top:2px; letter-spacing:1px; }
+
+    .deck-list { display:flex; flex-direction:column; gap:12px; }
+    .deck-card { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.03); border:1px solid var(--deck-border,rgba(255,255,255,0.1)); border-radius:20px; padding:16px; text-decoration:none; transition:all 0.25s; position:relative; overflow:hidden; opacity:0; transform:translateY(10px); animation:deckIn 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+    @keyframes deckIn { to{opacity:1;transform:translateY(0);} }
+    .deck-card:active { transform:scale(0.98); }
+    .deck-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--deck-accent,#d4af37); }
+    .deck-icon-wrap { width:52px; height:52px; border-radius:16px; background:var(--deck-bg,rgba(212,175,55,0.15)); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0; }
+    .deck-info { flex:1; min-width:0; }
+    .deck-name { font-size:15px; font-weight:700; color:white; margin-bottom:5px; }
+    .deck-progress-row { display:flex; align-items:center; gap:8px; }
+    .deck-progress-track { flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+    .deck-progress-fill { height:100%; border-radius:99px; background:var(--deck-accent,#d4af37); width:0%; transition:width 1s cubic-bezier(.22,1,.36,1); }
+    .deck-progress-text { font-size:11px; color:rgba(255,255,255,0.4); font-weight:700; flex-shrink:0; }
+    .deck-arrow { font-size:18px; color:rgba(255,255,255,0.25); flex-shrink:0; }
+    .deck-complete-badge { position:absolute; top:8px; right:10px; font-size:14px; }
+
+    .login-required-overlay.show { display:flex !important; }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="starsBg"></div>
+
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🎴 คอลเลกชันไพ่ทั้งหมด</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🎴</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อดูคอลเลกชันไพ่ของคุณค่ะ</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="hub-hero">
+    <div class="hub-hero-title">MY COLLECTIONS</div>
+    <div class="hub-hero-desc">สะสมไพ่จากทุกสำรับที่ My Tarot ค่ะ</div>
+  </div>
+
+  <div class="overall-card">
+    <div class="overall-count"><span id="overallOwned">0</span><small> / <span id="overallTotal">0</span> ใบ</small></div>
+    <div class="overall-label">รวมทุกสำรับ</div>
+  </div>
+
+  <div class="deck-list" id="deckList"></div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',
+  authDomain:'my-tarot67.firebaseapp.com', projectId:'my-tarot67',
+  storageBucket:'my-tarot67.firebasestorage.app',
+  messagingSenderId:'33661162829',
+  appId:'1:33661162829:web:9e06a7cd5a00d613785304'
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){ document.getElementById('coinCount').textContent=c; };
+function setAvatarDisplay(a){
+  var el=document.getElementById('avatarEl'); if(!el)return;
+  if(a&&a.includes('.png')){el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';}
+  else{el.textContent=a||'👤';}
+}
+window.toggleUserMenu=function(){
+  var m=document.getElementById('userMenu'), o=document.getElementById('overlay');
+  if(m.classList.contains('show')){m.classList.remove('show');o.classList.remove('show');}
+  else{m.classList.add('show');o.classList.add('show');}
+};
+window.closeUserMenu=function(){
+  document.getElementById('userMenu').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());document.getElementById('loginRequiredOverlay').classList.remove('show');}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+    window.initHubPage();
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
+</script>
+
+<script>
+(function(){
+  var wrap=document.getElementById('starsBg');
+  for(var i=0;i<26;i++){
+    var s=document.createElement('span');
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.animationDuration=(3+Math.random()*3)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+function hexToRgba(hex, a){
+  const h = hex.replace('#','');
+  const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+window.initHubPage = async function(){
+  const list = document.getElementById('deckList');
+  list.innerHTML = '<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);font-size:13px;">🔮 กำลังโหลดคอลเลกชัน...</div>';
+
+  let overallOwned = 0, overallTotal = 0;
+  const rows = [];
+
+  for (let i = 0; i < DECKS_ORDER.length; i++) {
+    const key = DECKS_ORDER[i];
+    const deckCfg = DECKS_CONFIG[key];
+    const cards = deckCfg.getCards();
+    const total = cards.length;
+    const owned = await window.getCardCollection(window.currentUser.uid, key);
+    const ownedCount = Object.keys(owned).length;
+    overallOwned += ownedCount;
+    overallTotal += total;
+
+    const pct = total ? Math.round((ownedCount/total)*100) : 0;
+    rows.push({ key, deckCfg, total, ownedCount, pct, delay: i * 0.06 });
+  }
+
+  document.getElementById('overallOwned').textContent = overallOwned;
+  document.getElementById('overallTotal').textContent = overallTotal;
+
+  list.innerHTML = rows.map(r => `
+    <a href="collection.html?deck=${r.key}" class="deck-card" style="--deck-accent:${r.deckCfg.accent};--deck-bg:${hexToRgba(r.deckCfg.accent,0.15)};--deck-border:${hexToRgba(r.deckCfg.accent,0.25)};animation-delay:${r.delay}s">
+      ${r.pct===100 ? '<div class="deck-complete-badge">👑</div>' : ''}
+      <div class="deck-icon-wrap">${r.deckCfg.icon}</div>
+      <div class="deck-info">
+        <div class="deck-name">${r.deckCfg.label}</div>
+        <div class="deck-progress-row">
+          <div class="deck-progress-track"><div class="deck-progress-fill" style="width:0%" data-pct="${r.pct}"></div></div>
+          <div class="deck-progress-text">${r.ownedCount}/${r.total}</div>
+        </div>
+      </div>
+      <div class="deck-arrow">›</div>
+    </a>`).join('');
+
+  setTimeout(()=>{
+    document.querySelectorAll('.deck-progress-fill').forEach(el=>{
+      el.style.width = el.getAttribute('data-pct') + '%';
+    });
+  }, 200);
+};
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;position:relative;z-index:1;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">คอลเลกชันไพ่คืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ทุกครั้งที่คุณจั่วไพ่ออราเคิลสำรับใดก็ตามที่ My Tarot ไพ่ใบนั้นจะถูกเก็บเข้าคอลเลกชันส่วนตัวของคุณโดยอัตโนมัติค่ะ หน้านี้รวมความคืบหน้าการสะสมของทุกสำรับไว้ในที่เดียว กดเข้าไปดูแต่ละชุดเพื่อดูรายละเอียดไพ่แต่ละใบได้เลยค่ะ</p>
+</div>
+
+</body>
+</html>
