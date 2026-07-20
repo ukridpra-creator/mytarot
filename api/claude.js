@@ -53,7 +53,7 @@ const SERVICE_COSTS = {
   "love-code":      10,
   "saju":           59,
   "saju-read":       0,
-  "loshu":          10,
+  "loshu":          20,
   "pinnacle":       20,
   "thai-astro":     99,
   "thai-astro-read": 0,
