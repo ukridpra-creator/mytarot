@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ปาจื้อ สี่เสาแห่งชะตา โหราศาสตร์จีนโบราณ | My Tarot</title>
-  <meta name="description" content="วิเคราะห์ดวงปาจื้อ (บาจื้อ) สี่เสาแห่งชะตา ห้าธาตุ และห้าสิบหกดาวแห่งโชคชะตาจากวัน เวลา และสถานที่เกิดค่ะ">
+  <meta name="description" content="วิเคราะห์ดวงปาจื้อ (ปาจื้อ) สี่เสาแห่งชะตา ห้าธาตุ และห้าสิบหกดาวแห่งโชคชะตาจากวัน เวลา และสถานที่เกิดค่ะ">
   <meta name="keywords" content="ปาจื้อ,บาจื้อ,สี่เสาแห่งชะตา,八字,bazi,ห้าธาตุ">
   <meta property="og:title" content="ปาจื้อ บาจื้อ สี่เสาแห่งชะตา — My Tarot">
   <meta property="og:description" content="วิเคราะห์ชะตาจากสี่เสา ห้าธาตุ และห้าสิบหกดาวแห่งโชคชะตาค่ะ">
@@ -167,7 +167,7 @@
 <!-- HEADER -->
 <div class="page-header">
   <a href="chinese-hub.html" class="back-btn">←</a>
-  <div class="page-title">🀄 บาจื้อ สี่เสา</div>
+  <div class="page-title">🀄 ปาจื้อ สี่เสาแห่งชะตา</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()">
@@ -205,7 +205,7 @@
     <div style="margin-bottom:12px">
       <img src="../images/mascot-chinese.png" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
     </div>
-    <div class="hero-title">🀄 บาจื้อ สี่เสาแห่งชะตา</div>
+    <div class="hero-title">🀄 ปาจื้อ สี่เสาแห่งชะตา</div>
     <div class="hero-desc">ปัญญาจีนโบราณแห่งห้าธาตุ<br>วิเคราะห์ชะตาชีวิตจากวัน เวลา และสถานที่เกิด</div>
   </div>
 
@@ -231,11 +231,11 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 40 เหรียญต่อการวิเคราะห์</div>
+    <div class="coin-text">🪙 ใช้ 59 เหรียญต่อการวิเคราะห์</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()">🀄 วิเคราะห์บาจื้อ</button>
+  <button class="btn-read" id="readBtn" onclick="startReading()">🀄 วิเคราะห์ปาจื้อ</button>
 
   <!-- PILLARS -->
   <div class="pillars-card" id="pillarsCard">
@@ -445,7 +445,7 @@ function buildPrompt(data) {
   const dmDesc = `${dm?.stem||''} — ${elTH} ${dm?.info?.polarity==='Yang'?'หยาง':'หยิน'}`;
   const elements = data.elements?.points ? Object.entries(data.elements.points).map(([el,score]) => `${ELEMENT_TH[el]}:${score}`).join(', ') : '';
   const luckCycle = data.luck_cycle?.pillars?.slice(0,3).map(lp => `อายุ${lp.start_age}-${lp.end_age}:${lp.gan_zhi}`).join(', ') || '';
-  return `วิเคราะห์บาจื้อ เพศ${selectedGender==='M'?'ชาย':'หญิง'} สี่เสา:${pillarsDesc} Day Master:${dmDesc} ห้าธาตุ:${elements} ${luckCycle?'Luck Cycle:'+luckCycle:''}
+  return `วิเคราะห์ปาจื้อ เพศ${selectedGender==='M'?'ชาย':'หญิง'} สี่เสา:${pillarsDesc} Day Master:${dmDesc} ห้าธาตุ:${elements} ${luckCycle?'Luck Cycle:'+luckCycle:''}
 
 ตอบแบบนี้เท่านั้น ใช้ tag นำหน้าแต่ละหัวข้อ ห้ามมีข้อความก่อน tag แรก:
 [ELEMENT]
@@ -572,7 +572,7 @@ window.startReading = async function() {
   } catch(e) { console.error('bazi api:', e); }
 
   prompt = baziData ? buildPrompt(baziData) :
-    `วิเคราะห์บาจื้อ วันเกิด ${day}/${month}/${year} ${hour!==''?hour+':'+minute:''} เพศ${selectedGender==='M'?'ชาย':'หญิง'}
+    `วิเคราะห์ปาจื้อ วันเกิด ${day}/${month}/${year} ${hour!==''?hour+':'+minute:''} เพศ${selectedGender==='M'?'ชาย':'หญิง'}
 ตอบโดยใช้ tag นำหน้าแต่ละหัวข้อ:
 [ELEMENT] ธาตุประจำตัวและบุคลิก
 [STRENGTH] จุดแข็งและพรสวรรค์
@@ -593,7 +593,7 @@ window.startReading = async function() {
         service: 'bazi',
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
-        system: 'คุณคือผู้เชี่ยวชาญบาจื้อและห้าธาตุแห่งจีนโบราณ วิเคราะห์ดวงชะตาเป็นภาษาไทย เรียกผู้ถามว่า คุณ เขียนแต่ละหัวข้อ 3-4 ประโยค กระชับ ตรงประเด็น ใช้คำศัพท์บาจื้อเป็นภาษาไทย ห้ามใช้ markdown ห้ามใช้เลขไทย ต้องใช้ tag [ELEMENT] [STRENGTH] [LOVE] [CAREER] [MONEY] [LUCK] [WARNING] [FUTURE] นำหน้าแต่ละ section เสมอ',
+        system: 'คุณคือผู้เชี่ยวชาญปาจื้อและห้าธาตุแห่งจีนโบราณ วิเคราะห์ดวงชะตาเป็นภาษาไทย เรียกผู้ถามว่า คุณ เขียนแต่ละหัวข้อ 3-4 ประโยค กระชับ ตรงประเด็น ใช้คำศัพท์ปาจื้อเป็นภาษาไทย ห้ามใช้ markdown ห้ามใช้เลขไทย ต้องใช้ tag [ELEMENT] [STRENGTH] [LOVE] [CAREER] [MONEY] [LUCK] [WARNING] [FUTURE] นำหน้าแต่ละ section เสมอ',
         messages: [{ role:'user', content: prompt }]
       })
     });
@@ -605,7 +605,7 @@ window.startReading = async function() {
       const err = await res.json();
       if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
       else alert('เกิดข้อผิดพลาดค่ะ');
-      btn.disabled = false; btn.textContent = '🀄 วิเคราะห์บาจื้อ';
+      btn.disabled = false; btn.textContent = '🀄 วิเคราะห์ปาจื้อ';
       return;
     }
 
@@ -628,7 +628,7 @@ window.startReading = async function() {
     lastFullText = text;
 
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-      type: 'โหราศาสตร์จีน บาจื้อ',
+      type: 'โหราศาสตร์จีน ปาจื้อ',
       result: text,
       createdAt: serverTimestamp()
     });
@@ -669,8 +669,8 @@ window.askFollowup = async function() {
         service: 'tarot_followup',
         model: 'claude-sonnet-4-6',
         max_tokens: 500,
-        system: 'คุณคือผู้เชี่ยวชาญบาจื้อ เรียกผู้ถามว่า "คุณ" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ห้ามใช้ markdown ห้ามใช้เลขไทย',
-        messages: [{ role:'user', content:`ผลวิเคราะห์บาจื้อ: ${lastFullText}\nคำถาม: ${question}` }]
+        system: 'คุณคือผู้เชี่ยวชาญปาจื้อ เรียกผู้ถามว่า "คุณ" ตอบจากผลวิเคราะห์เดิม สั้นๆ 3-5 บรรทัด ห้ามใช้ markdown ห้ามใช้เลขไทย',
+        messages: [{ role:'user', content:`ผลวิเคราะห์ปาจื้อ: ${lastFullText}\nคำถาม: ${question}` }]
       })
     });
 
