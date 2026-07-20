@@ -259,12 +259,6 @@ body { padding-bottom: 80px; background: #080612; }
       <div class="hd-card-body" id="authorityBody" style="padding-top:12px;"></div>
     </div>
 
-    <!-- PROFILE CARD -->
-    <div class="hd-card" id="cardProfile" style="display:none;">
-      <div class="card-header"><div class="card-header-icon">🎭</div><div class="card-header-title">บทบาทในชีวิต</div></div>
-      <div class="hd-card-body" id="profileBody" style="padding-top:12px;"></div>
-    </div>
-
     <!-- CENTERS CARD -->
     <div class="hd-card" id="cardCenters" style="display:none;">
       <div class="card-header"><div class="card-header-icon">⚡</div><div class="card-header-title">ศูนย์กลางพลังงานของคุณ</div></div>
@@ -597,13 +591,12 @@ function showResults(data) {
   const cards = [
     { id: 'cardType', fn: () => renderType(data), delay: 0 },
     { id: 'cardAuthority', fn: () => renderAuthority(data), delay: 800 },
-    { id: 'cardProfile', fn: () => renderProfile(data), delay: 1600 },
-    { id: 'cardCenters', fn: () => renderCenters(data), delay: 2400 },
-    { id: 'cardChannels', fn: () => renderChannels(data), delay: 3200 },
-    { id: 'cardWork', fn: () => renderWork(data), delay: 4000 },
-    { id: 'cardLove', fn: () => renderLove(data), delay: 4800 },
-    { id: 'cardHealth', fn: () => renderHealth(data), delay: 5600 },
-    { id: 'cardLife', fn: () => renderLife(data), delay: 6400 },
+    { id: 'cardCenters', fn: () => renderCenters(data), delay: 1600 },
+    { id: 'cardChannels', fn: () => renderChannels(data), delay: 2400 },
+    { id: 'cardWork', fn: () => renderWork(data), delay: 3200 },
+    { id: 'cardLove', fn: () => renderLove(data), delay: 4000 },
+    { id: 'cardHealth', fn: () => renderHealth(data), delay: 4800 },
+    { id: 'cardLife', fn: () => renderLife(data), delay: 5600 },
   ];
 
   cards.forEach(({ id, fn, delay }) => {
@@ -681,6 +674,38 @@ window.startReading = async function() {
 
   document.getElementById('formBox').style.display = 'none';
   showResults(hdData);
+
+  if (typeof window.__hdSave === 'function') {
+    const t = HD_TYPES[hdData.type];
+    const a = HD_AUTHORITIES[hdData.authority];
+    const centerNames = {
+      head: 'Head · ความคิด', ajna: 'Ajna · วิเคราะห์', throat: 'Throat · สื่อสาร',
+      g_center: 'G Center · ตัวตน', heart: 'Heart · มุ่งมั่น',
+      splenic: 'Spleen · สัญชาตญาณ', solar_plexus: 'Solar Plexus · อารมณ์',
+      sacral: 'Sacral · พลังชีวิต', root: 'Root · แรงผลักดัน'
+    };
+    const parts = [];
+    if (t) {
+      parts.push('🔹 ประเภท: ' + t.name + ' (' + t.nameEn + ')\nวิธีดำเนินชีวิต: ' + t.strategy + ' · ออร่า: ' + t.aura + '\n' + t.who);
+    }
+    if (a) {
+      parts.push('🧭 วิธีตัดสินใจที่เหมาะกับคุณ: ' + a.name + '\n' + a.who + '\n' + a.howToDecide);
+    }
+    if (hdData.definedCenters && hdData.definedCenters.length) {
+      parts.push('⚡ ศูนย์กลางพลังงานที่มีสม่ำเสมอ: ' + hdData.definedCenters.map(c => centerNames[c] || c).join(', '));
+    }
+    if (hdData.channels && hdData.channels.length) {
+      const chNames = hdData.channels.map(chId => { const ch = HD_CHANNELS.find(c => c.id === chId); return ch ? ch.name : chId; });
+      parts.push('🌟 เส้นพลังงานที่โดดเด่น: ' + chNames.join(', '));
+    }
+    if (t) {
+      parts.push('💼 การงานและความสำเร็จ\n' + t.work.desc + '\n\n💡 งานที่เหมาะ: ' + t.work.suitable.join(', ') + '\n⚠️ ระวัง: ' + t.work.warning);
+      parts.push('❤️ ความรักและความสัมพันธ์\n' + t.love.desc + '\n\n💕 คู่ชีวิตที่เหมาะ: ' + t.love.suitable + '\n⚠️ ระวัง: ' + t.love.warning);
+      parts.push('🌿 สุขภาพและพลังงานร่างกาย\n' + t.health.desc + '\n\n💚 วิธีดูแล: ' + t.health.tips.join(' / ') + '\n⚠️ ระวัง: ' + t.health.warning);
+      parts.push('✨ แนวทางชีวิตที่เหมาะกับคุณ\n' + t.life.desc + '\n\n' + t.life.tips.join('\n'));
+    }
+    window.__hdSave((t ? t.name : hdData.type), parts.join('\n\n'));
+  }
 };
 
 window.resetAll = function() {
@@ -701,7 +726,7 @@ window.resetAll = function() {
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 const firebaseConfig = {
   apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
@@ -722,6 +747,17 @@ function setAvatar(a) { var el = document.getElementById('avatarEl'); if(!el) re
 window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
 window.loginNow = function() { document.getElementById('loginRequiredOverlay').classList.add('show'); };
 window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+window.__hdSave = async function(question, result) {
+  if (!window.currentUser) return;
+  try {
+    await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
+      type: 'Human Design',
+      question: question,
+      result: result,
+      createdAt: serverTimestamp()
+    });
+  } catch(e) { console.error(e); }
+};
 onAuthStateChanged(auth, async user => {
   window.currentUser = user;
   if (user) {

@@ -480,6 +480,35 @@ window.startReading = async function() {
   const monthNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   const birthInfo = `${day} ${monthNames[month-1]} ${year+543} · ${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')} · ${city}`;
   showResults(hdData, birthInfo);
+
+  if (typeof window.__gkSave === 'function') {
+    const cGates = hdData.consciousGates || hdData.conscious || {};
+    const dGates = hdData.designGates || hdData.design || {};
+    const planetsForSave = [
+      { gate: cGates.sun?.gate,   label: '☀️ ดวงอาทิตย์ตอนเกิด · แก่นแท้ของตัวตน' },
+      { gate: cGates.earth?.gate, label: '🌍 โลกตอนเกิด · รากฐานชีวิต' },
+      { gate: cGates.moon?.gate,  label: '🌙 ดวงจันทร์ตอนเกิด · โลกอารมณ์ภายใน' },
+      { gate: dGates.sun?.gate,   label: '✨ ดวงอาทิตย์ออกแบบ · ด้านที่คนอื่นมองเห็น' },
+      { gate: dGates.earth?.gate, label: '🌏 โลกออกแบบ · รากฐานจิตใต้สำนึก' },
+      { gate: dGates.moon?.gate,  label: '🌙 ดวงจันทร์ออกแบบ · จิตใต้สำนึกลึก' },
+    ];
+    const parts = [];
+    planetsForSave.forEach(p => {
+      const key = GENE_KEYS[p.gate];
+      if (!key) return;
+      parts.push(
+        p.label + ' — Gate ' + p.gate + '\n' +
+        '🌑 SHADOW: ' + key.shadow.word + '\n' + (key.shadow.desc || '') + '\n' +
+        '🌟 GIFT: ' + key.gift.word + '\n' + (key.gift.desc || '') + '\n' +
+        '☀️ SIDDHI: ' + key.siddhi.word + '\n' + (key.siddhi.desc || '') +
+        (key.work ? '\n\n💼 การงาน: ' + key.work : '') +
+        (key.love ? '\n❤️ ความรัก: ' + key.love : '') +
+        (key.health ? '\n🌿 สุขภาพ: ' + key.health : '') +
+        (key.daily ? '\n✨ คำแนะนำรายวัน: ' + key.daily : '')
+      );
+    });
+    window.__gkSave(birthInfo, parts.join('\n\n'));
+  }
 };
 
 window.resetAll = function() {
@@ -503,7 +532,7 @@ window.resetAll = function() {
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 const firebaseConfig = {
   apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
@@ -524,6 +553,17 @@ function setAvatar(a) { var el = document.getElementById('avatarEl'); if(!el) re
 window.__ciGoogleSignIn = async function() { try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); } };
 window.loginNow = function() { document.getElementById('loginRequiredOverlay').classList.add('show'); };
 window.logoutNow = async function() { await signOut(auth); window.location.href='../index.html'; };
+window.__gkSave = async function(question, result) {
+  if (!window.currentUser) return;
+  try {
+    await addDoc(collection(db, 'users', window.currentUser.uid, 'readings'), {
+      type: 'Gene Keys',
+      question: question,
+      result: result,
+      createdAt: serverTimestamp()
+    });
+  } catch(e) { console.error(e); }
+};
 onAuthStateChanged(auth, async user => {
   window.currentUser = user;
   if (user) {
