@@ -288,9 +288,12 @@ window.startReading=async function(){
 
   // save
   try{
-    const dayThitData=calc.thits.find(t=>t.isDay);
-    const yamThitData=calc.thits.find(t=>t.isYam);
-    const resultText=`🌟 ดาวประจำวัน: ${calc.dayPlanetName} ตกทิศ${THIT_NAMES[calc.dayThit]}\n${dayThitData?dayThitData.title+' — '+dayThitData.text:''}\n\n🕐 ดาวยาม (ยามที่${calc.yam}): ${calc.yamPlanetName} ตกทิศ${THIT_NAMES[calc.yamThit]}\n${yamThitData?yamThitData.title+' — '+yamThitData.text:''}`;
+    const headerText=`🌟 วัน${calc.dayName} | ดาวประจำวัน: ${calc.dayPlanetName} | ยามที่${calc.yam} ดาวยาม: ${calc.yamPlanetName}`;
+    const thitsText=calc.thits.map(function(t){
+      var tag=t.isDay?' (ดาวประจำวัน)':(t.isYam?' (ดาวยาม)':'');
+      return `${t.thitEmoji} ${t.thitName}${tag} — ดาว${t.planetName}\n${t.title}${t.title?' — ':''}${t.text}`;
+    }).join('\n\n');
+    const resultText=`${headerText}\n\n${thitsText}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'ทักษา',
       question:`วัน${calc.dayName} ยามที่${calc.yam} ดาว${calc.yamPlanetName}`,
