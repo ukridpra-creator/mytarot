@@ -237,7 +237,9 @@ window.showResult = function() {
     <div class="lucky-item"><div class="lucky-item-label">📅 วันมงคล</div><div class="lucky-item-value">วัน${data.luckyDay}</div></div>`;
   document.getElementById('resultBox').classList.add('show');
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
-  saveReading();
+
+  const fullResult = `${getCurrentPeriod()}\n\n✦ ภาพรวม\n${data.overall}\n\n💕 ความรัก\n${data.love}\n\n💼 การงาน\n${data.work}\n\n💰 การเงิน\n${data.money}\n\n🩺 สุขภาพ\n${data.health}\n\n🍀 โชคลาภ\nสีมงคล: ${data.luckyColor}\nเลขมงคล: ${data.luckyNumber}\nวันมงคล: วัน${data.luckyDay}`;
+  saveReading(fullResult);
 };
 
 window.resetResult = function() {
@@ -248,9 +250,9 @@ window.resetResult = function() {
   window.scrollTo({top:0,behavior:'smooth'});
 };
 
-async function saveReading() {
+async function saveReading(fullResult) {
   if (!currentUser) return;
-  try { await addDocFS(selectedZodiac); } catch(e) { console.error(e); }
+  try { await addDocFS(selectedZodiac, fullResult); } catch(e) { console.error(e); }
 }
 </script>
 
@@ -278,11 +280,11 @@ function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)r
 window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
-window.addDocFS=async function(zodiac){
+window.addDocFS=async function(zodiac, fullResult){
   if(!window.currentUser)return;
   await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
     type:'ดวงรายเดือน',question:`ราศี${zodiac}`,
-    result:getCurrentPeriod(),createdAt:serverTimestamp()
+    result:fullResult||getCurrentPeriod(),createdAt:serverTimestamp()
   });
 };
 onAuthStateChanged(auth,async user=>{
