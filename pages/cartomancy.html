@@ -495,10 +495,17 @@ window.acceptReading = async function() {
 
   // save
   try{
+    const fullResult = selected.map(function(s,i){
+      const code=s.code;
+      const cdata=CARD_DATA[code];
+      const name=cdata?cdata.name:code;
+      const text=cdata?cdata[POS_KEYS[i]]:'ไม่พบข้อมูลค่ะ';
+      return POS_ICONS[i]+' '+POSITIONS[i]+' — '+name+'\n'+text;
+    }).join('\n\n');
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Cartomancy ไพ่โป๊กเกอร์ดูดวง',
       question:selected.map(function(s,i){return POSITIONS[i]+': '+(CARD_DATA[s.code]?CARD_DATA[s.code].name:s.code);}).join(' | '),
-      result:'เลือกไพ่ '+selected.map(function(s){return s.code;}).join(', '),
+      result:fullResult,
       createdAt:serverTimestamp()
     });
   }catch(e){console.error(e);}
