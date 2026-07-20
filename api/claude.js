@@ -68,7 +68,7 @@ const SERVICE_COSTS = {
   "pastlife": TIER.T30,
   "challenge": TIER.T20,
   "seven": TIER.T39,
-  "triwai": TIER.T9,
+  "triwai": TIER.T19,
   "thaksa": TIER.T19,
   "soul_aura": TIER.T19,
   "biorhythm": TIER.T10,
