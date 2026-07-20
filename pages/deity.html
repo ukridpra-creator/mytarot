@@ -436,12 +436,13 @@ window.doShare = async function() {
 };
 
 // ─── SAVE READING ───
-async function saveReading(name) {
+async function saveReading(name, d) {
   if (!currentUser) return;
   try {
+    const fullResult = `เทพประจำตัว: ${name}\n\n${d.desc}\n\n🙏 ของไหว้: ${d.offering}\n📿 บทสวด: ${d.prayer}\n🎨 สีมงคล: ${d.color}\n🧭 ทิศมงคล: ${d.direction}\n⚠️ ข้อห้าม: ${d.taboo}`;
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
       type: 'เทพประจำตัว',
-      result: name,
+      result: fullResult,
       createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
@@ -629,7 +630,7 @@ window.revealResult = function() {
   }).join('');
 
   document.getElementById('resultSection').scrollIntoView({ behavior:'smooth' });
-  saveReading(name1);
+  saveReading(name1, d1);
 }
 
 window.resetAll = function() {

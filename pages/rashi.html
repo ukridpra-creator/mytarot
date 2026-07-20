@@ -325,10 +325,12 @@ window.checkRashi = function() {
   // save
   if (currentUser) {
     try {
+      const compatNames = r.compatible.map(k => RASHI_NAMES[k] || k).join(', ');
+      const fullResult = `ราศี${r.nameTH} (${r.nameEN}) ${r.symbol} — ${r.dates}\n🪐 ${r.planet} · 🌿 ธาตุ${r.element}\n\n👤 บุคลิกภาพ\n${r.personality}\n\n💼 การงาน\n${r.career}\n\n💰 การเงิน\n${r.money}\n\n💕 ความรัก\n${r.love}\n\n🩺 สุขภาพ\n${r.health}\n\n✦ เครื่องเสริมดวง\nอัญมณี: ${r.gem} · สีมงคล: ${r.luckyColor} · วันมงคล: วัน${r.luckyDay} · เลขมงคล: ${r.luckyNumber} · เทพประจำราศี: ${r.deity}\n\n💑 ราศีที่เข้ากันได้ดี: ${compatNames}`;
       addDoc(collection(db,'users',currentUser.uid,'readings'), {
         type: 'ราศีอินเดีย',
         question: `วันที่ ${day} เดือน ${month}`,
-        result: `ราศี${r.nameTH} (${r.nameEN}) ${r.symbol} — ${r.dates}`,
+        result: fullResult,
         createdAt: serverTimestamp()
       });
     } catch(e) { console.error(e); }

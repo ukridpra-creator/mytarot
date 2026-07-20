@@ -377,10 +377,11 @@ window.checkNakshatra = async function() {
 
   // save
   try {
+    const fullResult = `⭐ ดาว${n.nameTH} (${n.name}) — ดาวที่ ${n.id+1}/27\n🪐 ${n.planet} · 🌿 ${n.element} · ♈ ${n.rashi}\n\n🙏 เทพประจำดาว: ${n.deity}\nสัญลักษณ์: ${n.symbol} (${n.symbol_meaning})\n\n👤 บุคลิกภาพ\n${n.personality}\n\n💼 การงาน\n${n.career}\n\n💰 การเงิน\n${n.money}\n\n💕 ความรัก\n${n.love}\n\n💪 จุดแข็ง\n${n.strength}\n\n⚠️ จุดอ่อน\n${n.weakness}\n\n🍀 โชคชะตา\n${n.fortune}\n\n✦ เครื่องเสริมดวง\nอัญมณี: ${n.gem} · สีมงคล: ${n.luckyColor} · วันมงคล: วัน${n.luckyDay}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'), {
       type: 'Nakshatras ดาวประจำตัว',
       question: `${day}/${month}/${year}`,
-      result: `ดาว${n.nameTH} (${n.name}) — ${n.deity}`,
+      result: fullResult,
       createdAt: serverTimestamp()
     });
   } catch(e) { console.error(e); }
