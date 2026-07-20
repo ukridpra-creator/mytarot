@@ -396,10 +396,17 @@ window.startReading = async function() {
 
   // save
   try {
+    const sectionLabels = {
+      cardPersonal:'⭐ ดาวประจำตัว', cardCareer:'💼 การงาน', cardMoney:'💰 การเงิน',
+      cardLove:'💗 ความรัก', cardHealth:'🩺 สุขภาพ', cardAdvice:'🔯 คำแนะนำ'
+    };
+    const fullResult = sections.map(function(sec){
+      return sectionLabels[sec.id] + '\n' + sec.text;
+    }).join('\n\n');
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'กุ้ยก้า 九宮飛星',
       question:`ปีเกิด ${birthYear} (พ.ศ. ${birthYear+543})`,
-      result:`ดาวประจำตัว ${calc.personalStar} ${si.name} | ทิศมงคล: ${luckyDirNames}`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
   } catch(e){console.error(e);}
