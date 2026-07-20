@@ -251,10 +251,6 @@
       <button class="followup-btn" id="followupBtn" onclick="askFollowup()">⭐ ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
-      <div class="followup-title">💬 ถามเพิ่มเติมเกี่ยวกับดวงชะตาของคุณได้เลยค่ะ</div>
-      <textarea class="followup-input" id="followupInput" rows="2" placeholder="เช่น ดวงรักปีนี้เป็นยังไงคะ?"></textarea>
-      <button class="followup-btn" id="followupBtn" onclick="askFollowup()">⭐ ถามต่อ 🪙 5 เหรียญ</button>
-    </div>
 </div>
 
 <nav class="bottom-nav">
@@ -616,10 +612,17 @@ ${calc.palaces.map((p,i)=>`${p.nameTH}: ${p.mainStarData.map(s=>s.nameTH+'('+s.n
     });
 
     // save
+    const sectionLabels = {life:'🌟 ชีวิตและบุคลิก', love:'💗 ความรักและคู่ครอง', career:'💼 การงานและความสำเร็จ', wealth:'💰 การเงินและทรัพย์สิน', health:'🩺 สุขภาพ', future:'🔮 ภาพรวมและคำแนะนำ'};
+    const fullResult = keys.map(function(k){
+      var lk=k.toLowerCase();
+      var txt=final[lk]?final[lk].replace(/\[\/[A-Z]+\]/g,'').trim():'';
+      return sectionLabels[lk]+'\n'+txt;
+    }).join('\n\n');
+
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Purple Star 紫微斗數',
       question:`${day}/${month}/${year} เวลา ${hour}:00`,
-      result:`ดาวชีวิต: ${starNames(calc.lifeStars)}`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
 
