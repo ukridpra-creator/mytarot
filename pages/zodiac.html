@@ -268,10 +268,14 @@ window.startZodiacReading = async function() {
 
   if (window._currentUser) {
     try {
+      const fullResult = 'ปีนักษัตร: ' + data.name +
+        '\n\n👤 บุคลิกและนิสัยใจคอ\n' + data.trait +
+        '\n\n❤️ เรื่องความรักความสัมพันธ์\n' + data.love +
+        '\n\n✨ ทริคเสริมดวงชะตา\n' + data.tip;
       await addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
         type: 'Chinese Zodiac (ฟรี)',
         question: day+'/'+month+'/'+(year+543),
-        result: 'วิเคราะห์ผลปีเกิด: ' + data.name,
+        result: fullResult,
         createdAt: serverTimestamp()
       });
     } catch(e){ console.error('save error:',e); }
