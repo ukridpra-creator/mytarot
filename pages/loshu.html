@@ -301,7 +301,16 @@ window.startReading = async function() {
   renderMeanings(counts);
   renderSummary(counts);
 
-  try { await window.saveReading('ผังลั่วซู', day+'/'+month+'/'+year, JSON.stringify(counts)); } catch(e) {}
+  try {
+    var summaryTxt = document.getElementById('summaryText').innerText;
+    var meaningsTxt = document.getElementById('meaningsList').innerText;
+    var arrowsWrapEl = document.getElementById('arrowsWrap');
+    var arrowsTxt = (arrowsWrapEl.style.display !== 'none') ? document.getElementById('arrowsList').innerText : '';
+    var fullResult = '📊 สรุปภาพรวม\n' + summaryTxt +
+      (arrowsTxt ? '\n\n⚡ เส้นพลังงานพิเศษ\n' + arrowsTxt : '') +
+      '\n\n🔢 ความหมายเลขแต่ละตัว\n' + meaningsTxt;
+    await window.saveReading('ผังลั่วซู', day+'/'+month+'/'+year, fullResult);
+  } catch(e) {}
 
   var box = document.getElementById('resultBox');
   box.style.display = 'block';
