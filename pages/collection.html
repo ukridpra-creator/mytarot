@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คอลเลกชันไพ่ สะสมไพ่ทุกสำรับ | My Tarot</title>
+  <meta name="description" content="สะสมไพ่ออราเคิลทุกสำรับที่ My Tarot เก็บทุกใบที่จั่วเจอไว้ในคอลเลกชันของคุณค่ะ">
+  <meta name="keywords" content="คอลเลกชันไพ่,สะสมไพ่ออราเคิล,card collection">
+  <meta property="og:title" content="คอลเลกชันไพ่ — My Tarot">
+  <meta property="og:description" content="สะสมไพ่ออราเคิลทุกสำรับค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/collection">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/collection.js"></script>
+  <script src="../js/decks-config.js"></script>
+  <!-- โหลด data ของทุกสำรับไว้เลย (ไฟล์เล็ก ไม่หนัก) เพื่อเลี่ยงปัญหา race condition ตอนสลับสำรับ -->
+  <script src="../js/dragon-data.js"></script>
+  <script src="../js/han-data.js"></script>
+  <script src="../js/nature-data.js"></script>
+  <script src="../js/oracle-angle-data.js"></script>
+  <script src="../js/demon-data.js"></script>
+  <script src="../js/oracle-dream-data.js"></script>
+  <script src="../js/oracle-hindu-data.js"></script>
+  <script src="../js/cosmic-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; background:radial-gradient(ellipse at top,#1a0d24 0%,#0a0510 55%,#050308 100%); overflow-x:hidden; }
+
+    .stars { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .stars span { position:absolute; width:2px; height:2px; background:#f5d576; border-radius:50%; opacity:0; animation:twinkle 4s ease-in-out infinite; }
+    @keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.5);} 50%{opacity:0.9;transform:scale(1.4);} }
+
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid rgba(212,175,55,0.2); background:rgba(10,5,16,0.85); backdrop-filter:blur(14px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:17px; font-weight:700; color:white; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .page-content { padding:20px 16px 40px; position:relative; z-index:1; }
+
+    .col-hero { text-align:center; padding:14px 0 20px; }
+    .col-hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:900; letter-spacing:2px; background:linear-gradient(135deg,#f5d576,#d4af37,#f5d576); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 0 30px rgba(212,175,55,0.35); margin-bottom:4px; }
+    .col-hero-desc { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:18px; }
+
+    .progress-card { background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(124,45,18,0.06)); border:1px solid rgba(212,175,55,0.25); border-radius:22px; padding:18px 20px; margin-bottom:18px; }
+    .progress-top { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+    .progress-count { font-family:'Cinzel',serif; font-size:26px; font-weight:900; color:#f5d576; }
+    .progress-count small { font-size:13px; color:rgba(255,255,255,0.4); font-family:'Sarabun',sans-serif; font-weight:400; }
+    .progress-pct { font-size:13px; color:#d4af37; font-weight:700; }
+    .progress-track { height:10px; background:rgba(255,255,255,0.06); border-radius:99px; overflow:hidden; position:relative; }
+    .progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#7c2d12,#d4af37,#f5d576); width:0%; transition:width 1.2s cubic-bezier(.22,1,.36,1); position:relative; overflow:hidden; }
+    .progress-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent); width:40%; animation:shimmer 2s linear infinite; }
+    @keyframes shimmer { 0%{transform:translateX(-100%);} 100%{transform:translateX(350%);} }
+
+    .suit-chips { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+    .suit-chip { flex:1; min-width:70px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:8px 6px; text-align:center; }
+    .suit-chip-icon { font-size:16px; margin-bottom:2px; }
+    .suit-chip-count { font-size:12px; font-weight:800; color:white; }
+    .suit-chip-label { font-size:9px; color:rgba(255,255,255,0.35); margin-top:1px; }
+
+    .filter-tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:18px; scrollbar-width:none; }
+    .filter-tabs::-webkit-scrollbar { display:none; }
+    .filter-tab { flex-shrink:0; padding:9px 16px; border-radius:20px; border:1.5px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.03); color:rgba(255,255,255,0.55); font-size:12px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.25s; white-space:nowrap; display:flex; align-items:center; gap:5px; }
+    .filter-tab.active { color:#0a0510; border-color:transparent; background:linear-gradient(135deg,var(--deck-accent,#d4af37),#f5d576); box-shadow:0 4px 14px rgba(212,175,55,0.35); }
+
+    .card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+    .card-slot { aspect-ratio:2/3; border-radius:13px; position:relative; cursor:pointer; opacity:0; transform:translateY(14px) scale(0.9); animation:cardIn 0.5s cubic-bezier(.22,1,.36,1) forwards; }
+    @keyframes cardIn { to { opacity:1; transform:translateY(0) scale(1); } }
+
+    .card-slot .face { position:absolute; inset:0; border-radius:13px; overflow:hidden; }
+    .card-slot .face img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .card-slot.owned .face { border:2px solid var(--suit-color,#d4af37); box-shadow:0 0 0 1px rgba(255,255,255,0.05), 0 6px 18px -4px var(--suit-glow,rgba(212,175,55,0.5)); transition:transform 0.25s, box-shadow 0.25s; }
+    .card-slot.owned:active .face { transform:scale(0.94); }
+    .card-slot.owned .shine { position:absolute; inset:0; background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,0.35) 45%,rgba(255,255,255,0.05) 50%,transparent 65%); background-size:250% 250%; background-position:120% 0; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+    .card-slot.owned:hover .shine { opacity:1; animation:shineSweep 1.1s ease forwards; }
+    @keyframes shineSweep { from{background-position:120% 0;} to{background-position:-20% 100%;} }
+
+    .card-slot.owned .count-badge { position:absolute; top:5px; right:5px; background:rgba(8,4,14,0.85); border:1px solid var(--suit-color,#d4af37); color:#f5d576; font-size:9px; font-weight:800; padding:2px 6px; border-radius:20px; z-index:2; }
+
+    .card-slot.locked .face { background:linear-gradient(160deg,#141018,#0c0810); border:1.5px dashed rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; }
+    .card-slot.locked .face img { opacity:0.16; filter:grayscale(1); }
+    .card-slot.locked .lock-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; opacity:0.35; }
+    .card-slot.locked .lock-name { position:absolute; bottom:5px; left:2px; right:2px; text-align:center; font-size:8px; color:rgba(255,255,255,0.2); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.3); font-size:13px; grid-column:1/-1; }
+
+    .card-modal-overlay { position:fixed; inset:0; z-index:300; background:rgba(5,3,8,0.92); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:24px; }
+    .card-modal-overlay.show { display:flex; }
+    .card-modal { width:100%; max-width:340px; text-align:center; animation:modalPop 0.35s cubic-bezier(.22,1,.36,1); max-height:88vh; overflow-y:auto; }
+    @keyframes modalPop { from{opacity:0;transform:scale(0.85) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
+    .card-modal-img-wrap { width:210px; aspect-ratio:2/3; margin:0 auto 16px; border-radius:18px; overflow:hidden; border:3px solid var(--suit-color,#d4af37); box-shadow:0 0 50px -8px var(--suit-glow,rgba(212,175,55,0.6)), 0 20px 40px rgba(0,0,0,0.5); }
+    .card-modal-img-wrap img { width:100%; height:100%; object-fit:cover; }
+    .card-modal-suit { display:inline-block; font-size:11px; font-weight:800; padding:4px 14px; border-radius:20px; margin-bottom:8px; }
+    .card-modal-name-th { font-family:'Cinzel',serif; font-size:20px; font-weight:800; color:white; margin-bottom:2px; }
+    .card-modal-name-en { font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; margin-bottom:16px; }
+    .card-modal-section { text-align:left; background:rgba(255,255,255,0.04); border-radius:14px; padding:14px 16px; margin-bottom:10px; }
+    .card-modal-label { font-size:10px; color:#d4af37; font-weight:700; letter-spacing:1px; margin-bottom:5px; }
+    .card-modal-text { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.7; }
+    .card-modal-meta { font-size:11px; color:rgba(255,255,255,0.3); margin-top:12px; }
+    .card-modal-close { margin-top:16px; width:100%; padding:13px; border-radius:16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.6); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; position:sticky; bottom:0; }
+
+    .login-required-overlay.show { display:flex !important; }
+
+    .btn-goto-deck { display:block; width:100%; text-align:center; text-decoration:none; margin-top:22px; padding:15px; border-radius:16px; background:linear-gradient(135deg,#7c2d12,#d4af37); color:white; font-size:15px; font-weight:800; font-family:'Sarabun',sans-serif; box-shadow:0 4px 20px rgba(212,175,55,0.3); }
+
+    .deck-switch { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:16px; scrollbar-width:none; }
+    .deck-switch::-webkit-scrollbar { display:none; }
+    .deck-switch-item { flex-shrink:0; padding:8px 14px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; white-space:nowrap; }
+    .deck-switch-item.active { color:white; border-color:transparent; background:linear-gradient(135deg,var(--deck-accent,#d4af37),rgba(255,255,255,0.15)); }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="starsBg"></div>
+
+<div class="page-header">
+  <a href="collections.html" class="back-btn">←</a>
+  <div class="page-title" id="pageTitle">🎴 คอลเลกชันไพ่</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🎴</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อดูคอลเลกชันไพ่ของคุณค่ะ</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+  </div>
+</div>
+
+<div class="card-modal-overlay" id="cardModalOverlay" onclick="if(event.target===this)closeCardModal()">
+  <div class="card-modal" id="cardModal"></div>
+</div>
+
+<div class="page-content">
+  <div class="col-hero">
+    <div class="col-hero-title" id="heroTitle">COLLECTION</div>
+    <div class="col-hero-desc">ทุกใบที่จั่วเจอจะถูกเก็บไว้ที่นี่ค่ะ</div>
+  </div>
+
+  <div class="deck-switch" id="deckSwitch"></div>
+
+  <div class="progress-card">
+    <div class="progress-top">
+      <div class="progress-count"><span id="ownedCount">0</span><small> / <span id="totalCount">0</span> ใบ</small></div>
+      <div class="progress-pct" id="progressPct">0%</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="suit-chips" id="suitChips"></div>
+  </div>
+
+  <div class="filter-tabs" id="filterTabs"></div>
+
+  <div class="card-grid" id="cardGrid"></div>
+
+  <a href="#" class="btn-goto-deck" id="gotoDeckBtn">🎴 ไปจั่วไพ่เพิ่ม</a>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',
+  authDomain:'my-tarot67.firebaseapp.com', projectId:'my-tarot67',
+  storageBucket:'my-tarot67.firebasestorage.app',
+  messagingSenderId:'33661162829',
+  appId:'1:33661162829:web:9e06a7cd5a00d613785304'
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){ document.getElementById('coinCount').textContent=c; };
+function setAvatarDisplay(a){
+  var el=document.getElementById('avatarEl'); if(!el)return;
+  if(a&&a.includes('.png')){el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';}
+  else{el.textContent=a||'👤';}
+}
+window.toggleUserMenu=function(){
+  var m=document.getElementById('userMenu'), o=document.getElementById('overlay');
+  if(m.classList.contains('show')){m.classList.remove('show');o.classList.remove('show');}
+  else{m.classList.add('show');o.classList.add('show');}
+};
+window.closeUserMenu=function(){
+  document.getElementById('userMenu').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());document.getElementById('loginRequiredOverlay').classList.remove('show');}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+    window.initCollectionPage();
+  } else {
+    updateCoinUI('—'); setAvatarDisplay('');
+    document.getElementById('loginRequiredOverlay').classList.add('show');
+  }
+});
+</script>
+
+<script>
+(function(){
+  var wrap=document.getElementById('starsBg');
+  for(var i=0;i<26;i++){
+    var s=document.createElement('span');
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.animationDuration=(3+Math.random()*3)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+const DEFAULT_GLOW = ['#d4af37', 'rgba(212,175,55,0.5)'];
+function glowFor(deckCfg){
+  const c = deckCfg.accent || '#d4af37';
+  return [c, hexToRgba(c, 0.5)];
+}
+function hexToRgba(hex, a){
+  const h = hex.replace('#','');
+  const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+const params = new URLSearchParams(window.location.search);
+let currentDeckKey = params.get('deck') || 'dragon';
+if (!DECKS_CONFIG[currentDeckKey]) currentDeckKey = 'dragon';
+let currentFilter = 'all';
+let ownedMap = {};
+
+function renderDeckSwitch(){
+  const wrap = document.getElementById('deckSwitch');
+  wrap.innerHTML = DECKS_ORDER.map(key=>{
+    const d = DECKS_CONFIG[key];
+    return `<a class="deck-switch-item ${key===currentDeckKey?'active':''}" style="--deck-accent:${d.accent}" href="collection.html?deck=${key}">${d.icon} ${d.label}</a>`;
+  }).join('');
+}
+
+window.initCollectionPage = async function(){
+  const deckCfg = DECKS_CONFIG[currentDeckKey];
+  document.getElementById('pageTitle').textContent = deckCfg.icon + ' ' + deckCfg.label;
+  document.getElementById('heroTitle').textContent = deckCfg.label.toUpperCase();
+  document.getElementById('gotoDeckBtn').href = deckCfg.pageUrl;
+  document.getElementById('gotoDeckBtn').textContent = deckCfg.icon + ' ไปจั่วไพ่ ' + deckCfg.label;
+  document.documentElement.style.setProperty('--deck-accent', deckCfg.accent);
+
+  renderDeckSwitch();
+
+  const grid = document.getElementById('cardGrid');
+  grid.innerHTML = '<div class="empty-state">🔮 กำลังเปิดคอลเลกชัน...</div>';
+
+  currentFilter = 'all';
+  ownedMap = await window.getCardCollection(window.currentUser.uid, currentDeckKey);
+
+  renderStats(deckCfg);
+  renderTabs(deckCfg);
+  renderGrid(deckCfg);
+};
+
+function renderStats(deckCfg){
+  const cards = deckCfg.getCards();
+  const total = cards.length;
+  const ownedIds = Object.keys(ownedMap);
+  const ownedCount = ownedIds.length;
+  const pct = total ? Math.round((ownedCount/total)*100) : 0;
+
+  document.getElementById('ownedCount').textContent = ownedCount;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('progressFill').style.width = '0%';
+  setTimeout(()=>{ document.getElementById('progressFill').style.width = pct+'%'; }, 100);
+
+  const chipsWrap = document.getElementById('suitChips');
+  if (deckCfg.category && deckCfg.categoryMeta) {
+    const cats = {};
+    cards.forEach(c=>{
+      const catKey = deckCfg.category(c);
+      if (!cats[catKey]) cats[catKey] = { total:0, owned:0 };
+      cats[catKey].total++;
+      if (ownedMap[c.id]) cats[catKey].owned++;
+    });
+    chipsWrap.style.display = 'flex';
+    chipsWrap.innerHTML = Object.keys(cats).map(catKey=>{
+      const meta = deckCfg.categoryMeta[catKey] || { label: catKey, icon: '✦' };
+      const s = cats[catKey];
+      return `<div class="suit-chip">
+        <div class="suit-chip-icon">${meta.icon}</div>
+        <div class="suit-chip-count">${s.owned}/${s.total}</div>
+        <div class="suit-chip-label">${meta.label}</div>
+      </div>`;
+    }).join('');
+  } else {
+    chipsWrap.style.display = 'none';
+    chipsWrap.innerHTML = '';
+  }
+}
+
+function renderTabs(deckCfg){
+  const wrap = document.getElementById('filterTabs');
+  if (!deckCfg.category || !deckCfg.categoryMeta) {
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.style.display = 'flex';
+  const cats = Object.keys(deckCfg.categoryMeta);
+  const tabs = [{key:'all', label:'ทั้งหมด', icon: deckCfg.icon}].concat(
+    cats.map(k=>({key:k, label:deckCfg.categoryMeta[k].label, icon:deckCfg.categoryMeta[k].icon}))
+  );
+  wrap.innerHTML = tabs.map(t=>`
+    <button class="filter-tab ${t.key===currentFilter?'active':''}" style="--deck-accent:${deckCfg.accent}" onclick="setFilter('${t.key}')">
+      <span>${t.icon}</span><span>${t.label}</span>
+    </button>`).join('');
+}
+
+window.setFilter = function(cat){
+  currentFilter = cat;
+  const deckCfg = DECKS_CONFIG[currentDeckKey];
+  renderTabs(deckCfg);
+  renderGrid(deckCfg);
+};
+
+function renderGrid(deckCfg){
+  const grid = document.getElementById('cardGrid');
+  let cards = deckCfg.getCards();
+  if (currentFilter !== 'all' && deckCfg.category) {
+    cards = cards.filter(c => deckCfg.category(c) === currentFilter);
+  }
+
+  const glow = glowFor(deckCfg);
+
+  grid.innerHTML = cards.map((card,i)=>{
+    const owned = ownedMap[card.id];
+    const style = `--suit-color:${glow[0]};--suit-glow:${glow[1]};animation-delay:${Math.min(i*0.025,0.6)}s`;
+    const imgUrl = deckCfg.imgUrl(card);
+    const displayName = deckCfg.name(card);
+
+    if (owned) {
+      return `<div class="card-slot owned" style="${style}" onclick="openCardModal('${card.id}')">
+        <div class="face"><img src="${imgUrl}" loading="lazy" alt="${displayName}"></div>
+        <div class="shine"></div>
+        ${owned.count>1 ? `<div class="count-badge">×${owned.count}</div>` : ''}
+      </div>`;
+    } else {
+      return `<div class="card-slot locked" style="${style}">
+        <div class="face"><img src="${deckCfg.back}" alt=""></div>
+        <div class="lock-icon">🔒</div>
+        <div class="lock-name">${displayName}</div>
+      </div>`;
+    }
+  }).join('');
+
+  if (!cards.length) grid.innerHTML = '<div class="empty-state">ไม่มีไพ่ในหมวดนี้ค่ะ</div>';
+}
+
+window.openCardModal = function(cardId){
+  const deckCfg = DECKS_CONFIG[currentDeckKey];
+  const cards = deckCfg.getCards();
+  const card = cards.find(c => String(c.id) === String(cardId));
+  const owned = ownedMap[cardId];
+  if (!card || !owned) return;
+  const glow = glowFor(deckCfg);
+
+  let dateStr = '';
+  try {
+    if (owned.firstObtainedAt && owned.firstObtainedAt.toDate) {
+      dateStr = owned.firstObtainedAt.toDate().toLocaleDateString('th-TH', {day:'numeric',month:'short',year:'numeric'});
+    }
+  } catch(e){}
+
+  const sections = deckCfg.sections(card).filter(s => s[1]);
+  const sub = deckCfg.sub(card);
+
+  document.getElementById('cardModal').innerHTML = `
+    <div class="card-modal-img-wrap" style="--suit-color:${glow[0]};--suit-glow:${glow[1]}">
+      <img src="${deckCfg.imgUrl(card)}" alt="${deckCfg.name(card)}">
+    </div>
+    <div class="card-modal-suit" style="background:${glow[1]};color:${glow[0]}">${deckCfg.icon} ${deckCfg.label}</div>
+    <div class="card-modal-name-th">${deckCfg.name(card)}</div>
+    ${sub ? `<div class="card-modal-name-en">${sub}</div>` : ''}
+    ${sections.map(s => `
+      <div class="card-modal-section">
+        <div class="card-modal-label">${s[0]}</div>
+        <div class="card-modal-text">${s[1]}</div>
+      </div>`).join('')}
+    <div class="card-modal-meta">เก็บได้ ${owned.count} ครั้ง${dateStr?' • ครั้งแรก '+dateStr:''}</div>
+    <button class="card-modal-close" onclick="closeCardModal()">ปิด</button>
+  `;
+  document.getElementById('cardModalOverlay').classList.add('show');
+};
+
+window.closeCardModal = function(){
+  document.getElementById('cardModalOverlay').classList.remove('show');
+};
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;position:relative;z-index:1;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">คอลเลกชันไพ่คืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ทุกครั้งที่คุณจั่วไพ่ออราเคิลสำรับใดก็ตามที่ My Tarot ไพ่ใบนั้นจะถูกเก็บเข้าคอลเลกชันส่วนตัวของคุณโดยอัตโนมัติค่ะ สะสมให้ครบทุกใบในแต่ละสำรับ แล้วย้อนกลับมาดูความหมายของไพ่ที่เคยได้ได้ทุกเมื่อค่ะ</p>
+</div>
+
+</body>
+</html>
