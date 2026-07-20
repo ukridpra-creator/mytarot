@@ -276,11 +276,21 @@ window.checkTojung = async function(){
   document.getElementById('resultBox').style.display='block';
   document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
 
+  var monthsText = data.months.map(function(m,i){ return (i+1)+'. '+m; }).join('\n');
+  var fullResult =
+    '✦ ภาพรวมปี 2569\n' + data.overview +
+    '\n\n📅 ดวงรายเดือน\n' + monthsText +
+    '\n\n💼 การงานและความสำเร็จ\n' + data.career +
+    '\n\n💰 การเงินและทรัพย์สิน\n' + data.money +
+    '\n\n💗 ความรัก\n' + data.love +
+    '\n\n🩺 สุขภาพ\n' + data.health +
+    '\n\n🍀 โชคลาภ\nสีมงคล: ' + data.lucky.colors + '\nทิศมงคล: ' + data.lucky.direction + '\nเลขมงคล: ' + data.lucky.numbers + '\nของมงคล: ' + data.lucky.item;
+
   addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
     type:'โทจองบีกยอล',
     zodiac: ZODIAC_TH[zIdx],
     year: 2569,
-    result: data.overview,
+    result: fullResult,
     createdAt: serverTimestamp()
   }).catch(function(){});
 
