@@ -406,10 +406,19 @@ window.startReading=async function(){
     Object.keys(final2).forEach(function(id){if(final2[id])updateSection(id,final2[id]);});
 
     // save
+    const sectionLabels={
+      personality:'✦ บุคลิกภาพ', childhood:'👶 วัยเด็ก', mission:'🎯 พันธกิจชีวิต',
+      love:'💕 ความรัก', career:'💼 การงาน', money:'💰 การเงิน', health:'🩺 สุขภาพ',
+      lucky:'🍀 โชคลาภ', thisyear:'📅 ดวงปีนี้', future:'🔮 อนาคต'
+    };
+    const allSections=Object.assign({},final1,final2);
+    const sectionOrder=['personality','childhood','mission','love','career','money','health','lucky','thisyear','future'];
+    const fullResult = 'ราศี'+profile.westernTh+' · เลขชีวิต '+profile.lifeNumber+' · ปี'+profile.chineseTh+' · วัน'+profile.thaiDay+' · ธาตุ'+profile.baziElements[0]+' · Personal Year '+profile.personalYear+'\n\n' +
+      sectionOrder.map(function(k){ return sectionLabels[k]+'\n'+(allSections[k]||''); }).join('\n\n');
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'เจาะดวงชะตา',
       question:name+' '+day+'/'+month+'/'+year,
-      result:'ราศี'+profile.westernTh+' เลข'+profile.lifeNumber+' ปี'+profile.chineseTh+' วัน'+profile.thaiDay,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
 

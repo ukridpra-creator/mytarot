@@ -493,10 +493,11 @@ window.startReading = async function() {
   await streamText(document.getElementById('textAdvice'), aura.advice, 16);
 
   try {
+    const fullResult = `🔮 ออร่า: ${aura.name} — ${aura.subtitle}\n💪 จุดแข็ง: ${aura.strength} · 💑 คู่ที่เข้ากัน: ${aura.match} · 🌿 ธาตุ: ${aura.element} · 💎 อัญมณี: ${aura.gem}\n\n👤 บุคลิกภาพ\n${aura.personality}\n\n💕 ความรัก\n${aura.love}\n\n💼 การงาน\n${aura.career}\n\n💰 การเงิน\n${aura.money}\n\n⚠️ ข้อควรระวัง\n${aura.warning}\n\n✨ คำแนะนำ\n${aura.advice}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Soul Aura Color',
       question:`${day}/${month}`,
-      result:`${aura.name} — ${aura.subtitle}`,
+      result:fullResult,
       createdAt: serverTimestamp()
     });
   } catch(e){console.error(e);}

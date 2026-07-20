@@ -569,10 +569,11 @@ window.startReading = async function() {
 
   // save
   try{
+    const fullResult = `🌳 Sefirot ที่ ${lifeNum}: ${sefira.nameTH} (${sefira.name}) — ${sefira.subtitle}\n${sefira.desc}\n\n👤 บุคลิกภาพ\n${sefira.personality}\n\n🛤️ เส้นทางชีวิต\n${sefira.path}\n\n💕 ความรัก\n${sefira.love}\n\n💼 การงาน\n${sefira.career}\n\n✨ คำแนะนำ\n${sefira.advice}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Kabbalah Tree of Life',
       question:`${day}/${month}/${year}`,
-      result:`Sefirot ที่ ${lifeNum}: ${sefira.nameTH} (${sefira.name}) — ${sefira.subtitle}`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
   }catch(e){console.error(e);}

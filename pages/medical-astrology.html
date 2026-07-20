@@ -402,10 +402,16 @@ window.startReading = async function() {
     }
     parseByTag(text);
 
+    const sectionLabels={secSign:'♈ ราศีและอวัยวะ',secPlanet:'🪐 ดาวเคราะห์และสุขภาพ',secWeak:'⚠️ จุดอ่อนที่ต้องระวัง',secCare:'💚 คำแนะนำดูแลสุขภาพ',secPeriod:'📅 ช่วงเวลาที่ต้องระวัง'};
+    const fullResult = Object.keys(sectionLabels).map(id=>{
+      const el=document.getElementById(id);
+      return sectionLabels[id]+'\n'+(el?el.textContent:'');
+    }).join('\n\n');
+
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Medical Astrology เจาะลึกสุขภาพ',
       question:`${day}/${month}/${year} เวลา ${hour||'?'}:${String(minute).padStart(2,'0')}`,
-      result:`ราศี${signData.th} — ${signData.body}`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
 

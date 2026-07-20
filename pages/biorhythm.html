@@ -598,10 +598,12 @@ window.startReading = async function() {
 
   // save
   try{
+    const criticalText = criticals.length ? criticals.map(c=>`⚠️ ${c.dateStr}: ${c.cycle} ตัดศูนย์ — ${c.warn}`).join('\n') : 'ไม่มีวันวิกฤตในช่วงนี้ค่ะ';
+    const fullResult = `📊 กราฟชีวิตวันที่ ${day}/${month}/${year}\n\n💪 ร่างกาย ${physPct}% (${document.getElementById('physTrend').textContent})\n${PHYS_TEXT[getLevel(p)]}\n\n💗 อารมณ์ ${emoPct}% (${document.getElementById('emoTrend').textContent})\n${EMO_TEXT[getLevel(e)]}\n\n🧠 สติปัญญา ${intelPct}% (${document.getElementById('intelTrend').textContent})\n${INTEL_TEXT[getLevel(int)]}\n\n📅 วันวิกฤต\n${criticalText}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Biorhythm กราฟชีวิต',
       question:`${day}/${month}/${year}`,
-      result:`ร่างกาย:${physPct}% อารมณ์:${emoPct}% สติปัญญา:${intelPct}%`,
+      result:fullResult,
       createdAt:serverTimestamp()
     });
   }catch(e){console.error(e);}

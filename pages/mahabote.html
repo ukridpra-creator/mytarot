@@ -177,7 +177,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',authDomain:'my-tarot67.firebaseapp.com',projectId:'my-tarot67',storageBucket:'my-tarot67.firebasestorage.app',messagingSenderId:'33661162829',appId:'1:33661162829:web:9e06a7cd5a00d613785304'};
@@ -191,6 +191,17 @@ function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)r
 window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
 window.loginNow=function(){var m=document.getElementById('loginRequiredOverlay');if(m)m.classList.add('show');};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+window.__mahaboteSave=async function(question, result){
+  if(!currentUser) return;
+  try{
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'มหาโพธิ์ ตำราพม่า',
+      question:question,
+      result:result,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
 onAuthStateChanged(auth,async user=>{
   currentUser=user;
   if(user){var snap=await getDoc(doc(db,'users',user.uid));var data=snap.exists()?snap.data():{};updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');document.getElementById('guestView').style.display='none';document.getElementById('loggedView').style.display='block';document.getElementById('menuName').textContent=data.displayName||user.displayName||'';document.getElementById('menuEmail').textContent=user.email;if(typeof setupCheckin==='function')setupCheckin(user,'../');}
@@ -352,6 +363,11 @@ window.calculate = function() {
 
   document.getElementById('resultBox').classList.add('show');
   setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+
+  if (typeof window.__mahaboteSave === 'function') {
+    const fullResult = `🐾 ${animal.name} — ${animal.day} · ${animal.planet}\nทิศมงคล: ${animal.dir} · สีมงคล: ${animal.color}\n\n👤 บุคลิกภาพ\n${animal.char}\n\n💕 ความรัก\n${animal.love}\n\n💼 การงานและการเงิน\n${animal.work}\n\n🍀 โชคลาภ\n${animal.luck}\n\n💑 ความเข้ากันได้\n${animal.compatDesc}`;
+    window.__mahaboteSave(`${d}/${m}/${y}`, fullResult);
+  }
 };
 
 window.resetResult = function() {
