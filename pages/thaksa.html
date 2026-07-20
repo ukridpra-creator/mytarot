@@ -288,10 +288,13 @@ window.startReading=async function(){
 
   // save
   try{
+    const dayThitData=calc.thits.find(t=>t.isDay);
+    const yamThitData=calc.thits.find(t=>t.isYam);
+    const resultText=`🌟 ดาวประจำวัน: ${calc.dayPlanetName} ตกทิศ${THIT_NAMES[calc.dayThit]}\n${dayThitData?dayThitData.title+' — '+dayThitData.text:''}\n\n🕐 ดาวยาม (ยามที่${calc.yam}): ${calc.yamPlanetName} ตกทิศ${THIT_NAMES[calc.yamThit]}\n${yamThitData?yamThitData.title+' — '+yamThitData.text:''}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'ทักษา',
       question:`วัน${calc.dayName} ยามที่${calc.yam} ดาว${calc.yamPlanetName}`,
-      result:`ดาวประจำวัน${calc.dayPlanetName}ตกทิศ${THIT_NAMES[calc.dayThit]} | ดาวยาม${calc.yamPlanetName}ตกทิศ${THIT_NAMES[calc.yamThit]}`,
+      result:resultText,
       createdAt:serverTimestamp()
     });
   }catch(e){console.error(e);}
