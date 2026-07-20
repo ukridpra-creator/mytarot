@@ -448,10 +448,27 @@ window.startReading = async function() {
   document.getElementById('pyNextText').textContent = PERSONAL_YEAR_MEANINGS[calc.personalYearNext] || '';
 
   try {
+    var pinBlocks = [];
+    for (var pi = 0; pi < 4; pi++) {
+      var mm = PINNACLE_MEANINGS[pins[pi]];
+      var pk = getPinnKey(pi);
+      var ageLabel = calc.ranges[pi].label;
+      var isCur = (pi+1) === calc.currentPin ? ' ⭐ (ช่วงปัจจุบัน)' : '';
+      var title = mm ? mm[pk].title : '';
+      var text  = mm ? mm[pk].text  : '';
+      pinBlocks.push('🔺 Pinnacle ' + (pi+1) + ' (' + ageLabel + ')' + isCur + ' — เลข ' + pins[pi] + ': ' + title + '\n' + text);
+    }
+
+    var curYForSave = new Date().getFullYear();
+    var pySummary = '📅 Personal Year ปีนี้ (' + curYForSave + ') — เลข ' + calc.personalYearNow + ': ' + (PERSONAL_YEAR_MEANINGS[calc.personalYearNow] || '')
+      + '\n\n📅 Personal Year ปีหน้า (' + (curYForSave+1) + ') — เลข ' + calc.personalYearNext + ': ' + (PERSONAL_YEAR_MEANINGS[calc.personalYearNext] || '');
+
     await addDoc(collection(db,'users',window._currentUser.uid,'readings'),{
       type: 'Pinnacle Numbers',
       question: day+'/'+month+'/'+year,
-      result: 'Life Path: '+lp+' | P1:'+pins[0]+' P2:'+pins[1]+' P3:'+pins[2]+' P4:'+pins[3]+' | ช่วงปัจจุบัน: Pinnacle '+calc.currentPin+' (เลข '+pins[calc.currentPin-1]+')',
+      result: '🌟 เลขเส้นทางชีวิต (Life Path): ' + lp
+        + '\n\n' + pinBlocks.join('\n\n')
+        + '\n\n' + pySummary,
       createdAt: serverTimestamp()
     });
   } catch(e){ console.error('save error:',e); }
