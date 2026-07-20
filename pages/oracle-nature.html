@@ -618,7 +618,7 @@ window.openSecret = async function() {
       body: JSON.stringify({
         service: 'han-oracle-1',
         model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
+        max_tokens: 1500,
         messages: [{ role:'user', content:`คำทำนายเดิม:\n${analysisResult}\n\nไพ่ความลับที่เพิ่งเปิด: ${secretCard.name} (${secretCard.meaning})\n\nเปิดเผยสิ่งที่ซ่อนเร้นเบื้องหลัง เชื่อมกับคำทำนายเดิม บอกสิ่งที่ท่านยังไม่รู้หรือยังมองไม่เห็น เรียกผู้ถามว่า "ท่าน" ห้ามใช้ markdown` }]
       })
     });
