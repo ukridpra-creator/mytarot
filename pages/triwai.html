@@ -64,8 +64,12 @@
     .own-badge { background:rgba(212,175,55,0.2); color:#d4af37; border:1px solid rgba(212,175,55,0.4); }
     .other-badge { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); border:1px solid rgba(255,255,255,0.1); }
 
-    .vai-title { font-size:14px; font-weight:700; color:white; margin-bottom:8px; }
+    .vai-title { font-size:14px; font-weight:700; color:white; margin-bottom:10px; }
     .vai-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.9; }
+    .vai-section { margin-bottom:12px; }
+    .vai-section:last-child { margin-bottom:0; }
+    .vai-section-label { font-size:12px; font-weight:700; color:#d4af37; margin-bottom:3px; display:flex; align-items:center; gap:5px; }
+    .vai-section-text { font-size:13px; color:rgba(255,255,255,0.75); line-height:1.8; }
 
     .login-required-overlay.show { display:flex !important; }
   </style>
@@ -267,7 +271,22 @@ window.startReading=async function(){
         <span class="vai-planet-badge ${badgeClass}">${badgeText}</span>
       </div>
       <div class="vai-title">${v.title}</div>
-      <div class="vai-text">${v.text}</div>`;
+      <div class="vai-section">
+        <div class="vai-section-label">💼 การงาน/การเงิน</div>
+        <div class="vai-section-text">${v.career}</div>
+      </div>
+      <div class="vai-section">
+        <div class="vai-section-label">💗 ความรัก/ครอบครัว</div>
+        <div class="vai-section-text">${v.love}</div>
+      </div>
+      <div class="vai-section">
+        <div class="vai-section-label">🌿 สุขภาพ</div>
+        <div class="vai-section-text">${v.health}</div>
+      </div>
+      <div class="vai-section">
+        <div class="vai-section-label">✨ คำแนะนำ</div>
+        <div class="vai-section-text">${v.advice}</div>
+      </div>`;
 
     list.appendChild(card);
     await sleep(200);
@@ -276,10 +295,21 @@ window.startReading=async function(){
 
   // save
   try{
+    var resultText=`🌟 ดาวประจำวันเกิด: ดาว${calc.planetName} (วัน${calc.dayName})\n\n`;
+    for(var s=0;s<calc.vais.length;s++){
+      var vv=calc.vais[s];
+      resultText+=`${vv.vaiEmoji} ${vv.vaiName} (${vv.vaiAge}) — ดาว${vv.planetName}${vv.isOwnDay?' ⭐ ดาวเดียวกับวันเกิด':''}\n`;
+      resultText+=`${vv.title}\n`;
+      resultText+=`💼 การงาน/การเงิน: ${vv.career}\n`;
+      resultText+=`💗 ความรัก/ครอบครัว: ${vv.love}\n`;
+      resultText+=`🌿 สุขภาพ: ${vv.health}\n`;
+      resultText+=`✨ คำแนะนำ: ${vv.advice}`;
+      if(s<calc.vais.length-1) resultText+=`\n\n`;
+    }
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'ตรีวัย',
       question:`วัน${calc.dayName} ${day}/${month}/${year}`,
-      result:`ดาว${calc.planetName} | ปฐม:ดาว${calc.vais[0].planetName} | มัชฌิม:ดาว${calc.vais[1].planetName} | ปัจฉิม:ดาว${calc.vais[2].planetName}`,
+      result:resultText,
       createdAt:serverTimestamp()
     });
   }catch(e){console.error(e);}
