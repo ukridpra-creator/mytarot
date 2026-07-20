@@ -216,6 +216,33 @@
       } catch(e) { return '—'; }
     }
 
+    // ── กรอง tag ดิบออกจากผลดูดวง ──
+    // หน้าดูดวงหลายหน้าในเว็บใช้ tag แบบ <GREETING>...</GREETING> หรือ [POS1]...[SUMMARY]
+    // ในการจัดโครงสร้างคำตอบจาก AI แล้วบันทึกข้อความดิบ (พร้อม tag) ลง Firestore ตรงๆ
+    // ฟังก์ชันนี้แปลงข้อความดิบให้อ่านง่าย โดยไม่ต้องแก้ข้อมูลเดิมที่บันทึกไว้แล้วเลย
+    function cleanReadingText(raw) {
+      if (!raw) return '';
+      let text = String(raw);
+
+      // ตัด tag แบบ XML เช่น <GREETING>, </GREETING>, <BODY> ฯลฯ — ปิด tag ให้ขึ้นย่อหน้าใหม่
+      text = text.replace(/<\/?[A-Z_]+>/g, (m) => (m.startsWith('</') ? '\n\n' : ''));
+
+      // ตัด tag แบบวงเล็บเหลี่ยม เช่น [GREETING], [POS1], [SUMMARY] — ขึ้นย่อหน้าใหม่ทุกครั้ง
+      text = text.replace(/\[[A-Z0-9_]+\]/g, '\n\n');
+
+      // ลบบรรทัดว่างที่ซ้ำเกิน 2 ครั้งติดกันให้เหลือแค่ 1 ช่องว่าง
+      text = text.replace(/\n{3,}/g, '\n\n');
+
+      return text.trim();
+    }
+
+    // ตัดให้สั้นสำหรับพรีวิวในการ์ด (ไม่ตัดกลางคำ HTML entity)
+    function previewText(raw, maxLen) {
+      const cleaned = cleanReadingText(raw).replace(/\n+/g, ' ');
+      if (cleaned.length <= maxLen) return cleaned;
+      return cleaned.slice(0, maxLen).trim() + '…';
+    }
+
     function renderPage(page) {
       currentPage = page;
       const total = allItems.length;
@@ -249,7 +276,7 @@
             <div class="item-date">${formatDate(item.createdAt)}</div>
           </div>
           ${item.question ? `<div class="item-question">📝 ${item.question}</div>` : ''}
-          <div class="item-result">${item.result || ''}</div>
+          <div class="item-result">${previewText(item.result, 120)}</div>
           <div class="item-arrow">›</div>
         </div>`;
       }).join('');
@@ -270,7 +297,7 @@
       document.getElementById('detailType').textContent = item.type || 'ดูดวง';
       document.getElementById('detailDate').textContent = formatDate(item.createdAt);
       document.getElementById('detailQuestion').textContent = item.question ? `📝 ${item.question}` : '';
-      document.getElementById('detailResult').textContent = item.result || '';
+      document.getElementById('detailResult').textContent = cleanReadingText(item.result);
       document.getElementById('detailOverlay').classList.add('show');
     }
 
