@@ -204,7 +204,10 @@ window.showToday = async function(signIdx){
   const cards = box.querySelectorAll('.cat-card');
   for (let i=0;i<cards.length;i++){ await sleep(120); cards[i].classList.add('visible'); }
 
-  if (typeof window.__dailySave === 'function') window.__dailySave('ราศี'+r.userSign, r.aspectName);
+  if (typeof window.__dailySave === 'function') {
+    const fullResult = `🌙 จันทร์วันนี้อยู่ราศี${r.moonSign} — ${r.aspectName}\n${starStr}\n\n💼 การงาน\n${r.work}\n\n💰 การเงิน\n${r.money}\n\n💕 ความรัก\n${r.love}\n\n🩺 สุขภาพ\n${r.health}`;
+    window.__dailySave('ราศี'+r.userSign, fullResult);
+  }
 };
 
 window.resetView = function(){
