@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
   <style>
-    body { padding-bottom: 80px; }
+    body { padding-bottom: 80px; overflow-x:hidden; }
     .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
     .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
     .page-title { font-size:18px; font-weight:700; color:white; }
@@ -59,11 +59,11 @@
     .aura-subtitle { font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:2px; margin-bottom:20px; }
     .result-section { border-radius:16px; padding:16px 20px; margin-bottom:12px; border-left:3px solid; }
     .result-section h3 { font-size:14px; font-weight:700; margin-bottom:8px; }
-    .result-section p { font-size:13px; line-height:1.9; color:rgba(255,255,255,0.8); }
+    .result-section p { font-size:13px; line-height:1.9; color:rgba(255,255,255,0.8); word-break:break-word; overflow-wrap:break-word; }
     .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
-    .info-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; }
+    .info-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; overflow:hidden; }
     .info-label { font-size:10px; color:var(--dim); margin-bottom:4px; }
-    .info-value { font-size:13px; font-weight:700; color:white; }
+    .info-value { font-size:13px; font-weight:700; color:white; word-break:break-word; overflow-wrap:break-word; }
     .cursor-blink { display:inline-block; width:2px; height:13px; margin-left:1px; animation:blink .7s infinite; vertical-align:middle; }
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     .btn-reset { width:100%; padding:14px; border-radius:16px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--dim); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }

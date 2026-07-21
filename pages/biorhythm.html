@@ -82,6 +82,15 @@
     /* 7 DAYS */
     .week-wrap { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:16px; }
     .week-title { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:12px; }
+
+    .ai-insight-wrap { background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(212,175,55,0.05)); border:1px solid rgba(124,58,237,0.25); border-radius:16px; padding:16px; margin-bottom:16px; }
+    .ai-insight-title { font-size:13px; color:var(--purple-light,#a78bfa); font-weight:700; margin-bottom:10px; }
+    .ai-insight-text { font-size:13px; line-height:1.9; color:rgba(255,255,255,0.8); white-space:pre-wrap; min-height:20px; }
+    .ai-insight-loading { display:flex; align-items:center; gap:8px; font-size:12px; color:rgba(255,255,255,0.4); }
+    .ai-dots span { display:inline-block; width:5px; height:5px; border-radius:50%; background:#a78bfa; margin-right:3px; animation:aiBounce 1.2s ease-in-out infinite; }
+    .ai-dots span:nth-child(2){animation-delay:0.15s;} .ai-dots span:nth-child(3){animation-delay:0.3s;}
+    @keyframes aiBounce { 0%,80%,100%{transform:translateY(0);opacity:0.5;} 40%{transform:translateY(-4px);opacity:1;} }
+    .double-critical-badge { display:inline-block; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); color:#f87171; font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; margin-left:6px; }
     .week-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
     .week-day { font-size:11px; color:var(--dim); width:50px; flex-shrink:0; }
     .week-bars { display:flex; gap:3px; flex:1; }
@@ -199,7 +208,7 @@
         <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>อารมณ์</div>
         <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>สติปัญญา</div>
       </div>
-      <canvas id="bioGraph" height="160"></canvas>
+      <canvas id="bioGraph" height="184"></canvas>
     </div>
 
     <!-- CRITICAL DAYS -->
@@ -212,6 +221,14 @@
     <div class="week-wrap">
       <div class="week-title">📅 7 วันข้างหน้าค่ะ</div>
       <div id="weekList"></div>
+    </div>
+
+    <!-- AI INSIGHT -->
+    <div class="ai-insight-wrap" id="aiInsightWrap" style="display:none;">
+      <div class="ai-insight-title">🔮 คำแนะนำเจาะลึกวันนี้</div>
+      <div class="ai-insight-text" id="aiInsightText">
+        <div class="ai-insight-loading"><div class="ai-dots"><span></span><span></span><span></span></div>กำลังวิเคราะห์ภาพรวมให้ค่ะ...</div>
+      </div>
     </div>
 
     <button class="btn-reset" onclick="resetResult()">🔄 คำนวณใหม่อีกครั้ง</button>
@@ -329,7 +346,9 @@ function drawGraph(birthDate, today) {
   const canvas = document.getElementById('bioGraph');
   const W = canvas.offsetWidth || 320;
   canvas.width = W;
-  const H = 160;
+  const H = 184;
+  const LABEL_H = 22; // พื้นที่ด้านล่างไว้ใส่วันที่
+  const plotH = H - LABEL_H; // ความสูงจริงของกราฟ (ไม่รวมแถบวันที่)
   const ctx = canvas.getContext('2d');
   const days = 30;
   const startDay = -7; // 7 วันก่อน ถึง 23 วันข้างหน้า
@@ -349,8 +368,8 @@ function drawGraph(birthDate, today) {
     ctx.lineWidth = 1;
     for(let y=0;y<=4;y++){
       ctx.beginPath();
-      ctx.moveTo(0, y*H/4);
-      ctx.lineTo(W, y*H/4);
+      ctx.moveTo(0, y*plotH/4);
+      ctx.lineTo(W, y*plotH/4);
       ctx.stroke();
     }
 
@@ -359,8 +378,8 @@ function drawGraph(birthDate, today) {
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4,4]);
     ctx.beginPath();
-    ctx.moveTo(0, H/2);
-    ctx.lineTo(W, H/2);
+    ctx.moveTo(0, plotH/2);
+    ctx.lineTo(W, plotH/2);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -370,7 +389,7 @@ function drawGraph(birthDate, today) {
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(todayX, 0);
-    ctx.lineTo(todayX, H);
+    ctx.lineTo(todayX, plotH);
     ctx.stroke();
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
     ctx.font = '9px Sarabun';
@@ -391,7 +410,7 @@ function drawGraph(birthDate, today) {
         const d = today0 + (startDay + x);
         const val = bio(d, periods[k]);
         const px = (x/days)*W;
-        const py = H/2 - val*(H/2-8);
+        const py = plotH/2 - val*(plotH/2-8);
         if(x===0) ctx.moveTo(px,py);
         else ctx.lineTo(px,py);
       }
@@ -405,21 +424,47 @@ function drawGraph(birthDate, today) {
         const d=today0+(startDay+x);
         const val=bio(d,periods[k]);
         const px=(x/days)*W;
-        const py=H/2-val*(H/2-8);
+        const py=plotH/2-val*(plotH/2-8);
         if(x===0)ctx.moveTo(px,py);
         else ctx.lineTo(px,py);
       }
-      ctx.lineTo((maxI/days)*W,H/2);
-      ctx.lineTo(0,H/2);
+      ctx.lineTo((maxI/days)*W,plotH/2);
+      ctx.lineTo(0,plotH/2);
       ctx.fillStyle=colors[k];
       ctx.fill();
       ctx.globalAlpha=1;
     });
 
+    // DATE LABELS ใต้กราฟ (ทุก 5 วัน กันข้อความรก)
+    const thShort = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '9px Sarabun';
+    for (let x = 0; x <= days; x += 5) {
+      const labelDate = new Date(today.getTime());
+      labelDate.setDate(today.getDate() + (startDay + x));
+      const px = (x/days)*W;
+      ctx.textAlign = x===0 ? 'left' : (x>=days ? 'right' : 'center');
+      ctx.fillText(labelDate.getDate()+' '+thShort[labelDate.getMonth()+1], px, plotH+16);
+    }
+    ctx.textAlign = 'left';
+
     frame++;
     if(frame <= totalFrames) requestAnimationFrame(drawFrame);
   }
   drawFrame();
+}
+
+// TODAY CRITICAL STATUS (double/triple transition day check ตามทฤษฎีจริง)
+function getTodayCriticalStatus(birthDate, today) {
+  const t0 = daysSince(birthDate, today);
+  const cycleNames = {23:'ร่างกาย', 28:'อารมณ์', 33:'สติปัญญา'};
+  const hit = [];
+  [23,28,33].forEach(p => {
+    const prev = bio(t0-1, p);
+    const curr = bio(t0, p);
+    if (prev * curr < 0 || Math.abs(curr) < 0.02) hit.push(cycleNames[p]);
+  });
+  return hit; // เช่น [] / ['ร่างกาย'] / ['ร่างกาย','อารมณ์'] (double) / ครบ 3 (triple)
 }
 
 // CRITICAL DAYS
@@ -490,13 +535,35 @@ window.startReading = async function() {
   const btn=document.getElementById('readBtn');
   btn.disabled=true; btn.textContent='⏳ กำลังคำนวณ...';
 
-  // ตัดเหรียญ
+  const birthDate = new Date(year, month-1, day);
+  const today = new Date();
+  const t0 = daysSince(birthDate, today);
+
+  const p  = bio(t0, 23);
+  const e  = bio(t0, 28);
+  const int= bio(t0, 33);
+  const physPct=toPct(p), emoPct=toPct(e), intelPct=toPct(int);
+  const todayCritical = getTodayCriticalStatus(birthDate, today);
+
+  let aiText = '';
   try{
     const idToken=await currentUser.getIdToken();
+    const criticalNote = todayCritical.length>=2
+      ? `⚠️ วันนี้เป็นวันวิกฤตซ้อน (${todayCritical.join(' + ')} ตัดศูนย์พร้อมกัน) ต้องเน้นย้ำเป็นพิเศษ`
+      : (todayCritical.length===1 ? `วันนี้วงจร${todayCritical[0]}กำลังตัดศูนย์ (วันวิกฤต)` : 'วันนี้ไม่มีวงจรตัดศูนย์');
+    const prompt = `คุณเป็นผู้เชี่ยวชาญไบโอริทึ่ม (Biorhythm) พูดภาษาไทย สุภาพ อบอุ่น ใช้คำลงท้าย "ค่ะ"
+ข้อมูลวันนี้ของผู้ใช้:
+- ร่างกาย (23 วัน): ${physPct}%
+- อารมณ์ (28 วัน): ${emoPct}%
+- สติปัญญา (33 วัน): ${intelPct}%
+- ${criticalNote}
+
+เขียนคำแนะนำภาพรวมสั้นๆ ไม่เกิน 5-6 ประโยค สังเคราะห์ทั้ง 3 วงจรเข้าด้วยกัน (ไม่ใช่แยกอธิบายทีละอัน) บอกว่าวันนี้ควรโฟกัสเรื่องอะไรเป็นพิเศษ ควรระวังอะไร ถ้ามีวันวิกฤตซ้อนให้เน้นย้ำเรื่องนั้นก่อน ห้ามใช้ markdown ห้ามมีคำนำ ตอบเนื้อหาคำแนะนำตรงๆเลย`;
+
     const res=await fetch('/api/claude',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'biorhythm',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'bio'}]})
+      body:JSON.stringify({service:'biorhythm',model:'claude-sonnet-4-6',max_tokens:600,messages:[{role:'user',content:prompt}]})
     });
     const nb=res.headers.get('X-New-Coin-Balance');
     if(nb!=null)updateCoinUI(parseInt(nb));
@@ -506,16 +573,15 @@ window.startReading = async function() {
       else alert('เกิดข้อผิดพลาดค่ะ');
       btn.disabled=false;btn.textContent='📊 วิเคราะห์กราฟชีวิตเลยค่ะ';return;
     }
-    if(res.body){const r=res.body.getReader();while(true){const{done}=await r.read();if(done)break;}}
+    if(res.body){
+      const reader=res.body.getReader(); const decoder=new TextDecoder();
+      while(true){
+        const {done,value}=await reader.read();
+        if(done)break;
+        aiText+=decoder.decode(value,{stream:true});
+      }
+    }
   }catch(e){console.error(e);btn.disabled=false;btn.textContent='📊 วิเคราะห์กราฟชีวิตเลยค่ะ';return;}
-
-  const birthDate = new Date(year, month-1, day);
-  const today = new Date();
-  const t0 = daysSince(birthDate, today);
-
-  const p  = bio(t0, 23);
-  const e  = bio(t0, 28);
-  const int= bio(t0, 33);
 
   // Today date
   const thMonths=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
@@ -531,7 +597,7 @@ window.startReading = async function() {
   // PHYS
   const physCard=document.getElementById('physCard');
   physCard.classList.add('visible');
-  const physPct=toPct(p);
+  
   document.getElementById('physPct').textContent = physPct+'%';
   document.getElementById('physTrend').textContent = getTrend(p);
   document.getElementById('physText').textContent = PHYS_TEXT[getLevel(p)];
@@ -541,7 +607,7 @@ window.startReading = async function() {
   // EMO
   const emoCard=document.getElementById('emoCard');
   emoCard.classList.add('visible');
-  const emoPct=toPct(e);
+  
   document.getElementById('emoPct').textContent = emoPct+'%';
   document.getElementById('emoTrend').textContent = getTrend(e);
   document.getElementById('emoText').textContent = EMO_TEXT[getLevel(e)];
@@ -551,7 +617,7 @@ window.startReading = async function() {
   // INTEL
   const intelCard=document.getElementById('intelCard');
   intelCard.classList.add('visible');
-  const intelPct=toPct(int);
+  
   document.getElementById('intelPct').textContent = intelPct+'%';
   document.getElementById('intelTrend').textContent = getTrend(int);
   document.getElementById('intelText').textContent = INTEL_TEXT[getLevel(int)];
@@ -596,10 +662,17 @@ window.startReading = async function() {
     wl.appendChild(div);
   });
 
+  // AI INSIGHT display
+  document.getElementById('aiInsightWrap').style.display = 'block';
+  document.getElementById('aiInsightText').textContent = aiText || 'ไม่สามารถโหลดคำแนะนำได้ในตอนนี้ค่ะ ลองใหม่อีกครั้งนะคะ';
+  const insightTitleEl = document.querySelector('#aiInsightWrap .ai-insight-title');
+  insightTitleEl.innerHTML = '🔮 คำแนะนำเจาะลึกวันนี้' + (todayCritical.length>=2 ? `<span class="double-critical-badge">⚠️ วันวิกฤตซ้อน ${todayCritical.length} วงจร</span>` : '');
+
   // save
   try{
     const criticalText = criticals.length ? criticals.map(c=>`⚠️ ${c.dateStr}: ${c.cycle} ตัดศูนย์ — ${c.warn}`).join('\n') : 'ไม่มีวันวิกฤตในช่วงนี้ค่ะ';
-    const fullResult = `📊 กราฟชีวิตวันที่ ${day}/${month}/${year}\n\n💪 ร่างกาย ${physPct}% (${document.getElementById('physTrend').textContent})\n${PHYS_TEXT[getLevel(p)]}\n\n💗 อารมณ์ ${emoPct}% (${document.getElementById('emoTrend').textContent})\n${EMO_TEXT[getLevel(e)]}\n\n🧠 สติปัญญา ${intelPct}% (${document.getElementById('intelTrend').textContent})\n${INTEL_TEXT[getLevel(int)]}\n\n📅 วันวิกฤต\n${criticalText}`;
+    const todayCriticalText = todayCritical.length ? `\n\n${todayCritical.length>=2?'⚠️ วันวิกฤตซ้อนวันนี้':'วันวิกฤตวันนี้'}: ${todayCritical.join(' + ')} ตัดศูนย์` : '';
+    const fullResult = `📊 กราฟชีวิตวันที่ ${day}/${month}/${year}\n\n💪 ร่างกาย ${physPct}% (${document.getElementById('physTrend').textContent})\n${PHYS_TEXT[getLevel(p)]}\n\n💗 อารมณ์ ${emoPct}% (${document.getElementById('emoTrend').textContent})\n${EMO_TEXT[getLevel(e)]}\n\n🧠 สติปัญญา ${intelPct}% (${document.getElementById('intelTrend').textContent})\n${INTEL_TEXT[getLevel(int)]}${todayCriticalText}\n\n📅 วันวิกฤตที่จะถึง\n${criticalText}\n\n🔮 คำแนะนำเจาะลึกวันนี้\n${aiText}`;
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Biorhythm กราฟชีวิต',
       question:`${day}/${month}/${year}`,
@@ -613,6 +686,8 @@ window.startReading = async function() {
 
 window.resetResult = function(){
   document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('aiInsightWrap').style.display='none';
+  document.getElementById('aiInsightText').innerHTML = '<div class="ai-insight-loading"><div class="ai-dots"><span></span><span></span><span></span></div>กำลังวิเคราะห์ภาพรวมให้ค่ะ...</div>';
   ['physCard','emoCard','intelCard'].forEach(id=>document.getElementById(id).classList.remove('visible'));
   window.scrollTo({top:0,behavior:'smooth'});
 };

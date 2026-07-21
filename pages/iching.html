@@ -530,6 +530,10 @@ window.getReading = async function() {
 
     if (!res.ok) {
       const err = await res.json().catch(()=>({}));
+      ['secMeaning','secReading','secAdvice'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = 'ไม่สามารถขอคำทำนายได้ค่ะ ลองใหม่อีกครั้งนะคะ';
+      });
       if (err.error === 'insufficient_coins') alert('เหรียญไม่พอนะคะ 🪙');
       else alert('เกิดข้อผิดพลาดค่ะ');
       btn.disabled = false; btn.textContent = '☯ ขอคำทำนายจากอี้จิง'; return;
@@ -554,6 +558,7 @@ window.getReading = async function() {
     await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
       type: 'อี้จิง',
       hexagram: hexNum + ' — ' + hex.th,
+      question: question ? question : 'ไม่ได้ระบุคำถาม — อี้จิงทำนายตามสิ่งที่ต้องการสื่อค่ะ',
       result: fullText,
       createdAt: serverTimestamp()
     });
@@ -563,7 +568,10 @@ window.getReading = async function() {
 
   } catch(e) {
     console.error(e);
-    document.getElementById('secAdvice').textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+    ['secMeaning','secReading','secAdvice'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+    });
   }
 
   btn.disabled = false; btn.textContent = '☯ ขอคำทำนายจากอี้จิง';
