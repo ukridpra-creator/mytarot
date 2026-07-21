@@ -278,10 +278,15 @@ window.selectBlood = async function(type) {
   // save
   if (currentUser) {
     try {
+      const goodTypes = data.compatible.good.map(t => BLOOD_LABELS[t]).join(', ');
+      const adjustTypes = data.compatible.adjust.length ? data.compatible.adjust.map(t => BLOOD_LABELS[t]).join(', ') : 'เข้ากันได้กับทุกกรุ๊ปค่ะ';
+      const fullResult = data.personality + '\n\n' + data.career + '\n\n' + data.money + '\n\n' + data.love
+        + '\n\n💑 กรุ๊ปเลือดที่เข้ากันดี: ' + goodTypes
+        + '\n🤝 กรุ๊ปเลือดที่ต้องปรับตัวหน่อย: ' + adjustTypes;
       await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
         type: 'ดูดวงกรุ๊ปเลือด',
         question: 'กรุ๊ป ' + type + ' — ' + genderTH,
-        result: data.personality + '\n\n' + data.career + '\n\n' + data.money + '\n\n' + data.love,
+        result: fullResult,
         createdAt: serverTimestamp()
       });
     } catch(e) { console.error(e); }
