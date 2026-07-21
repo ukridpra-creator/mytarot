@@ -119,6 +119,20 @@
   <button class="btn-accept" id="btnAccept" onclick="acceptReading()">🍀 รับคำทำนาย</button>
 </div>
 
+<!-- LOGIN MODAL -->
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(245,158,11,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🍀</div>
+    <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อเล่นและบันทึกประวัติดูดวงค่ะ</div>
+    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    </button>
+    <button onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+  </div>
+</div>
+<style>.login-required-overlay.show { display:flex !important; }</style>
+
 <div class="page-header">
   <a href="oracle.html" class="back-btn">←</a>
   <div class="page-title">🍀 The Fortune Code</div>
@@ -219,7 +233,7 @@ onAuthStateChanged(auth,async user=>{
     document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
     document.getElementById('menuEmail').textContent=user.email;
     if(typeof setupCheckin==='function')setupCheckin(user,'../');
-  } else {updateCoinUI('—');setAvatarDisplay('');}
+  } else {updateCoinUI('—');setAvatarDisplay('');document.getElementById('loginRequiredOverlay').classList.add('show');}
 });
 
 window.__luckSave = async function(cards, result){
