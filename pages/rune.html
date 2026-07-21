@@ -199,10 +199,8 @@
     <div class="slot">
       <div class="slot-card" id="slot0">
         <div class="slot-card-inner" id="slotInner0">
-          <!-- back: รูปหลังไพ่ -->
-          <div class="slot-card-back">
-            <img src="../images/rune/back.png" alt="rune back">
-          </div>
+          <!-- back: รูปหลังไพ่ (โผล่เฉพาะตอนเลือกไพ่แล้วเท่านั้น) -->
+          <div class="slot-card-back" id="slotBack0"></div>
           <!-- front: รูปหน้าไพ่ (เปิดตอน acceptReading) -->
           <div class="slot-card-front"><img id="slotImg0" src=""></div>
         </div>
@@ -213,9 +211,7 @@
     <div class="slot">
       <div class="slot-card" id="slot1">
         <div class="slot-card-inner" id="slotInner1">
-          <div class="slot-card-back">
-            <img src="../images/rune/back.png" alt="rune back">
-          </div>
+          <div class="slot-card-back" id="slotBack1"></div>
           <div class="slot-card-front"><img id="slotImg1" src=""></div>
         </div>
       </div>
@@ -225,9 +221,7 @@
     <div class="slot">
       <div class="slot-card" id="slot2">
         <div class="slot-card-inner" id="slotInner2">
-          <div class="slot-card-back">
-            <img src="../images/rune/back.png" alt="rune back">
-          </div>
+          <div class="slot-card-back" id="slotBack2"></div>
           <div class="slot-card-front"><img id="slotImg2" src=""></div>
         </div>
       </div>
@@ -404,9 +398,11 @@ function resetSlots() {
   for (let i = 0; i < 3; i++) {
     const inner = document.getElementById('slotInner' + i);
     const img = document.getElementById('slotImg' + i);
+    const back = document.getElementById('slotBack' + i);
     const name = document.getElementById('slotName' + i);
     inner.classList.remove('flipped');
     img.src = '';
+    back.innerHTML = ''; // ว่างเปล่า จนกว่าจะเลือกไพ่ลงสล็อตนี้จริงๆ
     name.textContent = '—';
   }
 }
@@ -431,14 +427,17 @@ function updateSlots() {
     const rune = selected[i];
     const inner = document.getElementById('slotInner' + i);
     const img = document.getElementById('slotImg' + i);
+    const back = document.getElementById('slotBack' + i);
     const name = document.getElementById('slotName' + i);
     if (rune) {
-      // แสดงหลังไพ่ (back face) — ยังไม่ flip
-      // back face มี img แล้วใน HTML ไม่ต้องทำอะไร
+      // เลือกไพ่ลงสล็อตนี้แล้ว — ค่อยโผล่ภาพหลังไพ่ตอนนี้เอง (ยังไม่ flip)
+      back.innerHTML = '<img src="../images/rune/back.png" alt="rune back">';
       inner.classList.remove('flipped');
       img.src = ''; // front ยังว่างอยู่ เปิดตอน acceptReading
       name.textContent = '?';
     } else {
+      // ยังไม่ได้เลือกไพ่ลงสล็อตนี้ — ให้เป็นกรอบว่างเปล่าจริงๆ
+      back.innerHTML = '';
       inner.classList.remove('flipped');
       img.src = '';
       name.textContent = '—';

@@ -491,7 +491,10 @@ window.showSlip = async function() {
   if (currentUser) {
     try {
       await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
-        type: 'เซียมซีกวนอิม', result: currentEntry.grade_th + ' — ' + currentEntry.grade, createdAt: serverTimestamp()
+        type: 'เซียมซีกวนอิม',
+        result: '🎋 ระดับ: ' + currentEntry.grade_th + ' (' + currentEntry.grade + ')'
+          + '\n\n📜 บทกวี:\n' + currentEntry.poem.join('\n'),
+        createdAt: serverTimestamp()
       });
     } catch(e) { console.error(e); }
   }

@@ -464,7 +464,8 @@ window.showSlip = async function() {
     try {
       await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
         type: 'เซียมซีญี่ปุ่น',
-        result: currentEntry.level_th + ' — ' + currentEntry.level_jp,
+        result: '🎋 ระดับ: ' + currentEntry.level_th + ' (' + currentEntry.level_jp + ')'
+          + '\n\n📜 บทกวี:\n' + currentEntry.poem.join('\n'),
         createdAt: serverTimestamp()
       });
     } catch(e) { console.error(e); }
