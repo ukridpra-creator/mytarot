@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ไพ่วัดพลังโชคลาภ Triple Fortune Oracle | My Tarot</title>
+  <title>ไพ่วัดพลังโชคลาภ The Fortune Code | My Tarot</title>
   <meta name="description" content="เปิดไพ่ออราเคิล 3 ใบ วัดพลังโชคลาภและการเงินของคุณ จากสำรับไพ่ 30 ใบ พร้อมเปอร์เซ็นต์และระดับพลังงานฟรีค่ะ">
-  <meta name="keywords" content="ไพ่ออราเคิลโชคลาภ,triple fortune,ไพ่วัดโชคลาภ,ดูดวงการเงิน">
-  <meta property="og:title" content="Triple Fortune Oracle — My Tarot">
+  <meta name="keywords" content="ไพ่ออราเคิลโชคลาภ,the fortune code,ไพ่วัดโชคลาภ,ดูดวงการเงิน">
+  <meta property="og:title" content="The Fortune Code — My Tarot">
   <meta property="og:description" content="เปิดไพ่ 3 ใบ วัดพลังโชคลาภและการเงินของคุณฟรีค่ะ">
   <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-luck">
   <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
@@ -62,10 +62,10 @@
     .reveal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.92); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 16px; }
     .reveal-overlay.show { display: flex; }
     .reveal-title { font-size: 16px; color: #f59e0b; font-weight: 700; margin-bottom: 20px; text-align: center; }
-    .reveal-row { display: flex; gap: 18px; justify-content: center; margin-bottom: 8px; align-items: flex-start; }
+    .reveal-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; align-items: flex-start; }
     .reveal-card { text-align: center; }
     .reveal-card-outer { position: relative; margin-bottom: 8px; } /* ไม่ clip — ให้โคลเวอร์โผล่เต็มใบไม่โดนตัด */
-    .reveal-card-wrap { width: 84px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; border: 2px solid rgba(245,158,11,0.5); perspective: 600px; }
+    .reveal-card-wrap { width: 108px; aspect-ratio: 2/3; border-radius: 12px; overflow: hidden; border: 2px solid rgba(245,158,11,0.5); perspective: 700px; }
     .reveal-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; }
     .reveal-card-inner.flipped { transform: rotateY(180deg); }
     .reveal-card-front, .reveal-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; overflow: hidden; }
@@ -76,7 +76,7 @@
     .reveal-card-pos { font-size: 8px; color: var(--dim); margin-top: 1px; }
 
     /* CLOVER SVG — วางนอกกรอบที่ถูก clip เพื่อไม่ให้โดนตัดขอบ */
-    .clover-badge { position: absolute; top: -10px; right: -10px; width: 28px; height: 28px; opacity: 0; transform: scale(0.3) rotate(-30deg); transition: all 0.45s cubic-bezier(.34,1.56,.64,1); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); z-index: 5; }
+    .clover-badge { position: absolute; top: -12px; right: -12px; width: 34px; height: 34px; opacity: 0; transform: scale(0.3) rotate(-30deg); transition: all 0.45s cubic-bezier(.34,1.56,.64,1); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)); z-index: 5; }
     .clover-badge.show { opacity: 1; transform: scale(1) rotate(0deg); }
     .clover-badge svg { width: 100%; height: 100%; }
 
@@ -89,7 +89,7 @@
     .result-cards-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 20px; align-items: flex-start; }
     .result-card { text-align: center; }
     .result-card-outer { position: relative; margin-bottom: 6px; }
-    .result-card-img { width: 64px; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; border: 1px solid rgba(245,158,11,0.4); }
+    .result-card-img { width: 90px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; border: 1px solid rgba(245,158,11,0.4); }
     .result-card-img img { width: 100%; height: 100%; object-fit: cover; }
     .result-card-name { font-size: 9px; color: #f59e0b; font-weight: 700; line-height: 1.2; }
     .result-card-pos { font-size: 8px; color: var(--dim); }
@@ -121,7 +121,7 @@
 
 <div class="page-header">
   <a href="oracle.html" class="back-btn">←</a>
-  <div class="page-title">🍀 Triple Fortune Oracle</div>
+  <div class="page-title">🍀 The Fortune Code</div>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -148,7 +148,7 @@
     <div style="margin-bottom:12px">
       <img src="../images/mascot-luck-oracle.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>🍀</div>')">
     </div>
-    <div class="hero-title">Triple Fortune Oracle</div>
+    <div class="hero-title">The Fortune Code</div>
     <div class="hero-desc">เลือกไพ่ 3 ใบจากสำรับ 30 ใบ<br>วัดพลังโชคลาภและการเงินของคุณพี่ค่ะ</div>
     <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
   </div>
@@ -228,7 +228,7 @@ window.__luckSave = async function(cards, result){
     const cardNames = cards.map((c,i) => LUCK_ROLES[i].label + ': ' + c.nameTh + ' (' + (c.score>0?'+':'') + c.score + ')').join(' | ');
     const roleTexts = cards.map((c,i) => '🎴 ' + LUCK_ROLES[i].label + ': ' + c.nameTh + ' — ' + c.meaning).join('\n\n');
     await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
-      type:'Triple Fortune Oracle',
+      type:'The Fortune Code',
       question: cardNames,
       result: '🍀 พลังโชคลาภรวม: ' + result.pct + '% (' + result.tier.label + ')'
         + '\n\n' + result.tier.prediction
@@ -414,8 +414,8 @@ document.addEventListener('DOMContentLoaded', () => { shuffle(); });
 
 <!-- SEO TEXT -->
 <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
-  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">Triple Fortune Oracle คืออะไร?</h2>
-  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">Triple Fortune Oracle คือไพ่ออราเคิลสำรับพิเศษ 30 ใบที่ออกแบบมาเพื่อวัดพลังงานด้านเงินทองและโชคลาภโดยเฉพาะค่ะ แบ่งเป็น 3 กลุ่มพลัง ได้แก่ The Takers (พลังแห่งการสูญเสีย) The Weavers (พลังแห่งจังหวะและการเปลี่ยนแปลง) และ The Givers (พลังแห่งความมั่งคั่ง) ที่ My Tarot คุณพี่สามารถเลือกไพ่ 3 ใบเพื่อดูพลังหลัก พลังสนับสนุนหรือแรงต้าน และผลลัพธ์ พร้อมคำนวณเปอร์เซ็นต์พลังโชคลาภโดยรวมและคำทำนายตามระดับพลังงานได้ฟรีค่ะ</p>
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">The Fortune Code คืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">The Fortune Code คือไพ่ออราเคิลสำรับพิเศษ 30 ใบที่ออกแบบมาเพื่อวัดพลังงานด้านเงินทองและโชคลาภโดยเฉพาะค่ะ แบ่งเป็น 3 กลุ่มพลัง ได้แก่ The Takers (พลังแห่งการสูญเสีย) The Weavers (พลังแห่งจังหวะและการเปลี่ยนแปลง) และ The Givers (พลังแห่งความมั่งคั่ง) ที่ My Tarot คุณพี่สามารถเลือกไพ่ 3 ใบเพื่อดูพลังหลัก พลังสนับสนุนหรือแรงต้าน และผลลัพธ์ พร้อมคำนวณเปอร์เซ็นต์พลังโชคลาภโดยรวมและคำทำนายตามระดับพลังงานได้ฟรีค่ะ</p>
 </div>
 
 </body>
