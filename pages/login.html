@@ -91,6 +91,7 @@
     <div class="verify-sub">พริปตาส่งลิงค์ยืนยันไปที่</div>
     <div class="verify-email" id="verifyEmail"></div>
     <div class="verify-sub">กดลิงค์ในเมลแล้วกลับมากดปุ่มด้านล่างค่ะ</div>
+    <div class="verify-sub" style="color:#f59e0b;">📁 ถ้าไม่เจอในกล่องหลัก ลองเช็คใน "อีเมลขยะ / Spam / Junk" ด้วยนะคะ<br>บางครั้งอีเมลอาจใช้เวลาสักครู่กว่าจะมาถึงค่ะ</div>
     <button class="btn-resend" id="btnResend" onclick="resendVerification()">📨 ส่งอีเมลยืนยันอีกครั้ง</button>
     <button class="btn-back" onclick="backToLogin()">← กลับ</button>
   </div>
@@ -317,7 +318,7 @@ window.resendVerification=async function(){
   btn.disabled=true;btn.textContent='⏳ กำลังส่ง...';
   try{
     await sendEmailVerification(pendingUser);
-    btn.textContent='✅ ส่งแล้วค่ะ เช็ค email ด้วยนะคะ';
+    btn.textContent='✅ ส่งแล้วค่ะ เช็ค email (รวมถึงถังขยะ/สแปม) ด้วยนะคะ';
   }catch(e){
     btn.disabled=false;btn.textContent='📨 ส่งอีเมลยืนยันอีกครั้ง';
   }
