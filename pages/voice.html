@@ -393,7 +393,7 @@ async function analyzeAudio(stream) {
       const avgPitch = samples > 0 ? pitchSum/samples : 200;
       const avgVolume = samples > 0 ? volumeSum/samples : 50;
       resolve({ pitch: avgPitch, volume: avgVolume });
-    }, 4000);
+    }, 8000);
   });
 }
 
@@ -442,8 +442,8 @@ window.toggleRecord = async function() {
     const analysis = await analyzeAudio(micStream);
     allAnalysis.push(analysis);
 
-    // auto stop after 4s
-    setTimeout(() => { if(isRecording) stopRecord(); }, 4100);
+    // auto stop after 8s
+    setTimeout(() => { if(isRecording) stopRecord(); }, 8100);
 
   } else {
     stopRecord();
