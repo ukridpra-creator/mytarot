@@ -304,7 +304,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+import { getFirestore, doc, getDoc, collection, addDoc, deleteDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -462,7 +462,7 @@ window.showSlip = async function() {
   // บันทึก Firestore
   if (currentUser) {
     try {
-      await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+      window.lastReadingRef = await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
         type: 'เซียมซีญี่ปุ่น',
         result: '🎋 ระดับ: ' + currentEntry.level_th + ' (' + currentEntry.level_jp + ')'
           + '\n\n📜 บทกวี:\n' + currentEntry.poem.join('\n'),
@@ -513,6 +513,10 @@ window.doShare = async function() {
 };
 
 window.burnSlip = async function() {
+  if (window.lastReadingRef) {
+    try { await deleteDoc(window.lastReadingRef); } catch(e) { console.error(e); }
+    window.lastReadingRef = null;
+  }
   const canvas = await getSlipCanvas();
   const overlay = document.getElementById('burnOverlay');
   const img = document.getElementById('burn-slip-img');

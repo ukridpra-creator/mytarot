@@ -391,6 +391,14 @@ window.__ciCloseLoginOverlay = closeLoginOverlay;
 
 // ─── SETUP ───
 window.setupCheckin = async function(user, apiBase, googleSignIn) {
+  // 🔒 กันคนที่สมัครด้วยอีเมล/รหัสผ่านแต่ยังไม่กดยืนยันอีเมล ไม่ให้ใช้งานหน้าไหนในเว็บได้เลย
+  // (Google login จะมี emailVerified=true ให้อัตโนมัติอยู่แล้ว ไม่โดนเงื่อนไขนี้)
+  if (user && user.emailVerified === false) {
+    var loginPath = window.location.pathname.includes('/pages/') ? 'login.html' : 'pages/login.html';
+    window.location.href = loginPath + '?return=' + encodeURIComponent(window.location.href);
+    return;
+  }
+
   window.__ciCurrentUser = user;
   window.__ciApiBase     = apiBase || '';
   if (googleSignIn) window.__ciGoogleSignIn = googleSignIn;
