@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ไพ่วัดพลังโชคลาภ Triple Fortune Oracle | My Tarot</title>
+  <meta name="description" content="เปิดไพ่ออราเคิล 3 ใบ วัดพลังโชคลาภและการเงินของคุณ จากสำรับไพ่ 30 ใบ พร้อมเปอร์เซ็นต์และระดับพลังงานฟรีค่ะ">
+  <meta name="keywords" content="ไพ่ออราเคิลโชคลาภ,triple fortune,ไพ่วัดโชคลาภ,ดูดวงการเงิน">
+  <meta property="og:title" content="Triple Fortune Oracle — My Tarot">
+  <meta property="og:description" content="เปิดไพ่ 3 ใบ วัดพลังโชคลาภและการเงินของคุณฟรีค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/oracle-luck">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/oracle-luck-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .free-badge-inline { display:inline-block; margin-top:10px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px; }
+
+    .deck-hint { text-align:center; font-size:12px; color:var(--dim); margin-bottom:14px; }
+    .deck-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:16px; }
+    .deck-card { aspect-ratio:2/3; border-radius:6px; overflow:hidden; cursor:pointer; border:1.5px solid rgba(255,255,255,0.1); transition:all 0.2s; position:relative; }
+    .deck-card img { width:100%; height:100%; object-fit:cover; display:block; }
+    .deck-card.picked { opacity:0.25; pointer-events:none; }
+    .deck-card:active { transform:scale(0.94); }
+
+    .picked-row { display:flex; gap:10px; justify-content:center; margin-bottom:16px; min-height:20px; }
+    .picked-chip { font-size:11px; color:var(--gold); background:rgba(212,175,55,0.1); border:1px solid rgba(212,175,55,0.25); border-radius:20px; padding:4px 10px; }
+
+    .btn-shuffle { width:100%; padding:12px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.5); font-size:13px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; }
+
+    .result-box { display:none; margin-top:10px; }
+    .result-box.show { display:block; }
+
+    .cards-reveal-row { display:flex; gap:10px; justify-content:center; margin-bottom:20px; }
+    .reveal-slot { flex:1; max-width:110px; }
+    .reveal-card-wrap { aspect-ratio:2/3; border-radius:10px; overflow:hidden; position:relative; perspective:600px; margin-bottom:8px; }
+    .reveal-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 0.7s ease; }
+    .reveal-card-inner.flipped { transform:rotateY(180deg); }
+    .reveal-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; overflow:hidden; }
+    .reveal-back { transform:rotateY(0deg); }
+    .reveal-front { transform:rotateY(180deg); }
+    .reveal-face img { width:100%; height:100%; object-fit:cover; display:block; }
+    .clover-badge { position:absolute; top:-8px; right:-8px; font-size:22px; opacity:0; transform:scale(0.3) rotate(-30deg); transition:all 0.4s cubic-bezier(.34,1.56,.64,1); filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
+    .clover-badge.show { opacity:1; transform:scale(1) rotate(0deg); }
+    .reveal-role { font-size:10px; color:var(--gold); font-weight:700; text-align:center; margin-bottom:2px; }
+    .reveal-score { font-size:12px; font-weight:800; text-align:center; }
+
+    .summary-card { border-radius:20px; padding:22px; text-align:center; margin-bottom:16px; border:1.5px solid; }
+    .summary-pct { font-size:44px; font-weight:800; color:white; margin-bottom:4px; }
+    .summary-tier { font-size:14px; font-weight:700; margin-bottom:6px; }
+    .summary-score { font-size:11px; color:rgba(255,255,255,0.4); }
+
+    .role-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:10px; }
+    .role-header { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+    .role-name { font-size:12px; font-weight:700; color:var(--gold); }
+    .role-card-name { font-size:13px; font-weight:800; color:white; }
+    .role-text { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.8; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="oracle.html" class="back-btn">←</a>
+  <div class="page-title">🍀 Triple Fortune</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-luck-oracle.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>🍀</div>')">
+    </div>
+    <div class="hero-title">🍀 Triple Fortune Oracle</div>
+    <div class="hero-desc">เลือกไพ่ 3 ใบจากสำรับ 30 ใบ<br>วัดพลังโชคลาภและการเงินของคุณพี่ค่ะ</div>
+    <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
+  </div>
+
+  <div id="pickSection">
+    <div class="deck-hint">แตะเลือกไพ่ 3 ใบที่รู้สึกดึงดูดใจค่ะ (<span id="pickCount">0</span>/3)</div>
+    <div class="picked-row" id="pickedRow"></div>
+    <div class="deck-grid" id="deckGrid"></div>
+    <button class="btn-shuffle" onclick="renderDeck()">🔀 สับไพ่ใหม่</button>
+  </div>
+
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+window.__luckSave = async function(cards, result){
+  if(!window.currentUser) return;
+  try{
+    const cardNames = cards.map(c => c.nameTh + ' (' + (c.score>0?'+':'') + c.score + ')').join(', ');
+    const roleTexts = cards.map((c,i) => '🎴 ' + LUCK_ROLES[i].label + ': ' + c.nameTh + ' — ' + c.meaning).join('\n\n');
+    await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+      type:'Triple Fortune Oracle',
+      question: cardNames,
+      result: '🍀 พลังโชคลาภรวม: ' + result.pct + '% (' + result.tier.label + ')'
+        + '\n\n' + roleTexts,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
+</script>
+
+<script>
+let shuffledDeck = [];
+let pickedCards = [];
+
+function shuffleArray(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+window.renderDeck = function(){
+  shuffledDeck = shuffleArray(LUCK_CARDS);
+  pickedCards = [];
+  document.getElementById('pickCount').textContent = '0';
+  document.getElementById('pickedRow').innerHTML = '';
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('pickSection').style.display = 'block';
+
+  const grid = document.getElementById('deckGrid');
+  grid.innerHTML = shuffledDeck.map((card, i) => `
+    <div class="deck-card" id="deckCard${i}" onclick="pickCard(${i})">
+      <img src="../images/luck/b.png" alt="card back" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg,#7c3aed55,#a855f755)'">
+    </div>`).join('');
+};
+
+window.pickCard = function(idx){
+  if (pickedCards.length >= 3) return;
+  const card = shuffledDeck[idx];
+  if (pickedCards.find(c => c.id === card.id)) return;
+
+  pickedCards.push(card);
+  document.getElementById('deckCard' + idx).classList.add('picked');
+  document.getElementById('pickCount').textContent = pickedCards.length;
+
+  const row = document.getElementById('pickedRow');
+  row.innerHTML = pickedCards.map((c,i) => `<div class="picked-chip">${i+1}. ${c.nameTh}</div>`).join('');
+
+  if (pickedCards.length === 3) {
+    setTimeout(startReveal, 500);
+  }
+};
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function startReveal(){
+  document.getElementById('pickSection').style.display = 'none';
+  const box = document.getElementById('resultBox');
+  box.classList.add('show');
+
+  const result = calcLuckReading(pickedCards);
+
+  box.innerHTML = `
+    <div class="cards-reveal-row">
+      ${pickedCards.map((c,i) => `
+        <div class="reveal-slot">
+          <div class="reveal-card-wrap">
+            <div class="reveal-card-inner" id="revealInner${i}">
+              <div class="reveal-face reveal-back"><img src="../images/luck/b.png" onerror="this.parentElement.style.background='linear-gradient(160deg,#7c3aed55,#a855f755)'"></div>
+              <div class="reveal-face reveal-front"><img src="../images/luck/${c.id}.png" onerror="this.parentElement.style.background='linear-gradient(160deg,#f59e0b55,#7c3aed55)'"></div>
+            </div>
+            <div class="clover-badge" id="clover${i}"></div>
+          </div>
+          <div class="reveal-role">${LUCK_ROLES[i].label}</div>
+          <div class="reveal-score" style="color:${c.score<0?'#ef4444':c.score<=50?'#22c55e':'#fbbf24'}">${c.score>0?'+':''}${c.score}</div>
+        </div>`).join('')}
+    </div>
+    <div id="summarySection" style="display:none;"></div>
+  `;
+
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // flip ทีละใบ พร้อมโคลเวอร์เอฟเฟกต์ตามหลัง
+  for (let i = 0; i < 3; i++) {
+    await sleep(600);
+    document.getElementById('revealInner' + i).classList.add('flipped');
+    await sleep(500);
+    const clover = getCloverColor(pickedCards[i].score);
+    const cloverEl = document.getElementById('clover' + i);
+    cloverEl.textContent = clover.emoji;
+    cloverEl.style.filter += ' hue-rotate(0deg)';
+    cloverEl.style.color = clover.color;
+    cloverEl.classList.add('show');
+  }
+
+  await sleep(400);
+
+  const tierColor = result.tier.color;
+  document.getElementById('summarySection').style.display = 'block';
+  document.getElementById('summarySection').innerHTML = `
+    <div class="summary-card" style="border-color:${tierColor}55;background:${tierColor}0f;">
+      <div class="summary-pct" style="color:${tierColor}">${result.pct}%</div>
+      <div class="summary-tier" style="color:${tierColor}">🍀 ${result.tier.label}</div>
+      <div class="summary-score">คะแนนรวม ${result.total} / ${LUCK_MAX_SCORE}</div>
+    </div>
+
+    ${pickedCards.map((c,i) => `
+      <div class="role-card">
+        <div class="role-header">
+          <span class="role-name">${LUCK_ROLES[i].label}</span>
+          <span class="role-card-name">— ${c.nameTh}</span>
+        </div>
+        <div class="role-text">${c.meaning}</div>
+      </div>`).join('')}
+
+    <button class="btn-reset" onclick="renderDeck()">🔄 เปิดไพ่ใหม่</button>
+  `;
+
+  document.getElementById('summarySection').scrollIntoView({behavior:'smooth', block:'start'});
+
+  if (typeof window.__luckSave === 'function') window.__luckSave(pickedCards, result);
+}
+
+renderDeck();
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">Triple Fortune Oracle คืออะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">Triple Fortune Oracle คือไพ่ออราเคิลสำรับพิเศษ 30 ใบที่ออกแบบมาเพื่อวัดพลังงานด้านเงินทองและโชคลาภโดยเฉพาะค่ะ แบ่งเป็น 3 กลุ่มพลัง ได้แก่ The Takers (พลังแห่งการสูญเสีย) The Weavers (พลังแห่งจังหวะและการเปลี่ยนแปลง) และ The Givers (พลังแห่งความมั่งคั่ง) ที่ My Tarot คุณพี่สามารถเลือกไพ่ 3 ใบเพื่อดูพลังหลัก พลังสนับสนุนหรือแรงต้าน และผลลัพธ์ พร้อมคำนวณเปอร์เซ็นต์พลังโชคลาภโดยรวมได้ฟรีค่ะ</p>
+</div>
+
+</body>
+</html>
