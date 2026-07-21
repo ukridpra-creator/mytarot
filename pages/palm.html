@@ -215,7 +215,7 @@
 
   <!-- RESULT -->
   <div id="resultBox">
-    <div class="result-section sec-life"><h3>✦ เส้นชีวิต (Life Line)</h3><p id="secLife"><div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-life"><h3>✦ เส้นชีวิต (Life Line)</h3><p id="secLife"></p></div>
     <div class="result-section sec-head"><h3>✦ เส้นสมอง (Head Line)</h3><p id="secHead"></p></div>
     <div class="result-section sec-heart"><h3>✦ เส้นหัวใจ (Heart Line)</h3><p id="secHeart"></p></div>
     <div class="result-section sec-fate"><h3>✦ เส้นวาสนา (Fate Line)</h3><p id="secFate"></p></div>
@@ -431,7 +431,7 @@ window.startReading = async function() {
   document.getElementById('greetingBox').textContent = '';
   Object.values(PALM_IDS).forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = '<div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+    if (el) el.textContent = '';
   });
 
   const resultBox = document.getElementById('resultBox');

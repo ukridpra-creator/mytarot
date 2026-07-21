@@ -181,7 +181,7 @@
   <div id="resultBox">
     <div class="result-section sec-personality">
       <h3>✦ บุคลิกภาพและตัวตน</h3>
-      <p id="secPersonality"><div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p>
+      <p id="secPersonality"></p>
     </div>
     <div class="result-section sec-emotion">
       <h3>✦ อารมณ์และความรู้สึก</h3>
@@ -371,7 +371,7 @@ window.startReading=async function(){
   document.getElementById('greetingBox').textContent='';
   Object.values(IDS).forEach(id=>{
     const el=document.getElementById(id);
-    if(el)el.innerHTML='<div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+    if(el)el.textContent='';
   });
   document.getElementById('resultBox').classList.add('show');
   setTimeout(()=>prev.scrollIntoView({behavior:'smooth'}),100);

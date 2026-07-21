@@ -199,7 +199,7 @@
 
   <!-- RESULT -->
   <div id="resultBox">
-    <div class="result-section sec-face"><h3>✦ รูปหน้า</h3><p id="secFace"><div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-face"><h3>✦ รูปหน้า</h3><p id="secFace"></p></div>
     <div class="result-section sec-forehead"><h3>✦ หน้าผาก</h3><p id="secForehead"></p></div>
     <div class="result-section sec-eyes"><h3>✦ คิ้วและตา</h3><p id="secEyes"></p></div>
     <div class="result-section sec-nose"><h3>✦ จมูก</h3><p id="secNose"></p></div>
@@ -430,7 +430,7 @@ window.startReading = async function() {
   document.getElementById('greetingBox').textContent = '';
   Object.values(FACE_IDS).forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = '<div class="loading-wrap">กำลังวิเคราะห์ <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+    if (el) el.textContent = '';
   });
 
   const resultBox = document.getElementById('resultBox');

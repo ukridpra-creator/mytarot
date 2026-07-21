@@ -227,7 +227,7 @@
 
   <!-- RESULT -->
   <div id="resultBox">
-    <div class="result-section sec-shape"><h3>👣 รูปทรงเท้าและบุคลิก</h3><p id="secShape"><div class="loading-wrap">กำลังอ่านดวง <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div></p></div>
+    <div class="result-section sec-shape"><h3>👣 รูปทรงเท้าและบุคลิก</h3><p id="secShape"></p></div>
     <div class="result-section sec-toes"><h3>🦶 นิ้วเท้าและนิสัย</h3><p id="secToes"></p></div>
     <div class="result-section sec-arch"><h3>🌊 อุ้งเท้าและพลังงาน</h3><p id="secArch"></p></div>
     <div class="result-section sec-reflex"><h3>⚡ โซนสุขภาพ Reflexology</h3><p id="secReflex"></p></div>
@@ -458,7 +458,7 @@ window.startReading = async function() {
   document.getElementById('greetingBox').textContent = '';
   Object.values(FOOT_IDS).forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.innerHTML = '<div class="loading-wrap">กำลังอ่านดวง <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+    if (el) el.textContent = '';
   });
 
   const resultBox = document.getElementById('resultBox');
