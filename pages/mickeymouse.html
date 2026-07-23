@@ -80,12 +80,9 @@
     <span class="p-icon">📦</span> ดาวน์โหลดครบ 12 ราศีเลย
   </button>
 
-  <div class="platform-grid">
-    <button class="platform-btn fb" id="btnFb" onclick="downloadCard('facebook')" disabled><span class="p-icon">📘</span> Facebook</button>
-    <button class="platform-btn ig" id="btnIg" onclick="downloadCard('instagram')" disabled><span class="p-icon">📸</span> Instagram</button>
-    <button class="platform-btn tt" id="btnTt" onclick="downloadCard('tiktok')" disabled><span class="p-icon">🎵</span> TikTok</button>
-    <button class="platform-btn x"  id="btnX"  onclick="downloadCard('x')" disabled><span class="p-icon">✖️</span> X (Twitter)</button>
-  </div>
+  <button class="platform-btn" id="btnDownload" onclick="downloadCard()" disabled style="width:100%;margin-bottom:14px;">
+    <span class="p-icon">⬇️</span> ดาวน์โหลดรูป
+  </button>
   <div class="status-text" id="statusText"></div>
 </div>
 
@@ -111,7 +108,7 @@
   <!-- โซนล่าง (bottom 400px) — โลโก้แบรนด์ วางไม่ติดขอบล่างสุด -->
   <div style="position:absolute; bottom:90px; left:0; right:0; text-align:center;">
     <div style="font-size:38px; font-weight:800; color:#d4af37;">🔮 mytarot.vip</div>
-    <div style="font-size:23px; color:rgba(255,255,255,0.5); margin-top:8px;">ดูดวงออนไลน์ ครบทุกศาสตร์</div>
+    <div style="font-size:23px; color:rgba(255,255,255,0.5); margin-top:8px;">ดูดวงออนไลน์ฟรี ครบทุกศาสตร์</div>
   </div>
 </div>
 
@@ -183,7 +180,7 @@ window.pickZodiac = function(idx){
   currentResult = getDailyHoroscope(idx, chosenDate);
   buildShareCard(currentResult, chosenDate);
 
-  ['btnFb','btnIg','btnTt','btnX'].forEach(id => document.getElementById(id).disabled = false);
+  document.getElementById('btnDownload').disabled = false;
   document.getElementById('statusText').textContent = '';
 };
 
@@ -202,15 +199,15 @@ function buildShareCard(r, dateForCard){
     </div>`).join('');
 }
 
-window.downloadCard = async function(platform){
+window.downloadCard = async function(){
   if (selectedSignIdx === null) return;
   const statusEl = document.getElementById('statusText');
   statusEl.textContent = '⏳ กำลังสร้างรูป...';
 
   try {
     const dataUrl = await captureCard();
-    triggerDownload(dataUrl, `mytarot-horoscope-${platform}-${Date.now()}.png`);
-    statusEl.textContent = '✅ บันทึกรูปสำเร็จค่ะ (' + platform + ')';
+    triggerDownload(dataUrl, `mytarot-horoscope-${Date.now()}.png`);
+    statusEl.textContent = '✅ บันทึกรูปสำเร็จค่ะ';
   } catch(e) {
     console.error(e);
     statusEl.textContent = '❌ สร้างรูปไม่สำเร็จค่ะ ลองใหม่อีกครั้ง';
