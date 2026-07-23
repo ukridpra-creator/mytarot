@@ -76,6 +76,10 @@
 
   <div class="preview-note">เลือกราศีก่อน ปุ่มแพลตฟอร์มจะกดได้ค่ะ</div>
 
+  <button class="platform-btn" id="btnAll12" onclick="downloadAll12()" style="width:100%;margin-bottom:14px;border-color:rgba(212,175,55,0.4);">
+    <span class="p-icon">📦</span> ดาวน์โหลดครบ 12 ราศีเลย
+  </button>
+
   <div class="platform-grid">
     <button class="platform-btn fb" id="btnFb" onclick="downloadCard('facebook')" disabled><span class="p-icon">📘</span> Facebook</button>
     <button class="platform-btn ig" id="btnIg" onclick="downloadCard('instagram')" disabled><span class="p-icon">📸</span> Instagram</button>
@@ -96,18 +100,18 @@
 
   <!-- SAFE ZONE เนื้อหาหลัก (250px - 1520px = สูง 1270px) -->
   <div style="padding:0 80px;">
-    <div style="text-align:center; font-size:130px; line-height:1;" id="cardEmoji"></div>
-    <div style="text-align:center; font-size:52px; font-weight:800; color:white; margin-top:10px;" id="cardSign"></div>
-    <div style="text-align:center; font-size:28px; color:#d4af37; margin-top:8px;" id="cardDate"></div>
-    <div style="text-align:center; font-size:52px; margin-top:18px; letter-spacing:4px;" id="cardStars"></div>
+    <div style="text-align:center; font-size:150px; line-height:1;" id="cardEmoji"></div>
+    <div style="text-align:center; font-size:64px; font-weight:800; color:white; margin-top:14px;" id="cardSign"></div>
+    <div style="text-align:center; font-size:34px; color:#d4af37; margin-top:10px;" id="cardDate"></div>
+    <div style="text-align:center; font-size:58px; margin-top:20px; letter-spacing:4px;" id="cardStars"></div>
 
     <div style="margin-top:40px; display:flex; flex-direction:column; gap:20px;" id="cardCatList"></div>
   </div>
 
   <!-- โซนล่าง (bottom 400px) — โลโก้แบรนด์ วางไม่ติดขอบล่างสุด -->
   <div style="position:absolute; bottom:90px; left:0; right:0; text-align:center;">
-    <div style="font-size:34px; font-weight:800; color:#d4af37;">🔮 mytarot.vip</div>
-    <div style="font-size:20px; color:rgba(255,255,255,0.5); margin-top:6px;">ดูดวงออนไลน์ฟรี ครบทุกศาสตร์</div>
+    <div style="font-size:38px; font-weight:800; color:#d4af37;">🔮 mytarot.vip</div>
+    <div style="font-size:23px; color:rgba(255,255,255,0.5); margin-top:8px;">ดูดวงออนไลน์ฟรี ครบทุกศาสตร์</div>
   </div>
 </div>
 
@@ -193,8 +197,8 @@ function buildShareCard(r, dateForCard){
   const cats = ['work','money','love','health'];
   document.getElementById('cardCatList').innerHTML = cats.map(key => `
     <div style="background:rgba(255,255,255,0.06); border-radius:22px; padding:26px 28px;">
-      <div style="font-size:28px; color:#d4af37; font-weight:700;">${CAT_ICONS[key]} ${CAT_LABELS[key]}</div>
-      <div style="font-size:24px; color:rgba(255,255,255,0.85); margin-top:10px; line-height:1.7;">${r[key]}</div>
+      <div style="font-size:32px; color:#d4af37; font-weight:700;">${CAT_ICONS[key]} ${CAT_LABELS[key]}</div>
+      <div style="font-size:28px; color:rgba(255,255,255,0.9); margin-top:12px; line-height:1.75;">${r[key]}</div>
     </div>`).join('');
 }
 
@@ -204,23 +208,66 @@ window.downloadCard = async function(platform){
   statusEl.textContent = '⏳ กำลังสร้างรูป...';
 
   try {
-    const card = document.getElementById('shareCard');
-    const canvas = await html2canvas(card, { width:1080, height:1920, scale:1, backgroundColor:null });
-    const dataUrl = canvas.toDataURL('image/png');
-
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = `mytarot-horoscope-${platform}-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
+    const dataUrl = await captureCard();
+    triggerDownload(dataUrl, `mytarot-horoscope-${platform}-${Date.now()}.png`);
     statusEl.textContent = '✅ บันทึกรูปสำเร็จค่ะ (' + platform + ')';
   } catch(e) {
     console.error(e);
     statusEl.textContent = '❌ สร้างรูปไม่สำเร็จค่ะ ลองใหม่อีกครั้ง';
   }
 };
+
+// ── ดาวน์โหลดครบ 12 ราศีในคลิกเดียว ──
+// ใช้วันที่ที่เลือกไว้ตอนนี้ (หรือวันนี้ถ้ายังไม่เปลี่ยน) วนสร้างการ์ดทีละราศีแล้วดาวน์โหลดต่อกัน
+window.downloadAll12 = async function(){
+  const statusEl = document.getElementById('statusText');
+  const btn = document.getElementById('btnAll12');
+  btn.disabled = true;
+  const chosenDate = getSelectedDate();
+
+  for (let i = 0; i < 12; i++) {
+    statusEl.textContent = `⏳ กำลังสร้างรูป ${i+1}/12 (ราศี${ZODIAC_TH[i]})...`;
+    const result = getDailyHoroscope(i, chosenDate);
+    buildShareCard(result, chosenDate);
+
+    // รอให้ browser วาด DOM ใหม่ก่อนแคป
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    try {
+      const dataUrl = await captureCard();
+      triggerDownload(dataUrl, `mytarot-horoscope-${ZODIAC_TH[i]}-${Date.now()}.png`);
+    } catch(e) {
+      console.error('พลาดที่ราศี' + ZODIAC_TH[i], e);
+    }
+
+    // เว้นจังหวะระหว่างดาวน์โหลดแต่ละไฟล์ กันเบราว์เซอร์บล็อกการดาวน์โหลดรัวๆ
+    await new Promise(r => setTimeout(r, 400));
+  }
+
+  btn.disabled = false;
+  statusEl.textContent = '✅ ดาวน์โหลดครบ 12 ราศีแล้วค่ะ';
+
+  // คืนค่าการ์ดกลับไปที่ราศีที่เลือกไว้ก่อนหน้า (ถ้ามี)
+  if (selectedSignIdx !== null) {
+    const r = getDailyHoroscope(selectedSignIdx, chosenDate);
+    buildShareCard(r, chosenDate);
+  }
+};
+
+async function captureCard(){
+  const card = document.getElementById('shareCard');
+  const canvas = await html2canvas(card, { width:1080, height:1920, scale:1, backgroundColor:null });
+  return canvas.toDataURL('image/png');
+}
+
+function triggerDownload(dataUrl, filename){
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
 </body>
 </html>
