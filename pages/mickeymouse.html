@@ -66,6 +66,14 @@
   <div class="page-sub">เลือกราศี แล้วเลือกแพลตฟอร์มที่จะบันทึกรูป</div>
 
   <div class="zodiac-grid" id="zodiacGrid"></div>
+
+  <div class="page-sub" style="margin-top:4px;margin-bottom:8px;text-align:left;">📅 เลือกวันที่จะดูดวง (ค่าเริ่มต้น = วันนี้)</div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;">
+    <select class="platform-btn" id="selDay" style="cursor:pointer;padding:10px 4px;"></select>
+    <select class="platform-btn" id="selMonth" style="cursor:pointer;padding:10px 4px;"></select>
+    <select class="platform-btn" id="selYear" style="cursor:pointer;padding:10px 4px;"></select>
+  </div>
+
   <div class="preview-note">เลือกราศีก่อน ปุ่มแพลตฟอร์มจะกดได้ค่ะ</div>
 
   <div class="platform-grid">
@@ -103,8 +111,8 @@
   </div>
 </div>
 
-<script src="js/daily-horoscope-data.js"></script>
-<script src="js/astronomy.browser.min.js"></script>
+<script src="../js/astronomy.browser.min.js"></script>
+<script src="../js/daily-horoscope-data.js"></script>
 <script>
 // ── PASSWORD GATE (ไม่มี backend เช็คแค่ฝั่ง client เท่านั้น) ──
 window.checkPw = function(){
@@ -131,25 +139,55 @@ let currentResult = null;
       <div class="z-icon">${ZODIAC_EMOJI[i]}</div>
       <div class="z-label">${name}</div>
     </div>`).join('');
+
+  // เติมตัวเลือกวันที่ (default = วันนี้)
+  const today = new Date();
+  const selDay = document.getElementById('selDay');
+  const selMonth = document.getElementById('selMonth');
+  const selYear = document.getElementById('selYear');
+
+  selDay.innerHTML = Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+  selMonth.innerHTML = MONTH_TH.map((m,i) => `<option value="${i+1}">${m}</option>`).join('');
+  const curY = today.getFullYear();
+  selYear.innerHTML = Array.from({length:5}, (_,i) => curY-2+i).map(y => `<option value="${y}">${y+543}</option>`).join('');
+
+  selDay.value = today.getDate();
+  selMonth.value = today.getMonth()+1;
+  selYear.value = curY;
+
+  [selDay, selMonth, selYear].forEach(el => el.addEventListener('change', onDateChange));
 })();
+
+function getSelectedDate(){
+  const d = parseInt(document.getElementById('selDay').value);
+  const m = parseInt(document.getElementById('selMonth').value);
+  const y = parseInt(document.getElementById('selYear').value);
+  return new Date(y, m-1, d);
+}
+
+function onDateChange(){
+  // ถ้าเลือกราศีไว้แล้ว ให้คำนวณใหม่ตามวันที่ที่เปลี่ยน
+  if (selectedSignIdx !== null) pickZodiac(selectedSignIdx);
+}
 
 window.pickZodiac = function(idx){
   selectedSignIdx = idx;
   document.querySelectorAll('.zodiac-btn').forEach(el => el.classList.remove('active'));
   document.getElementById('zbtn'+idx).classList.add('active');
 
-  currentResult = getDailyHoroscope(idx, new Date());
-  buildShareCard(currentResult);
+  const chosenDate = getSelectedDate();
+  currentResult = getDailyHoroscope(idx, chosenDate);
+  buildShareCard(currentResult, chosenDate);
 
   ['btnFb','btnIg','btnTt','btnX'].forEach(id => document.getElementById(id).disabled = false);
   document.getElementById('statusText').textContent = '';
 };
 
-function buildShareCard(r){
-  const today = new Date();
+function buildShareCard(r, dateForCard){
+  const d = dateForCard || new Date();
   document.getElementById('cardEmoji').textContent = r.userSignEmoji;
   document.getElementById('cardSign').textContent = 'ราศี' + r.userSign;
-  document.getElementById('cardDate').textContent = today.getDate() + ' ' + MONTH_TH[today.getMonth()] + ' ' + (today.getFullYear()+543);
+  document.getElementById('cardDate').textContent = d.getDate() + ' ' + MONTH_TH[d.getMonth()] + ' ' + (d.getFullYear()+543);
   document.getElementById('cardStars').textContent = '⭐'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
 
   const cats = ['work','money','love','health'];
