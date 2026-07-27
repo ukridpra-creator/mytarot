@@ -84,6 +84,7 @@ export default async function handler(req, res) {
         lastCheckin: today,
         checkinStreak: saveStreak,
         coins: FieldValue.increment(reward),
+        lastActive: new Date(),
       }, { merge: true });
 
       // ── บันทึกลง coin ledger กลาง เพื่อให้ admin dashboard ดูย้อนหลังได้ว่า

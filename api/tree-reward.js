@@ -59,7 +59,7 @@ export default async function handler(req, res) {
     // ── ใช้ FieldValue.increment() ภายใน transaction แทน read-then-write เดิม
     //    (เดิมอ่าน coins มาบวกแล้วเขียนทับ เสี่ยง race condition ถ้ากดรัวๆ) ──
     await db.runTransaction(async (t) => {
-      t.set(userRef, { coins: FieldValue.increment(reward) }, { merge: true });
+      t.set(userRef, { coins: FieldValue.increment(reward), lastActive: new Date() }, { merge: true });
 
       // บันทึกลง coin ledger กลาง เพื่อดูย้อนหลังได้ว่า user ได้เหรียญจากต้นไม้ตอนไหนบ้าง
       const ledgerRef = db.collection('coin_ledger').doc();

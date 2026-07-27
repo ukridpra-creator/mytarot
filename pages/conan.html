@@ -138,10 +138,6 @@
   <div class="top-bar">
     <div class="top-logo">⭐ CONAN</div>
     <div style="display:flex;align-items:center;gap:12px;">
-      <div class="auto-toggle" id="autoToggle" onclick="toggleAutoRefresh()" style="cursor:pointer;">
-        <div class="auto-dot" id="autoDot"></div>
-        <span id="autoLabel">อัตโนมัติ: ปิด</span>
-      </div>
       <div class="top-time" id="topTime"></div>
       <button class="btn-refresh" onclick="loadDash()">↻ รีเฟรช</button>
     </div>
@@ -345,23 +341,6 @@ window.openUserDetail=async function(uid){
 
 window.closeUserModal=function(){
   document.getElementById('userModal').classList.remove('show');
-};
-
-// ── AUTO REFRESH (ใหม่) ──
-let autoRefreshTimer = null;
-window.toggleAutoRefresh=function(){
-  const dot = document.getElementById('autoDot');
-  const label = document.getElementById('autoLabel');
-  if (autoRefreshTimer) {
-    clearInterval(autoRefreshTimer);
-    autoRefreshTimer = null;
-    dot.classList.remove('on');
-    label.textContent = 'อัตโนมัติ: ปิด';
-  } else {
-    autoRefreshTimer = setInterval(loadDash, 30000); // รีเฟรชทุก 30 วินาที
-    dot.classList.add('on');
-    label.textContent = 'อัตโนมัติ: 30s';
-  }
 };
 
 window.loadDash=async function(){

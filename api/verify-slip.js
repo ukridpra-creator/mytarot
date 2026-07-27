@@ -39,6 +39,18 @@ function amountToCoins(amount) {
   return null; // น้อยกว่า 25฿ reject
 }
 
+// ── กำหนด key สำหรับ counter สรุปยอดขายแยกตามช่วงราคา (ใช้แสดง "แพ็กเกจขายดี" ใน admin
+//    โดยไม่ต้องสแกน topup_history ทั้งหมดทุกครั้งที่ดู dashboard) ──
+function pkgTierKey(amount) {
+  if (amount >= 1000) return 'pkg_1000';
+  if (amount >= 500)  return 'pkg_500';
+  if (amount >= 250)  return 'pkg_250';
+  if (amount >= 150)  return 'pkg_150';
+  if (amount >= 50)   return 'pkg_50';
+  if (amount >= 25)   return 'pkg_25';
+  return 'pkg_other';
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -102,11 +114,9 @@ export default async function handler(req, res) {
   if (!slipBuffer) return res.status(400).json({ error: 'no_slip', message: 'กรุณาแนบสลิปค่ะ' });
 
   // ── คำนวณ hash ของรูปภาพ แล้วเช็คว่าเคยส่งรูปนี้มาก่อนไหม ──
-  // กันกรณีลูกค้ากดซ้ำ (เน็ตช้า/error) ด้วยรูปเดิม จะได้ไม่ต้องเสีย EasySlip call ซ้ำอีก
   const imageHash = createHash('sha256').update(slipBuffer).digest('hex');
   const hashRef = db.collection('_slipHashCache').doc(imageHash);
 
-  // helper: ตอบกลับ + บันทึกผลลัพธ์ไว้ในแคชของ hash นี้ (ใช้กับทุก error/success)
   async function respond(status, body) {
     try {
       await hashRef.set({
@@ -133,12 +143,10 @@ export default async function handler(req, res) {
           message: 'สลิปนี้กำลังถูกตรวจสอบอยู่ค่ะ กรุณารอสักครู่นะคะ'
         });
       }
-      // เคยเห็นรูปนี้มาก่อนแล้ว (ไม่ว่าจะสำเร็จหรือล้มเหลว) — ตอบกลับจากแคชทันที ไม่ยิง EasySlip ซ้ำ
       console.log('duplicate image hash, returning cached result:', imageHash);
       return res.status(cached.httpStatus || 400).json(cached.response);
     }
   }
-  // ล็อกไว้ก่อนว่ากำลังประมวลผล กันกรณี 2 request เข้ามาพร้อมกันด้วยรูปเดียวกัน
   await hashRef.set({ status: 'processing', uid, cachedAt: Date.now() });
 
   // ── เรียก EasySlip API v2 ──
@@ -146,8 +154,8 @@ export default async function handler(req, res) {
   try {
     const formData = new FormData();
     const blob = new Blob([slipBuffer], { type: slipMime });
-    formData.append('image', blob, 'slip.jpg'); // v2 ใช้ field ชื่อ 'image' ไม่ใช่ 'files'
-    formData.append('checkDuplicate', 'true');   // ให้ EasySlip ช่วยเช็คสลิปซ้ำอีกชั้นด้วย
+    formData.append('image', blob, 'slip.jpg');
+    formData.append('checkDuplicate', 'true');
 
     const easyRes = await fetch('https://api.easyslip.com/v2/verify/bank', {
       method: 'POST',
@@ -160,7 +168,6 @@ export default async function handler(req, res) {
     const easyData = await easyRes.json();
     console.log('EasySlip response:', JSON.stringify(easyData));
 
-    // v2 ตอบกลับด้วย { success: true/false, data: {...}, message } ไม่ใช่ { status: 200 }
     if (!easyRes.ok || !easyData.success) {
       const code = easyData?.error?.code;
       if (code === 'SLIP_PENDING') {
@@ -181,13 +188,11 @@ export default async function handler(req, res) {
       });
     }
 
-    // ข้อมูลสลิปจริงอยู่ใน data.rawSlip ไม่ใช่ data ตรงๆ
     slipData = easyData.data?.rawSlip;
     if (!slipData) {
       return respond(400, { error: 'slip_invalid', message: 'อ่านข้อมูลสลิปไม่ได้ค่ะ กรุณาลองใหม่ค่ะ' });
     }
 
-    // ถ้า EasySlip เจอว่าสลิปนี้เคยถูกส่งมาแล้ว (checkDuplicate) ให้ปฏิเสธตั้งแต่ตรงนี้
     if (easyData.data?.isDuplicate) {
       return respond(400, {
         error: 'slip_already_used',
@@ -196,17 +201,14 @@ export default async function handler(req, res) {
     }
   } catch (e) {
     console.error('EasySlip error:', e);
-    // error ฝั่งเราเอง (เช่น network) ไม่ต้อง cache เป็น failed ถาวร ลบ lock ออกให้ลองใหม่ได้
     await hashRef.delete().catch(() => {});
     return res.status(500).json({ error: 'easyslip_error', message: 'ระบบตรวจสอบขัดข้องค่ะ กรุณาลองใหม่ค่ะ' });
   }
 
   // ── ตรวจสอบ receiver account ──
-  // โอนผ่านพร้อมเพย์เบอร์มือถือ: บางธนาคารจะโชว์เลขบัญชีจริงที่ผูกกับเบอร์ (receiver.account.bank.account)
-  // บางธนาคารอาจโชว์เบอร์โทรที่ใช้โอนไว้ใน receiver.account.proxy.account แทน จึงเช็คทั้ง 2 ทางเพื่อความชัวร์
   const receiverBankAcct = (slipData?.receiver?.account?.bank?.account || '').replace(/[-\sx]/gi, '');
   const receiverProxy = (slipData?.receiver?.account?.proxy?.account || '').replace(/[-\sx]/gi, '');
-  const ourPhoneTail = OUR_PHONE.slice(-4); // เทียบ 4 ตัวท้ายของเบอร์ เพราะข้อมูลอาจถูก mask บางส่วน
+  const ourPhoneTail = OUR_PHONE.slice(-4);
 
   const matchedByBank = receiverBankAcct && receiverBankAcct.endsWith(ourPhoneTail);
   const matchedByProxy = receiverProxy && receiverProxy.endsWith(ourPhoneTail);
@@ -254,16 +256,18 @@ export default async function handler(req, res) {
   const slipRef = db.collection('used_slips').doc(transRef);
   const userRef = db.collection('users').doc(uid);
   const totalCoins = pkg.total;
+  const tierKey = pkgTierKey(slipAmount);
+  // ── stats/summary: เอกสารสรุปยอดรวมทั้งหมด อ่านครั้งเดียวพอสำหรับ admin dashboard
+  //    แทนการสแกน topup_history ทั้งคอลเลกชันทุกครั้งที่ดูหน้าแอดมิน ──
+  const statsRef = db.collection('stats').doc('summary');
 
   try {
     await db.runTransaction(async (t) => {
-      // เช็คสลิปซ้ำ (กันเผื่อกรณี checkDuplicate ของ EasySlip พลาด)
       const slipSnap = await t.get(slipRef);
       if (slipSnap.exists) {
         throw new Error('SLIP_USED');
       }
 
-      // เขียน atomic
       t.set(slipRef, {
         uid,
         transRef,
@@ -275,9 +279,9 @@ export default async function handler(req, res) {
 
       t.set(userRef, {
         coins: FieldValue.increment(totalCoins),
+        lastActive: new Date(),
       }, { merge: true });
 
-      // บันทึก history
       t.set(db.collection('topup_history').doc(), {
         uid,
         transRef,
@@ -287,9 +291,16 @@ export default async function handler(req, res) {
         amount: slipAmount,
         createdAt: new Date(),
       });
+
+      // อัปเดต counter สรุปยอดรวม (ใช้แสดงใน admin dashboard แบบอ่านครั้งเดียว)
+      t.set(statsRef, {
+        totalRevenue: FieldValue.increment(slipAmount),
+        totalCoinsSold: FieldValue.increment(totalCoins),
+        totalTx: FieldValue.increment(1),
+        [tierKey]: FieldValue.increment(1),
+      }, { merge: true });
     });
 
-    // อ่าน coins ล่าสุดหลัง transaction
     const updatedSnap = await userRef.get();
     const newCoins = updatedSnap.data()?.coins || totalCoins;
 
@@ -308,13 +319,12 @@ export default async function handler(req, res) {
       });
     }
     console.error('Transaction error:', e);
-    // error ฝั่งเราเอง (Firestore ล่ม ฯลฯ) ไม่ควร cache ถาวร ลบ lock ออกให้ลองใหม่ได้
     await hashRef.delete().catch(() => {});
     return res.status(500).json({ error: 'transaction_failed', message: 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่ค่ะ' });
   }
 }
 
-// ── Parse multipart/form-data (เขียนเอง ไม่ใช้ library ตามที่ต้องการ) ──
+// ── Parse multipart/form-data ──
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -345,7 +355,6 @@ function parseMultipart(req) {
           const name = nameMatch[1];
 
           if (fileMatch) {
-            // ไฟล์ slip
             mime = mimeMatch ? mimeMatch[1].trim() : 'image/jpeg';
             slipBuf = Buffer.from(bodyStr, 'binary');
           } else {
