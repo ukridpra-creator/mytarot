@@ -2,7 +2,7 @@
 // รับเหรียญจากต้นไม้ศักดิ์สิทธิ์
 
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 export const config = { maxDuration: 10 };
@@ -55,11 +55,25 @@ export default async function handler(req, res) {
 
   try {
     const userRef = db.collection('users').doc(uid);
-    const snap = await userRef.get();
-    const data = snap.exists ? snap.data() : {};
-    const newCoins = (data.coins || 0) + reward;
 
-    await userRef.set({ coins: newCoins }, { merge: true });
+    // ── ใช้ FieldValue.increment() ภายใน transaction แทน read-then-write เดิม
+    //    (เดิมอ่าน coins มาบวกแล้วเขียนทับ เสี่ยง race condition ถ้ากดรัวๆ) ──
+    await db.runTransaction(async (t) => {
+      t.set(userRef, { coins: FieldValue.increment(reward) }, { merge: true });
+
+      // บันทึกลง coin ledger กลาง เพื่อดูย้อนหลังได้ว่า user ได้เหรียญจากต้นไม้ตอนไหนบ้าง
+      const ledgerRef = db.collection('coin_ledger').doc();
+      t.set(ledgerRef, {
+        uid,
+        source: 'tree',
+        coins: reward,
+        detail: { color },
+        createdAt: new Date(),
+      });
+    });
+
+    const updatedSnap = await userRef.get();
+    const newCoins = updatedSnap.data()?.coins || reward;
 
     return res.status(200).json({
       reward,

@@ -308,15 +308,17 @@ window.openUserDetail=async function(uid){
       return;
     }
     const d = await res.json();
-    const txHtml = d.transactions.length ? d.transactions.map(t=>`
+
+    // แหล่งที่มาของเหรียญทั้งหมด (เติมเงิน EasySlip + เช็คอิน + ต้นไม้) รวมเป็นรายการเดียว
+    const sourceHtml = d.coinSources.length ? d.coinSources.map(s=>`
       <div class="tx-item">
         <div class="tx-avatar">🪙</div>
         <div class="tx-info">
-          <div class="tx-name">${t.label}</div>
-          <div class="tx-time">${t.createdAt ? new Date(t.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
+          <div class="tx-name">${s.label}</div>
+          <div class="tx-time">${s.createdAt ? new Date(s.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
         </div>
-        <div class="tx-amt">฿${t.amount}</div>
-      </div>`).join('') : '<div class="loading">ยังไม่เคยเติมเงินค่ะ</div>';
+        <div class="tx-amt">+${s.coins} 🪙</div>
+      </div>`).join('') : '<div class="loading">ยังไม่มีประวัติได้เหรียญค่ะ (หมายเหตุ: เช็คอิน/ต้นไม้เพิ่งเริ่มบันทึกย้อนหลังไม่ได้)</div>';
 
     const readHtml = d.readings.length ? d.readings.map(r=>`
       <div class="rank-item">
@@ -330,8 +332,8 @@ window.openUserDetail=async function(uid){
         <div class="modal-user-name">${d.displayName || d.email || d.uid.slice(0,8)}</div>
         <div class="modal-user-sub">${d.email || ''} · 🪙 ${d.coins}</div>
       </div>
-      <div class="modal-sec-title">🧾 ประวัติเติมเงิน (${d.transactions.length})</div>
-      <div class="card">${txHtml}</div>
+      <div class="modal-sec-title">🪙 ที่มาของเหรียญ (${d.coinSources.length})</div>
+      <div class="card">${sourceHtml}</div>
       <div class="modal-sec-title">🔮 ประวัติดูดวง (${d.readings.length})</div>
       <div class="card">${readHtml}</div>
     `;

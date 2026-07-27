@@ -2,7 +2,7 @@
 // เช็คอินประจำวัน — server-side ทั้งหมด
 
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 export const config = { maxDuration: 10 };
@@ -44,57 +44,89 @@ export default async function handler(req, res) {
 
   try {
     const userRef = db.collection('users').doc(uid);
-    const snap = await userRef.get();
-    const data = snap.exists ? snap.data() : {};
 
     const now = new Date(Date.now() + 7 * 60 * 60 * 1000);
     const today = now.toISOString().slice(0, 10);
     const yesterday = new Date(Date.now() + 7 * 60 * 60 * 1000 - 86400000).toISOString().slice(0, 10);
 
-    // เช็คอินแล้ววันนี้
-    if ((data.lastCheckin || '') === today) {
+    const { checkOnly } = req.body;
+
+    // ── ใช้ Firestore Transaction ครอบทั้งการเช็คสถานะและเติมเหรียญ ──
+    // เดิมโค้ดอ่านค่า coins มาบวกเลขแล้วเขียนทับ (read-then-write) มีโอกาสเกิด race condition
+    // ถ้ามี 2 request มาพร้อมกัน (เช่นกดซ้ำเร็วๆ) อาจได้เหรียญไม่ครบหรือได้ซ้ำ
+    // เปลี่ยนมาใช้ FieldValue.increment() ภายใน transaction แทน เพื่อความถูกต้อง atomic
+    const result = await db.runTransaction(async (t) => {
+      const snap = await t.get(userRef);
+      const data = snap.exists ? snap.data() : {};
+
+      // เช็คอินแล้ววันนี้
+      if ((data.lastCheckin || '') === today) {
+        return { already: true, streak: data.checkinStreak || 0, coins: data.coins || 0 };
+      }
+
+      // checkOnly — แค่ดูว่าเช็คอินแล้วหรือยัง ไม่ได้เหรียญ ไม่ต้องเขียนอะไร
+      if (checkOnly) {
+        return { checkOnlyMode: true, already: false, streak: data.checkinStreak || 0, coins: data.coins || 0 };
+      }
+
+      // คำนวณ streak
+      let streak = data.checkinStreak || 0;
+      if ((data.lastCheckin || '') === yesterday) {
+        streak = Math.min(streak + 1, 7);
+      } else {
+        streak = 1;
+      }
+
+      const reward = REWARDS[streak] || 10;
+      const saveStreak = streak === 7 ? 0 : streak;
+
+      t.set(userRef, {
+        lastCheckin: today,
+        checkinStreak: saveStreak,
+        coins: FieldValue.increment(reward),
+      }, { merge: true });
+
+      // ── บันทึกลง coin ledger กลาง เพื่อให้ admin dashboard ดูย้อนหลังได้ว่า
+      //    user คนนี้ได้เหรียญจากเช็คอินวันไหนบ้าง (ของเดิมไม่เคย log ไว้เลย) ──
+      const ledgerRef = db.collection('coin_ledger').doc();
+      t.set(ledgerRef, {
+        uid,
+        source: 'checkin',
+        coins: reward,
+        detail: { streak },
+        createdAt: new Date(),
+      });
+
+      return { already: false, streak, reward };
+    });
+
+    if (result.already) {
       return res.status(200).json({
         already: true,
-        streak: data.checkinStreak || 0,
-        coins: data.coins || 0,
+        streak: result.streak,
+        coins: result.coins,
         message: 'เช็คอินแล้ววันนี้ค่ะ'
       });
     }
 
-    // checkOnly — แค่ดูว่าเช็คอินแล้วหรือยัง ไม่ได้เหรียญ
-    const { checkOnly } = req.body;
-    if (checkOnly) {
+    if (result.checkOnlyMode) {
       return res.status(200).json({
         already: false,
-        streak: data.checkinStreak || 0,
-        coins: data.coins || 0,
+        streak: result.streak,
+        coins: result.coins,
       });
     }
 
-    // คำนวณ streak
-    let streak = data.checkinStreak || 0;
-    if ((data.lastCheckin || '') === yesterday) {
-      streak = Math.min(streak + 1, 7);
-    } else {
-      streak = 1;
-    }
-
-    const reward = REWARDS[streak] || 10;
-    const newCoins = (data.coins || 0) + reward;
-    const saveStreak = streak === 7 ? 0 : streak;
-
-    await userRef.set({
-      lastCheckin: today,
-      checkinStreak: saveStreak,
-      coins: newCoins,
-    }, { merge: true });
+    // อ่านยอดเหรียญล่าสุดหลัง transaction เพื่อตอบกลับให้ตรงจริง
+    const updatedSnap = await userRef.get();
+    const newCoins = updatedSnap.data()?.coins || 0;
 
     return res.status(200).json({
       already: false,
-      streak: streak,
-      reward: reward,
+      streak: result.streak,
+      reward: result.reward,
       coins: newCoins,
-      message: `รับ ${reward} เหรียญสำเร็จ!`
+      message: `รับ ${result.reward} เหรียญสำเร็จ!`
     });
 
   } catch(e) {

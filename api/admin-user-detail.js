@@ -45,10 +45,14 @@ export default async function handler(req, res) {
   try {
     const userRef = db.collection('users').doc(uid);
 
-    // ดึงข้อมูล user + transactions + readings ของคนนี้พร้อมกัน (scoped ตัวเดียว เร็วมาก ไม่มีปัญหา N+1)
-    const [userSnap, txSnap, readingsSnap] = await Promise.all([
+    // ดึงข้อมูล user + แหล่งที่มาเหรียญทั้งหมด + readings ของคนนี้พร้อมกัน
+    // (scoped เฉพาะ uid เดียว เร็วมาก ไม่มีปัญหา N+1)
+    // หมายเหตุ: ถ้า Firestore ขึ้น error "FAILED_PRECONDITION" ตอน query ที่มี where+orderBy
+    // ครั้งแรก ให้กด link ที่ error แนบมาเพื่อสร้าง composite index อัตโนมัติ (ทำครั้งเดียว)
+    const [userSnap, topupSnap, ledgerSnap, readingsSnap] = await Promise.all([
       userRef.get(),
-      userRef.collection('transactions').orderBy('createdAt', 'desc').limit(50).get(),
+      db.collection('topup_history').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(50).get(),
+      db.collection('coin_ledger').where('uid', '==', uid).orderBy('createdAt', 'desc').limit(50).get(),
       userRef.collection('readings').orderBy('createdAt', 'desc').limit(50).get(),
     ]);
 
@@ -56,16 +60,33 @@ export default async function handler(req, res) {
 
     const userData = userSnap.data();
 
-    const transactions = txSnap.docs.map(d => {
+    // ── รวมแหล่งที่มาของเหรียญทั้งหมดเป็นรายการเดียว เรียงตามเวลา ──
+    const topupEntries = topupSnap.docs.map(d => {
       const t = d.data();
       const dt = toJSDate(t.createdAt);
       return {
-        label: t.label || '—',
-        amount: (t.amount || 0) / 100,
-        coins: t.coins || 0,
+        source: 'topup',
+        label: `💳 เติมเงิน ฿${(t.amount || 0).toLocaleString()}`,
+        coins: t.totalCoins || 0,
         createdAt: dt ? dt.toISOString() : null,
       };
     });
+
+    const sourceLabelMap = { checkin: '🎁 เช็คอินรายวัน', tree: '🌳 เขย่าต้นไม้มงคล' };
+    const ledgerEntries = ledgerSnap.docs.map(d => {
+      const l = d.data();
+      const dt = toJSDate(l.createdAt);
+      return {
+        source: l.source || 'other',
+        label: sourceLabelMap[l.source] || (l.source || 'อื่นๆ'),
+        coins: l.coins || 0,
+        createdAt: dt ? dt.toISOString() : null,
+      };
+    });
+
+    const coinSources = [...topupEntries, ...ledgerEntries]
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+      .slice(0, 50);
 
     const readings = readingsSnap.docs.map(d => {
       const r = d.data();
@@ -82,7 +103,7 @@ export default async function handler(req, res) {
       email: userData.email || '',
       coins: userData.coins || 0,
       createdAt: toJSDate(userData.createdAt)?.toISOString() || null,
-      transactions,
+      coinSources,
       readings,
     });
   } catch (e) {

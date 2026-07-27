@@ -89,12 +89,17 @@ export default async function handler(req, res) {
 
     const monthStart = new Date(todayStart.getFullYear(), todayStart.getMonth(), 1);
 
-    // ── ดึงข้อมูลหลัก 3 ก้อนพร้อมกัน (แทนการวนลูป query ทีละ user แบบเดิมที่ทำให้ช้า
-    //    และเสี่ยง timeout กลางทางจนข้อมูลบางคนหายไปเงียบๆ) ──
-    const [usersSnap, txGroupSnap, readingsGroupSnap] = await Promise.all([
+    // ── ดึงข้อมูลหลักพร้อมกัน (แทนการวนลูป query ทีละ user แบบเดิมที่ทำให้ช้า
+    //    และเสี่ยง timeout กลางทางจนข้อมูลบางคนหายไปเงียบๆ)
+    //    หมายเหตุสำคัญ: ระบบเติมเงินปัจจุบันใช้ EasySlip ซึ่งบันทึกลง collection
+    //    ระดับบนสุด "topup_history" ไม่ใช่ sub-collection "users/{uid}/transactions"
+    //    แบบเดิม (ที่เป็นของระบบ Stripe เก่า) — ของเดิม query ผิด collection มาตลอด
+    //    จึงไม่เคยเห็นยอดเติมเงินที่เกิดขึ้นจริงเลย ──
+    const [usersSnap, topupSnap, readingsGroupSnap, ledgerSnap] = await Promise.all([
       db.collection('users').get(),
-      db.collectionGroup('transactions').get(),
+      db.collection('topup_history').get(),
       db.collectionGroup('readings').get(),
+      db.collection('coin_ledger').get(),
     ]);
 
     const totalUsers = usersSnap.size;
@@ -116,31 +121,51 @@ export default async function handler(req, res) {
       if (createdAt && createdAt >= todayStart) newToday++;
     });
 
-    // ── ประมวลผล transactions ของทุก user รวดเดียว ──
+    // ── ประมวลผล topup_history ของทุก user รวดเดียว (EasySlip) ──
     let allTx = [];
     let totalRevenue = 0;
     let todayRevenue = 0;
     let totalCoins = 0;
     const pkgCount = {};
 
-    txGroupSnap.forEach(txDoc => {
+    topupSnap.forEach(txDoc => {
       const t = txDoc.data();
-      const uid = txDoc.ref.parent.parent?.id; // users/{uid}/transactions/{txId}
-      const amt = (t.amount || 0) / 100;
+      const uid = t.uid; // topup_history เป็น top-level collection เก็บ uid เป็น field ตรงๆ
+      const amt = t.amount || 0; // บาทเต็มอยู่แล้ว (EasySlip) ไม่ใช่หน่วยสตางค์แบบ Stripe เดิม
+      const coinsAdded = t.totalCoins || 0; // ยอดเหรียญจริงที่ได้ (รวมโบนัส)
       const txCreated = toJSDate(t.createdAt);
 
       totalRevenue += amt;
-      totalCoins += (t.coins || 0);
+      totalCoins += coinsAdded;
       if (txCreated && txCreated >= todayStart) todayRevenue += amt;
 
-      allTx.push({ label: t.label, amount: t.amount, coins: t.coins, userId: uid, _createdAtDate: txCreated });
+      allTx.push({
+        label: `เติมเงิน (${coinsAdded.toLocaleString()} เหรียญ)`,
+        amount: amt,
+        coins: coinsAdded,
+        userId: uid,
+        _createdAtDate: txCreated,
+      });
 
-      const label = t.label || 'unknown';
-      pkgCount[label] = (pkgCount[label] || 0) + 1;
+      // จัดกลุ่มตามยอดเงิน แทน "label" แบบเดิม (EasySlip ไม่มี package name เหมือน Stripe)
+      const pkgLabel = `฿${amt.toLocaleString()}`;
+      pkgCount[pkgLabel] = (pkgCount[pkgLabel] || 0) + 1;
 
       if (uid && userMap[uid] && txCreated) {
         if (!userMap[uid].lastActive || txCreated > userMap[uid].lastActive) {
           userMap[uid].lastActive = txCreated;
+        }
+      }
+    });
+
+    // ── รวมความเคลื่อนไหวจาก coin_ledger (เช็คอิน/ต้นไม้) เข้า lastActive ด้วย ──
+    ledgerSnap.forEach(ledgerDoc => {
+      const l = ledgerDoc.data();
+      const uid = l.uid;
+      const created = toJSDate(l.createdAt);
+      if (uid && userMap[uid] && created) {
+        if (!userMap[uid].lastActive || created > userMap[uid].lastActive) {
+          userMap[uid].lastActive = created;
         }
       }
     });
