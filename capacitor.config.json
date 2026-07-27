@@ -1,0 +1,10 @@
+{
+  "appId": "vip.mytarot.app",
+  "appName": "MyTarot",
+  "webDir": "www",
+  "server": {
+    "url": "https://www.mytarot.vip",
+    "androidScheme": "https",
+    "cleartext": false
+  }
+}

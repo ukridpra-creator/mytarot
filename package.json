@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/cli": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
     "firebase-admin": "^11.11.1",
     "promptpay-qr": "^0.5.0",
     "qrcode": "^1.5.4",
