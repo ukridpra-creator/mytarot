@@ -170,11 +170,12 @@
 </div>
 
 <script type="module">
+import { nativeGoogleSignIn } from '../js/native-google-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence,
   onAuthStateChanged, signInWithPopup, GoogleAuthProvider,
   createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  sendEmailVerification, sendPasswordResetEmail }
+  sendEmailVerification, sendPasswordResetEmail , signInWithCredential }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -232,7 +233,7 @@ window.backToLogin=function(){
 // ── GOOGLE ──
 window.loginGoogle=async function(){
   try{
-    await signInWithPopup(auth,new GoogleAuthProvider());
+    await (window.Capacitor?.isNativePlatform() ? nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) : signInWithPopup(auth, new GoogleAuthProvider()));
   }catch(e){ console.error(e); }
 };
 

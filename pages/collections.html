@@ -177,8 +177,9 @@
 </nav>
 
 <script type="module">
+import { nativeGoogleSignIn } from '../js/native-google-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut , signInWithCredential }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -211,7 +212,7 @@ window.closeUserMenu=function(){
   document.getElementById('userMenu').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
 };
-window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());document.getElementById('loginRequiredOverlay').classList.remove('show');}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await (window.Capacitor?.isNativePlatform() ? nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) : signInWithPopup(auth, new GoogleAuthProvider()));document.getElementById('loginRequiredOverlay').classList.remove('show');}catch(e){console.error(e);}};
 window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
 
 onAuthStateChanged(auth,async user=>{

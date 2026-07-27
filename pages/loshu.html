@@ -177,8 +177,9 @@
 </nav>
 
 <script type="module">
+import { nativeGoogleSignIn } from '../js/native-google-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut , signInWithCredential }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -207,7 +208,7 @@ function setAvatarDisplay(a) {
   else el.textContent = a || '👤';
 }
 window.loginNow = async function() {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
+  try { await (window.Capacitor?.isNativePlatform() ? nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) : signInWithPopup(auth, new GoogleAuthProvider())); } catch(e) { console.error(e); }
 };
 window.logoutNow = async function() {
   await signOut(auth); window.location.href = '../index.html';
