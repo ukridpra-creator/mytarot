@@ -11,7 +11,7 @@ async function _initAuth() {
   if (_auth) return;
   try {
     const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getAuth, GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
     const cfg = {
       apiKey:'AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM',
       authDomain:'my-tarot67.firebaseapp.com',
@@ -23,7 +23,13 @@ async function _initAuth() {
     const app = getApps().length ? getApps()[0] : initializeApp(cfg);
     _auth = getAuth(app);
     _GoogleAuthProvider = GoogleAuthProvider;
-    window.__ciSignInWithPopup = () => signInWithPopup(_auth, new GoogleAuthProvider());
+    window.__ciSignInWithPopup = async () => {
+      if (window.Capacitor?.isNativePlatform()) {
+        const { nativeGoogleSignIn } = await import('/js/native-google-auth.js');
+        return nativeGoogleSignIn(_auth, GoogleAuthProvider, signInWithCredential);
+      }
+      return signInWithPopup(_auth, new GoogleAuthProvider());
+    };
   } catch(e) { console.error('auth init error', e); }
 }
 
