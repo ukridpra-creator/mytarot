@@ -1,5 +1,6 @@
 package vip.mytarot.app;
 
 import com.getcapacitor.BridgeActivity;
+import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
 
-public class MainActivity extends BridgeActivity {}
+public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {}
