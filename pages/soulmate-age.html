@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เนื้อคู่จะมาตอนอายุเท่าไหร่ ผสมศาสตร์ไทย+เวทิก | My Tarot</title>
+  <meta name="description" content="ทำนายอายุที่จะเจอเนื้อคู่ ผสมศาสตร์วันเกิดไทยโบราณและโหราศาสตร์เวทิก (ลัคนา เรือนที่ 7 ทศา) คำนวณจากวันเกิดจริงฟรีค่ะ">
+  <meta name="keywords" content="อายุเจอเนื้อคู่,ทำนายเนื้อคู่,ลัคนา,เรือนที่7,ทศา,vimshottari dasha">
+  <meta property="og:title" content="เนื้อคู่จะมาตอนอายุเท่าไหร่ — My Tarot">
+  <meta property="og:description" content="ทำนายอายุเจอเนื้อคู่ ผสมศาสตร์ไทย+เวทิก คำนวณจริงจากวันเกิดฟรีค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/soulmate-age">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/checkin.js"></script>
+  <script src="../js/astronomy.browser.min.js"></script>
+  <script src="../js/moon-engine.js"></script>
+  <script src="../js/soulmate-data.js"></script>
+  <style>
+    body { padding-bottom: 80px; }
+    .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(124,58,237,0.2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--purple-light); font-size:16px; text-decoration:none; flex-shrink:0; }
+    .page-title { font-size:18px; font-weight:700; color:white; }
+    .page-content { padding:20px 20px 40px; }
+
+    .hero { text-align:center; padding:8px 0 20px; }
+    .hero-title { font-size:22px; font-weight:800; color:white; margin-bottom:4px; }
+    .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
+    .free-badge-inline { display:inline-block; margin-top:10px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); font-size:11px; font-weight:700; padding:4px 14px; border-radius:20px; }
+
+    .form-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:16px; }
+    .form-label { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px; display:block; }
+    .gender-row { display:flex; gap:10px; margin-bottom:16px; }
+    .gender-btn { flex:1; padding:12px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.6); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; text-align:center; }
+    .gender-btn.active { border-color:#a855f7; background:rgba(124,58,237,0.15); color:white; font-weight:700; }
+
+    .date-row { display:flex; gap:8px; margin-bottom:16px; }
+    .date-row select { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 4px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; }
+
+    .time-toggle { display:flex; align-items:center; gap:8px; margin-bottom:14px; cursor:pointer; }
+    .time-toggle input { width:18px; height:18px; }
+    .time-toggle-label { font-size:13px; color:rgba(255,255,255,0.7); }
+
+    .time-section { display:none; }
+    .time-section.show { display:block; }
+    .time-row { display:flex; gap:8px; margin-bottom:12px; }
+    .time-row select { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:10px 4px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; }
+    .province-select { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:12px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; margin-bottom:8px; }
+    .no-time-hint { font-size:11px; color:rgba(255,255,255,0.4); line-height:1.7; }
+
+    .btn-calc { width:100%; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; border-radius:16px; padding:16px; color:white; font-size:15px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:6px; }
+
+    .result-box { display:none; margin-top:20px; }
+    .result-box.show { display:block; }
+
+    .section-label { font-size:14px; font-weight:800; color:white; margin:20px 0 10px; }
+    .system-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:18px; padding:18px; margin-bottom:14px; }
+    .system-title { font-size:13px; font-weight:700; color:var(--gold); margin-bottom:12px; }
+
+    .age-chip { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.04); border-radius:14px; padding:12px 14px; margin-bottom:8px; }
+    .age-chip.good { border-left:3px solid #10b981; }
+    .age-chip.bad { border-left:3px solid #ef4444; }
+    .age-chip.mixed { border-left:3px solid #f59e0b; }
+    .age-chip-range { font-size:15px; font-weight:800; color:white; min-width:90px; }
+    .age-chip-note { font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+    .vedic-info-row { display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,0.6); padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .vedic-info-row:last-child { border-bottom:none; }
+    .vedic-info-label { color:rgba(255,255,255,0.4); }
+    .vedic-info-val { color:var(--gold); font-weight:700; }
+
+    .lagna-note { font-size:11px; color:rgba(255,255,255,0.4); margin-top:8px; font-style:italic; }
+
+    .btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="indian-hub.html" class="back-btn">←</a>
+  <div class="page-title">💞 อายุเจอเนื้อคู่</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+    <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
+    <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
+  </div>
+</div>
+
+<div class="user-menu" id="userMenu">
+  <div id="guestView">
+    <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
+    <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
+    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+  </div>
+  <div id="loggedView" style="display:none">
+    <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
+    <div class="menu-divider"></div>
+    <div class="menu-item" onclick="window.location.href='history.html'">📜 ประวัติดูดวง</div>
+    <div class="menu-item danger" onclick="logoutNow()">🚪 ออกจากระบบ</div>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<div class="page-content">
+  <div class="hero">
+    <div style="margin-bottom:12px">
+      <img src="../images/mascot-soulmate.png" alt="mascot" style="width:100px;height:100px;object-fit:contain;margin:0 auto;display:block;" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=font-size:56px;margin-bottom:4px>💞</div>')">
+    </div>
+    <div class="hero-title">💞 เนื้อคู่จะมาตอนอายุเท่าไหร่</div>
+    <div class="hero-desc">ผสมศาสตร์วันเกิดไทยโบราณ + โหราศาสตร์เวทิก<br>(ลัคนา เรือนที่ 7 ทศา) คำนวณจริงจากวันเกิดค่ะ</div>
+    <div class="free-badge-inline">✨ ฟรี ไม่เสียเหรียญ</div>
+  </div>
+
+  <div class="form-card">
+    <label class="form-label">เพศ</label>
+    <div class="gender-row">
+      <div class="gender-btn active" id="genderMale" onclick="selectGender('male')">👨 ชาย</div>
+      <div class="gender-btn" id="genderFemale" onclick="selectGender('female')">👩 หญิง</div>
+    </div>
+
+    <label class="form-label">วันเดือนปีเกิด</label>
+    <div class="date-row">
+      <select id="selDay"></select>
+      <select id="selMonth"></select>
+      <select id="selYear"></select>
+    </div>
+
+    <div class="time-toggle" onclick="toggleTime()">
+      <input type="checkbox" id="hasTimeCheck" onclick="event.stopPropagation();toggleTime()">
+      <span class="time-toggle-label">ทราบเวลาเกิดที่แม่นยำ (เพื่อคำนวณลัคนาได้แม่นขึ้น)</span>
+    </div>
+
+    <div class="time-section" id="timeSection">
+      <div class="time-row">
+        <select id="selHour"></select>
+        <select id="selMinute"></select>
+      </div>
+      <label class="form-label">จังหวัดที่เกิด</label>
+      <select class="province-select" id="selProvince"></select>
+    </div>
+    <div class="no-time-hint" id="noTimeHint">💡 ถ้าไม่ทราบเวลาเกิด ระบบจะใช้ราศีเกิดแทนลัคนาโดยประมาณค่ะ</div>
+
+    <button class="btn-calc" onclick="calcNow()">💞 คำนวณเลยค่ะ</button>
+  </div>
+
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBMQEsuykNPvV7CsnB36zzmN-wribcd7YM",
+  authDomain:"my-tarot67.firebaseapp.com", projectId:"my-tarot67",
+  storageBucket:"my-tarot67.firebasestorage.app",
+  messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
+};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+setPersistence(auth,indexedDBLocalPersistence).catch(()=>setPersistence(auth,browserLocalPersistence));
+const db=getFirestore(app);
+window.currentUser=null;
+
+window.updateCoinUI=function(c){document.getElementById('coinCount').textContent=c;};
+function setAvatarDisplay(a){var el=document.getElementById('avatarEl');if(!el)return;if(a&&a.includes('.png'))el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';else el.textContent=a||'👤';}
+window.__ciGoogleSignIn=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.loginNow=async function(){try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){console.error(e);}};
+window.logoutNow=async function(){await signOut(auth);window.location.href='../index.html';};
+
+onAuthStateChanged(auth,async user=>{
+  window.currentUser=user;
+  if(user){
+    var snap=await getDoc(doc(db,'users',user.uid));
+    var data=snap.exists()?snap.data():{};
+    updateCoinUI(data.coins||0);setAvatarDisplay(data.avatar||'');
+    document.getElementById('guestView').style.display='none';
+    document.getElementById('loggedView').style.display='block';
+    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
+    document.getElementById('menuEmail').textContent=user.email;
+    if(typeof setupCheckin==='function')setupCheckin(user,'../');
+  } else {updateCoinUI('—');setAvatarDisplay('');}
+});
+
+window.__soulmateSave = async function(question, resultText){
+  if(!window.currentUser) return;
+  try{
+    await addDoc(collection(db,'users',window.currentUser.uid,'readings'),{
+      type:'อายุเจอเนื้อคู่',
+      question:question,
+      result:resultText,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){console.error(e);}
+};
+</script>
+
+<script>
+let selectedGender = 'male';
+
+// เติม dropdown วัน/เดือน/ปี
+(function(){
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('selDay').innerHTML = Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+  document.getElementById('selMonth').innerHTML = months.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  const curY = new Date().getFullYear();
+  document.getElementById('selYear').innerHTML = Array.from({length:80},(_,i)=> curY-i).map(y=>`<option value="${y}">${y+543}</option>`).join('');
+
+  document.getElementById('selHour').innerHTML = Array.from({length:24},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')} น.</option>`).join('');
+  document.getElementById('selMinute').innerHTML = Array.from({length:60},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')} นาที</option>`).join('');
+
+  document.getElementById('selProvince').innerHTML = THAI_PROVINCES.map(p=>`<option value="${p.name}">${p.name}</option>`).join('');
+})();
+
+window.selectGender = function(g){
+  selectedGender = g;
+  document.getElementById('genderMale').classList.toggle('active', g==='male');
+  document.getElementById('genderFemale').classList.toggle('active', g==='female');
+};
+
+window.toggleTime = function(){
+  const check = document.getElementById('hasTimeCheck');
+  document.getElementById('timeSection').classList.toggle('show', check.checked);
+  document.getElementById('noTimeHint').style.display = check.checked ? 'none' : 'block';
+};
+
+function findProvinceCoord(name){
+  const p = THAI_PROVINCES.find(x => x.name === name);
+  return p ? {lat:p.lat, lng:p.lng} : null;
+}
+
+window.calcNow = function(){
+  const day = parseInt(document.getElementById('selDay').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const year = parseInt(document.getElementById('selYear').value);
+  const hasTime = document.getElementById('hasTimeCheck').checked;
+
+  let input = { day, month, year, gender: selectedGender, hasTime };
+  if (hasTime) {
+    input.hour = parseInt(document.getElementById('selHour').value);
+    input.minute = parseInt(document.getElementById('selMinute').value);
+    const coord = findProvinceCoord(document.getElementById('selProvince').value);
+    if (coord) { input.longitude = coord.lng; input.latitude = coord.lat; }
+  }
+
+  const r = calcSoulmatePrediction(input);
+  renderResult(r, input);
+};
+
+function qualityLabel(q){
+  if (q === 'good') return '✅ ดี';
+  if (q === 'bad') return '⚠️ ควรระวัง';
+  return '🟡 กลางๆ';
+}
+
+function renderResult(r, input){
+  const box = document.getElementById('resultBox');
+  box.classList.add('show');
+
+  const thaiChips = r.thaiDayData.map(d => `
+    <div class="age-chip ${d.quality}">
+      <div class="age-chip-range">${d.age}</div>
+      <div class="age-chip-note">${qualityLabel(d.quality)} — ${d.note}</div>
+    </div>`).join('');
+
+  const favorableChips = r.favorableDashas.length ? r.favorableDashas.map(f => `
+    <div class="age-chip good">
+      <div class="age-chip-range">${Math.round(f.ageStart)}-${Math.round(f.ageEnd)} ปี</div>
+      <div class="age-chip-note">ช่วงทศา${f.lord} — ดาวที่เกี่ยวข้องกับคู่ครองกำลังส่งพลังค่ะ</div>
+    </div>`).join('') : '<div class="lagna-note">ไม่พบช่วงทศาที่เด่นชัดเป็นพิเศษในช่วงวัยที่เหมาะสมค่ะ</div>';
+
+  box.innerHTML = `
+    <div class="section-label">🇹🇭 ระบบวันเกิดไทย (${r.dayOfWeek})</div>
+    <div class="system-card">
+      <div class="system-title">ช่วงอายุที่มีโอกาสเจอเนื้อคู่</div>
+      ${thaiChips}
+    </div>
+
+    <div class="section-label">🕉️ ระบบเวทิก (ลัคนา + เรือนที่ 7 + ทศา)</div>
+    <div class="system-card">
+      <div class="vedic-info-row"><span class="vedic-info-label">ลัคนา</span><span class="vedic-info-val">ราศี${r.lagnaSign}</span></div>
+      <div class="vedic-info-row"><span class="vedic-info-label">เรือนที่ 7 (คู่ครอง)</span><span class="vedic-info-val">ราศี${r.seventhSign}</span></div>
+      <div class="vedic-info-row"><span class="vedic-info-label">เจ้าเรือนที่ 7</span><span class="vedic-info-val">${r.seventhLord}</span></div>
+      <div class="vedic-info-row"><span class="vedic-info-label">นักษัตรจันทร์</span><span class="vedic-info-val">${r.moonNakshatra}</span></div>
+      <div class="lagna-note">${r.lagnaSource}</div>
+    </div>
+
+    <div class="system-card">
+      <div class="system-title">ช่วงทศาที่เอื้อต่อการมีคู่ครอง</div>
+      ${favorableChips}
+    </div>
+
+    <button class="btn-reset" onclick="location.reload()">🔄 คำนวณใหม่</button>
+  `;
+
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+
+  const question = `${selectedGender==='male'?'ชาย':'หญิง'} เกิด ${input.day}/${input.month}/${input.year}`;
+  const resultText = `🇹🇭 วันเกิด (${r.dayOfWeek}): ` + r.thaiDayData.map(d=>d.age+' — '+qualityLabel(d.quality)+' — '+d.note).join(' | ')
+    + `\n\n🕉️ ลัคนา: ราศี${r.lagnaSign} (${r.lagnaSource}) | เรือนที่7: ราศี${r.seventhSign} เจ้าเรือน${r.seventhLord} | นักษัตรจันทร์: ${r.moonNakshatra}`
+    + `\n\nช่วงทศาที่เอื้อต่อคู่ครอง: ` + (r.favorableDashas.length ? r.favorableDashas.map(f=>Math.round(f.ageStart)+'-'+Math.round(f.ageEnd)+' ปี (ทศา'+f.lord+')').join(', ') : 'ไม่พบช่วงเด่นชัด');
+
+  if (typeof window.__soulmateSave === 'function') window.__soulmateSave(question, resultText);
+}
+</script>
+
+<!-- SEO TEXT -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ทำนายอายุเจอเนื้อคู่คำนวณจากอะไร?</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">หน้านี้ผสมผสาน 2 ศาสตร์เข้าด้วยกันค่ะ ศาสตร์แรกคือตำราทำนายเนื้อคู่จากวันเกิดแบบไทยโบราณ ที่ระบุช่วงอายุและคุณภาพของชีวิตคู่ตามวันในสัปดาห์ที่เกิด ศาสตร์ที่สองคือโหราศาสตร์เวทิก (Vedic/Jyotish) ซึ่งคำนวณลัคนา (Ascendant) จากวันเวลาและสถานที่เกิดจริง เพื่อหาเรือนที่ 7 อันเป็นเรือนแห่งคู่ครอง และวิเคราะห์ทศา (Vimshottari Dasha) จากตำแหน่งดวงจันทร์จริงเพื่อหาช่วงอายุที่พลังดาวเอื้อต่อการมีคู่ครองค่ะ หากไม่ทราบเวลาเกิดที่แม่นยำ ระบบจะใช้ราศีเกิดเป็นตัวประมาณลัคนาแทนค่ะ</p>
+</div>
+
+</body>
+</html>

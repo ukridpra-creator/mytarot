@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mickey Mouse — Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { box-sizing:border-box; }
+    body { margin:0; background:#0d0620; font-family:'Sarabun',sans-serif; color:white; min-height:100vh; }
+
+    /* ── PASSWORD GATE (client-side ล้วน ไม่ผูก backend) ── */
+    #gate { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:#0d0620; z-index:999; }
+    .gate-box { text-align:center; width:90%; max-width:320px; }
+    .gate-icon { font-size:48px; margin-bottom:16px; }
+    .gate-title { font-size:20px; font-weight:800; margin-bottom:6px; }
+    .gate-sub { font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:20px; }
+    .gate-input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:14px; color:white; font-size:16px; text-align:center; letter-spacing:2px; outline:none; margin-bottom:10px; }
+    .gate-input:focus { border-color:#7c3aed; }
+    .gate-btn { width:100%; background:linear-gradient(135deg,#5b21b6,#7c3aed); border:none; border-radius:12px; padding:14px; color:white; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .gate-err { font-size:12px; color:#f87171; margin-top:8px; min-height:16px; }
+
+    /* ── MAIN CONTENT ── */
+    #content { display:none; padding:20px; padding-bottom:60px; }
+    .page-title { font-size:18px; font-weight:800; text-align:center; margin-bottom:4px; }
+    .page-sub { font-size:12px; color:rgba(255,255,255,0.4); text-align:center; margin-bottom:24px; }
+
+    .zodiac-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
+    .zodiac-btn { background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 4px; text-align:center; cursor:pointer; }
+    .zodiac-btn.active { border-color:#a855f7; background:rgba(124,58,237,0.15); }
+    .zodiac-btn .z-icon { font-size:20px; }
+    .zodiac-btn .z-label { font-size:10px; font-weight:700; margin-top:2px; }
+
+    .preview-note { text-align:center; font-size:12px; color:rgba(255,255,255,0.35); margin-bottom:16px; }
+
+    .platform-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:14px; }
+    .platform-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:16px 10px; border-radius:14px; border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:white; font-size:14px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .platform-btn:disabled { opacity:0.35; cursor:not-allowed; }
+    .platform-btn .p-icon { font-size:20px; }
+    .platform-btn.fb { border-color:rgba(24,119,242,0.4); }
+    .platform-btn.ig { border-color:rgba(225,48,108,0.4); }
+    .platform-btn.tt { border-color:rgba(255,255,255,0.3); }
+    .platform-btn.x  { border-color:rgba(255,255,255,0.3); }
+
+    .status-text { text-align:center; font-size:12px; color:#d4af37; min-height:18px; margin-top:6px; }
+  </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">🐭</div>
+    <div class="gate-title">Mickey Mouse — Test Page</div>
+    <div class="gate-sub">หน้าทดสอบภายใน ไม่เปิดสาธารณะ</div>
+    <input class="gate-input" type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">เข้าสู่ระบบ</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="page-title">🍀 ทดสอบสร้างรูปแชร์ดวงรายวัน</div>
+  <div class="page-sub">เลือกราศี แล้วเลือกแพลตฟอร์มที่จะบันทึกรูป</div>
+
+  <div class="zodiac-grid" id="zodiacGrid"></div>
+
+  <div class="page-sub" style="margin-top:4px;margin-bottom:8px;text-align:left;">📅 เลือกวันที่จะดูดวง (ค่าเริ่มต้น = วันนี้)</div>
+  <div style="display:flex;gap:8px;margin-bottom:20px;">
+    <select class="platform-btn" id="selDay" style="cursor:pointer;padding:10px 4px;"></select>
+    <select class="platform-btn" id="selMonth" style="cursor:pointer;padding:10px 4px;"></select>
+    <select class="platform-btn" id="selYear" style="cursor:pointer;padding:10px 4px;"></select>
+  </div>
+
+  <div class="preview-note">เลือกราศีก่อน ปุ่มแพลตฟอร์มจะกดได้ค่ะ</div>
+
+  <button class="platform-btn" id="btnAll12" onclick="downloadAll12()" style="width:100%;margin-bottom:14px;border-color:rgba(212,175,55,0.4);">
+    <span class="p-icon">📦</span> ดาวน์โหลดครบ 12 ราศีเลย
+  </button>
+
+  <button class="platform-btn" id="btnDownload" onclick="downloadCard()" disabled style="width:100%;margin-bottom:14px;">
+    <span class="p-icon">⬇️</span> ดาวน์โหลดรูป
+  </button>
+  <div class="status-text" id="statusText"></div>
+</div>
+
+<!-- ── การ์ดสำหรับแคปเป็นรูป (วางไว้นอกจอ ไม่ต้องโชว์ให้ผู้ใช้เห็น) ── -->
+<!-- ขนาด 1080x1920 (9:16) — safe zone: เว้นบน 250px, ล่าง 400px, ข้างละ ~80px ตามที่ศึกษามา -->
+<div id="shareCard" style="position:fixed; left:-9999px; top:0; width:1080px; height:1920px; background:linear-gradient(160deg,#1a0b2e 0%,#2a1245 40%,#0d0620 100%); font-family:'Sarabun',sans-serif; overflow:hidden;">
+
+  <!-- โซนบน (0-250px) — ตกแต่งเฉยๆ ไม่ใส่เนื้อหาสำคัญ -->
+  <div style="height:250px; display:flex; align-items:center; justify-content:center;">
+    <div style="font-size:28px; color:rgba(255,255,255,0.18); letter-spacing:8px; font-weight:700;">DAILY HOROSCOPE</div>
+  </div>
+
+  <!-- SAFE ZONE เนื้อหาหลัก (250px - 1520px = สูง 1270px) -->
+  <div style="padding:0 80px;">
+    <div style="text-align:center; font-size:150px; line-height:1;" id="cardEmoji"></div>
+    <div style="text-align:center; font-size:64px; font-weight:800; color:white; margin-top:14px;" id="cardSign"></div>
+    <div style="text-align:center; font-size:34px; color:#d4af37; margin-top:10px;" id="cardDate"></div>
+    <div style="text-align:center; font-size:58px; margin-top:20px; letter-spacing:4px;" id="cardStars"></div>
+
+    <div style="margin-top:40px; display:flex; flex-direction:column; gap:20px;" id="cardCatList"></div>
+  </div>
+
+  <!-- โซนล่าง (bottom 400px) — โลโก้แบรนด์ วางไม่ติดขอบล่างสุด -->
+  <div style="position:absolute; bottom:90px; left:0; right:0; text-align:center;">
+    <div style="font-size:38px; font-weight:800; color:#d4af37;">🔮 mytarot.vip</div>
+    <div style="font-size:23px; color:rgba(255,255,255,0.5); margin-top:8px;">ดูดวงออนไลน์ฟรี ครบทุกศาสตร์</div>
+  </div>
+</div>
+
+<script src="../js/astronomy.browser.min.js"></script>
+<script src="../js/daily-horoscope-data.js"></script>
+<script>
+// ── PASSWORD GATE (ไม่มี backend เช็คแค่ฝั่ง client เท่านั้น) ──
+window.checkPw = function(){
+  const v = document.getElementById('pwInput').value;
+  if (v === 'kk112233') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+  } else {
+    document.getElementById('gateErr').textContent = 'รหัสผ่านไม่ถูกต้องค่ะ';
+  }
+};
+
+const CAT_ICONS = { work:'💼', money:'💰', love:'💕', health:'🩺' };
+const CAT_LABELS = { work:'การงาน', money:'การเงิน', love:'ความรัก', health:'สุขภาพ' };
+const MONTH_TH = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+let selectedSignIdx = null;
+let currentResult = null;
+
+(function(){
+  const grid = document.getElementById('zodiacGrid');
+  grid.innerHTML = ZODIAC_TH.map((name,i) => `
+    <div class="zodiac-btn" id="zbtn${i}" onclick="pickZodiac(${i})">
+      <div class="z-icon">${ZODIAC_EMOJI[i]}</div>
+      <div class="z-label">${name}</div>
+    </div>`).join('');
+
+  // เติมตัวเลือกวันที่ (default = วันนี้)
+  const today = new Date();
+  const selDay = document.getElementById('selDay');
+  const selMonth = document.getElementById('selMonth');
+  const selYear = document.getElementById('selYear');
+
+  selDay.innerHTML = Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+  selMonth.innerHTML = MONTH_TH.map((m,i) => `<option value="${i+1}">${m}</option>`).join('');
+  const curY = today.getFullYear();
+  selYear.innerHTML = Array.from({length:5}, (_,i) => curY-2+i).map(y => `<option value="${y}">${y+543}</option>`).join('');
+
+  selDay.value = today.getDate();
+  selMonth.value = today.getMonth()+1;
+  selYear.value = curY;
+
+  [selDay, selMonth, selYear].forEach(el => el.addEventListener('change', onDateChange));
+})();
+
+function getSelectedDate(){
+  const d = parseInt(document.getElementById('selDay').value);
+  const m = parseInt(document.getElementById('selMonth').value);
+  const y = parseInt(document.getElementById('selYear').value);
+  return new Date(y, m-1, d);
+}
+
+function onDateChange(){
+  // ถ้าเลือกราศีไว้แล้ว ให้คำนวณใหม่ตามวันที่ที่เปลี่ยน
+  if (selectedSignIdx !== null) pickZodiac(selectedSignIdx);
+}
+
+window.pickZodiac = function(idx){
+  selectedSignIdx = idx;
+  document.querySelectorAll('.zodiac-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('zbtn'+idx).classList.add('active');
+
+  const chosenDate = getSelectedDate();
+  currentResult = getDailyHoroscope(idx, chosenDate);
+  buildShareCard(currentResult, chosenDate);
+
+  document.getElementById('btnDownload').disabled = false;
+  document.getElementById('statusText').textContent = '';
+};
+
+function buildShareCard(r, dateForCard){
+  const d = dateForCard || new Date();
+  document.getElementById('cardEmoji').textContent = r.userSignEmoji;
+  document.getElementById('cardSign').textContent = 'ราศี' + r.userSign;
+  document.getElementById('cardDate').textContent = d.getDate() + ' ' + MONTH_TH[d.getMonth()] + ' ' + (d.getFullYear()+543);
+  document.getElementById('cardStars').textContent = '⭐'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+
+  const cats = ['work','money','love','health'];
+  document.getElementById('cardCatList').innerHTML = cats.map(key => `
+    <div style="background:rgba(255,255,255,0.06); border-radius:22px; padding:26px 28px;">
+      <div style="font-size:32px; color:#d4af37; font-weight:700;">${CAT_ICONS[key]} ${CAT_LABELS[key]}</div>
+      <div style="font-size:28px; color:rgba(255,255,255,0.9); margin-top:12px; line-height:1.75;">${r[key]}</div>
+    </div>`).join('');
+}
+
+window.downloadCard = async function(){
+  if (selectedSignIdx === null) return;
+  const statusEl = document.getElementById('statusText');
+  statusEl.textContent = '⏳ กำลังสร้างรูป...';
+
+  try {
+    const dataUrl = await captureCard();
+    triggerDownload(dataUrl, `mytarot-horoscope-${Date.now()}.png`);
+    statusEl.textContent = '✅ บันทึกรูปสำเร็จค่ะ';
+  } catch(e) {
+    console.error(e);
+    statusEl.textContent = '❌ สร้างรูปไม่สำเร็จค่ะ ลองใหม่อีกครั้ง';
+  }
+};
+
+// ── ดาวน์โหลดครบ 12 ราศีในคลิกเดียว ──
+// ใช้วันที่ที่เลือกไว้ตอนนี้ (หรือวันนี้ถ้ายังไม่เปลี่ยน) วนสร้างการ์ดทีละราศีแล้วดาวน์โหลดต่อกัน
+window.downloadAll12 = async function(){
+  const statusEl = document.getElementById('statusText');
+  const btn = document.getElementById('btnAll12');
+  btn.disabled = true;
+  const chosenDate = getSelectedDate();
+
+  for (let i = 0; i < 12; i++) {
+    statusEl.textContent = `⏳ กำลังสร้างรูป ${i+1}/12 (ราศี${ZODIAC_TH[i]})...`;
+    const result = getDailyHoroscope(i, chosenDate);
+    buildShareCard(result, chosenDate);
+
+    // รอให้ browser วาด DOM ใหม่ก่อนแคป
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    try {
+      const dataUrl = await captureCard();
+      triggerDownload(dataUrl, `mytarot-horoscope-${ZODIAC_TH[i]}-${Date.now()}.png`);
+    } catch(e) {
+      console.error('พลาดที่ราศี' + ZODIAC_TH[i], e);
+    }
+
+    // เว้นจังหวะระหว่างดาวน์โหลดแต่ละไฟล์ กันเบราว์เซอร์บล็อกการดาวน์โหลดรัวๆ
+    await new Promise(r => setTimeout(r, 400));
+  }
+
+  btn.disabled = false;
+  statusEl.textContent = '✅ ดาวน์โหลดครบ 12 ราศีแล้วค่ะ';
+
+  // คืนค่าการ์ดกลับไปที่ราศีที่เลือกไว้ก่อนหน้า (ถ้ามี)
+  if (selectedSignIdx !== null) {
+    const r = getDailyHoroscope(selectedSignIdx, chosenDate);
+    buildShareCard(r, chosenDate);
+  }
+};
+
+async function captureCard(){
+  const card = document.getElementById('shareCard');
+  const canvas = await html2canvas(card, { width:1080, height:1920, scale:1, backgroundColor:null });
+  return canvas.toDataURL('image/png');
+}
+
+function triggerDownload(dataUrl, filename){
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
+</body>
+</html>
