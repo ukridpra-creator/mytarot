@@ -82,6 +82,29 @@
     .tx-time{font-size:11px;color:var(--dim);}
     .tx-amt{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gold);}
 
+    /* RECENT USERS (ใหม่) */
+    .user-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background 0.15s;}
+    .user-item:last-child{border-bottom:none;}
+    .user-item:active{background:rgba(124,58,237,0.08);}
+    .user-avatar{width:38px;height:38px;border-radius:50%;background:rgba(212,175,55,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .user-info{flex:1;min-width:0;}
+    .user-name{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .user-time{font-size:11px;color:var(--dim);}
+    .user-coins{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--gold);flex-shrink:0;}
+    .user-arrow{color:var(--dim);font-size:14px;flex-shrink:0;}
+
+    /* USER DETAIL MODAL (ใหม่) */
+    .modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.75);display:none;align-items:flex-end;justify-content:center;}
+    .modal-overlay.show{display:flex;}
+    .modal-sheet{background:linear-gradient(160deg,#1e0a3c,#0d0820);border:1px solid var(--border);border-radius:24px 24px 0 0;width:100%;max-width:480px;max-height:82vh;overflow-y:auto;padding:24px 20px 32px;}
+    .modal-close{text-align:right;margin-bottom:8px;}
+    .modal-close span{font-size:20px;color:var(--dim);cursor:pointer;padding:4px 10px;}
+    .modal-user-head{text-align:center;margin-bottom:20px;}
+    .modal-user-avatar{width:56px;height:56px;border-radius:50%;background:rgba(212,175,55,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;}
+    .modal-user-name{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:white;}
+    .modal-user-sub{font-size:12px;color:var(--dim);margin-top:2px;}
+    .modal-sec-title{font-size:12px;color:var(--dim);font-weight:700;letter-spacing:1px;margin:20px 0 10px;}
+
     /* LOADING */
     .loading{text-align:center;padding:32px;color:var(--dim);font-size:13px;}
     .skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 100%);background-size:200% 100%;animation:skel 1.2s infinite;border-radius:8px;height:16px;margin-bottom:8px;}
@@ -89,6 +112,11 @@
 
     /* REFRESH */
     .btn-refresh{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:10px;padding:6px 14px;color:#a855f7;font-size:12px;font-family:'Sarabun',sans-serif;cursor:pointer;}
+
+    /* AUTO-REFRESH TOGGLE (ใหม่) */
+    .auto-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);}
+    .auto-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.2);}
+    .auto-dot.on{background:#10b981;box-shadow:0 0 6px #10b981;}
   </style>
 </head>
 <body>
@@ -109,7 +137,11 @@
 <div id="dash">
   <div class="top-bar">
     <div class="top-logo">⭐ CONAN</div>
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="auto-toggle" id="autoToggle" onclick="toggleAutoRefresh()" style="cursor:pointer;">
+        <div class="auto-dot" id="autoDot"></div>
+        <span id="autoLabel">อัตโนมัติ: ปิด</span>
+      </div>
       <div class="top-time" id="topTime"></div>
       <button class="btn-refresh" onclick="loadDash()">↻ รีเฟรช</button>
     </div>
@@ -142,6 +174,12 @@
       </div>
     </div>
 
+    <!-- RECENT USERS (ใหม่) -->
+    <div class="sec-title">👥 ผู้ใช้ที่มีความเคลื่อนไหวล่าสุด</div>
+    <div class="card" id="recentUsers">
+      <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+    </div>
+
     <!-- TOP PAGES -->
     <div class="sec-title">🔥 หน้าที่เล่นเยอะสุด</div>
     <div class="period-tabs" id="periodTabs">
@@ -166,6 +204,16 @@
       <div class="skel"></div><div class="skel"></div><div class="skel"></div>
     </div>
 
+  </div>
+</div>
+
+<!-- USER DETAIL MODAL (ใหม่) -->
+<div class="modal-overlay" id="userModal" onclick="if(event.target===this)closeUserModal()">
+  <div class="modal-sheet">
+    <div class="modal-close"><span onclick="closeUserModal()">✕</span></div>
+    <div id="userModalBody">
+      <div class="loading">กำลังโหลด...</div>
+    </div>
   </div>
 </div>
 
@@ -209,6 +257,18 @@ function startClock(){
   update(); setInterval(update,60000);
 }
 
+function timeAgo(iso){
+  if(!iso) return '—';
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const min = Math.floor(diffMs/60000);
+  if (min < 1) return 'เมื่อสักครู่';
+  if (min < 60) return min+' นาทีที่แล้ว';
+  const hr = Math.floor(min/60);
+  if (hr < 24) return hr+' ชม.ที่แล้ว';
+  const day = Math.floor(hr/24);
+  return day+' วันที่แล้ว';
+}
+
 let currentPeriod = 'today';
 let topPagesData = null; // เก็บข้อมูลทั้ง 4 ช่วงเวลาไว้ สลับแท็บไม่ต้องยิง fetch ใหม่
 
@@ -233,6 +293,75 @@ window.switchPeriod=function(period){
   renderTopPages(period);
 };
 
+// ── USER DETAIL MODAL (ใหม่) ──
+window.openUserDetail=async function(uid){
+  document.getElementById('userModal').classList.add('show');
+  document.getElementById('userModalBody').innerHTML = '<div class="loading">กำลังโหลด...</div>';
+  try{
+    const res = await fetch('/api/admin-user-detail', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password: window._adminPass, uid })
+    });
+    if(!res.ok){
+      document.getElementById('userModalBody').innerHTML = '<div class="loading">โหลดข้อมูลไม่สำเร็จค่ะ</div>';
+      return;
+    }
+    const d = await res.json();
+    const txHtml = d.transactions.length ? d.transactions.map(t=>`
+      <div class="tx-item">
+        <div class="tx-avatar">🪙</div>
+        <div class="tx-info">
+          <div class="tx-name">${t.label}</div>
+          <div class="tx-time">${t.createdAt ? new Date(t.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
+        </div>
+        <div class="tx-amt">฿${t.amount}</div>
+      </div>`).join('') : '<div class="loading">ยังไม่เคยเติมเงินค่ะ</div>';
+
+    const readHtml = d.readings.length ? d.readings.map(r=>`
+      <div class="rank-item">
+        <div class="rank-name">${r.type}</div>
+        <div class="rank-count" style="width:auto;">${r.createdAt ? new Date(r.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
+      </div>`).join('') : '<div class="loading">ยังไม่เคยดูดวงค่ะ</div>';
+
+    document.getElementById('userModalBody').innerHTML = `
+      <div class="modal-user-head">
+        <div class="modal-user-avatar">🔮</div>
+        <div class="modal-user-name">${d.displayName || d.email || d.uid.slice(0,8)}</div>
+        <div class="modal-user-sub">${d.email || ''} · 🪙 ${d.coins}</div>
+      </div>
+      <div class="modal-sec-title">🧾 ประวัติเติมเงิน (${d.transactions.length})</div>
+      <div class="card">${txHtml}</div>
+      <div class="modal-sec-title">🔮 ประวัติดูดวง (${d.readings.length})</div>
+      <div class="card">${readHtml}</div>
+    `;
+  } catch(e){
+    console.error(e);
+    document.getElementById('userModalBody').innerHTML = '<div class="loading">เกิดข้อผิดพลาดค่ะ</div>';
+  }
+};
+
+window.closeUserModal=function(){
+  document.getElementById('userModal').classList.remove('show');
+};
+
+// ── AUTO REFRESH (ใหม่) ──
+let autoRefreshTimer = null;
+window.toggleAutoRefresh=function(){
+  const dot = document.getElementById('autoDot');
+  const label = document.getElementById('autoLabel');
+  if (autoRefreshTimer) {
+    clearInterval(autoRefreshTimer);
+    autoRefreshTimer = null;
+    dot.classList.remove('on');
+    label.textContent = 'อัตโนมัติ: ปิด';
+  } else {
+    autoRefreshTimer = setInterval(loadDash, 30000); // รีเฟรชทุก 30 วินาที
+    dot.classList.add('on');
+    label.textContent = 'อัตโนมัติ: 30s';
+  }
+};
+
 window.loadDash=async function(){
   try{
     const res=await fetch('/api/admin',{
@@ -249,6 +378,18 @@ window.loadDash=async function(){
     document.getElementById('mRevenue').textContent='฿'+d.totalRevenue.toLocaleString();
     document.getElementById('mRevenueToday').textContent='วันนี้ ฿'+d.todayRevenue;
     document.getElementById('mCoins').textContent=d.totalCoins.toLocaleString();
+
+    // RECENT USERS (ใหม่)
+    document.getElementById('recentUsers').innerHTML = (d.recentUsers && d.recentUsers.length) ? d.recentUsers.map(u=>`
+      <div class="user-item" onclick="openUserDetail('${u.uid}')">
+        <div class="user-avatar">🔮</div>
+        <div class="user-info">
+          <div class="user-name">${u.displayName}</div>
+          <div class="user-time">${timeAgo(u.lastActive)}</div>
+        </div>
+        <div class="user-coins">🪙 ${u.coins}</div>
+        <div class="user-arrow">›</div>
+      </div>`).join('') : '<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';
 
     // TOP PAGES — เก็บทั้ง 4 ช่วงเวลาไว้ แล้วโชว์ตามแท็บที่เลือกอยู่
     topPagesData = d.topPages;

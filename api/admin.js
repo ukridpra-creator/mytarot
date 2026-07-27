@@ -14,6 +14,9 @@ if (!getApps().length) {
 const db = getFirestore();
 const ADMIN_PASS = process.env.ADMIN_PASSWORD;
 
+// เผื่อเวลาให้พอสำหรับ collectionGroup query ถ้าข้อมูลเยอะ (ปรับได้ตาม plan ของ Vercel)
+export const config = { maxDuration: 30 };
+
 // แปลงค่า createdAt ให้เป็น JS Date อย่างปลอดภัย ไม่ว่าจะเป็น Firestore Timestamp,
 // string, number, Date object หรือรูปแบบอื่น — ถ้าแปลงไม่ได้จะ return null แทนที่จะ throw error
 function toJSDate(value) {
@@ -86,55 +89,85 @@ export default async function handler(req, res) {
 
     const monthStart = new Date(todayStart.getFullYear(), todayStart.getMonth(), 1);
 
-    // ดึง users ทั้งหมด
-    const usersSnap = await db.collection('users').get();
+    // ── ดึงข้อมูลหลัก 3 ก้อนพร้อมกัน (แทนการวนลูป query ทีละ user แบบเดิมที่ทำให้ช้า
+    //    และเสี่ยง timeout กลางทางจนข้อมูลบางคนหายไปเงียบๆ) ──
+    const [usersSnap, txGroupSnap, readingsGroupSnap] = await Promise.all([
+      db.collection('users').get(),
+      db.collectionGroup('transactions').get(),
+      db.collectionGroup('readings').get(),
+    ]);
+
     const totalUsers = usersSnap.size;
     let newToday = 0;
 
+    // เก็บข้อมูล user ไว้ใน map เพื่อ lookup เร็ว ไม่ query ซ้ำ
+    const userMap = {};
+    usersSnap.docs.forEach(doc => {
+      const data = doc.data();
+      const createdAt = toJSDate(data.createdAt);
+      userMap[doc.id] = {
+        uid: doc.id,
+        displayName: data.displayName || '',
+        email: data.email || '',
+        coins: data.coins || 0,
+        createdAt,
+        lastActive: null, // คำนวณจาก transaction/reading ล่าสุดของ user นี้ด้านล่าง
+      };
+      if (createdAt && createdAt >= todayStart) newToday++;
+    });
+
+    // ── ประมวลผล transactions ของทุก user รวดเดียว ──
     let allTx = [];
     let totalRevenue = 0;
     let todayRevenue = 0;
     let totalCoins = 0;
+    const pkgCount = {};
+
+    txGroupSnap.forEach(txDoc => {
+      const t = txDoc.data();
+      const uid = txDoc.ref.parent.parent?.id; // users/{uid}/transactions/{txId}
+      const amt = (t.amount || 0) / 100;
+      const txCreated = toJSDate(t.createdAt);
+
+      totalRevenue += amt;
+      totalCoins += (t.coins || 0);
+      if (txCreated && txCreated >= todayStart) todayRevenue += amt;
+
+      allTx.push({ label: t.label, amount: t.amount, coins: t.coins, userId: uid, _createdAtDate: txCreated });
+
+      const label = t.label || 'unknown';
+      pkgCount[label] = (pkgCount[label] || 0) + 1;
+
+      if (uid && userMap[uid] && txCreated) {
+        if (!userMap[uid].lastActive || txCreated > userMap[uid].lastActive) {
+          userMap[uid].lastActive = txCreated;
+        }
+      }
+    });
+
+    // ── ประมวลผล readings ของทุก user รวดเดียว ──
     const pageCountAll = {};
     const pageCountToday = {};
     const pageCountWeek = {};
     const pageCountMonth = {};
-    const pkgCount = {};
 
-    for (const userDoc of usersSnap.docs) {
-      const data = userDoc.data();
+    readingsGroupSnap.forEach(rDoc => {
+      const rd = rDoc.data();
+      const uid = rDoc.ref.parent.parent?.id;
+      const type = rd.type || 'unknown';
+      const readingDate = toJSDate(rd.createdAt);
 
-      // ยูสใหม่วันนี้
-      const userCreated = toJSDate(data.createdAt);
-      if (userCreated && userCreated >= todayStart) newToday++;
+      pageCountAll[type] = (pageCountAll[type] || 0) + 1;
+      if (readingDate && readingDate >= monthStart) pageCountMonth[type] = (pageCountMonth[type] || 0) + 1;
+      if (readingDate && readingDate >= weekStart) pageCountWeek[type] = (pageCountWeek[type] || 0) + 1;
+      if (readingDate && readingDate >= todayStart) pageCountToday[type] = (pageCountToday[type] || 0) + 1;
 
-      // transactions
-      const txSnap = await db.collection('users').doc(userDoc.id).collection('transactions').get();
-      txSnap.forEach(tx => {
-        const t = tx.data();
-        const amt = (t.amount || 0) / 100;
-        totalRevenue += amt;
-        totalCoins += (t.coins || 0);
-        const txCreated = toJSDate(t.createdAt);
-        if (txCreated && txCreated >= todayStart) todayRevenue += amt;
-        allTx.push({ ...t, userId: userDoc.id });
-        const label = t.label || 'unknown';
-        pkgCount[label] = (pkgCount[label] || 0) + 1;
-      });
-
-      // readings
-      const rSnap = await db.collection('users').doc(userDoc.id).collection('readings').get();
-      rSnap.forEach(r => {
-        const rd = r.data();
-        const type = rd.type || 'unknown';
-        const readingDate = toJSDate(rd.createdAt);
-
-        pageCountAll[type] = (pageCountAll[type] || 0) + 1;
-        if (readingDate && readingDate >= monthStart) pageCountMonth[type] = (pageCountMonth[type] || 0) + 1;
-        if (readingDate && readingDate >= weekStart) pageCountWeek[type] = (pageCountWeek[type] || 0) + 1;
-        if (readingDate && readingDate >= todayStart) pageCountToday[type] = (pageCountToday[type] || 0) + 1;
-      });
-    }
+      if (uid && userMap[uid] && readingDate) {
+        if (!userMap[uid].lastActive || readingDate > userMap[uid].lastActive) {
+          userMap[uid].lastActive = readingDate;
+        }
+      }
+    });
 
     // Top pages — แยกตามช่วงเวลา
     const buildTopPages = (countObj) => Object.entries(countObj)
@@ -157,21 +190,28 @@ export default async function handler(req, res) {
 
     // Recent transactions
     const recentTx = allTx
-      .sort((a, b) => {
-        const aDate = toJSDate(a.createdAt);
-        const bDate = toJSDate(b.createdAt);
-        return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
-      })
+      .sort((a, b) => (b._createdAtDate ? b._createdAtDate.getTime() : 0) - (a._createdAtDate ? a._createdAtDate.getTime() : 0))
       .slice(0, 8)
-      .map(t => {
-        const d = toJSDate(t.createdAt);
-        return {
-          label: t.label || '—',
-          amount: (t.amount || 0) / 100,
-          coins: t.coins || 0,
-          createdAt: d ? d.toISOString() : null,
-        };
-      });
+      .map(t => ({
+        label: t.label || '—',
+        amount: (t.amount || 0) / 100,
+        coins: t.coins || 0,
+        userId: t.userId,
+        createdAt: t._createdAtDate ? t._createdAtDate.toISOString() : null,
+      }));
+
+    // ── ผู้ใช้ที่มีความเคลื่อนไหวล่าสุด (อิงจากเวลาอ่านไพ่/เติมเงินล่าสุด) ──
+    const recentUsers = Object.values(userMap)
+      .filter(u => u.lastActive)
+      .sort((a, b) => b.lastActive.getTime() - a.lastActive.getTime())
+      .slice(0, 15)
+      .map(u => ({
+        uid: u.uid,
+        displayName: u.displayName || u.email || ('User ' + u.uid.slice(0, 8)),
+        email: u.email,
+        coins: u.coins,
+        lastActive: u.lastActive.toISOString(),
+      }));
 
     return res.status(200).json({
       totalUsers,
@@ -183,6 +223,7 @@ export default async function handler(req, res) {
       topPages,
       topPkgs,
       recentTx,
+      recentUsers,
     });
 
   } catch (e) {
