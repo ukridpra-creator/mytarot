@@ -1,15 +1,13 @@
-import { SocialLogin } from '@capgo/capacitor-social-login';
-
-let initialized = false;
-
 export async function nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) {
-  if (!initialized) {
+  const { SocialLogin } = window.Capacitor.Plugins;
+
+  if (!window.__socialLoginInitialized) {
     await SocialLogin.initialize({
       google: {
         webClientId: '33661162829-tphejaaj5k475t33h7upb1ktpqdtc6ms.apps.googleusercontent.com'
       }
     });
-    initialized = true;
+    window.__socialLoginInitialized = true;
   }
   const res = await SocialLogin.login({
     provider: 'google',
