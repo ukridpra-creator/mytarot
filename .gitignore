@@ -1,4 +1,5 @@
 # Local Netlify folder
 .netlify
 
-node_modules/
+android/keystore/
+node_modules
