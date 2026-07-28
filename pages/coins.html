@@ -215,7 +215,7 @@
     <div class="sel-price" id="selPriceText">— ฿</div>
   </div>
 
-  <button class="btn-pay" id="btnPay" onclick="openQR()">🪙 ชำระเงินเลยค่ะ</button>
+  <button class="btn-pay" id="btnPay" onclick="startPurchase()">🪙 ชำระเงินเลยค่ะ</button>
   <div style="margin-top:16px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;font-size:11px;color:rgba(255,255,255,0.3);line-height:1.8;text-align:center;">
     บริการนี้เป็นความเชื่อส่วนบุคคลและเพื่อความบันเทิงเท่านั้น<br>
     ทางระบบขอสงวนสิทธิ์ไม่คืนเงินทุกกรณีหลังจากที่ได้รับคำทำนายแล้ว
@@ -262,6 +262,38 @@ window.selectPackage = function(coins, bonus, pkgId, price) {
   document.getElementById('selPriceText').textContent = price.toLocaleString() + ' ฿';
   document.getElementById('selectedInfo').classList.add('show');
   document.getElementById('btnPay').classList.add('active');
+};
+
+// ── แยกทางเดินตอนกดปุ่ม "ชำระเงินเลยค่ะ" ──
+// เว็บ: เปิด QR พร้อมเพย์ + อัปโหลดสลิป เหมือนเดิมทุกอย่าง (เรียก openQR() เดิม ไม่แตะ)
+// แอป: เรียก Google Play Billing แทน (ไม่มี QR ตามนโยบาย Google)
+window.startPurchase = async function() {
+  if (!selCoins) return;
+
+  if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+    const btn = document.getElementById('btnPay');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ กำลังดำเนินการ...';
+    btn.style.pointerEvents = 'none';
+    try {
+      if (!window.currentUser) throw new Error('กรุณาเข้าสู่ระบบก่อนค่ะ');
+      const idToken = await window.currentUser.getIdToken();
+      const { nativePurchaseCoins } = await import('../js/native-purchase.js');
+      const data = await nativePurchaseCoins(selPkgId, idToken);
+      if (window.updateCoinUI) updateCoinUI(data.newCoins);
+      document.getElementById('balanceAmount').textContent = data.newCoins;
+      alert('✅ เติมเหรียญสำเร็จค่ะ! ได้รับ 🪙 ' + data.coinsAdded.toLocaleString() + ' เหรียญค่ะ');
+    } catch (e) {
+      console.error('native purchase error:', e);
+      alert('❌ ' + (e.message || 'ไม่สามารถซื้อเหรียญได้ค่ะ กรุณาลองใหม่'));
+    } finally {
+      btn.textContent = originalText;
+      btn.style.pointerEvents = '';
+    }
+    return;
+  }
+
+  openQR();
 };
 
 window.openQR = function() {
