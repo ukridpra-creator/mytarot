@@ -2,4 +2,5 @@
 .netlify
 
 android/keystore/
-node_modulesandroid/.idea/
+node_modules
+android/.idea/
