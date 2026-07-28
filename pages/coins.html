@@ -264,6 +264,31 @@ window.selectPackage = function(coins, bonus, pkgId, price) {
   document.getElementById('btnPay').classList.add('active');
 };
 
+// ── ราคาในแอปแพงกว่าเว็บ ~20% เพื่อชดเชยค่า commission ที่ Google Play หักไป (15% ปีแรก)
+//    ทำงานเฉพาะตอนรันในแอป Capacitor เท่านั้น เว็บยังคงราคาเดิมทุกจุดไม่กระทบเลย ──
+const APP_PRICES = {
+  '50': 30, '100': 60, '300': 180, '500': 300, '1000': 600, '2000': 1200,
+};
+
+if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+  Object.keys(APP_PRICES).forEach(pkgId => {
+    const card = document.getElementById('pkg_' + pkgId);
+    if (!card) return;
+    const newPrice = APP_PRICES[pkgId];
+
+    const priceEl = card.querySelector('.pkg-price');
+    if (priceEl) priceEl.textContent = newPrice.toLocaleString() + '฿';
+
+    // ดึงค่า coins/bonus/pkgId เดิมจาก onclick attribute แล้วผูกใหม่ด้วยราคาแอป
+    const match = card.getAttribute('onclick').match(/selectPackage\((\d+),(\d+),'([^']+)',\d+\)/);
+    if (match) {
+      const [, coins, bonus, id] = match;
+      card.setAttribute('onclick', ''); // ล้าง onclick เดิมที่มีราคาเว็บติดอยู่
+      card.onclick = () => selectPackage(Number(coins), Number(bonus), id, newPrice);
+    }
+  });
+}
+
 // ── แยกทางเดินตอนกดปุ่ม "ชำระเงินเลยค่ะ" ──
 // เว็บ: เปิด QR พร้อมเพย์ + อัปโหลดสลิป เหมือนเดิมทุกอย่าง (เรียก openQR() เดิม ไม่แตะ)
 // แอป: เรียก Google Play Billing แทน (ไม่มี QR ตามนโยบาย Google)
