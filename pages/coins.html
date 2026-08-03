@@ -43,6 +43,23 @@
     .btn-pay.active { opacity:1; pointer-events:all; }
     .btn-pay:active { transform:scale(0.98); }
 
+    /* RESULT MODAL (แทน alert() เดิม ใช้แจ้งผลซื้อเหรียญสำเร็จ/ไม่สำเร็จ) */
+    .result-overlay { position:fixed; inset:0; z-index:700; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; padding:20px; }
+    .result-overlay.show { display:flex; }
+    .result-card { background:linear-gradient(160deg,#1e1638,#0d0820); border:1px solid rgba(212,175,55,0.3); border-radius:24px; padding:32px 24px 24px; width:100%; max-width:320px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.5); animation:resultPop 0.25s ease; }
+    @keyframes resultPop { from{ transform:scale(0.9); opacity:0; } to{ transform:scale(1); opacity:1; } }
+    .result-card.success { border-color:rgba(16,185,129,0.4); }
+    .result-card.error { border-color:rgba(239,68,68,0.35); }
+    .result-icon-wrap { width:64px; height:64px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-size:30px; }
+    .result-card.success .result-icon-wrap { background:rgba(16,185,129,0.15); }
+    .result-card.error .result-icon-wrap { background:rgba(239,68,68,0.12); }
+    .result-title { font-size:18px; font-weight:800; color:white; margin-bottom:6px; }
+    .result-message { font-size:14px; color:rgba(255,255,255,0.6); line-height:1.6; margin-bottom:22px; }
+    .btn-result-close { width:100%; border:none; border-radius:14px; padding:14px; font-size:15px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; transition:all 0.2s; }
+    .btn-result-close:active { transform:scale(0.98); }
+    .result-card.success .btn-result-close { background:linear-gradient(135deg,#059669,#10b981); color:white; }
+    .result-card.error .btn-result-close { background:linear-gradient(135deg,#b8860b,#d4af37); color:#1a1000; }
+
     /* QR OVERLAY */
     .qr-overlay { position:fixed; inset:0; z-index:600; background:rgba(0,0,0,0.92); display:none; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px 16px; overflow-y:auto; }
     .qr-overlay.show { display:flex; }
@@ -78,6 +95,16 @@
   </style>
 </head>
 <body>
+
+<!-- RESULT MODAL (แจ้งผลซื้อเหรียญสำเร็จ/ไม่สำเร็จ แทน alert() เดิม) -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card" id="resultCard">
+    <div class="result-icon-wrap"><span id="resultIcon"></span></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-message" id="resultMessage"></div>
+    <button class="btn-result-close" id="resultCloseBtn" onclick="closeResultModal()">เข้าใจแล้วค่ะ</button>
+  </div>
+</div>
 
 <!-- QR + SLIP OVERLAY -->
 <div class="qr-overlay" id="qrOverlay">
@@ -296,6 +323,23 @@ if (window.Capacitor && window.Capacitor.isNativePlatform()) {
 // ── แยกทางเดินตอนกดปุ่ม "ชำระเงินเลยค่ะ" ──
 // เว็บ: เปิด QR พร้อมเพย์ + อัปโหลดสลิป เหมือนเดิมทุกอย่าง (เรียก openQR() เดิม ไม่แตะ)
 // แอป: เรียก Google Play Billing แทน (ไม่มี QR ตามนโยบาย Google)
+// ── popup แจ้งผลซื้อเหรียญ (แทน alert() เดิม) ──
+// type: 'success' หรือ 'error'
+window.showResultModal = function(type, title, message) {
+  const card = document.getElementById('resultCard');
+  card.classList.remove('success', 'error');
+  card.classList.add(type);
+  document.getElementById('resultIcon').textContent = type === 'success' ? '✅' : '❌';
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMessage').textContent = message;
+  document.getElementById('resultCloseBtn').textContent = type === 'success' ? 'เย้! เข้าใจแล้วค่ะ' : 'เข้าใจแล้วค่ะ';
+  document.getElementById('resultOverlay').classList.add('show');
+};
+
+window.closeResultModal = function() {
+  document.getElementById('resultOverlay').classList.remove('show');
+};
+
 window.startPurchase = async function() {
   if (!selCoins) return;
 
@@ -311,10 +355,10 @@ window.startPurchase = async function() {
       const data = await nativePurchaseCoins(selPkgId, idToken);
       if (window.updateCoinUI) updateCoinUI(data.newCoins);
       document.getElementById('balanceAmount').textContent = data.newCoins;
-      alert('✅ เติมเหรียญสำเร็จค่ะ! ได้รับ 🪙 ' + data.coinsAdded.toLocaleString() + ' เหรียญค่ะ');
+      showResultModal('success', 'เติมเหรียญสำเร็จค่ะ!', 'ได้รับ 🪙 ' + data.coinsAdded.toLocaleString() + ' เหรียญ เข้าบัญชีเรียบร้อยแล้วค่ะ');
     } catch (e) {
       console.error('native purchase error:', e);
-      alert('❌ ' + (e.message || 'ไม่สามารถซื้อเหรียญได้ค่ะ กรุณาลองใหม่'));
+      showResultModal('error', 'ทำรายการไม่สำเร็จ', e.message || 'ไม่สามารถซื้อเหรียญได้ค่ะ กรุณาลองใหม่อีกครั้ง');
     } finally {
       btn.textContent = originalText;
       btn.style.pointerEvents = '';
@@ -412,7 +456,7 @@ window.verifySlip = async function() {
       closeQR();
       if (window.updateCoinUI) updateCoinUI(data.newCoins);
       document.getElementById('balanceAmount').textContent = data.newCoins;
-      alert('✅ เติมเหรียญสำเร็จค่ะ! ได้รับ 🪙 ' + (selCoins + selBonus).toLocaleString() + ' เหรียญค่ะ');
+      showResultModal('success', 'เติมเหรียญสำเร็จค่ะ!', 'ได้รับ 🪙 ' + (selCoins + selBonus).toLocaleString() + ' เหรียญ เข้าบัญชีเรียบร้อยแล้วค่ะ');
     } else {
       const reason = data.message || 'ไม่สามารถยืนยันได้ค่ะ กรุณาลองใหม่';
       status.textContent = '❌ ' + reason;
