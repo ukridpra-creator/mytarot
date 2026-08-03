@@ -90,7 +90,7 @@
 
 <div class="login-required-overlay" id="loginRequiredOverlay" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="login-required-sheet">
-    <div><img src="images/mascot.png" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'"></div>
+    <div><img src="images/mascot.png" style="width:120px;height:120px;object-fit:contain;" loading="lazy" alt="มาสคอต My Tarot" onerror="this.style.display='none'"></div>
     <div class="login-required-title">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
     <div class="login-required-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง<br>และเหรียญของคุณอย่างปลอดภัย</div>
     <button class="btn-login-now" onclick="loginNow();document.getElementById('loginRequiredOverlay').classList.remove('show')">
@@ -149,73 +149,73 @@
   <div class="grid">
 
     <div class="card" onclick="window.location.href='pages/tarot.html'">
-      <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🃏</span>'"></div>
+      <div class="card-icon"><img src="images/icon-tarot.png" alt="ไพ่ทาโรต์" fetchpriority="high" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🃏</span>'"></div>
       <div class="card-title">ไพ่ทาโรต์</div>
       <div class="card-desc">เปิดไพ่รับคำทำนายจาก AI วิเคราะห์ความรัก การงาน การเงิน</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/oracle.html'">
-      <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌟</span>'"></div>
+      <div class="card-icon"><img src="images/icon-oracle.png" alt="ไพ่ออราเคิล" fetchpriority="high" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌟</span>'"></div>
       <div class="card-title">ไพ่ออราเคิล</div>
       <div class="card-desc">รับสารจากจักรวาลและสิ่งศักดิ์สิทธิ์ที่ชี้นำเส้นทางคุณ</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/number-hub.html'">
-      <div class="card-icon"><img src="images/icon-number.png" alt="เลขศาสตร์" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🔢</span>'"></div>
+      <div class="card-icon"><img src="images/icon-number.png" alt="เลขศาสตร์" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🔢</span>'"></div>
       <div class="card-title">เลขศาสตร์</div>
       <div class="card-desc">ความลับในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อ</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/body-hub.html'">
-      <div class="card-icon"><img src="images/icon-body.png" alt="ศาสตร์ร่างกาย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🤲</span>'"></div>
+      <div class="card-icon"><img src="images/icon-body.png" alt="ศาสตร์ร่างกาย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🤲</span>'"></div>
       <div class="card-title">ศาสตร์ร่างกาย</div>
       <div class="card-desc">ดูลายมือ ลายเท้า โหงวเฮ้ง อ่านดวงจากร่างกายของคุณ</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/thai-hub.html'">
-      <div class="card-icon"><img src="images/icon-thai.png" alt="โหราศาสตร์ไทย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇹🇭</span>'"></div>
+      <div class="card-icon"><img src="images/icon-thai.png" alt="โหราศาสตร์ไทย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇹🇭</span>'"></div>
       <div class="card-title">โหราศาสตร์ไทย 🇹🇭</div>
       <div class="card-desc">สุริยยาตร์ เลข 7 ตัว ทักษา ตรีวัย ศาสตร์ไทยโบราณ</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/korean.html'">
-      <div class="card-icon"><img src="images/icon-korean.png" alt="โหราศาสตร์เกาหลี" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇰🇷</span>'"></div>
+      <div class="card-icon"><img src="images/icon-korean.png" alt="โหราศาสตร์เกาหลี" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇰🇷</span>'"></div>
       <div class="card-title">โหราศาสตร์เกาหลี 🇰🇷</div>
       <div class="card-desc">ซาจู กุงฮับ ซัมแจ ศาสตร์เกาหลีโบราณแห่งชะตา</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/chinese-hub.html'">
-      <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇨🇳</span>'"></div>
+      <div class="card-icon"><img src="images/icon-chinese.png" alt="โหราศาสตร์จีน" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇨🇳</span>'"></div>
       <div class="card-title">โหราศาสตร์จีน 🇨🇳</div>
       <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา ห้าธาตุ เปิดเผยดวงชะตาตลอดชีวิต</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/western-hub.html'">
-      <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌍</span>'"></div>
+      <div class="card-icon"><img src="images/icon-western.png" alt="โหราศาสตร์ตะวันตก" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌍</span>'"></div>
       <div class="card-title">โหราศาสตร์ตะวันตก 🌍</div>
       <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์จากตำแหน่งดาวเคราะห์</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/indian-hub.html'">
-      <div class="card-icon"><img src="images/icon-indian.png" alt="โหราศาสตร์อินเดีย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇮🇳</span>'"></div>
+      <div class="card-icon"><img src="images/icon-indian.png" alt="โหราศาสตร์อินเดีย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇮🇳</span>'"></div>
       <div class="card-title">โหราศาสตร์อินเดีย 🇮🇳</div>
       <div class="card-desc">เวทิก โหราศาสตร์อินเดียโบราณ ดาวนพเคราะห์และราศี</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/other-astro.html'">
-      <div class="card-icon"><img src="images/icon-other-astro.png" alt="โหราศาสตร์อื่นๆ" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>✨</span>'"></div>
+      <div class="card-icon"><img src="images/icon-other-astro.png" alt="โหราศาสตร์อื่นๆ" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>✨</span>'"></div>
       <div class="card-title">โหราศาสตร์อื่นๆ ✨</div>
       <div class="card-desc">มายัน อาหรับ เซลติก และศาสตร์ดูดวงจากทั่วโลก</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/divination.html'">
-      <div class="card-icon"><img src="images/icon-divination.png" alt="ศาสตร์เสี่ยงทาย" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎴</span>'"></div>
+      <div class="card-icon"><img src="images/icon-divination.png" alt="ศาสตร์เสี่ยงทาย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎴</span>'"></div>
       <div class="card-title">ศาสตร์เสี่ยงทาย</div>
       <div class="card-desc">เซียมซี กวนอิม โอมิคุจิ อี้จิง ไพ่รูน เสี่ยงทายหลากวัฒนธรรม</div>
     </div>
 
     <div class="card" onclick="window.location.href='pages/activity-hub.html'">
-      <div class="card-icon"><img src="images/icon-activity.png" alt="กิจกรรม" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎪</span>'"></div>
+      <div class="card-icon"><img src="images/icon-activity.png" alt="กิจกรรม" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎪</span>'"></div>
       <div class="card-title">กิจกรรม</div>
       <div class="card-desc">มินิเกม ทดสอบดวง และกิจกรรมสนุกๆ อีกมากมาย</div>
     </div>
@@ -240,7 +240,7 @@
   </div>
   <div style="margin-bottom:12px;">
     <a href='https://dbdregistered.dbd.go.th/api/public/shopinfoReg?param=A1D459481442DFA1335FD6781AE8379307CFC1B183946136D8E0B2B2E38B16BC' target="_blank">
-      <img src='https://dbdregistered.dbd.go.th/api/public/bannerreg?param=A1D459481442DFA1335FD6781AE8379307CFC1B183946136D8E0B2B2E38B16BC' style="width:80px;" />
+      <img src='https://dbdregistered.dbd.go.th/api/public/bannerreg?param=A1D459481442DFA1335FD6781AE8379307CFC1B183946136D8E0B2B2E38B16BC' style="width:80px;" alt="จดทะเบียนพาณิชย์อิเล็กทรอนิกส์ กรมพัฒนาธุรกิจการค้า" loading="lazy" />
     </a>
   </div>
   <div style="font-size:10px;color:rgba(255,255,255,0.2);">© 2026 MyTarot.vip · All rights reserved</div>
