@@ -168,7 +168,7 @@
       </div>
     </div>
     <div style="text-align:right">
-      <div class="balance-rate">1 เหรียญ = 0.50 ฿</div>
+      <div class="balance-rate" id="balanceRateText">1 เหรียญ = 0.50 ฿</div>
     </div>
   </div>
 
@@ -271,6 +271,10 @@ const APP_PRICES = {
 };
 
 if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+  // อัปเดตอัตราแลกเปลี่ยนให้ตรงกับราคาแอป (30฿ / 50 เหรียญ = 0.60฿ ต่อเหรียญ)
+  const rateEl = document.getElementById('balanceRateText');
+  if (rateEl) rateEl.textContent = '1 เหรียญ = 0.60 ฿';
+
   Object.keys(APP_PRICES).forEach(pkgId => {
     const card = document.getElementById('pkg_' + pkgId);
     if (!card) return;
