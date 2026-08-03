@@ -3,5 +3,5 @@
 
 android/keystore/
 node_modules
-android/.idea/apk_extract/
+apk_extract/
 *.apk
