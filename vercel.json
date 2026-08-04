@@ -29,6 +29,7 @@
     }
   ],
   "rewrites": [
-    { "source": "/pages/:path*", "destination": "/pages/:path*.html" }
+    { "source": "/pages/:path*", "destination": "/pages/:path*.html" },
+    { "source": "/learn/:path*", "destination": "/learn/:path*.html" }
   ]
 }
