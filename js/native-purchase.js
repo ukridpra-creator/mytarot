@@ -59,8 +59,11 @@ export async function nativePurchaseCoins(pkgId, idToken) {
 
   // เปิดหน้าต่างซื้อของ Google Play
   // หมายเหตุ: ค่า productType ใช้ string 'inapp' ตรงๆ แทนการ import PURCHASE_TYPE enum
-  // (เหตุผลเดียวกับข้างบน — ไม่ import จาก npm package ตรงๆ) ควรตรวจสอบค่าจริงจาก
-  // node_modules/@capgo/native-purchases อีกครั้งก่อนใช้งานจริง เผื่อค่าคนละแบบ
+  // (เหตุผลเดียวกับข้างบน — ไม่ import จาก npm package ตรงๆ)
+  //
+  // สำคัญ: purchaseProduct() คืนค่าเป็น Promise<Transaction> โดยตรง
+  // (ยืนยันจาก node_modules/@capgo/native-purchases/dist/esm/definitions.d.ts บรรทัด 1033-1042)
+  // ไม่ได้ห่อด้วย { transaction: ... } อีกชั้น — ต้องดึง purchaseToken จาก result ตรงๆ
   let result;
   try {
     result = await NativePurchases.purchaseProduct({
@@ -73,7 +76,7 @@ export async function nativePurchaseCoins(pkgId, idToken) {
     throw new Error(translatePurchaseError(err));
   }
 
-  const purchaseToken = result?.transaction?.purchaseToken;
+  const purchaseToken = result?.purchaseToken;
   if (!purchaseToken) throw new Error('ไม่สามารถทำรายการซื้อได้ค่ะ กรุณาลองใหม่');
 
   // ส่งไปตรวจสอบฝั่งเซิร์ฟเวอร์ผ่าน Google Play Developer API แล้วเติมเหรียญ
