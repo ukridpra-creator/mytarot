@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องเรียนโหราศาสตร์ — เรียนรู้ไพ่ทาโรต์ เลขศาสตร์ โหราศาสตร์ฟรี | mytarot.vip</title>
+  <meta name="description" content="เรียนรู้ความรู้โหราศาสตร์ฟรี ทั้งไพ่ทาโรต์ เลขศาสตร์ โหราศาสตร์ไทย จีน ตะวันตก อินเดีย เหมาะสำหรับมือใหม่และผู้ที่อยากศึกษาเพิ่มเติมค่ะ">
+  <meta name="keywords" content="เรียนไพ่ทาโรต์,ความหมายไพ่ทาโรต์,เรียนโหราศาสตร์,เลขศาสตร์คืออะไร,ไพ่ยิปซีคืออะไร">
+  <meta property="og:title" content="ห้องเรียนโหราศาสตร์ | mytarot.vip">
+  <meta property="og:description" content="เรียนรู้ความรู้โหราศาสตร์ฟรี ทั้งไพ่ทาโรต์ เลขศาสตร์ และโหราศาสตร์หลากสาขาค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/learn">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background: #0d0820;
+      color: white;
+      font-family: 'Sarabun', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* hero */
+    .learn-hero {
+      text-align: center;
+      padding: 48px 20px 32px;
+      position: relative;
+    }
+    .learn-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .learn-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(212,175,55,0.7);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .learn-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .learn-title span {
+      background: linear-gradient(135deg, #d4af37, #f0d060);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .learn-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.8;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    /* section */
+    .learn-section {
+      padding: 0 16px;
+      margin-bottom: 32px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 0 4px;
+    }
+    .section-icon { font-size: 20px; }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+    }
+    .section-count {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      margin-left: auto;
+    }
+
+    /* cards grid */
+    .learn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .learn-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+    .learn-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .learn-card:active { transform: scale(0.97); }
+
+    /* card variants */
+    .learn-card.tarot::before { background: linear-gradient(90deg, #8b5cf6, #d4af37); }
+    .learn-card.number::before { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
+    .learn-card.thai::before { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+    .learn-card.chinese::before { background: linear-gradient(90deg, #ef4444, #f97316); }
+    .learn-card.western::before { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+    .learn-card.indian::before { background: linear-gradient(90deg, #f97316, #f59e0b); }
+    .learn-card.korean::before { background: linear-gradient(90deg, #ec4899, #8b5cf6); }
+    .learn-card.divination::before { background: linear-gradient(90deg, #10b981, #06b6d4); }
+    .learn-card:active::before { opacity: 1; }
+
+    .learn-card-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .learn-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .learn-card-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.6;
+    }
+    .learn-card-count {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: rgba(212,175,55,0.6);
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.15);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* featured card (full width) */
+    .learn-card.featured {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+    }
+    .learn-card.featured .learn-card-icon {
+      font-size: 40px;
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+    .featured-text { flex: 1; }
+
+    /* divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      margin: 8px 16px 28px;
+    }
+
+    /* back link */
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+    }
+    .back-link:active { color: rgba(255,255,255,0.7); }
+
+    /* coming soon badge */
+    .badge-soon {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- back -->
+  <a href="/" class="back-link">← กลับหน้าหลัก</a>
+
+  <!-- hero -->
+  <div class="learn-hero">
+    <div class="learn-label">✦ ห้องเรียนโหราศาสตร์</div>
+    <div class="learn-title">เรียนรู้<span>ศาสตร์แห่งดวงดาว</span><br>ฟรี ทุกที่ ทุกเวลา</div>
+    <p class="learn-desc">รวมความรู้โหราศาสตร์ครบทุกสาขา ตั้งแต่พื้นฐานจนถึงระดับลึก เหมาะสำหรับมือใหม่และผู้ที่อยากศึกษาเพิ่มเติมค่ะ</p>
+  </div>
+
+  <!-- ไพ่ทาโรต์ -->
+  <div class="learn-section">
+    <div class="section-header">
+      <span class="section-icon">🃏</span>
+      <span class="section-title">ไพ่ทาโรต์</span>
+      <span class="section-count">3 บทเรียน</span>
+    </div>
+    <div class="learn-grid">
+      <a href="/learn/tarot-meaning" class="learn-card tarot featured">
+        <span class="learn-card-icon">📖</span>
+        <div class="featured-text">
+          <div class="learn-card-title">ความหมายไพ่ทาโรต์ทั้ง 78 ใบ</div>
+          <div class="learn-card-desc">Major Arcana, Wands, Cups, Swords, Pentacles พร้อมคำอธิบายละเอียดค่ะ</div>
+          <span class="learn-card-count">78 ใบ</span>
+        </div>
+      </a>
+      <a href="/learn/tarot-howto" class="learn-card tarot">
+        <span class="learn-card-icon">🎓</span>
+        <div class="learn-card-title">วิธีอ่านไพ่สำหรับมือใหม่</div>
+        <div class="learn-card-desc">เริ่มต้นดูไพ่ยังไง ตั้งคำถามอย่างไรให้ได้ผลค่ะ</div>
+        <span class="learn-card-count">มือใหม่</span>
+      </a>
+      <a href="/learn/tarot-spread" class="learn-card tarot">
+        <span class="learn-card-icon">✨</span>
+        <div class="learn-card-title">รูปแบบการวางไพ่ (Spread)</div>
+        <div class="learn-card-desc">Celtic Cross, 3 ใบ, Past-Present-Future และอื่นๆ ค่ะ</div>
+        <span class="learn-card-count">เพิ่มเร็วๆ นี้</span>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- เลขศาสตร์ -->
+  <div class="learn-section">
+    <div class="section-header">
+      <span class="section-icon">🔢</span>
+      <span class="section-title">เลขศาสตร์</span>
+      <span class="section-count">เร็วๆ นี้</span>
+    </div>
+    <div class="learn-grid">
+      <a href="/learn/numerology-life" class="learn-card number">
+        <span class="learn-card-icon">🌟</span>
+        <div class="learn-card-title">เลขชีวิตคืออะไร</div>
+        <div class="learn-card-desc">คำนวณและตีความเลขชีวิตจากวันเกิดค่ะ</div>
+        <span class="learn-card-count">เร็วๆ นี้</span>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+      <a href="/learn/numerology-kua" class="learn-card number">
+        <span class="learn-card-icon">🧭</span>
+        <div class="learn-card-title">เลขกัวคืออะไร</div>
+        <div class="learn-card-desc">ทิศมงคล สีมงคล จากเลขกัวของคุณค่ะ</div>
+        <span class="learn-card-count">เร็วๆ นี้</span>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- โหราศาสตร์ -->
+  <div class="learn-section">
+    <div class="section-header">
+      <span class="section-icon">🌏</span>
+      <span class="section-title">โหราศาสตร์</span>
+      <span class="section-count">เร็วๆ นี้</span>
+    </div>
+    <div class="learn-grid">
+      <a href="/learn/thai-astro" class="learn-card thai">
+        <span class="learn-card-icon">🇹🇭</span>
+        <div class="learn-card-title">โหราศาสตร์ไทย</div>
+        <div class="learn-card-desc">สุริยยาตร์ เลข 7 ตัว ทักษา ตรีวัยค่ะ</div>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+      <a href="/learn/chinese-astro" class="learn-card chinese">
+        <span class="learn-card-icon">🇨🇳</span>
+        <div class="learn-card-title">โหราศาสตร์จีน</div>
+        <div class="learn-card-desc">บาจื้อ ห้าธาตุ นักษัตรจีนค่ะ</div>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+      <a href="/learn/western-astro" class="learn-card western">
+        <span class="learn-card-icon">⭐</span>
+        <div class="learn-card-title">โหราศาสตร์ตะวันตก</div>
+        <div class="learn-card-desc">ราศี ดาวเคราะห์ Natal Chart ค่ะ</div>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+      <a href="/learn/indian-astro" class="learn-card indian">
+        <span class="learn-card-icon">🇮🇳</span>
+        <div class="learn-card-title">โหราศาสตร์อินเดีย</div>
+        <div class="learn-card-desc">เวทิก นพเคราะห์ ราศีอินเดียค่ะ</div>
+        <span class="badge-soon">เร็วๆ นี้</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- SEO TEXT -->
+  <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+    <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ห้องเรียนโหราศาสตร์ฟรี เรียนไพ่ทาโรต์ เลขศาสตร์ โหราศาสตร์ออนไลน์ | mytarot.vip</h2>
+    <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ห้องเรียนโหราศาสตร์ mytarot.vip รวมความรู้ด้านโหราศาสตร์และการทำนายดวงฟรีครบทุกสาขาค่ะ ไม่ว่าจะเป็นความหมายไพ่ทาโรต์ทั้ง 78 ใบ วิธีอ่านไพ่ยิปซีสำหรับมือใหม่ เลขศาสตร์ เลขกัว โหราศาสตร์ไทย จีน ตะวันตก และอินเดีย เหมาะสำหรับทุกคนที่อยากเรียนรู้ศาสตร์แห่งดวงดาวค่ะ</p>
+
+    <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">ทำไมต้องเรียนโหราศาสตร์?</h3>
+    <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">โหราศาสตร์ไม่ใช่แค่การดูดวง แต่เป็นเครื่องมือทำความเข้าใจตัวเองและโลกรอบข้างค่ะ การเรียนรู้ความหมายของไพ่ทาโรต์หรือดาวเคราะห์ช่วยให้เราตัดสินใจได้ดีขึ้น เข้าใจนิสัยตัวเองและคนรอบข้าง และรับมือกับสถานการณ์ต่างๆ ได้อย่างมีสติมากขึ้นค่ะ</p>
+
+    <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">เริ่มเรียนโหราศาสตร์จากตรงไหนดี?</h3>
+    <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">สำหรับมือใหม่แนะนำให้เริ่มจากไพ่ทาโรต์ก่อนค่ะ เพราะไพ่ทาโรต์มีภาพประกอบที่ช่วยจำความหมายได้ง่าย และสามารถนำไปใช้ดูดวงได้ทันทีหลังเรียนรู้พื้นฐานค่ะ</p>
+  </div>
+
+</body>
+</html>
