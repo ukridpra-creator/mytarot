@@ -103,6 +103,7 @@ Object.entries(SPREADS).forEach(([k,s])=>{
   const o=document.createElement('option'); o.value=k; o.textContent=s.label; spreadSelect.appendChild(o);
 });
 spreadSelect.value='cross';
+spreadSelect.addEventListener('change', shuffleAndLoad);
 
 function cardName(id){
   if(id.startsWith('major-')){
@@ -131,6 +132,7 @@ function shuffle(arr){
 
 let selectedCards=[];
 let loadedImgs=[];
+let currentSpreadKey='cross';
 let backImg=null, backOk=false;
 const statusEl = document.getElementById('status');
 const drawnListEl = document.getElementById('drawnList');
@@ -240,7 +242,7 @@ function drawThickDeck(cx,cy,w,h,layers,jitter){
 function renderStatic(){
   drawBlackBase();
   const dp = deckPos();
-  const n = selectedCards.length || SPREADS[spreadSelect.value].pos.length;
+  const n = selectedCards.length || SPREADS[currentSpreadKey].pos.length;
   const {w:wf} = cardSize(n);
   const w = W*wf, h = w*1.55;
   drawThickDeck(dp.x, dp.y, w, h, Math.min(Math.max(n,2),10), 0);
@@ -265,7 +267,8 @@ async function shuffleAndLoad(){
   dlLink.style.display='none'; warnBox.style.display='none';
   await preloadBack();
   const base = document.getElementById('baseUrl').value.replace(/\/$/,'');
-  const spread = SPREADS[spreadSelect.value];
+  currentSpreadKey = spreadSelect.value;
+  const spread = SPREADS[currentSpreadKey];
   const n = spread.pos.length;
   drawBlackBase();
   const dp = deckPos();
@@ -337,7 +340,7 @@ let animHandle=null;
 function runAnimation({record=false}={}){
   return new Promise((resolve)=>{
     const n = selectedCards.length;
-    const spread = SPREADS[spreadSelect.value];
+    const spread = SPREADS[currentSpreadKey];
     const speed = parseFloat(document.getElementById('speedSelect').value);
     const {w:wf} = cardSize(n);
     const cw = W*wf, ch = cw*1.55;
