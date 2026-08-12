@@ -471,6 +471,7 @@ async function buildPosterCanvas(d) {
   c.save();
   roundRect(c, artX, artY, artW, artH, 14);
   c.clip();
+  let imgLoaded = true;
   try {
     const img = await loadImage(d.imagePath);
     const ir = img.width / img.height, br = artW / artH;
@@ -479,28 +480,33 @@ async function buildPosterCanvas(d) {
     else { sh = img.width / br; sy = (img.height - sh) / 2; }
     c.drawImage(img, sx, sy, sw, sh, artX, artY, artW, artH);
   } catch (e) {
+    imgLoaded = false;
     c.fillStyle = '#161616'; c.fillRect(artX, artY, artW, artH);
     c.fillStyle = 'rgba(216,166,114,0.5)';
     c.font = '700 60px Cinzel'; c.textAlign = 'center';
     c.fillText(d.numeral, artX + artW/2, artY + artH/2);
     c.textAlign = 'left';
   }
-  const og = c.createLinearGradient(0, artY + artH - 150, 0, artY + artH);
-  og.addColorStop(0, 'rgba(13,13,13,0)'); og.addColorStop(1, 'rgba(13,13,13,0.92)');
-  c.fillStyle = og; c.fillRect(artX, artY + artH - 150, artW, 150);
+  if (!imgLoaded) {
+    const og = c.createLinearGradient(0, artY + artH - 150, 0, artY + artH);
+    og.addColorStop(0, 'rgba(13,13,13,0)'); og.addColorStop(1, 'rgba(13,13,13,0.92)');
+    c.fillStyle = og; c.fillRect(artX, artY + artH - 150, artW, 150);
+  }
   c.restore();
   c.strokeStyle = 'rgba(216,166,114,0.4)'; c.lineWidth = 2;
   roundRect(c, artX, artY, artW, artH, 14); c.stroke();
 
-  c.fillStyle = '#f0c9a0';
-  c.font = '700 26px Cinzel';
-  c.fillText(d.numeral, artX + 20, artY + 44);
+  if (!imgLoaded) {
+    c.fillStyle = '#f0c9a0';
+    c.font = '700 26px Cinzel';
+    c.fillText(d.numeral, artX + 20, artY + 44);
 
-  c.fillStyle = 'white';
-  c.font = '700 32px Cinzel';
-  c.textAlign = 'center';
-  c.fillText(d.titleEn, artX + artW/2, artY + artH - 28);
-  c.textAlign = 'left';
+    c.fillStyle = 'white';
+    c.font = '700 32px Cinzel';
+    c.textAlign = 'center';
+    c.fillText(d.titleEn, artX + artW/2, artY + artH - 28);
+    c.textAlign = 'left';
+  }
 
   let iy = artY + 46;
   c.fillStyle = '#d8a672';
@@ -674,19 +680,19 @@ async function downloadPoster() {
     const canvas = await buildPosterCanvas(cardData);
     const filename = `mytarot-${cardData.titleEn.toLowerCase().replace(/\s+/g, '-')}.png`;
     const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-    const file = new File([blob], filename, { type: 'image/png' });
-
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({ files: [file], title: cardData.titleTh });
-        btn.disabled = false; btn.textContent = original;
-        return;
-      } catch (shareErr) {
-        if (shareErr.name === 'AbortError') { btn.disabled = false; btn.textContent = original; return; }
-      }
-    }
 
     if (isIOS()) {
+      const file = new File([blob], filename, { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: cardData.titleTh });
+          btn.disabled = false; btn.textContent = original;
+          return;
+        } catch (shareErr) {
+          if (shareErr.name === 'AbortError') { btn.disabled = false; btn.textContent = original; return; }
+          // fall through to open-in-tab fallback below
+        }
+      }
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
       alert('เปิดรูปในแท็บใหม่แล้วค่ะ กดค้างที่รูปแล้วเลือก "บันทึกลงรูปภาพ" เพื่อเซฟค่ะ');
@@ -694,6 +700,7 @@ async function downloadPoster() {
       return;
     }
 
+    // Android + desktop: direct download (no share sheet detour)
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
