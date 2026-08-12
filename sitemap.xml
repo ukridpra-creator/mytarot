@@ -19,6 +19,7 @@
   <url><loc>https://www.mytarot.vip/pages/activity-hub</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.mytarot.vip/pages/wallpaper-hub</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.mytarot.vip/pages/mantra-hub</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/learn</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 
   <!-- ไพ่ทาโรต์ -->
   <url><loc>https://www.mytarot.vip/pages/tarot-yesno</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -27,6 +28,31 @@
   <url><loc>https://www.mytarot.vip/pages/tarot-money</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.mytarot.vip/pages/tarot-health</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.mytarot.vip/pages/tarot-ask</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- ห้องเรียนโหราศาสตร์ — ความหมายไพ่ทาโรต์ -->
+  <url><loc>https://www.mytarot.vip/learn/tarot-meaning</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thefool</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/themagician</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thehighpriestess</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/theempress</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/theemperor</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thehierophant</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thelovers</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thechariot</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/strength</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thehermit</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thewheeloffortune</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/justice</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thehangedman</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/death</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/temperance</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thedevil</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thetower</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thestar</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/themoon</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/thesun</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/judgement</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.mytarot.vip/learn/theworld</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 
   <!-- ออราเคิล -->
   <url><loc>https://www.mytarot.vip/pages/oracle-demon</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
