@@ -24,320 +24,138 @@
       min-height: 100vh;
       padding-bottom: 80px;
     }
-
     .back-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 20px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      padding: 16px 20px; font-size: 13px;
+      color: rgba(255,255,255,0.4); text-decoration: none;
     }
-
-    /* hero */
-    .hero {
-      text-align: center;
-      padding: 24px 20px 32px;
-      position: relative;
-    }
+    .hero { text-align: center; padding: 24px 20px 32px; position: relative; }
     .hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 300px; height: 200px;
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 300px; height: 200px;
       background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
       pointer-events: none;
     }
     .hero-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(212,175,55,0.7);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+      font-size: 11px; font-weight: 600; color: rgba(212,175,55,0.7);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;
     }
-    .hero-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
+    .hero-title { font-size: 24px; font-weight: 800; color: white; margin-bottom: 8px; line-height: 1.3; }
     .hero-title span {
       background: linear-gradient(135deg, #d4af37, #f0d060);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .hero-desc {
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      line-height: 1.8;
-    }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; }
 
-    /* tab navigation */
     .tab-wrap {
-      overflow-x: auto;
-      padding: 0 16px;
-      margin-bottom: 24px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      overflow-x: auto; padding: 0 16px; margin-bottom: 24px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
     }
     .tab-wrap::-webkit-scrollbar { display: none; }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      width: max-content;
-    }
+    .tabs { display: flex; gap: 8px; width: max-content; }
     .tab {
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.5);
-      white-space: nowrap;
-      transition: all 0.2s;
+      padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5);
+      white-space: nowrap; transition: all 0.2s;
     }
     .tab.active {
-      background: rgba(212,175,55,0.15);
-      border-color: rgba(212,175,55,0.4);
-      color: #d4af37;
+      background: rgba(212,175,55,0.15); border-color: rgba(212,175,55,0.4); color: #d4af37;
     }
 
-    /* section */
     .cards-section { display: none; padding: 0 16px; }
     .cards-section.active { display: block; }
-
     .section-intro {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 16px; margin-bottom: 20px;
     }
-    .section-intro-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 6px;
-    }
-    .section-intro-desc {
-      font-size: 12px;
-      color: rgba(255,255,255,0.4);
-      line-height: 1.8;
-    }
+    .section-intro-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .section-intro-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.8; }
 
-    /* card grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     .tarot-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 16px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 16px 14px; cursor: pointer; transition: all 0.2s;
+      position: relative; overflow: hidden;
+      text-decoration: none; color: inherit; display: block;
     }
-    .tarot-card:active {
-      transform: scale(0.97);
-      background: rgba(255,255,255,0.06);
-    }
-    .tarot-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-    }
+    .tarot-card:active { transform: scale(0.97); background: rgba(255,255,255,0.06); }
+    .tarot-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
 
-    /* suit colors */
     .major .tarot-card::before { background: linear-gradient(90deg, #8b5cf6, #d4af37); }
     .wands .tarot-card::before { background: linear-gradient(90deg, #f97316, #f59e0b); }
     .cups .tarot-card::before { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
     .swords .tarot-card::before { background: linear-gradient(90deg, #94a3b8, #e2e8f0); }
     .pentacles .tarot-card::before { background: linear-gradient(90deg, #10b981, #d4af37); }
 
-    .card-num {
-      font-size: 10px;
-      color: rgba(255,255,255,0.25);
-      letter-spacing: 1px;
-      margin-bottom: 4px;
+    /* thumbnail */
+    .card-thumb {
+      width: 100%; aspect-ratio: 2 / 3; border-radius: 10px; overflow: hidden;
+      margin-bottom: 10px; background: linear-gradient(160deg, #1a0e35, #0d0820);
+      border: 1px solid rgba(212,175,55,0.15); position: relative;
     }
-    .card-name-th {
-      font-size: 13px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 2px;
-      line-height: 1.3;
-    }
-    .card-name-en {
-      font-size: 10px;
-      color: rgba(255,255,255,0.3);
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    }
-    .card-keywords {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-    .kw {
-      font-size: 10px;
-      color: rgba(212,175,55,0.7);
-      background: rgba(212,175,55,0.07);
-      border: 1px solid rgba(212,175,55,0.15);
-      padding: 2px 8px;
-      border-radius: 10px;
+    .card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-thumb .thumb-fallback {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: Georgia, serif; font-size: 22px; color: rgba(212,175,55,0.45);
     }
 
-    /* modal */
+    .card-num { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 1px; margin-bottom: 4px; }
+    .card-name-th { font-size: 13px; font-weight: 700; color: white; margin-bottom: 2px; line-height: 1.3; }
+    .card-name-en { font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 8px; letter-spacing: 0.5px; }
+    .card-keywords { display: flex; flex-wrap: wrap; gap: 4px; }
+    .kw {
+      font-size: 10px; color: rgba(212,175,55,0.7); background: rgba(212,175,55,0.07);
+      border: 1px solid rgba(212,175,55,0.15); padding: 2px 8px; border-radius: 10px;
+    }
+
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 1000;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000;
+      display: none; align-items: flex-end; justify-content: center;
     }
     .modal-overlay.show { display: flex; }
     .modal {
-      background: linear-gradient(180deg, #1a0e35, #0d0820);
-      border: 1px solid rgba(212,175,55,0.2);
-      border-radius: 28px 28px 0 0;
-      width: 100%;
-      max-width: 480px;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 28px 20px 40px;
+      background: linear-gradient(180deg, #1a0e35, #0d0820); border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 28px 28px 0 0; width: 100%; max-width: 480px; max-height: 85vh;
+      overflow-y: auto; padding: 28px 20px 40px;
     }
-    .modal-handle {
-      width: 40px; height: 4px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
-    .modal-num {
-      font-size: 11px;
-      color: rgba(212,175,55,0.5);
-      letter-spacing: 2px;
-      margin-bottom: 6px;
-    }
-    .modal-name-th {
-      font-size: 22px;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 2px;
-    }
-    .modal-name-en {
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
-    .modal-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent);
-      margin-bottom: 16px;
-    }
+    .modal-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-num { font-size: 11px; color: rgba(212,175,55,0.5); letter-spacing: 2px; margin-bottom: 6px; }
+    .modal-name-th { font-size: 22px; font-weight: 800; color: white; margin-bottom: 2px; }
+    .modal-name-en { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 2px; margin-bottom: 16px; }
+    .modal-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent); margin-bottom: 16px; }
     .modal-section-title {
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(139,92,246,0.8);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      font-size: 11px; font-weight: 600; color: rgba(139,92,246,0.8);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
     }
-    .modal-text {
-      font-size: 13px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.9;
-      margin-bottom: 16px;
-    }
-    .modal-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 16px;
-    }
+    .modal-text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.9; margin-bottom: 16px; }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
     .modal-tag {
-      font-size: 12px;
-      color: rgba(212,175,55,0.8);
-      background: rgba(212,175,55,0.08);
-      border: 1px solid rgba(212,175,55,0.2);
-      padding: 4px 12px;
-      border-radius: 20px;
+      font-size: 12px; color: rgba(212,175,55,0.8); background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.2); padding: 4px 12px; border-radius: 20px;
     }
-    .modal-trio {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
+    .modal-trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
     .modal-trio-box {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 12px 10px;
-      text-align: center;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 12px 10px; text-align: center;
     }
-    .modal-trio-label {
-      font-size: 10px;
-      color: rgba(255,255,255,0.3);
-      margin-bottom: 4px;
-      letter-spacing: 1px;
-    }
-    .modal-trio-val {
-      font-size: 12px;
-      font-weight: 700;
-      color: white;
-    }
-    .modal-yesno {
-      font-size: 20px;
-      font-weight: 900;
-    }
+    .modal-trio-label { font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 4px; letter-spacing: 1px; }
+    .modal-trio-val { font-size: 12px; font-weight: 700; color: white; }
+    .modal-yesno { font-size: 20px; font-weight: 900; }
     .yes { color: #4ade80; }
     .no { color: #f87171; }
     .modal-close {
-      width: 100%;
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.6);
-      font-size: 15px;
-      font-family: 'Sarabun', sans-serif;
-      cursor: pointer;
-      margin-top: 8px;
+      width: 100%; padding: 14px; border-radius: 16px; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);
+      font-size: 15px; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-top: 8px;
     }
     .modal-try-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #6d28d9, #4c1d95);
-      border: none;
-      color: white;
-      font-size: 15px;
-      font-weight: 700;
-      font-family: 'Sarabun', sans-serif;
-      cursor: pointer;
-      margin-bottom: 10px;
+      width: 100%; padding: 14px; border-radius: 16px;
+      background: linear-gradient(135deg, #6d28d9, #4c1d95); border: none; color: white;
+      font-size: 15px; font-weight: 700; font-family: 'Sarabun', sans-serif; cursor: pointer; margin-bottom: 10px;
     }
-
-    /* SEO */
-    .seo-block {
-      padding: 20px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      margin-top: 32px;
-    }
+    .seo-block { padding: 20px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 32px; }
   </style>
 </head>
 <body>
@@ -350,7 +168,6 @@
   <div class="hero-desc">แบ่งเป็น 5 หมวด กดที่ไพ่เพื่อดูความหมายละเอียดค่ะ</div>
 </div>
 
-<!-- tabs -->
 <div class="tab-wrap">
   <div class="tabs">
     <div class="tab active" onclick="switchTab('major')">🌟 Major Arcana (22)</div>
@@ -361,16 +178,14 @@
   </div>
 </div>
 
-<!-- MAJOR ARCANA -->
 <div id="major" class="cards-section major active">
   <div class="section-intro">
     <div class="section-intro-title">🌟 Major Arcana — 22 ใบ</div>
-    <div class="section-intro-desc">ไพ่ Major Arcana เป็นไพ่ที่มีพลังงานสูงที่สุด สื่อถึงบทเรียนสำคัญในชีวิต เหตุการณ์ใหญ่ และพลังงานจักรวาลค่ะ</div>
+    <div class="section-intro-desc">ไพ่ Major Arcana เป็นไพ่ที่มีพลังงานสูงที่สุด สื่อถึงบทเรียนสำคัญในชีวิต เหตุการณ์ใหญ่ และพลังงานจักรวาลค่ะ กดที่ไพ่เพื่อดูความหมายละเอียดเต็มรูปแบบค่ะ</div>
   </div>
   <div class="cards-grid" id="major-grid"></div>
 </div>
 
-<!-- WANDS -->
 <div id="wands" class="cards-section wands">
   <div class="section-intro">
     <div class="section-intro-title">🔥 Suit of Wands — ธาตุไฟ</div>
@@ -379,7 +194,6 @@
   <div class="cards-grid" id="wands-grid"></div>
 </div>
 
-<!-- CUPS -->
 <div id="cups" class="cards-section cups">
   <div class="section-intro">
     <div class="section-intro-title">💧 Suit of Cups — ธาตุน้ำ</div>
@@ -388,7 +202,6 @@
   <div class="cards-grid" id="cups-grid"></div>
 </div>
 
-<!-- SWORDS -->
 <div id="swords" class="cards-section swords">
   <div class="section-intro">
     <div class="section-intro-title">⚔️ Suit of Swords — ธาตุลม</div>
@@ -397,7 +210,6 @@
   <div class="cards-grid" id="swords-grid"></div>
 </div>
 
-<!-- PENTACLES -->
 <div id="pentacles" class="cards-section pentacles">
   <div class="section-intro">
     <div class="section-intro-title">🌿 Suit of Pentacles — ธาตุดิน</div>
@@ -406,7 +218,7 @@
   <div class="cards-grid" id="pentacles-grid"></div>
 </div>
 
-<!-- modal -->
+<!-- modal — used for Minor Arcana suits only now (Major Arcana links out directly to dedicated pages) -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal" id="modal-content">
     <div class="modal-handle"></div>
@@ -437,17 +249,13 @@
   </div>
 </div>
 
-<!-- SEO -->
 <div class="seo-block">
   <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ความหมายไพ่ทาโรต์ 78 ใบ ภาษาไทย ครบทุกใบ | mytarot.vip</h2>
   <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ความหมายไพ่ทาโรต์และไพ่ยิปซีครบ 78 ใบ ภาษาไทย แบ่งเป็น Major Arcana 22 ใบ ได้แก่ The Fool, The Magician, The High Priestess, The Empress, The Emperor, The Hierophant, The Lovers, The Chariot, Strength, The Hermit, Wheel of Fortune, Justice, The Hanged Man, Death, Temperance, The Devil, The Tower, The Star, The Moon, The Sun, Judgement, The World และ Minor Arcana 56 ใบ แบ่งเป็น Wands, Cups, Swords, Pentacles ค่ะ</p>
-
   <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">ไพ่ทาโรต์กับไพ่ยิปซีต่างกันไหม?</h3>
   <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ทาโรต์และไพ่ยิปซีเป็นไพ่ชุดเดียวกันค่ะ คนไทยนิยมเรียกว่าไพ่ยิปซี ส่วนชื่อสากลคือ Tarot มี 78 ใบ ใช้สำหรับทำนายดวงและให้แนวทางชีวิตมากว่า 600 ปีค่ะ</p>
-
   <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">Major Arcana คืออะไร?</h3>
   <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">Major Arcana คือไพ่ 22 ใบแรกของสำรับ เลขที่ 0-21 มีพลังงานสูงที่สุด สื่อถึงบทเรียนสำคัญในชีวิต เหตุการณ์ใหญ่ และพลังงานจักรวาล เวลาออกไพ่ Major Arcana แสดงว่าเรื่องนั้นสำคัญและมีผลกระทบกับชีวิตมากค่ะ</p>
-
   <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">Minor Arcana คืออะไร?</h3>
   <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">Minor Arcana คือไพ่ 56 ใบที่เหลือ แบ่งเป็น 4 ชุด ได้แก่ Wands (ไฟ), Cups (น้ำ), Swords (ลม), Pentacles (ดิน) แต่ละชุดมี 14 ใบ สื่อถึงเหตุการณ์และสถานการณ์ในชีวิตประจำวันค่ะ</p>
 </div>
@@ -455,28 +263,28 @@
 <script>
 const cards = {
   major: [
-    { num:'0', th:'เดอะ ฟูล', en:'THE FOOL', keys:['การเริ่มต้น','ผจญภัย','อิสระ','ความไร้เดียงสา'], meaning:'ไพ่แห่งการเริ่มต้นใหม่และความกล้าหาญค่ะ บ่งบอกถึงการออกเดินทางในเส้นทางใหม่ด้วยจิตใจที่เปิดกว้าง ไม่กลัวความไม่แน่นอน พร้อมรับทุกประสบการณ์', yesno:'YES', element:'ลม', astro:'ยูเรนัส' },
-    { num:'I', th:'เดอะ แมจิเชียน', en:'THE MAGICIAN', keys:['พลังงาน','ความสามารถ','ความมั่นใจ','ลงมือทำ'], meaning:'ไพ่แห่งพลังงานและความสามารถค่ะ คุณมีทุกสิ่งที่ต้องการอยู่ในมือแล้ว ถึงเวลาลงมือทำและแสดงศักยภาพที่แท้จริงออกมาค่ะ', yesno:'YES', element:'ไฟ', astro:'ดาวพุธ' },
-    { num:'II', th:'เดอะ ไฮ พรีเอสเตส', en:'THE HIGH PRIESTESS', keys:['สัญชาตญาณ','ความลึกลับ','ปัญญา','ความเงียบ'], meaning:'ไพ่แห่งสัญชาตญาณและความรู้ที่ซ่อนอยู่ค่ะ ให้ฟังเสียงภายในและเชื่อมั่นในสัญชาตญาณของตัวเองค่ะ', yesno:'YES', element:'น้ำ', astro:'ดวงจันทร์' },
-    { num:'III', th:'เดอะ เอ็มเพรส', en:'THE EMPRESS', keys:['ความอุดมสมบูรณ์','ความรัก','ธรรมชาติ','ความงาม'], meaning:'ไพ่แห่งความอุดมสมบูรณ์และความรักค่ะ สื่อถึงพลังงานของแม่ ความเจริญงอกงาม และความสุขในชีวิตค่ะ', yesno:'YES', element:'ดิน', astro:'ดาวศุกร์' },
-    { num:'IV', th:'เดอะ เอ็มเพอเรอร์', en:'THE EMPEROR', keys:['อำนาจ','ความมั่นคง','ระเบียบ','โครงสร้าง'], meaning:'ไพ่แห่งอำนาจและการปกครองค่ะ สื่อถึงความมั่นคง การวางแผนอย่างรอบคอบ และการควบคุมสถานการณ์ได้อย่างมีประสิทธิภาพค่ะ', yesno:'YES', element:'ไฟ', astro:'ดาวอังคาร' },
-    { num:'V', th:'เดอะ ไฮเอโรแฟนท์', en:'THE HIEROPHANT', keys:['ประเพณี','ความเชื่อ','การสอน','สถาบัน'], meaning:'ไพ่แห่งประเพณีและความเชื่อค่ะ สื่อถึงการทำตามกฎเกณฑ์สังคม การศึกษา และการแสวงหาความรู้จากผู้เชี่ยวชาญค่ะ', yesno:'YES', element:'ดิน', astro:'ราศีพฤษภ' },
-    { num:'VI', th:'เดอะ เลิฟเวอร์ส', en:'THE LOVERS', keys:['ความรัก','การเลือก','ความสัมพันธ์','ความสมดุล'], meaning:'ไพ่แห่งความรักและการตัดสินใจค่ะ สื่อถึงความสัมพันธ์ที่ลึกซึ้ง การเลือกที่สำคัญในชีวิต และความสมดุลระหว่างหัวใจกับเหตุผลค่ะ', yesno:'YES', element:'ลม', astro:'ราศีเมถุน' },
-    { num:'VII', th:'เดอะ ชาริออต', en:'THE CHARIOT', keys:['ชัยชนะ','ความมุ่งมั่น','การควบคุม','ความสำเร็จ'], meaning:'ไพ่แห่งชัยชนะและความมุ่งมั่นค่ะ สื่อถึงการเอาชนะอุปสรรค ความตั้งใจแน่วแน่ และความสำเร็จที่ได้มาจากความพยายามค่ะ', yesno:'YES', element:'น้ำ', astro:'ราศีกรกฎ' },
-    { num:'VIII', th:'สเตรงธ์', en:'STRENGTH', keys:['ความกล้าหาญ','ความอดทน','พลังใจ','การควบคุม'], meaning:'ไพ่แห่งความแข็งแกร่งภายในค่ะ ไม่ใช่พลังกาย แต่คือความกล้าหาญ ความอดทน และการควบคุมสัญชาตญาณด้วยความรักค่ะ', yesno:'YES', element:'ไฟ', astro:'ราศีสิงห์' },
-    { num:'IX', th:'เดอะ เฮอร์มิท', en:'THE HERMIT', keys:['การค้นหาตัวเอง','ปัญญา','ความสงบ','การอยู่คนเดียว'], meaning:'ไพ่แห่งการค้นหาความจริงค่ะ สื่อถึงการหยุดพักจากโลกภายนอก หันมาใคร่ครวญภายใน และแสวงหาปัญญาจากภายในตัวเองค่ะ', yesno:'ขึ้นอยู่กับคำถาม', element:'ดิน', astro:'ราศีกันย์' },
-    { num:'X', th:'วีล ออฟ ฟอร์จูน', en:'WHEEL OF FORTUNE', keys:['โชคชะตา','การเปลี่ยนแปลง','วงจร','โอกาส'], meaning:'ไพ่แห่งโชคชะตาและวงจรชีวิตค่ะ สื่อถึงการเปลี่ยนแปลงที่กำลังจะมา โอกาสใหม่ๆ และการหมุนเวียนของดวงชะตาค่ะ', yesno:'YES', element:'ไฟ', astro:'ดาวพฤหัส' },
-    { num:'XI', th:'จัสทิส', en:'JUSTICE', keys:['ความยุติธรรม','ความสมดุล','ความจริง','กฎแห่งกรรม'], meaning:'ไพ่แห่งความยุติธรรมและความสมดุลค่ะ สื่อถึงผลของการกระทำ ความเป็นธรรม และการตัดสินที่อยู่บนพื้นฐานของความจริงค่ะ', yesno:'YES', element:'ลม', astro:'ราศีตุลย์' },
-    { num:'XII', th:'เดอะ แฮงด์แมน', en:'THE HANGED MAN', keys:['การรอคอย','การปล่อยวาง','มุมมองใหม่','การสละ'], meaning:'ไพ่แห่งการหยุดรอและมองในมุมใหม่ค่ะ สื่อถึงการปล่อยวางสิ่งที่ยึดติด การรอจังหวะที่เหมาะสม และการเข้าใจชีวิตผ่านมุมมองที่แตกต่างค่ะ', yesno:'NO', element:'น้ำ', astro:'ดาวเนปจูน' },
-    { num:'XIII', th:'เดธ', en:'DEATH', keys:['การเปลี่ยนแปลง','จบบทเก่า','การเริ่มใหม่','การปล่อยวาง'], meaning:'ไพ่แห่งการเปลี่ยนแปลงครั้งใหญ่ค่ะ ไม่ได้หมายถึงความตายทางกาย แต่คือการสิ้นสุดของบทเก่าเพื่อเริ่มต้นบทใหม่ที่ดีกว่าค่ะ', yesno:'NO', element:'น้ำ', astro:'ราศีพิจิก' },
-    { num:'XIV', th:'เทมเพอแรนซ์', en:'TEMPERANCE', keys:['ความสมดุล','ความอดทน','การผสมผสาน','ความพอดี'], meaning:'ไพ่แห่งความสมดุลและความพอดีค่ะ สื่อถึงการหาจุดกึ่งกลาง ความอดทน และการผสมผสานสิ่งต่างๆ ให้ลงตัวค่ะ', yesno:'YES', element:'ไฟ', astro:'ราศีธนู' },
-    { num:'XV', th:'เดอะ เดวิล', en:'THE DEVIL', keys:['การยึดติด','ความกลัว','สิ่งล่อใจ','พันธนาการ'], meaning:'ไพ่แห่งการยึดติดและพันธนาการค่ะ สื่อถึงนิสัยที่ไม่ดี ความกลัว สิ่งที่เราติดอยู่ และการตระหนักว่าเราสามารถปลดโซ่ตรวนเหล่านั้นได้เองค่ะ', yesno:'NO', element:'ดิน', astro:'ราศีมังกร' },
-    { num:'XVI', th:'เดอะ ทาวเวอร์', en:'THE TOWER', keys:['การพังทลาย','การเปิดเผยความจริง','การเปลี่ยนแปลงฉับพลัน','การตื่นรู้'], meaning:'ไพ่แห่งการเปลี่ยนแปลงอย่างฉับพลันค่ะ สื่อถึงเหตุการณ์ที่ทำให้ชีวิตพลิกผัน การเปิดเผยความจริงที่ซ่อนอยู่ และการพังทลายของสิ่งที่ไม่มั่นคงค่ะ', yesno:'NO', element:'ไฟ', astro:'ดาวอังคาร' },
-    { num:'XVII', th:'เดอะ สตาร์', en:'THE STAR', keys:['ความหวัง','การรักษา','แรงบันดาลใจ','ความเชื่อ'], meaning:'ไพ่แห่งความหวังและการฟื้นฟูค่ะ สื่อถึงช่วงเวลาแห่งการรักษาจิตใจ ความเชื่อมั่นในอนาคต และแสงสว่างที่ส่องมาหลังจากความมืดค่ะ', yesno:'YES', element:'ลม', astro:'ราศีกุมภ์' },
-    { num:'XVIII', th:'เดอะ มูน', en:'THE MOON', keys:['ความลึกลับ','ความสับสน','จิตใต้สำนึก','ความกลัว'], meaning:'ไพ่แห่งจิตใต้สำนึกและความลึกลับค่ะ สื่อถึงช่วงเวลาที่ไม่แน่ใจ ความกลัว ความฝัน และสิ่งที่ซ่อนอยู่ใต้พื้นผิวค่ะ', yesno:'NO', element:'น้ำ', astro:'ราศีมีน' },
-    { num:'XIX', th:'เดอะ ซัน', en:'THE SUN', keys:['ความสุข','ความสำเร็จ','ความสดใส','พลังงานบวก'], meaning:'ไพ่แห่งความสุขและความสำเร็จค่ะ สื่อถึงพลังงานบวก ความสดใส ชัยชนะ และช่วงเวลาที่ดีที่สุดในชีวิตค่ะ', yesno:'YES', element:'ไฟ', astro:'ดวงอาทิตย์' },
-    { num:'XX', th:'จัดจ์เมนท์', en:'JUDGEMENT', keys:['การตื่นรู้','การให้อภัย','การเปลี่ยนแปลง','การฟื้นฟู'], meaning:'ไพ่แห่งการตื่นรู้และการให้อภัยค่ะ สื่อถึงการสำรวจตัวเอง การปล่อยวางอดีต และการก้าวสู่ช่วงชีวิตใหม่ที่สูงขึ้นค่ะ', yesno:'YES', element:'ไฟ', astro:'ดาวพลูโต' },
-    { num:'XXI', th:'เดอะ เวิลด์', en:'THE WORLD', keys:['ความสำเร็จ','ความสมบูรณ์','การเดินทาง','ความสุขสมหวัง'], meaning:'ไพ่แห่งความสำเร็จสูงสุดค่ะ สื่อถึงการบรรลุเป้าหมาย ความสมบูรณ์ของวงจรชีวิต และความพร้อมที่จะเริ่มต้นบทใหม่ค่ะ', yesno:'YES', element:'ดิน', astro:'ดาวเสาร์' },
+    { idx:0, num:'0', slug:'thefool', th:'เดอะ ฟูล', en:'THE FOOL', keys:['การเริ่มต้น','ผจญภัย','อิสระ','ความไร้เดียงสา'] },
+    { idx:1, num:'I', slug:'themagician', th:'เดอะ แมจิเชียน', en:'THE MAGICIAN', keys:['พลังงาน','ความสามารถ','ความมั่นใจ','ลงมือทำ'] },
+    { idx:2, num:'II', slug:'thehighpriestess', th:'เดอะ ไฮ พรีเอสเตส', en:'THE HIGH PRIESTESS', keys:['สัญชาตญาณ','ความลึกลับ','ปัญญา','ความเงียบ'] },
+    { idx:3, num:'III', slug:'theempress', th:'เดอะ เอ็มเพรส', en:'THE EMPRESS', keys:['ความอุดมสมบูรณ์','ความรัก','ธรรมชาติ','ความงาม'] },
+    { idx:4, num:'IV', slug:'theemperor', th:'เดอะ เอ็มเพอเรอร์', en:'THE EMPEROR', keys:['อำนาจ','ความมั่นคง','ระเบียบ','โครงสร้าง'] },
+    { idx:5, num:'V', slug:'thehierophant', th:'เดอะ ไฮเอโรแฟนท์', en:'THE HIEROPHANT', keys:['ประเพณี','ความเชื่อ','การสอน','สถาบัน'] },
+    { idx:6, num:'VI', slug:'thelovers', th:'เดอะ เลิฟเวอร์ส', en:'THE LOVERS', keys:['ความรัก','การเลือก','ความสัมพันธ์','ความสมดุล'] },
+    { idx:7, num:'VII', slug:'thechariot', th:'เดอะ ชาริออต', en:'THE CHARIOT', keys:['ชัยชนะ','ความมุ่งมั่น','การควบคุม','ความสำเร็จ'] },
+    { idx:8, num:'VIII', slug:'strength', th:'สเตรงธ์', en:'STRENGTH', keys:['ความกล้าหาญ','ความอดทน','พลังใจ','การควบคุม'] },
+    { idx:9, num:'IX', slug:'thehermit', th:'เดอะ เฮอร์มิท', en:'THE HERMIT', keys:['การค้นหาตัวเอง','ปัญญา','ความสงบ','การอยู่คนเดียว'] },
+    { idx:10, num:'X', slug:'thewheeloffortune', th:'วีล ออฟ ฟอร์จูน', en:'WHEEL OF FORTUNE', keys:['โชคชะตา','การเปลี่ยนแปลง','วงจร','โอกาส'] },
+    { idx:11, num:'XI', slug:'justice', th:'จัสทิส', en:'JUSTICE', keys:['ความยุติธรรม','ความสมดุล','ความจริง','กฎแห่งกรรม'] },
+    { idx:12, num:'XII', slug:'thehangedman', th:'เดอะ แฮงด์แมน', en:'THE HANGED MAN', keys:['การรอคอย','การปล่อยวาง','มุมมองใหม่','การสละ'] },
+    { idx:13, num:'XIII', slug:'death', th:'เดธ', en:'DEATH', keys:['การเปลี่ยนแปลง','จบบทเก่า','การเริ่มใหม่','การปล่อยวาง'] },
+    { idx:14, num:'XIV', slug:'temperance', th:'เทมเพอแรนซ์', en:'TEMPERANCE', keys:['ความสมดุล','ความอดทน','การผสมผสาน','ความพอดี'] },
+    { idx:15, num:'XV', slug:'thedevil', th:'เดอะ เดวิล', en:'THE DEVIL', keys:['การยึดติด','ความกลัว','สิ่งล่อใจ','พันธนาการ'] },
+    { idx:16, num:'XVI', slug:'thetower', th:'เดอะ ทาวเวอร์', en:'THE TOWER', keys:['การพังทลาย','การเปิดเผยความจริง','การเปลี่ยนแปลงฉับพลัน','การตื่นรู้'] },
+    { idx:17, num:'XVII', slug:'thestar', th:'เดอะ สตาร์', en:'THE STAR', keys:['ความหวัง','การรักษา','แรงบันดาลใจ','ความเชื่อ'] },
+    { idx:18, num:'XVIII', slug:'themoon', th:'เดอะ มูน', en:'THE MOON', keys:['ความลึกลับ','ความสับสน','จิตใต้สำนึก','ความกลัว'] },
+    { idx:19, num:'XIX', slug:'thesun', th:'เดอะ ซัน', en:'THE SUN', keys:['ความสุข','ความสำเร็จ','ความสดใส','พลังงานบวก'] },
+    { idx:20, num:'XX', slug:'judgement', th:'จัดจ์เมนท์', en:'JUDGEMENT', keys:['การตื่นรู้','การให้อภัย','การเปลี่ยนแปลง','การฟื้นฟู'] },
+    { idx:21, num:'XXI', slug:'theworld', th:'เดอะ เวิลด์', en:'THE WORLD', keys:['ความสำเร็จ','ความสมบูรณ์','การเดินทาง','ความสุขสมหวัง'] },
   ],
   wands: [
     { num:'Ace', th:'เอซ ออฟ แวนด์ส', en:'ACE OF WANDS', keys:['แรงบันดาลใจ','การเริ่มต้น','พลังงาน','ความคิดสร้างสรรค์'], meaning:'ไพ่แห่งแรงบันดาลใจและการเริ่มต้นใหม่ค่ะ สื่อถึงพลังงานที่ลุกโชน ไอเดียใหม่ และความกระตือรือร้นในการลงมือทำค่ะ', yesno:'YES', element:'ไฟ', astro:'ไฟ' },
@@ -547,11 +355,33 @@ const cards = {
 function renderCards(suit) {
   const grid = document.getElementById(suit + '-grid');
   if (!grid || grid.children.length > 0) return;
-  cards[suit].forEach((c, i) => {
+
+  if (suit === 'major') {
+    cards.major.forEach((c) => {
+      const a = document.createElement('a');
+      a.className = 'tarot-card';
+      a.href = `/learn/${c.slug}`;
+      a.innerHTML = `
+        <div class="card-thumb">
+          <img src="/learn/images/tarotmajor/${c.idx}.png" alt="ไพ่ ${c.th} ไพ่ทาโรต์ ${c.num}"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="thumb-fallback" style="display:none">${c.num}</div>
+        </div>
+        <div class="card-num">Major Arcana · ${c.num}</div>
+        <div class="card-name-th">${c.th}</div>
+        <div class="card-name-en">${c.en}</div>
+        <div class="card-keywords">${c.keys.slice(0,2).map(k=>`<span class="kw">${k}</span>`).join('')}</div>
+      `;
+      grid.appendChild(a);
+    });
+    return;
+  }
+
+  cards[suit].forEach((c) => {
     const div = document.createElement('div');
     div.className = 'tarot-card';
     div.innerHTML = `
-      <div class="card-num">${suit === 'major' ? 'Major Arcana · ' : ''}${c.num}</div>
+      <div class="card-num">${c.num}</div>
       <div class="card-name-th">${c.th}</div>
       <div class="card-name-en">${c.en}</div>
       <div class="card-keywords">${c.keys.slice(0,2).map(k=>`<span class="kw">${k}</span>`).join('')}</div>
@@ -570,7 +400,7 @@ function switchTab(suit) {
 }
 
 function openModal(c, suit) {
-  document.getElementById('m-num').textContent = suit === 'major' ? `Major Arcana · ${c.num}` : `${suit.charAt(0).toUpperCase()+suit.slice(1)} · ${c.num}`;
+  document.getElementById('m-num').textContent = `${suit.charAt(0).toUpperCase()+suit.slice(1)} · ${c.num}`;
   document.getElementById('m-name-th').textContent = c.th;
   document.getElementById('m-name-en').textContent = c.en;
   document.getElementById('m-meaning').textContent = c.meaning;
@@ -589,7 +419,6 @@ function closeModal(e) {
   }
 }
 
-// render major on load
 renderCards('major');
 </script>
 
