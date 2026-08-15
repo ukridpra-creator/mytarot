@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyTarot Video Maker v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#e9c877; --gold-dim:#b6924a; --cream:#f3ead4; }
+  *{box-sizing:border-box;}
+  body{margin:0;min-height:100vh;background:#0c0c0e;font-family:'Sarabun',sans-serif;color:var(--cream);
+    display:flex;flex-direction:column;align-items:center;padding:24px 12px 60px;}
+  h1{font-family:'Noto Serif Thai',serif;font-size:19px;color:var(--gold);margin:0 0 4px;}
+  .sub{color:#9a92a8;font-size:12.5px;margin-bottom:16px;text-align:center;max-width:380px;}
+  #canvasWrap{position:relative;width:100%;max-width:340px;}
+  canvas{width:100%;height:auto;display:block;border-radius:14px;box-shadow:0 0 0 2px var(--gold-dim),0 16px 40px rgba(0,0,0,.6);background:#000;}
+  #status{font-size:12px;color:#9a92a8;margin-top:8px;min-height:16px;text-align:center;}
+  #panel{width:100%;max-width:340px;margin-top:16px;}
+  .field{margin-bottom:12px;}
+  label{display:block;font-size:12px;color:#9a92a8;margin-bottom:4px;}
+  select,input[type=text]{width:100%;padding:9px 10px;border-radius:8px;border:1px solid #333;
+    background:#1a1a1e;color:var(--cream);font-family:'Sarabun',sans-serif;font-size:13.5px;}
+  .btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  button{flex:1;min-width:100px;padding:11px 12px;border-radius:10px;border:none;
+    font-family:'Sarabun',sans-serif;font-weight:700;font-size:13px;cursor:pointer;}
+  button:active{transform:scale(.96);}
+  button:disabled{opacity:.35;cursor:not-allowed;}
+  .primary{background:linear-gradient(135deg,var(--gold),#c9a24e);color:#231708;}
+  .ghost{background:transparent;border:1px solid var(--gold-dim);color:var(--gold);}
+  .danger{background:transparent;border:1px solid #7a4;color:#7a9;}
+  #drawnList{font-size:11.5px;color:#9a92a8;margin-top:10px;line-height:1.7;word-break:break-all;}
+  #warnBox{display:none;background:#2b1414;border:1px solid #a44;border-radius:8px;padding:10px;font-size:12px;color:#e9b;margin-top:12px;line-height:1.6;}
+  #dlLink{display:none;margin-top:12px;text-align:center;}
+  #dlLink a{color:#231708;background:var(--gold);padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13.5px;}
+</style>
+</head>
+<body>
+
+<h1>🔮 MyTarot Video Maker</h1>
+<div class="sub">สุ่มไพ่จริงจาก mytarot.vip · สับไพ่ก่อนแจก · หลังไพ่จริง · ชื่อไพ่ใต้การ์ด · 9:16 เว้นขอบบน-ล่าง 20%</div>
+
+<div id="canvasWrap">
+  <canvas id="cv" width="720" height="1280"></canvas>
+</div>
+<div id="status">พร้อมสุ่มไพ่ค่ะ</div>
+<div id="dlLink"></div>
+<div id="warnBox"></div>
+
+<div id="panel">
+  <div class="field">
+    <label>Base URL ของเว็บ</label>
+    <input type="text" id="baseUrl" value="https://mytarot.vip">
+  </div>
+  <div class="field">
+    <label>รูปแบบไพ่ (Spread)</label>
+    <select id="spreadSelect"></select>
+  </div>
+  <div class="field">
+    <label>ความเร็ว</label>
+    <select id="speedSelect">
+      <option value="1.4">ช้า</option>
+      <option value="1" selected>ปกติ</option>
+      <option value="0.6">เร็ว</option>
+    </select>
+  </div>
+  <div class="btns">
+    <button class="ghost" id="shuffleBtn">🔀 สุ่มไพ่ใหม่</button>
+    <button class="primary" id="previewBtn" disabled>▶️ พรีวิว</button>
+  </div>
+  <div class="btns">
+    <button class="danger" id="recordBtn" disabled>⏺ อัดเป็นวิดีโอ</button>
+  </div>
+  <div id="drawnList"></div>
+</div>
+
+<script>
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+const TOP_MARGIN = H*0.20, BOT_MARGIN = H*0.20;
+const ACTIVE_TOP = TOP_MARGIN, ACTIVE_H = H - TOP_MARGIN - BOT_MARGIN;
+
+const MAJOR_NAMES = ["The Fool","The Magician","The High Priestess","The Empress","The Emperor","The Hierophant","The Lovers","The Chariot","Strength","The Hermit","Wheel of Fortune","Justice","The Hanged Man","Death","Temperance","The Devil","The Tower","The Star","The Moon","The Sun","Judgement","The World"];
+const RANK_NAMES = ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"];
+const SUIT_LABEL = {cups:"Cups",wands:"Wands",swords:"Swords",pentacles:"Pentacles"};
+
+const SPREADS = {
+  one:{label:"1 ใบ", pos:[[50,50]]},
+  two:{label:"2 ใบ", pos:[[35,50],[65,50]]},
+  three:{label:"3 ใบ (อดีต-ปัจจุบัน-อนาคต)", pos:[[20,50],[50,50],[80,50]]},
+  four:{label:"4 ใบ", pos:[[50,14],[26,46],[74,46],[50,80]]},
+  cross:{label:"5 ใบ กางเขน", pos:[[50,10],[22,46],[50,46],[78,46],[50,82]]},
+  star:{label:"6 ใบ ดาว", pos:[[50,6],[25,30],[75,30],[25,64],[75,64],[50,90]]},
+  horseshoe:{label:"7 ใบ เกือกม้า", pos:[[12,84],[15,56],[28,26],[50,8],[72,26],[85,56],[88,84]]},
+  love:{label:"5 ใบ ความรัก", pos:[[50,10],[25,42],[75,42],[25,78],[75,78]]},
+  career:{label:"5 ใบ การงาน (แถวเดียว)", pos:[[10,50],[30,50],[50,50],[70,50],[90,50]]},
+  celtic:{label:"10 ใบ เซลติกครอส", pos:[[35,46],[35,46],[35,80],[10,46],[35,12],[60,46],[86,88],[86,64],[86,40],[86,16]]},
+  tree:{label:"9 ใบ ต้นไม้ชีวิต", pos:[[50,4],[28,18],[72,18],[16,38],[84,38],[50,38],[28,60],[72,60],[50,84]]},
+};
+const spreadSelect = document.getElementById('spreadSelect');
+Object.entries(SPREADS).forEach(([k,s])=>{
+  const o=document.createElement('option'); o.value=k; o.textContent=s.label; spreadSelect.appendChild(o);
+});
+spreadSelect.value='cross';
+spreadSelect.addEventListener('change', shuffleAndLoad);
+
+function cardName(id){
+  if(id.startsWith('major-')){
+    const i = parseInt(id.split('-')[1],10);
+    return MAJOR_NAMES[i] || id;
+  }
+  const [folder,rankStr] = id.split('-');
+  const rank = parseInt(rankStr,10);
+  return `${RANK_NAMES[rank-1]} of ${SUIT_LABEL[folder]}`;
+}
+
+function buildDeck(base){
+  const deck=[];
+  for(let i=0;i<=21;i++) deck.push({id:'major-'+i, url:`${base}/learn/images/tarotmajor/${i}.png`});
+  const suits=[['cups','c'],['wands','w'],['swords','s'],['pentacles','p']];
+  suits.forEach(([folder,letter])=>{
+    for(let r=1;r<=14;r++) deck.push({id:folder+'-'+r, url:`${base}/learn/images/${folder}/${letter}${r}.png`});
+  });
+  return deck;
+}
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+let selectedCards=[];
+let loadedImgs=[];
+let currentSpreadKey='cross';
+let backImg=null, backOk=false;
+const statusEl = document.getElementById('status');
+const drawnListEl = document.getElementById('drawnList');
+const warnBox = document.getElementById('warnBox');
+const dlLink = document.getElementById('dlLink');
+const previewBtn = document.getElementById('previewBtn');
+const recordBtn = document.getElementById('recordBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+
+function loadOne(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=>res({ok:true,img});
+    img.onerror = ()=>res({ok:false,img:null});
+    img.src = url;
+  });
+}
+
+function drawBlackBase(){
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0,0,W,H);
+}
+function roundRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function drawCardBack(x,y,w,h){
+  ctx.save();
+  ctx.translate(x,y);
+  roundRect(-w/2,-h/2,w,h,w*0.08);
+  ctx.save(); ctx.clip();
+  if(backOk){
+    ctx.drawImage(backImg,-w/2,-h/2,w,h);
+  } else {
+    ctx.fillStyle = '#141018'; ctx.fillRect(-w/2,-h/2,w,h);
+    ctx.fillStyle='rgba(233,200,119,.5)'; ctx.font=`${w*0.3}px serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('✦',0,0);
+  }
+  ctx.restore();
+  ctx.strokeStyle = '#e9c877'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.restore();
+}
+function drawCardFront(imgObj,x,y,w,h){
+  ctx.save();
+  ctx.translate(x,y);
+  roundRect(-w/2,-h/2,w,h,w*0.08);
+  ctx.save(); ctx.clip();
+  if(imgObj && imgObj.ok){
+    ctx.drawImage(imgObj.img,-w/2,-h/2,w,h);
+  } else {
+    ctx.fillStyle='#3a2a1a'; ctx.fillRect(-w/2,-h/2,w,h);
+    ctx.fillStyle='#e9c877'; ctx.font=`${w*0.12}px sans-serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('รูปไม่พบ',0,0);
+  }
+  ctx.restore();
+  ctx.strokeStyle = '#e9c877'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.restore();
+}
+
+let particles=[];
+function spawnParticles(x,y){
+  for(let i=0;i<10;i++){
+    const ang = Math.random()*Math.PI*2, sp=2+Math.random()*3;
+    particles.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,life:1});
+  }
+}
+function drawParticles(){
+  particles.forEach(p=>{
+    ctx.globalAlpha = Math.max(p.life,0);
+    ctx.fillStyle = '#e9c877';
+    ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    p.x+=p.vx; p.y+=p.vy; p.life-=0.045;
+  });
+  particles = particles.filter(p=>p.life>0);
+}
+
+function deckPos(){ return {x:W/2, y:ACTIVE_TOP+ACTIVE_H*0.90}; }
+
+// thick deck: draws many stacked backs with slight offsets + side "spine" shading for depth
+function drawThickDeck(cx,cy,w,h,layers,jitter){
+  jitter = jitter || 0;
+  for(let i=0;i<layers;i++){
+    const off = (layers-1-i) * (h*0.012);
+    const jx = jitter ? Math.sin(i*1.7)*jitter : 0;
+    ctx.save();
+    ctx.translate(cx+jx, cy - off);
+    roundRect(-w/2,-h/2,w,h,w*0.08);
+    ctx.save(); ctx.clip();
+    if(backOk){ ctx.drawImage(backImg,-w/2,-h/2,w,h); }
+    else { ctx.fillStyle='#141018'; ctx.fillRect(-w/2,-h/2,w,h); }
+    ctx.restore();
+    if(i<layers-1){ ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(-w/2,-h/2,w,h); }
+    ctx.strokeStyle = i===layers-1 ? '#e9c877' : 'rgba(233,200,119,.35)';
+    ctx.lineWidth = i===layers-1 ? 3 : 1;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function renderStatic(){
+  drawBlackBase();
+  const dp = deckPos();
+  const n = selectedCards.length || SPREADS[currentSpreadKey].pos.length;
+  const {w:wf} = cardSize(n);
+  const w = W*wf, h = w*1.55;
+  drawThickDeck(dp.x, dp.y, w, h, Math.min(Math.max(n,2),10), 0);
+}
+
+function cardSize(n){
+  if(n<=2) return {w:0.30};
+  if(n<=4) return {w:0.24};
+  if(n<=6) return {w:0.20};
+  if(n<=8) return {w:0.17};
+  return {w:0.14};
+}
+
+async function preloadBack(){
+  const base = document.getElementById('baseUrl').value.replace(/\/$/,'');
+  const res = await loadOne(`${base}/learn/images/tarotmajor/b.png`);
+  backImg = res.img; backOk = res.ok;
+}
+
+async function shuffleAndLoad(){
+  previewBtn.disabled = true; recordBtn.disabled = true;
+  dlLink.style.display='none'; warnBox.style.display='none';
+  await preloadBack();
+  const base = document.getElementById('baseUrl').value.replace(/\/$/,'');
+  currentSpreadKey = spreadSelect.value;
+  const spread = SPREADS[currentSpreadKey];
+  const n = spread.pos.length;
+  drawBlackBase();
+  const dp = deckPos();
+  const {w:wf0} = cardSize(n);
+  drawThickDeck(dp.x, dp.y, W*wf0, W*wf0*1.55, Math.min(Math.max(n,2),10), 0);
+  statusEl.textContent = 'กำลังสุ่มไพ่และโหลดรูป... 0%';
+
+  const deck = buildDeck(base);
+  selectedCards = shuffle(deck).slice(0,n);
+
+  let done = 0;
+  loadedImgs = await Promise.all(selectedCards.map(c=>loadOne(c.url).then(r=>{
+    done++; statusEl.textContent = `กำลังสุ่มไพ่และโหลดรูป... ${Math.round(done/n*100)}%`;
+    return r;
+  })));
+
+  drawnListEl.innerHTML = 'ไพ่ที่สุ่มได้: ' + selectedCards.map(c=>cardName(c.id)).join(', ');
+  const failed = loadedImgs.filter(x=>!x.ok).length;
+  if(failed>0){
+    statusEl.textContent = `โหลดรูปไม่สำเร็จ ${failed}/${n} ใบ (เช็ค path/URL)`;
+  } else {
+    statusEl.textContent = `พร้อม! สุ่มได้ ${n} ใบ · โหลดรูปครบแล้ว`;
+  }
+  renderStatic();
+  previewBtn.disabled = false; recordBtn.disabled = false;
+}
+
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+
+function buildSchedule(n, speed, dealOffset){
+  const moveDur = 550*speed, flipDur = 420*speed, gap = 300*speed, startDelay=250*speed;
+  const sched=[];
+  let t = dealOffset + startDelay;
+  for(let i=0;i<n;i++){
+    const moveStart=t, moveEnd=moveStart+moveDur;
+    const flipStart=moveEnd+80*speed, flipEnd=flipStart+flipDur;
+    sched.push({moveStart,moveEnd,flipStart,flipEnd});
+    t = flipEnd+gap;
+  }
+  return {sched, total:t+300*speed};
+}
+
+function drawShuffle(el, dur, cx, cy, w, h, cards){
+  // riffle-style shuffle: several card backs oscillating side to side and interleaving
+  cards = cards || 10;
+  const p = Math.min(el/dur,1);
+  const wobble = Math.sin(p*Math.PI); // 0->1->0 envelope
+  for(let i=0;i<cards;i++){
+    const phase = (i/cards)*Math.PI*2;
+    const spread = 26*wobble;
+    const jx = Math.sin(p*Math.PI*6 + phase) * spread;
+    const jy = Math.cos(p*Math.PI*4 + phase) * (spread*0.35);
+    const rot = Math.sin(p*Math.PI*5 + phase) * 10*wobble;
+    ctx.save();
+    ctx.translate(cx+jx, cy+jy - i*(h*0.012));
+    ctx.rotate(rot*Math.PI/180);
+    roundRect(-w/2,-h/2,w,h,w*0.08);
+    ctx.save(); ctx.clip();
+    if(backOk){ ctx.drawImage(backImg,-w/2,-h/2,w,h); }
+    else { ctx.fillStyle='#141018'; ctx.fillRect(-w/2,-h/2,w,h); }
+    ctx.restore();
+    ctx.strokeStyle = '#e9c877'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.restore();
+  }
+}
+
+let animHandle=null;
+
+function runAnimation({record=false}={}){
+  return new Promise((resolve)=>{
+    const n = selectedCards.length;
+    const spread = SPREADS[currentSpreadKey];
+    const speed = parseFloat(document.getElementById('speedSelect').value);
+    const {w:wf} = cardSize(n);
+    const cw = W*wf, ch = cw*1.55;
+    const dp = deckPos();
+    const shuffleDur = 1300*speed;
+    const vanishDur = 380*speed;
+    const bigW = W*0.30, bigH = bigW*1.55, bigLayers = 22;
+    const smallLayers = Math.min(Math.max(n,2),10);
+    const {sched,total} = buildSchedule(n,speed,shuffleDur+vanishDur);
+    const start = performance.now();
+    let sparked = new Array(n).fill(false);
+    let vanishParticles = false;
+
+    function frame(now){
+      const el = now - start;
+      drawBlackBase();
+
+      if(el < shuffleDur){
+        drawShuffle(el, shuffleDur, dp.x, dp.y, bigW, bigH, 14);
+      } else if(el < shuffleDur+vanishDur){
+        const p = (el-shuffleDur)/vanishDur;
+        // big deck shrinks & fades out
+        ctx.save(); ctx.globalAlpha = Math.max(1-p,0);
+        const s = 1 - p*0.35;
+        ctx.translate(dp.x,dp.y); ctx.scale(s,s); ctx.translate(-dp.x,-dp.y);
+        drawThickDeck(dp.x, dp.y, bigW, bigH, bigLayers, 0);
+        ctx.restore();
+        // small deck fades in
+        ctx.save(); ctx.globalAlpha = Math.min(p*1.4,1);
+        drawThickDeck(dp.x, dp.y, cw, ch, smallLayers, 0);
+        ctx.restore();
+        if(!vanishParticles && p>0.4){ vanishParticles = true; spawnParticles(dp.x,dp.y); }
+      } else {
+        const remaining = sched.filter(s=>el<s.moveStart).length;
+        if(remaining>0){
+          drawThickDeck(dp.x, dp.y, cw, ch, Math.min(remaining,smallLayers), 0);
+        }
+      }
+
+      for(let i=0;i<n;i++){
+        const s = sched[i];
+        const [txp,typ] = spread.pos[i];
+        const tx = txp/100*W, ty = ACTIVE_TOP + typ/100*ACTIVE_H;
+        if(el < s.moveStart) continue;
+
+        let x,y;
+        if(el < s.moveEnd){
+          const p = easeOutCubic((el-s.moveStart)/(s.moveEnd-s.moveStart));
+          x = dp.x + (tx-dp.x)*p; y = dp.y + (ty-dp.y)*p;
+        } else { x=tx; y=ty; }
+
+        if(el < s.flipStart){
+          drawCardBack(x,y,cw,ch);
+        } else if(el < s.flipEnd){
+          const p = (el-s.flipStart)/(s.flipEnd-s.flipStart);
+          const scaleX = Math.abs(Math.cos(p*Math.PI));
+          ctx.save(); ctx.translate(x,y); ctx.scale(Math.max(scaleX,0.02),1); ctx.translate(-x,-y);
+          if(p<0.5) drawCardBack(x,y,cw,ch); else drawCardFront(loadedImgs[i],x,y,cw,ch);
+          ctx.restore();
+          if(p>=0.5 && !sparked[i]){ sparked[i]=true; spawnParticles(x,y); }
+        } else {
+          drawCardFront(loadedImgs[i],x,y,cw,ch);
+        }
+      }
+
+      drawParticles();
+      statusEl.textContent = record ? 'กำลังอัดวิดีโอ...' : 'กำลังพรีวิว...';
+
+      if(el < total){
+        animHandle = requestAnimationFrame(frame);
+      } else {
+        statusEl.textContent = record ? 'อัดเสร็จแล้ว!' : 'พรีวิวเสร็จแล้ว';
+        resolve();
+      }
+    }
+    animHandle = requestAnimationFrame(frame);
+  });
+}
+
+shuffleBtn.addEventListener('click', shuffleAndLoad);
+previewBtn.addEventListener('click', async ()=>{
+  if(selectedCards.length===0){ await shuffleAndLoad(); }
+  await runAnimation({record:false});
+});
+
+recordBtn.addEventListener('click', async ()=>{
+  if(selectedCards.length===0){ await shuffleAndLoad(); }
+  recordBtn.disabled = true; previewBtn.disabled = true; shuffleBtn.disabled = true;
+  warnBox.style.display='none';
+  try{
+    const stream = cv.captureStream(30);
+    const candidates = ['video/mp4;codecs=h264','video/mp4','video/webm;codecs=vp9','video/webm'];
+    const mimeType = candidates.find(t=>MediaRecorder.isTypeSupported(t)) || '';
+    const rec = new MediaRecorder(stream, mimeType?{mimeType}:{});
+    const chunks=[];
+    rec.ondataavailable = e=>{ if(e.data.size>0) chunks.push(e.data); };
+    const stopped = new Promise(res=> rec.onstop = res);
+    rec.start();
+    await runAnimation({record:true});
+    rec.stop();
+    await stopped;
+    const ext = (mimeType.includes('mp4')) ? 'mp4' : 'webm';
+    const blob = new Blob(chunks, {type: mimeType || 'video/webm'});
+    const url = URL.createObjectURL(blob);
+    dlLink.innerHTML = `<a href="${url}" download="tarot-reading.${ext}">⬇️ ดาวน์โหลดวิดีโอ (.${ext})</a>`;
+    dlLink.style.display='block';
+  }catch(err){
+    warnBox.style.display='block';
+    warnBox.textContent = 'อัดวิดีโอไม่สำเร็จ (อาจติด CORS ของรูปภาพจากเว็บ) — ลองตั้งค่า Access-Control-Allow-Origin บน Vercel สำหรับ path /learn/images/* แล้วลองใหม่ค่ะ. รายละเอียด: ' + err.message;
+    statusEl.textContent = 'เกิดข้อผิดพลาด';
+  }
+  recordBtn.disabled = false; previewBtn.disabled = false; shuffleBtn.disabled = false;
+});
+
+shuffleAndLoad();
+</script>
+</body>
+</html>
