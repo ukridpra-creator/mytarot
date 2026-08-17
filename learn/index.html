@@ -10,6 +10,7 @@
   <meta property="og:description" content="เรียนรู้ความรู้โหราศาสตร์ฟรี ทั้งไพ่ทาโรต์ เลขศาสตร์ และโหราศาสตร์หลากสาขาค่ะ">
   <meta property="og:url" content="https://www.mytarot.vip/learn">
   <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <link rel="canonical" href="https://www.mytarot.vip/learn">
   <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="apple-touch-icon" href="/images/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,6 +190,13 @@
     }
     .back-link:active { color: rgba(255,255,255,0.7); }
 
+    /* การ์ดที่ยังไม่เปิด — ไม่ใช่ลิงก์ กดไม่ได้ */
+    .learn-card.disabled {
+      cursor: default;
+      opacity: 0.55;
+    }
+    .learn-card.disabled:active { transform: none; }
+
     /* coming soon badge */
     .badge-soon {
       position: absolute;
@@ -236,13 +244,13 @@
         <div class="learn-card-desc">เริ่มต้นดูไพ่ยังไง ตั้งคำถามอย่างไรให้ได้ผลค่ะ</div>
         <span class="learn-card-count">มือใหม่</span>
       </a>
-      <a href="/learn/tarot-spread" class="learn-card tarot">
+      <div class="learn-card tarot disabled">
         <span class="learn-card-icon">✨</span>
         <div class="learn-card-title">รูปแบบการวางไพ่ (Spread)</div>
         <div class="learn-card-desc">Celtic Cross, 3 ใบ, Past-Present-Future และอื่นๆ ค่ะ</div>
         <span class="learn-card-count">เพิ่มเร็วๆ นี้</span>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
+      </div>
     </div>
   </div>
 
@@ -256,20 +264,20 @@
       <span class="section-count">เร็วๆ นี้</span>
     </div>
     <div class="learn-grid">
-      <a href="/learn/numerology-life" class="learn-card number">
+      <div class="learn-card number disabled">
         <span class="learn-card-icon">🌟</span>
         <div class="learn-card-title">เลขชีวิตคืออะไร</div>
         <div class="learn-card-desc">คำนวณและตีความเลขชีวิตจากวันเกิดค่ะ</div>
         <span class="learn-card-count">เร็วๆ นี้</span>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
-      <a href="/learn/numerology-kua" class="learn-card number">
+      </div>
+      <div class="learn-card number disabled">
         <span class="learn-card-icon">🧭</span>
         <div class="learn-card-title">เลขกัวคืออะไร</div>
         <div class="learn-card-desc">ทิศมงคล สีมงคล จากเลขกัวของคุณค่ะ</div>
         <span class="learn-card-count">เร็วๆ นี้</span>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
+      </div>
     </div>
   </div>
 
@@ -283,30 +291,30 @@
       <span class="section-count">เร็วๆ นี้</span>
     </div>
     <div class="learn-grid">
-      <a href="/learn/thai-astro" class="learn-card thai">
+      <div class="learn-card thai disabled">
         <span class="learn-card-icon">🇹🇭</span>
         <div class="learn-card-title">โหราศาสตร์ไทย</div>
         <div class="learn-card-desc">สุริยยาตร์ เลข 7 ตัว ทักษา ตรีวัยค่ะ</div>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
-      <a href="/learn/chinese-astro" class="learn-card chinese">
+      </div>
+      <div class="learn-card chinese disabled">
         <span class="learn-card-icon">🇨🇳</span>
         <div class="learn-card-title">โหราศาสตร์จีน</div>
         <div class="learn-card-desc">บาจื้อ ห้าธาตุ นักษัตรจีนค่ะ</div>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
-      <a href="/learn/western-astro" class="learn-card western">
+      </div>
+      <div class="learn-card western disabled">
         <span class="learn-card-icon">⭐</span>
         <div class="learn-card-title">โหราศาสตร์ตะวันตก</div>
         <div class="learn-card-desc">ราศี ดาวเคราะห์ Natal Chart ค่ะ</div>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
-      <a href="/learn/indian-astro" class="learn-card indian">
+      </div>
+      <div class="learn-card indian disabled">
         <span class="learn-card-icon">🇮🇳</span>
         <div class="learn-card-title">โหราศาสตร์อินเดีย</div>
         <div class="learn-card-desc">เวทิก นพเคราะห์ ราศีอินเดียค่ะ</div>
         <span class="badge-soon">เร็วๆ นี้</span>
-      </a>
+      </div>
     </div>
   </div>
 
@@ -321,6 +329,32 @@
     <h3 style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);margin:16px 0 6px;">เริ่มเรียนโหราศาสตร์จากตรงไหนดี?</h3>
     <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">สำหรับมือใหม่แนะนำให้เริ่มจากไพ่ทาโรต์ก่อนค่ะ เพราะไพ่ทาโรต์มีภาพประกอบที่ช่วยจำความหมายได้ง่าย และสามารถนำไปใช้ดูดวงได้ทันทีหลังเรียนรู้พื้นฐานค่ะ</p>
   </div>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "mytarot.vip", "item": "https://www.mytarot.vip" },
+    { "@type": "ListItem", "position": 2, "name": "\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19\u0e42\u0e2b\u0e23\u0e32\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c", "item": "https://www.mytarot.vip/learn" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "\u0e2b\u0e49\u0e2d\u0e07\u0e40\u0e23\u0e35\u0e22\u0e19\u0e42\u0e2b\u0e23\u0e32\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c",
+  "description": "\u0e40\u0e23\u0e35\u0e22\u0e19\u0e23\u0e39\u0e49\u0e04\u0e27\u0e32\u0e21\u0e23\u0e39\u0e49\u0e42\u0e2b\u0e23\u0e32\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c\u0e1f\u0e23\u0e35 \u0e17\u0e31\u0e49\u0e07\u0e44\u0e1e\u0e48\u0e17\u0e32\u0e42\u0e23\u0e15\u0e4c \u0e40\u0e25\u0e02\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c \u0e41\u0e25\u0e30\u0e42\u0e2b\u0e23\u0e32\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c\u0e2b\u0e25\u0e32\u0e01\u0e2b\u0e25\u0e32\u0e22\u0e2a\u0e32\u0e02\u0e32",
+  "url": "https://www.mytarot.vip/learn",
+  "isPartOf": { "@type": "WebSite", "name": "mytarot.vip", "url": "https://www.mytarot.vip" },
+  "hasPart": [
+    { "@type": "Article", "name": "\u0e04\u0e27\u0e32\u0e21\u0e2b\u0e21\u0e32\u0e22\u0e44\u0e1e\u0e48\u0e17\u0e32\u0e42\u0e23\u0e15\u0e4c\u0e17\u0e31\u0e49\u0e07 78 \u0e43\u0e1a", "url": "https://www.mytarot.vip/learn/tarot-meaning" },
+    { "@type": "Article", "name": "\u0e27\u0e34\u0e18\u0e35\u0e2d\u0e48\u0e32\u0e19\u0e44\u0e1e\u0e48\u0e2a\u0e33\u0e2b\u0e23\u0e31\u0e1a\u0e21\u0e37\u0e2d\u0e43\u0e2b\u0e21\u0e48", "url": "https://www.mytarot.vip/learn/tarot-howto" }
+  ]
+}
+</script>
 
 </body>
 </html>
