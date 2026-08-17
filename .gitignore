@@ -4,4 +4,5 @@
 android/keystore/
 node_modules
 apk_extract/
+_backup/
 *.apk
