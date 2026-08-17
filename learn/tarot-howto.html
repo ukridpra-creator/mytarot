@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ ครบทุกขั้นตอน | mytarot.vip</title>
+  <meta name="description" content="สอนวิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ ตั้งแต่การตั้งคำถาม การจั่วไพ่ ความหมายไพ่ตั้งตรง-กลับหัว ไปจนถึงรูปแบบการวางไพ่ (Spread) พร้อมข้อผิดพลาดที่ควรเลี่ยงค่ะ">
+  <meta name="keywords" content="วิธีอ่านไพ่ทาโรต์,อ่านไพ่ยิปซีสำหรับมือใหม่,วิธีดูไพ่ทาโรต์,tarot spread คืออะไร,ไพ่กลับหัวความหมาย,เริ่มเล่นไพ่ทาโรต์">
+  <link rel="canonical" href="https://www.mytarot.vip/learn/tarot-howto">
+  <meta property="og:title" content="วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ | mytarot.vip">
+  <meta property="og:description" content="สอนวิธีอ่านไพ่ทาโรต์ตั้งแต่พื้นฐานจนถึงรูปแบบการวางไพ่ เหมาะสำหรับมือใหม่ที่เพิ่งเริ่มต้นค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/learn/tarot-howto">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="th_TH">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ | mytarot.vip">
+  <meta name="twitter:description" content="สอนวิธีอ่านไพ่ทาโรต์ตั้งแต่พื้นฐานจนถึงรูปแบบการวางไพ่ เหมาะสำหรับมือใหม่ที่เพิ่งเริ่มต้นค่ะ">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background: #0d0820;
+      color: white;
+      font-family: 'Sarabun', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+    .back-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 16px 20px; font-size: 13px;
+      color: rgba(255,255,255,0.4); text-decoration: none;
+    }
+    .hero { text-align: center; padding: 32px 20px 28px; position: relative; }
+    .hero::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 300px; height: 240px;
+      background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      font-size: 11px; font-weight: 600; color: rgba(212,175,55,0.7);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .hero-title { font-size: 24px; font-weight: 800; color: white; margin-bottom: 10px; line-height: 1.3; }
+    .hero-title span {
+      background: linear-gradient(135deg, #d4af37, #f0d060);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.8; max-width: 340px; margin: 0 auto; }
+
+    .sec { padding: 0 16px; margin-bottom: 28px; }
+    .sec-title {
+      font-size: 17px; font-weight: 700; color: white;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .sec-box {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 18px 16px;
+    }
+    .sec-text { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.9; }
+    .sec-text + .sec-text { margin-top: 10px; }
+
+    /* step list */
+    .step-list { display: flex; flex-direction: column; gap: 10px; }
+    .step-item {
+      display: flex; gap: 12px; background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px;
+    }
+    .step-num {
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37, #f0d060); color: #14100a;
+      font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center;
+    }
+    .step-body-title { font-size: 14.5px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .step-body-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+    /* good/bad comparison */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .compare-box { border-radius: 14px; padding: 14px; }
+    .compare-box.good { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); }
+    .compare-box.bad { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); }
+    .compare-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+    .compare-box.good .compare-label { color: #4ade80; }
+    .compare-box.bad .compare-label { color: #f87171; }
+    .compare-ex { font-size: 12.5px; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 6px; padding-left: 14px; position: relative; }
+    .compare-ex::before { position: absolute; left: 0; }
+    .compare-box.good .compare-ex::before { content: '✓'; color: #4ade80; }
+    .compare-box.bad .compare-ex::before { content: '✕'; color: #f87171; }
+
+    /* upright/reversed */
+    .ur-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ur-box { border-radius: 14px; padding: 16px 14px; }
+    .ur-box.up { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); }
+    .ur-box.down { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); }
+    .ur-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .ur-box.up .ur-title { color: #4ade80; }
+    .ur-box.down .ur-title { color: #f87171; }
+    .ur-text { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+
+    /* spread diagrams */
+    .spread-block { margin-bottom: 22px; }
+    .spread-name { font-size: 14.5px; font-weight: 700; color: #d8a672; margin-bottom: 4px; }
+    .spread-desc { font-size: 12.5px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 14px; }
+    .mini-card {
+      background: linear-gradient(160deg, #241a3d, #0d0820);
+      border: 1px solid rgba(216,166,114,0.4);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: rgba(216,166,114,0.8); font-weight: 700;
+      text-align: center; padding: 4px;
+    }
+    .spread-single { display: flex; justify-content: center; padding: 10px 0; }
+    .spread-single .mini-card { width: 70px; height: 105px; font-size: 12px; }
+
+    .spread-three { display: flex; justify-content: center; gap: 12px; padding: 10px 0; }
+    .spread-three .mini-card { width: 64px; height: 96px; }
+
+    .spread-celtic {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 56px);
+      gap: 6px;
+      max-width: 320px;
+      margin: 10px auto;
+      grid-template-areas:
+        ".    c2   .    c7"
+        "c5   c1   c4   c8"
+        ".    c3   .    c9";
+    }
+    .spread-celtic .mini-card { font-size: 9px; padding: 2px; }
+    .c1 { grid-area: c1; } .c2 { grid-area: c2; transform: rotate(90deg); }
+    .c3 { grid-area: c3; } .c4 { grid-area: c4; }
+    .c5 { grid-area: c5; } .c7 { grid-area: c7; }
+    .c8 { grid-area: c8; } .c9 { grid-area: c9; }
+
+    /* mistakes list */
+    .mistake-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .mistake-item {
+      font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8;
+      padding: 12px 14px 12px 38px; position: relative;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    }
+    .mistake-item::before {
+      content: '⚠'; position: absolute; left: 12px; top: 12px; color: #f0c9a0; font-size: 14px;
+    }
+    .mistake-item b { color: white; }
+
+    /* faq */
+    .faq-item { margin-bottom: 16px; }
+    .faq-q { font-size: 14px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .faq-a { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.8; }
+
+    .cta-banner {
+      margin: 28px 16px; padding: 24px 20px; border-radius: 18px; text-align: center;
+      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(212,175,55,0.08));
+      border: 1px solid rgba(212,175,55,0.2);
+    }
+    .cta-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .cta-desc { font-size: 12.5px; color: rgba(255,255,255,0.5); margin-bottom: 16px; line-height: 1.7; }
+    .cta-row { display: flex; gap: 10px; }
+    .btn { flex: 1; padding: 13px; border-radius: 14px; font-size: 13.5px; font-weight: 700; text-align: center; text-decoration: none; }
+    .btn-primary { background: linear-gradient(135deg, #d8a672, #b8834f); color: #14100a; }
+    .btn-secondary { background: rgba(216,166,114,0.1); border: 1px solid rgba(216,166,114,0.3); color: #d8a672; }
+
+    .section-divider {
+      height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      margin: 8px 16px 28px;
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);">
+  <a href="/" style="color:rgba(255,255,255,0.3);text-decoration:none;">mytarot.vip</a>
+  <span> › </span>
+  <a href="/learn" style="color:rgba(255,255,255,0.3);text-decoration:none;">ห้องเรียนโหราศาสตร์</a>
+  <span> › </span>
+  <span style="color:rgba(255,255,255,0.5);">วิธีอ่านไพ่ทาโรต์</span>
+</nav>
+<a href="/learn" class="back-link">← ห้องเรียนโหราศาสตร์</a>
+
+<div class="hero">
+  <div class="hero-label">✦ คู่มือมือใหม่</div>
+  <h1 class="hero-title">วิธีอ่านไพ่ทาโรต์<br><span>สำหรับมือใหม่</span></h1>
+  <p class="hero-desc">ตั้งแต่การตั้งคำถาม จั่วไพ่ ไปจนถึงการวางไพ่แบบต่างๆ อ่านจบใช้งานได้จริงค่ะ</p>
+</div>
+
+<!-- เตรียมตัว -->
+<div class="sec">
+  <div class="sec-title">🕯️ เตรียมตัวก่อนเริ่มดูไพ่</div>
+  <div class="sec-box">
+    <p class="sec-text">ไม่จำเป็นต้องมีพิธีรีตองอะไรมากค่ะ สิ่งที่ต้องมีจริงๆ คือ <b>สำรับไพ่ทาโรต์หนึ่งชุด</b> (จะเป็นไพ่จริงหรือแอปดูดวงออนไลน์อย่าง mytarot.vip ก็ได้) และ <b>พื้นที่เงียบสงบ</b> ที่ไม่มีใครมารบกวนสัก 5-10 นาที</p>
+    <p class="sec-text">ก่อนเริ่ม ลองหายใจลึกๆ สัก 2-3 ครั้ง ปล่อยความคิดที่วุ่นวายลงชั่วคราว แล้วโฟกัสไปที่คำถามที่อยากรู้คำตอบ ความสงบก่อนดูไพ่จะช่วยให้ตีความได้ตรงประเด็นมากขึ้นค่ะ</p>
+  </div>
+</div>
+
+<!-- ขั้นตอน -->
+<div class="sec">
+  <div class="sec-title">📖 6 ขั้นตอนอ่านไพ่ทาโรต์</div>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-body-title">ตั้งคำถามให้ชัดเจน</div>
+        <div class="step-body-desc">คิดคำถามที่อยากรู้คำตอบให้ชัดก่อนจั่วไพ่ ยิ่งคำถามชัด ไพ่ยิ่งตอบตรงจุด</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-body-title">สับไพ่พร้อมนึกถึงคำถาม</div>
+        <div class="step-body-desc">สับไพ่ไปเรื่อยๆ จนรู้สึกว่า "พอแล้ว" ระหว่างนี้ให้ใจจดจ่ออยู่กับคำถามของตัวเอง</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-body-title">จั่วไพ่ตามจำนวนที่ต้องการ</div>
+        <div class="step-body-desc">มือใหม่แนะนำให้เริ่มจากไพ่ใบเดียวก่อน ค่อยขยับไปแบบ 3 ใบเมื่อคุ้นมือแล้ว</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-body-title">มองภาพรวมก่อนตีความ</div>
+        <div class="step-body-desc">สังเกตสี บรรยากาศ และความรู้สึกแรกที่ได้จากไพ่ก่อนไปดูความหมายละเอียด</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div>
+        <div class="step-body-title">ดูตำแหน่งไพ่ ตั้งตรงหรือกลับหัว</div>
+        <div class="step-body-desc">ไพ่ตั้งตรงกับกลับหัวให้ความหมายต่างกัน (อธิบายละเอียดด้านล่าง)</div>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">6</div>
+      <div>
+        <div class="step-body-title">เชื่อมโยงความหมายกับคำถามของตัวเอง</div>
+        <div class="step-body-desc">ความหมายไพ่ในตำราคือจุดเริ่มต้น แต่ให้ปรับใช้กับสถานการณ์จริงของตัวเองเสมอ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ตั้งคำถาม -->
+<div class="sec">
+  <div class="sec-title">❓ วิธีตั้งคำถามที่ดี</div>
+  <div class="sec-box" style="margin-bottom:12px;">
+    <p class="sec-text">คำถามที่ดีจะทำให้ไพ่ตอบได้ตรงจุดและนำไปใช้ได้จริง หลักสำคัญคือ <b>ถามเรื่องตัวเอง ไม่ใช่ถามแทนคนอื่น</b> และ <b>เปิดโอกาสให้มีคำตอบหลายแบบ</b> ไม่ใช่ถามแบบบังคับให้ตอบอย่างเดียว</p>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-box good">
+      <div class="compare-label">✓ ตัวอย่างคำถามที่ดี</div>
+      <div class="compare-ex">ตอนนี้ฉันควรโฟกัสเรื่องอะไรในความสัมพันธ์นี้?</div>
+      <div class="compare-ex">ฉันจะเตรียมตัวยังไงกับการเปลี่ยนงานที่กำลังจะมาถึง?</div>
+      <div class="compare-ex">มีอะไรที่ฉันควรรู้เกี่ยวกับสถานการณ์นี้บ้าง?</div>
+    </div>
+    <div class="compare-box bad">
+      <div class="compare-label">✕ ตัวอย่างคำถามที่ควรเลี่ยง</div>
+      <div class="compare-ex">เขาคิดกับฉันยังไง (ถามแทนใจคนอื่น)</div>
+      <div class="compare-ex">ฉันจะรวยเมื่อไหร่ (กว้างเกินไป ไม่เจาะจง)</div>
+      <div class="compare-ex">ใช่หรือไม่ใช่ (ปิดกั้นคำตอบเกินไป)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Major vs Minor -->
+<div class="sec">
+  <div class="sec-title">🃏 Major Arcana กับ Minor Arcana ต่างกันยังไง</div>
+  <div class="sec-box">
+    <p class="sec-text"><b>Major Arcana</b> มี 22 ใบ (The Fool ถึง The World) เป็นไพ่ที่มีพลังงานสูง สื่อถึงบทเรียนใหญ่หรือจุดเปลี่ยนสำคัญของชีวิต เวลาไพ่กลุ่มนี้ออกมา มักหมายถึงเรื่องที่สำคัญและส่งผลกระทบมากกว่าปกติ</p>
+    <p class="sec-text"><b>Minor Arcana</b> มี 56 ใบ แบ่งเป็น 4 ชุดตามธาตุ ได้แก่ Wands (ไฟ) Cups (น้ำ) Swords (ลม) และ Pentacles (ดิน) สื่อถึงเหตุการณ์และรายละเอียดในชีวิตประจำวันที่เจาะจงกว่า Major Arcana</p>
+    <p class="sec-text">อยากดูความหมายไพ่ครบทั้ง 78 ใบแบบละเอียด เข้าไปดูได้ที่ <a href="/learn/tarot-meaning" style="color:#d8a672;">หน้าความหมายไพ่ทาโรต์ 78 ใบ</a> ค่ะ</p>
+  </div>
+</div>
+
+<!-- ตั้งตรง กลับหัว -->
+<div class="sec">
+  <div class="sec-title">🔄 ไพ่ตั้งตรง VS กลับหัว คืออะไร</div>
+  <div class="sec-box" style="margin-bottom:12px;">
+    <p class="sec-text">เวลาจั่วไพ่ บางครั้งไพ่จะออกมาในลักษณะกลับหัว (รูปในไพ่กลับด้าน) ซึ่งมีความหมายต่างจากตอนตั้งตรงค่ะ ไม่ได้แปลว่าไพ่กลับหัวจะแย่เสมอไป แต่มักสื่อถึงพลังงานที่ถูกกัน ยังไม่เต็มที่ หรือด้านตรงข้ามของความหมายเดิม</p>
+  </div>
+  <div class="ur-grid">
+    <div class="ur-box up">
+      <div class="ur-title">↑ ตั้งตรง (Upright)</div>
+      <div class="ur-text">พลังงานของไพ่แสดงออกเต็มที่ ตรงไปตรงมาตามความหมายหลัก</div>
+    </div>
+    <div class="ur-box down">
+      <div class="ur-title">↓ กลับหัว (Reversed)</div>
+      <div class="ur-text">พลังงานถูกกันไว้ ยังไม่เต็มที่ หรือสื่อถึงด้านตรงข้าม/เงาของความหมายเดิม</div>
+    </div>
+  </div>
+</div>
+
+<!-- spreads -->
+<div class="sec">
+  <div class="sec-title">🗂️ รูปแบบการวางไพ่ (Spread) ยอดนิยม</div>
+
+  <div class="spread-block">
+    <div class="spread-name">1. ไพ่ใบเดียว (One Card)</div>
+    <div class="spread-desc">ง่ายที่สุด เหมาะกับมือใหม่และคำถามที่ต้องการคำตอบสั้นๆ ตรงประเด็น</div>
+    <div class="spread-single">
+      <div class="mini-card">ไพ่</div>
+    </div>
+  </div>
+
+  <div class="spread-block">
+    <div class="spread-name">2. สามใบ อดีต-ปัจจุบัน-อนาคต (Past-Present-Future)</div>
+    <div class="spread-desc">วางไพ่ 3 ใบเรียงกัน ใบซ้ายคืออดีตที่ส่งผลถึงตอนนี้ ใบกลางคือสถานการณ์ปัจจุบัน ใบขวาคือแนวโน้มอนาคต</div>
+    <div class="spread-three">
+      <div class="mini-card">อดีต</div>
+      <div class="mini-card">ปัจจุบัน</div>
+      <div class="mini-card">อนาคต</div>
+    </div>
+  </div>
+
+  <div class="spread-block">
+    <div class="spread-name">3. Celtic Cross (10 ใบ)</div>
+    <div class="spread-desc">รูปแบบละเอียดที่สุด นิยมใช้เมื่อต้องการวิเคราะห์สถานการณ์ซับซ้อนแบบรอบด้าน เหมาะกับคนที่คุ้นเคยกับไพ่มาสักระยะแล้ว</div>
+    <div class="spread-celtic">
+      <div class="mini-card c2">2. อุปสรรค</div>
+      <div class="mini-card c1">1. สถานการณ์</div>
+      <div class="mini-card c4">4. อดีต</div>
+      <div class="mini-card c7">7. ตัวคุณ</div>
+      <div class="mini-card c5">5. เป้าหมาย</div>
+      <div class="mini-card c3">3. รากฐาน</div>
+      <div class="mini-card c8">8. สิ่งแวดล้อม</div>
+      <div class="mini-card c9">9. ความหวัง/กลัว</div>
+    </div>
+  </div>
+</div>
+
+<!-- mistakes -->
+<div class="sec">
+  <div class="sec-title">⚠️ ข้อผิดพลาดที่มือใหม่มักเจอ</div>
+  <ul class="mistake-list">
+    <li class="mistake-item"><b>ท่องจำความหมายแบบตายตัว</b> — ความหมายในตำราคือจุดเริ่มต้น ต้องปรับให้เข้ากับบริบทคำถามของตัวเองเสมอ</li>
+    <li class="mistake-item"><b>ถามซ้ำจนกว่าจะได้คำตอบที่อยากได้</b> — ถ้าไพ่ตอบมาแล้วไม่ถูกใจ แล้วจั่วใหม่เรื่อยๆ จะทำให้การตีความไม่น่าเชื่อถือ</li>
+    <li class="mistake-item"><b>มองข้ามภาพรวมของไพ่ทั้งชุด</b> — โดยเฉพาะตอนวางหลายใบ ควรดูว่าไพ่ทั้งชุดเล่าเรื่องอะไรร่วมกัน ไม่ใช่แค่ตีความทีละใบแยกกัน</li>
+    <li class="mistake-item"><b>กลัวไพ่กลับหัวหรือไพ่ที่ดูน่ากลัว</b> — เช่น Death หรือ The Tower ไม่ได้แปลว่าร้ายเสมอไป มักสื่อถึงการเปลี่ยนแปลงที่จำเป็นมากกว่า</li>
+    <li class="mistake-item"><b>ไม่ฟังสัญชาตญาณตัวเอง</b> — บางครั้งความรู้สึกแรกที่เห็นไพ่สำคัญพอๆ กับความหมายในตำรา อย่ามองข้ามไป</li>
+  </ul>
+</div>
+
+<!-- faq -->
+<div class="sec">
+  <div class="sec-title">💬 คำถามที่พบบ่อย</div>
+  <div class="sec-box">
+    <div class="faq-item">
+      <div class="faq-q">ไพ่ทาโรต์กับไพ่ยิปซีต่างกันไหม?</div>
+      <div class="faq-a">เป็นไพ่ชุดเดียวกันค่ะ คนไทยนิยมเรียกว่าไพ่ยิปซี ส่วนชื่อสากลคือ Tarot</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">มือใหม่ควรเริ่มจากไพ่กี่ใบ?</div>
+      <div class="faq-a">แนะนำเริ่มจากไพ่ใบเดียวก่อนค่ะ ฝึกความเข้าใจไพ่แต่ละใบให้แม่นยำ แล้วค่อยขยับไปแบบ 3 ใบเมื่อคุ้นมือ</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">ต้องท่องความหมายไพ่ทั้ง 78 ใบให้ได้ก่อนไหม?</div>
+      <div class="faq-a">ไม่จำเป็นค่ะ เริ่มจากเข้าใจภาพรวมและคีย์เวิร์ดหลักของแต่ละใบก่อน แล้วความเข้าใจจะลึกขึ้นเรื่อยๆ ตามประสบการณ์</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">ดูไพ่ให้ตัวเองได้ไหม หรือต้องให้คนอื่นดูให้?</div>
+      <div class="faq-a">ดูให้ตัวเองได้ค่ะ เพียงแต่ต้องพยายามมองสถานการณ์อย่างเป็นกลาง ไม่ตีความเข้าข้างตัวเองมากเกินไป</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-banner">
+  <div class="cta-title">พร้อมลองดูไพ่จริงหรือยังคะ?</div>
+  <div class="cta-desc">ลองใช้ความรู้ที่เพิ่งอ่านมาดูดวงไพ่ทาโรต์ออนไลน์ได้เลยค่ะ</div>
+  <div class="cta-row">
+    <a href="/pages/tarot.html" class="btn btn-primary">🃏 ลองดูดวงไพ่ทาโรต์ฟรี</a>
+    <a href="/learn/tarot-meaning" class="btn btn-secondary">📖 ดูความหมายไพ่ 78 ใบ</a>
+  </div>
+</div>
+
+<!-- SEO text -->
+<div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ ครบทุกขั้นตอน | mytarot.vip</h2>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">การอ่านไพ่ทาโรต์สำหรับมือใหม่เริ่มต้นได้ไม่ยากค่ะ เพียงเข้าใจขั้นตอนพื้นฐาน ตั้งแต่การตั้งคำถาม การจั่วไพ่ การดูตำแหน่งไพ่ตั้งตรงหรือกลับหัว ไปจนถึงการเลือกรูปแบบการวางไพ่ (Spread) ที่เหมาะกับคำถามของตัวเอง ไม่ว่าจะเป็นไพ่ใบเดียว สามใบอดีตปัจจุบันอนาคต หรือ Celtic Cross สำหรับคำถามที่ซับซ้อนกว่า เมื่อฝึกฝนไปเรื่อยๆ ความแม่นยำในการตีความจะดีขึ้นตามประสบการณ์ค่ะ</p>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "mytarot.vip", "item": "https://www.mytarot.vip" },
+    { "@type": "ListItem", "position": 2, "name": "ห้องเรียนโหราศาสตร์", "item": "https://www.mytarot.vip/learn" },
+    { "@type": "ListItem", "position": 3, "name": "วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่", "item": "https://www.mytarot.vip/learn/tarot-howto" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่",
+  "description": "ขั้นตอนการอ่านไพ่ทาโรต์สำหรับผู้เริ่มต้น ตั้งแต่การตั้งคำถามไปจนถึงการตีความไพ่",
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "ตั้งคำถามให้ชัดเจน", "text": "คิดคำถามที่อยากรู้คำตอบให้ชัดก่อนจั่วไพ่" },
+    { "@type": "HowToStep", "position": 2, "name": "สับไพ่พร้อมนึกถึงคำถาม", "text": "สับไพ่ไปเรื่อยๆ พร้อมจดจ่ออยู่กับคำถามของตัวเอง" },
+    { "@type": "HowToStep", "position": 3, "name": "จั่วไพ่ตามจำนวนที่ต้องการ", "text": "เริ่มจากไพ่ใบเดียวก่อนสำหรับมือใหม่" },
+    { "@type": "HowToStep", "position": 4, "name": "มองภาพรวมก่อนตีความ", "text": "สังเกตความรู้สึกแรกที่ได้จากไพ่ก่อนดูความหมายละเอียด" },
+    { "@type": "HowToStep", "position": 5, "name": "ดูตำแหน่งไพ่ ตั้งตรงหรือกลับหัว", "text": "ไพ่ตั้งตรงกับกลับหัวให้ความหมายต่างกัน" },
+    { "@type": "HowToStep", "position": 6, "name": "เชื่อมโยงความหมายกับคำถามของตัวเอง", "text": "ปรับความหมายไพ่ในตำราให้เข้ากับสถานการณ์จริง" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "วิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ ครบทุกขั้นตอน",
+  "description": "สอนวิธีอ่านไพ่ทาโรต์สำหรับมือใหม่ ตั้งแต่การตั้งคำถามไปจนถึงรูปแบบการวางไพ่",
+  "url": "https://www.mytarot.vip/learn/tarot-howto",
+  "mainEntityOfPage": "https://www.mytarot.vip/learn/tarot-howto"
+}
+</script>
+
+</body>
+</html>
