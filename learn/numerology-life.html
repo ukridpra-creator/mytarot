@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เลขชีวิตคืออะไร วิธีคำนวณเลขชีวิตจากวันเกิด ความหมายเลข 1-9 | mytarot.vip</title>
+  <meta name="description" content="สอนวิธีคำนวณเลขชีวิต (Life Path Number) จากวันเกิดแบบละเอียด พร้อมความหมายเลข 1-9 และเลขมาสเตอร์ 11 22 33 เรียนฟรีสำหรับมือใหม่ค่ะ">
+  <meta name="keywords" content="เลขชีวิต,เลขชีวิตคืออะไร,วิธีคำนวณเลขชีวิต,Life Path Number,เลขศาสตร์วันเกิด,ความหมายเลข1-9">
+  <link rel="canonical" href="https://www.mytarot.vip/learn/numerology-life">
+  <meta property="og:title" content="เลขชีวิตคืออะไร วิธีคำนวณจากวันเกิด | mytarot.vip">
+  <meta property="og:description" content="สอนคำนวณเลขชีวิตทีละขั้น พร้อมความหมายเลข 1-9 และเลขมาสเตอร์ 11 22 33 ค่ะ">
+  <meta property="og:url" content="https://www.mytarot.vip/learn/numerology-life">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-default.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="th_TH">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="เลขชีวิตคืออะไร วิธีคำนวณจากวันเกิด | mytarot.vip">
+  <meta name="twitter:description" content="สอนคำนวณเลขชีวิตทีละขั้น พร้อมความหมายเลข 1-9 และเลขมาสเตอร์ค่ะ">
+  <meta name="twitter:image" content="https://www.mytarot.vip/images/og-default.png">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background: #0b0e14;
+      color: white;
+      font-family: 'Sarabun', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+    }
+
+    /* hero */
+    .lesson-hero { padding: 8px 20px 26px; text-align: center; position: relative; }
+    .lesson-hero::before {
+      content: '';
+      position: absolute;
+      top: -20px; left: 50%;
+      transform: translateX(-50%);
+      width: 320px; height: 280px;
+      background: radial-gradient(circle, rgba(6,182,212,0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .lesson-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      color: rgba(6,182,212,0.75);
+      margin-bottom: 12px;
+    }
+    .lesson-title {
+      font-size: 25px; font-weight: 800; line-height: 1.35;
+      margin: 0 0 10px;
+    }
+    .lesson-title span {
+      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lesson-sub {
+      font-size: 13.5px; color: rgba(255,255,255,0.42);
+      line-height: 1.8; max-width: 340px; margin: 0 auto;
+    }
+
+    /* sections */
+    .sec { margin: 22px 16px; }
+    .sec-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px 16px;
+    }
+    .sec-label {
+      font-family: 'Cinzel', serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(34,211,238,0.85);
+      margin: 0 0 12px;
+    }
+    .sec-text { font-size: 13.5px; color: rgba(255,255,255,0.62); line-height: 1.95; margin: 0 0 10px; }
+    .sec-text:last-child { margin-bottom: 0; }
+
+    /* steps */
+    .step { display: flex; gap: 14px; margin-bottom: 18px; }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      flex-shrink: 0;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+      color: #22d3ee;
+      background: rgba(6,182,212,0.1);
+      border: 1px solid rgba(6,182,212,0.35);
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 13.5px; font-weight: 700; color: white; margin-bottom: 5px; }
+    .step-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.85; }
+    .calc {
+      display: block;
+      margin-top: 8px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: rgba(6,182,212,0.06);
+      border: 1px solid rgba(6,182,212,0.18);
+      font-size: 13px;
+      color: #7dd3fc;
+      line-height: 1.8;
+      word-break: break-word;
+    }
+    .calc b { color: #22d3ee; font-weight: 700; }
+
+    /* warning list */
+    .warn-list { list-style: none; padding: 0; margin: 0; }
+    .warn-list li {
+      font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.85;
+      padding-left: 22px; position: relative; margin-bottom: 10px;
+    }
+    .warn-list li:last-child { margin-bottom: 0; }
+    .warn-list li::before {
+      content: '!';
+      position: absolute; left: 0; top: 2px;
+      width: 15px; height: 15px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      color: #fbbf24; background: rgba(251,191,36,0.12);
+      border: 1px solid rgba(251,191,36,0.3);
+    }
+
+    /* number grid */
+    .num-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .num-card {
+      display: block;
+      text-decoration: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 13px;
+    }
+    .num-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+    .num-digit {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', serif; font-size: 17px; font-weight: 700;
+      color: #0b0e14;
+      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    }
+    .num-name { font-size: 13px; font-weight: 700; color: white; line-height: 1.3; }
+    .num-good { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.75; margin-bottom: 7px; }
+    .num-watch { font-size: 11.5px; color: rgba(248,113,113,0.72); line-height: 1.7; }
+    .num-card:active { transform: scale(0.97); }
+    .num-more { display:block; margin-top:9px; font-size:11px; font-weight:700; color:rgba(34,211,238,0.75); }
+
+    /* master numbers */
+    .master-row { display: flex; flex-direction: column; gap: 10px; }
+    .master-item {
+      display: flex; gap: 13px; align-items: flex-start;
+      padding: 13px;
+      border-radius: 14px;
+      background: rgba(139,92,246,0.06);
+      border: 1px solid rgba(139,92,246,0.22);
+    }
+    .master-digit {
+      flex-shrink: 0;
+      font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700;
+      color: #c4b5fd;
+      min-width: 34px;
+    }
+    .master-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .master-desc { font-size: 12.5px; color: rgba(255,255,255,0.55); line-height: 1.8; }
+
+    /* CTA */
+    .cta-box {
+      margin: 26px 16px 8px;
+      padding: 22px 18px;
+      border-radius: 18px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(59,130,246,0.07));
+      border: 1px solid rgba(6,182,212,0.28);
+    }
+    .cta-title { font-size: 16px; font-weight: 800; color: white; margin-bottom: 8px; }
+    .cta-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.8; margin-bottom: 16px; }
+    .cta-btn {
+      display: block;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      color: #06121f;
+      font-size: 14.5px; font-weight: 800;
+      text-decoration: none;
+      margin-bottom: 12px;
+    }
+    .cta-btn.love {
+      background: linear-gradient(135deg, #f472b6, #a855f7);
+      color: #1a0a14;
+    }
+    .cta-link {
+      display: inline-block;
+      font-size: 12px;
+      color: rgba(34,211,238,0.7);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(34,211,238,0.3);
+      padding-bottom: 1px;
+      margin-bottom: 12px;
+    }
+    .cta-note { font-size: 11.5px; color: rgba(255,255,255,0.35); line-height: 1.75; }
+
+    /* nav */
+    .lesson-nav { display: flex; gap: 10px; padding: 14px 16px 4px; }
+    .lesson-nav a {
+      flex: 1; padding: 12px;
+      border-radius: 14px;
+      background: rgba(34,211,238,0.05);
+      border: 1px solid rgba(34,211,238,0.22);
+      text-decoration: none;
+      color: rgba(34,211,238,0.7);
+      font-size: 12px;
+    }
+    .lesson-nav a span { display: block; color: #7dd3fc; font-size: 13px; font-weight: 700; margin-top: 2px; }
+
+    /* seo block */
+    .seo-block { padding: 20px; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 14px; }
+    .seo-block h2 { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.5); margin: 0 0 8px; }
+    .seo-block h3 { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.4); margin: 16px 0 6px; }
+    .seo-block p { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.9; margin: 0; }
+
+    @media (max-width: 340px) {
+      .num-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);">
+  <a href="/" style="color:rgba(255,255,255,0.3);text-decoration:none;">mytarot.vip</a>
+  <span> › </span>
+  <a href="/learn" style="color:rgba(255,255,255,0.3);text-decoration:none;">ห้องเรียนโหราศาสตร์</a>
+  <span> › </span>
+  <span style="color:rgba(255,255,255,0.5);">เลขชีวิต</span>
+</nav>
+<a href="/learn" class="back-link">← ห้องเรียนโหราศาสตร์</a>
+
+<div class="lesson-hero">
+  <div class="lesson-eyebrow">✦ บทเรียนเลขศาสตร์</div>
+  <h1 class="lesson-title">เลขชีวิตคืออะไร<br>และ<span>คำนวณยังไง</span></h1>
+  <p class="lesson-sub">เลขตัวเดียวที่ได้จากวันเกิด แต่บอกนิสัยและเส้นทางชีวิตได้ทั้งชีวิต มาเรียนวิธีคิดจากศูนย์กันค่ะ</p>
+</div>
+
+<div class="sec">
+  <div class="sec-box">
+    <h2 class="sec-label">✦ เลขชีวิตคืออะไร</h2>
+    <p class="sec-text">เลขชีวิต หรือ Life Path Number คือเลขหลักเดียว (1-9) ที่ได้จากการบวกตัวเลขทุกหลักในวันเดือนปีเกิดของเราค่ะ เป็นแกนหลักของเลขศาสตร์สายพีทาโกรัส ซึ่งเป็นระบบที่ใช้กันแพร่หลายที่สุดในโลก</p>
+    <p class="sec-text">ในเลขศาสตร์ เลขชีวิตเปรียบเหมือน "เส้นทางหลัก" ที่เราเดินอยู่ — บอกว่าเราถนัดอะไรโดยธรรมชาติ ติดกับดักแบบไหนบ่อย และบทเรียนอะไรที่มักวนกลับมาหาเราซ้ำๆ ค่ะ</p>
+    <p class="sec-text">ข้อดีของเลขชีวิตคือคำนวณเองได้ ไม่ต้องรู้เวลาเกิด ไม่ต้องใช้ตำราหนา ใช้แค่วันเกิดอย่างเดียวก็เริ่มได้แล้วค่ะ</p>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-box">
+    <h2 class="sec-label">✦ วิธีคำนวณ ทีละขั้น</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">แปลงปีเกิดเป็น ค.ศ. ก่อน</div>
+        <div class="step-desc">เลขศาสตร์สายนี้ใช้ปี ค.ศ. เท่านั้น ถ้าจำเป็น พ.ศ. ให้ลบ 543 ออกค่ะ
+          <span class="calc">ตัวอย่าง เกิด <b>15 มีนาคม 2540</b><br>2540 − 543 = <b>1997</b><br>เขียนเป็นตัวเลขได้ 15 / 03 / 1997</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">บวกตัวเลขทุกหลักรวมกัน</div>
+        <div class="step-desc">แยกทุกตัวเลขออกมาบวกกันหมด ทั้งวัน เดือน และปี ไม่เว้นเลขศูนย์
+          <span class="calc">1 + 5 + 0 + 3 + 1 + 9 + 9 + 7 = <b>35</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">ทดจนเหลือหลักเดียว</div>
+        <div class="step-desc">ถ้าผลลัพธ์ยังเป็นเลขสองหลัก ให้บวกกันอีกรอบจนเหลือ 1-9
+          <span class="calc">35 → 3 + 5 = <b>8</b><br>คนเกิดวันนี้มีเลขชีวิต = <b>8</b></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-box">
+    <h2 class="sec-label">✦ 3 จุดที่คนคำนวณผิดบ่อย</h2>
+    <ul class="warn-list">
+      <li>ใช้ปี พ.ศ. ตรงๆ โดยลืมลบ 543 — เป็นสาเหตุอันดับหนึ่งที่ได้เลขผิดค่ะ</li>
+      <li>ทดเลข 11, 22, 33 ต่อจนเหลือหลักเดียว — สามตัวนี้คือเลขมาสเตอร์ ให้หยุดไว้ตรงนั้น ไม่ต้องทดต่อค่ะ</li>
+      <li>ใช้วันเกิดที่จำผิด หรือวันในบัตรที่ไม่ตรงกับวันเกิดจริง — เลขศาสตร์ยึดวันที่คลอดจริงค่ะ</li>
+    </ul>
+  </div>
+</div>
+
+<div class="sec">
+  <h2 class="sec-label" style="margin-left:2px;">✦ ความหมายเลข 1-9</h2>
+  <div class="num-grid">
+
+    <a class="num-card" href="/learn/numerology-life-1">
+      <div class="num-head"><div class="num-digit">1</div><div class="num-name">ผู้เริ่มต้น</div></div>
+      <div class="num-good">เป็นตัวของตัวเองสูง กล้าตัดสินใจ ชอบบุกเบิกสิ่งใหม่ เหมาะกับงานที่ได้นำเอง</div>
+      <div class="num-watch">ระวัง: ดื้อ ไม่ค่อยฟังใคร และแบกทุกอย่างไว้คนเดียว</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-2">
+      <div class="num-head"><div class="num-digit">2</div><div class="num-name">ผู้ประสาน</div></div>
+      <div class="num-good">อ่อนโยน อ่านใจคนเก่ง ทำงานเป็นทีมได้ดี มักเป็นคนที่ทุกคนสบายใจจะปรึกษา</div>
+      <div class="num-watch">ระวัง: เกรงใจเกินไป ตัดสินใจช้า และเก็บความรู้สึกไว้จนอึดอัด</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-3">
+      <div class="num-head"><div class="num-digit">3</div><div class="num-name">ผู้สื่อสาร</div></div>
+      <div class="num-good">ครีเอทีฟ พูดเก่ง มีเสน่ห์ เข้ากับคนง่าย เหมาะกับงานสร้างสรรค์และงานที่ต้องใช้คำพูด</div>
+      <div class="num-watch">ระวัง: ใจไม่นิ่ง เริ่มหลายอย่างแต่ไม่ค่อยจบ</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-4">
+      <div class="num-head"><div class="num-digit">4</div><div class="num-name">ผู้วางรากฐาน</div></div>
+      <div class="num-good">มีวินัย อดทน เชื่อถือได้ ทำงานละเอียด เป็นคนที่คนอื่นฝากงานยากๆ ไว้ได้</div>
+      <div class="num-watch">ระวัง: ยึดติดกรอบเดิม ปรับตัวช้า และเครียดสะสมโดยไม่บอกใคร</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-5">
+      <div class="num-head"><div class="num-digit">5</div><div class="num-name">ผู้แสวงหาอิสระ</div></div>
+      <div class="num-good">ปรับตัวเก่ง เรียนรู้ไว ชอบเดินทางและความเปลี่ยนแปลง อยู่ในที่จำเจไม่ได้นาน</div>
+      <div class="num-watch">ระวัง: เบื่อง่าย เปลี่ยนใจบ่อย และหนีเมื่อต้องผูกมัด</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-6">
+      <div class="num-head"><div class="num-digit">6</div><div class="num-name">ผู้ดูแล</div></div>
+      <div class="num-good">รับผิดชอบสูง รักครอบครัว มีรสนิยมด้านความงาม มักเป็นเสาหลักให้คนรอบตัว</div>
+      <div class="num-watch">ระวัง: แบกภาระคนอื่นเกินตัว จนลืมดูแลตัวเอง</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-7">
+      <div class="num-head"><div class="num-digit">7</div><div class="num-name">นักคิด</div></div>
+      <div class="num-good">วิเคราะห์ลึก สัญชาตญาณดี ชอบค้นหาความจริงเบื้องหลัง เหมาะกับงานวิจัยและงานเฉพาะทาง</div>
+      <div class="num-watch">ระวัง: เก็บตัว คิดมาก และไม่ค่อยเปิดใจให้ใครเข้าถึง</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-8">
+      <div class="num-head"><div class="num-digit">8</div><div class="num-name">ผู้บริหาร</div></div>
+      <div class="num-good">จัดการเก่ง มองเรื่องเงินและโอกาสขาด มีบารมี เหมาะกับงานที่ต้องคุมภาพรวม</div>
+      <div class="num-watch">ระวัง: บ้างาน และวัดคุณค่าตัวเองจากความสำเร็จมากเกินไป</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+    <a class="num-card" href="/learn/numerology-life-9">
+      <div class="num-head"><div class="num-digit">9</div><div class="num-name">ผู้ให้</div></div>
+      <div class="num-good">เมตตา มองภาพใหญ่ เข้าใจความทุกข์คนอื่น มักได้ทำงานที่เกี่ยวกับการช่วยเหลือ</div>
+      <div class="num-watch">ระวัง: ให้จนลืมตัวเอง และปล่อยวางเรื่องเก่าได้ยาก</div><span class="num-more">อ่านเพิ่มเติม →</span>
+    </a>
+
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-box">
+    <h2 class="sec-label">✦ เลขมาสเตอร์ 11 22 33</h2>
+    <p class="sec-text">ถ้าบวกแล้วได้ 11, 22 หรือ 33 ให้หยุดไว้ตรงนั้น ไม่ต้องทดต่อค่ะ สามตัวนี้ถือเป็นเลขที่มีพลังสูงกว่าปกติ แต่ก็มาพร้อมความกดดันที่มากกว่าด้วย</p>
+    <div class="master-row">
+      <div class="master-item">
+        <div class="master-digit">11</div>
+        <div>
+          <div class="master-title">ผู้จุดประกาย</div>
+          <div class="master-desc">สัญชาตญาณแรงมาก รับรู้พลังงานคนรอบตัวไว มักเป็นแรงบันดาลใจให้คนอื่นโดยไม่ตั้งใจ — เป็นเลข 2 ที่ยกระดับขึ้นค่ะ</div>
+        </div>
+      </div>
+      <div class="master-item">
+        <div class="master-digit">22</div>
+        <div>
+          <div class="master-title">นักสร้างต้นแบบ</div>
+          <div class="master-desc">ฝันใหญ่และลงมือทำจริงจนสำเร็จได้ เก่งเรื่องเปลี่ยนไอเดียนามธรรมให้เป็นระบบที่จับต้องได้ — เป็นเลข 4 ที่ยกระดับขึ้นค่ะ</div>
+        </div>
+      </div>
+      <div class="master-item">
+        <div class="master-digit">33</div>
+        <div>
+          <div class="master-title">ครูผู้ให้</div>
+          <div class="master-desc">พบได้น้อยที่สุด สื่อสารด้วยความรักและความเข้าใจ มักได้บทบาทดูแลหรือสอนคนหมู่มาก — เป็นเลข 6 ที่ยกระดับขึ้นค่ะ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-box">
+  <div class="cta-title">อยากรู้เลขชีวิตของคุณ ไม่ต้องคำนวณเอง</div>
+  <div class="cta-desc">กรอกวันเกิดแล้วให้ระบบคำนวณและวิเคราะห์ให้ทันทีค่ะ</div>
+  <a href="/pages/energy-code" class="cta-btn">✨ ดู Energy Code ฟรี</a>
+  <a href="/pages/love-code" class="cta-btn love">💖 Love Code เช็กดวงคู่ · 10 เหรียญ</a>
+  <a href="/pages/number-hub" class="cta-link">ดูเครื่องมือเลขศาสตร์ทั้งหมด →</a>
+  <div class="cta-note">Energy Code คำนวณเลขชีวิตจากวันเกิดให้ฟรี ไม่เสียเหรียญ ส่วน Love Code วิเคราะห์ความเข้ากันของคู่รักจากวันเกิดทั้งสองฝ่ายค่ะ</div>
+</div>
+
+<nav aria-label="บทเรียนอื่น" class="lesson-nav">
+  <a href="/learn">← 📚<span>ห้องเรียนทั้งหมด</span></a>
+  <a href="/learn/tarot-meaning" style="text-align:right;">📖 →<span>ความหมายไพ่ 78 ใบ</span></a>
+</nav>
+
+<div class="seo-block">
+  <h2>เลขชีวิตคืออะไร วิธีคำนวณเลขชีวิตจากวันเกิด | mytarot.vip</h2>
+  <p>เลขชีวิต (Life Path Number) คือเลขหลักเดียวที่ได้จากการบวกตัวเลขในวันเดือนปีเกิด เป็นหัวใจของเลขศาสตร์สายพีทาโกรัส ใช้อธิบายนิสัยพื้นฐาน จุดแข็ง และบทเรียนที่มักวนกลับมาในชีวิตค่ะ บทเรียนนี้สอนตั้งแต่การแปลงปี พ.ศ. เป็น ค.ศ. การบวกเลขทุกหลัก ไปจนถึงการทดจนเหลือหลักเดียว พร้อมความหมายของเลข 1 ถึง 9 และเลขมาสเตอร์ 11 22 33 ค่ะ</p>
+
+  <h3>เลขชีวิตต้องใช้ปี พ.ศ. หรือ ค.ศ.?</h3>
+  <p>ต้องใช้ปี ค.ศ. เท่านั้นค่ะ ถ้าจำเป็นปี พ.ศ. ให้ลบ 543 ก่อนเสมอ เช่น พ.ศ. 2540 เท่ากับ ค.ศ. 1997 การใช้ พ.ศ. ตรงๆ จะทำให้ได้เลขชีวิตผิดตัวไปเลยค่ะ</p>
+
+  <h3>เลขชีวิตกับเลขศาสตร์ไทยต่างกันอย่างไร?</h3>
+  <p>เลขชีวิตมาจากเลขศาสตร์สายตะวันตกที่คิดจากวันเดือนปีเกิด ส่วนเลขศาสตร์ไทยมักดูจากผลรวมเลขในเบอร์โทรศัพท์ ทะเบียนรถ หรือชื่อ และตีความเป็นเลขคู่ เช่น 45 หรือ 24 ซึ่งเป็นคนละระบบกันค่ะ ใช้ควบคู่กันได้ แต่อย่านำเลขจากระบบหนึ่งไปเทียบความหมายของอีกระบบหนึ่งค่ะ</p>
+
+  <h3>เลขชีวิตเปลี่ยนได้ไหม?</h3>
+  <p>เลขชีวิตมาจากวันเกิดจึงเปลี่ยนไม่ได้ค่ะ แต่สิ่งที่เปลี่ยนได้คือวิธีที่เราใช้พลังของเลขนั้น คนเลขเดียวกันจึงใช้ชีวิตต่างกันได้มาก ขึ้นอยู่กับว่าเลือกด้านบวกหรือปล่อยให้ด้านที่ต้องระวังนำค่ะ</p>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "mytarot.vip", "item": "https://www.mytarot.vip" },
+    { "@type": "ListItem", "position": 2, "name": "ห้องเรียนโหราศาสตร์", "item": "https://www.mytarot.vip/learn" },
+    { "@type": "ListItem", "position": 3, "name": "เลขชีวิต", "item": "https://www.mytarot.vip/learn/numerology-life" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "เลขชีวิตคืออะไร วิธีคำนวณเลขชีวิตจากวันเกิด",
+  "description": "สอนวิธีคำนวณเลขชีวิตจากวันเกิดทีละขั้น พร้อมความหมายเลข 1-9 และเลขมาสเตอร์ 11 22 33",
+  "image": "https://www.mytarot.vip/images/og-default.png",
+  "author": { "@type": "Organization", "name": "mytarot.vip" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "mytarot.vip",
+    "logo": { "@type": "ImageObject", "url": "https://www.mytarot.vip/images/favicon.png" }
+  },
+  "mainEntityOfPage": "https://www.mytarot.vip/learn/numerology-life"
+}
+</script>
+
+</body>
+</html>
