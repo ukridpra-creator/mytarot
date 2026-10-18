@@ -123,8 +123,8 @@
 
     .burn-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; }
     .burn-overlay.show { display: flex; }
-    .burn-wrap { position: relative; width: 220px; overflow: hidden; }
-    #burn-slip-img { width: 220px; display: block; border-radius: 3px; }
+    .burn-wrap { position: relative; width: 268px; overflow: hidden; }
+    #burn-slip-img { width: 268px; display: block; border-radius: 3px; }
     .fire-wrap { position: absolute; left: -10px; right: -10px; bottom: 0; height: 80px; pointer-events: none; }
     @keyframes f1 { 0%,100%{transform:scaleX(1) scaleY(1) rotate(-2deg)} 50%{transform:scaleX(1.1) scaleY(1.4) rotate(2deg)} }
     @keyframes f2 { 0%,100%{transform:scaleX(1) scaleY(1.2) rotate(1deg)} 50%{transform:scaleX(0.9) scaleY(1) rotate(-2deg)} }
@@ -139,20 +139,51 @@
     .burn-msg-main { font-size: 18px; color: #d4af37; font-weight: 700; margin-bottom: 8px; }
     .burn-msg-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
 
-
-    /* image-based shrine */
-    .saisen-wrap { width: 230px; height: 260px; }
-    .torii-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 170px; height: auto; filter: drop-shadow(0 10px 24px rgba(212,175,55,0.22)); }
-    .saisen-img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 210px; height: auto; z-index: 2; filter: drop-shadow(0 10px 16px rgba(0,0,0,0.6)); }
-    .coin-drop { top: 30px; left: calc(50% - 14px); transform: none; width: 28px; height: 28px; background: url(../images/omikuji-coin.webp) center/contain no-repeat; border: 0; border-radius: 0; z-index: 10; }
-    @keyframes coinFall { 0%{top:20px;opacity:0;transform:rotateY(0deg)} 10%{opacity:1} 70%{top:118px;opacity:1;transform:rotateY(540deg) scale(1)} 100%{top:130px;opacity:0;transform:rotateY(720deg) scale(0.5)} }
-    .tube-wrap { width: 150px; height: 290px; }
-    #tube { width: 120px; height: 253px; }
-    .tube-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 22px rgba(212,175,55,0.25)); }
-    #stick-out { bottom: 238px; width: 12px; background: url(../images/omikuji-stick.webp) top center/100% auto no-repeat; border-radius: 0; }
-    @keyframes stickRise { 0%{height:0;bottom:238px} 100%{height:90px;bottom:238px} }
+
+
+    /* image-based shrine */
+
+    .saisen-wrap { width: 230px; height: 260px; }
+
+    .torii-img { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 170px; height: auto; filter: drop-shadow(0 10px 24px rgba(212,175,55,0.22)); }
+
+    .saisen-img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 210px; height: auto; z-index: 2; filter: drop-shadow(0 10px 16px rgba(0,0,0,0.6)); }
+
+    .coin-drop { top: 30px; left: calc(50% - 14px); transform: none; width: 28px; height: 28px; background: url(../images/omikuji-coin.webp) center/contain no-repeat; border: 0; border-radius: 0; z-index: 10; }
+
+    @keyframes coinFall { 0%{top:20px;opacity:0;transform:rotateY(0deg)} 10%{opacity:1} 70%{top:118px;opacity:1;transform:rotateY(540deg) scale(1)} 100%{top:130px;opacity:0;transform:rotateY(720deg) scale(0.5)} }
+
+    .tube-wrap { width: 150px; height: 290px; }
+
+    #tube { width: 120px; height: 253px; }
+
+    .tube-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 22px rgba(212,175,55,0.25)); }
+
+    #stick-out { bottom: 238px; width: 12px; background: url(../images/omikuji-stick.webp) top center/100% auto no-repeat; border-radius: 0; }
+
+    @keyframes stickRise { 0%{height:0;bottom:238px} 100%{height:90px;bottom:238px} }
+
     /* USER MENU override สีแดง */
     .user-menu { border-color: rgba(212,175,55,0.2) !important; }
+  
+    /* ===== premium omikuji slip ===== */
+    #slip-card { width: 268px; background: #fffaf0 radial-gradient(circle at 50% 0%, #ffffff 0%, #fdf6e3 60%, #f3e6c4 100%); border: 5px double #c9a227; border-radius: 4px; box-shadow: 0 12px 50px rgba(0,0,0,0.7), 0 0 40px rgba(200,40,30,0.2); }
+    .slip-watermark { background: repeating-linear-gradient(45deg, transparent 0 15px, rgba(179,32,26,0.035) 15px 16px); }
+    .slip-header { background: repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 6px, transparent 6px 12px), linear-gradient(180deg, #c8281e 0%, #a31a12 60%, #7e120c 100%); padding: 18px 10px 14px; border-bottom: 3px double #d4af37; position: relative; }
+    .slip-shrine-name { font-size: 12px; color: #ffe4b0; letter-spacing: 5px; margin-bottom: 6px; font-weight: 600; }
+    .slip-shrine-name::before, .slip-shrine-name::after { content: '✿'; font-size: 10px; color: #f0d78a; margin: 0 8px; letter-spacing: 0; }
+    .slip-num { font-size: 13px; color: #ffe9a8; letter-spacing: 4px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(240,215,138,0.4); display: inline-block; min-width: 120px; }
+    .slip-level-jp { font-size: 52px; color: #fffaf0; font-weight: 800; line-height: 1.05; letter-spacing: 4px; text-shadow: 0 2px 0 #6b0d08, 0 0 18px rgba(255,190,90,0.6); }
+    .slip-level-th { font-size: 13px; color: #ffe0a0; margin-top: 6px; letter-spacing: 2px; font-weight: 600; }
+    .slip-poem-box { background: linear-gradient(180deg, #f8e4b4 0%, #fbeccb 50%, #fdf6e3 100%); padding: 16px 18px 12px; border-bottom: 1px solid rgba(179,32,26,0.3); }
+    .poem-line { font-size: 12.5px; color: #7a1a10; line-height: 2; font-style: normal; font-weight: 600; letter-spacing: 1px; }
+    .slip-body { padding: 8px 18px 14px; background: transparent; }
+    .slip-row { display: block; padding: 8px 0 7px; border-bottom: 1px dashed rgba(179,32,26,0.25); }
+    .slip-label { display: inline-block; width: auto; font-size: 11px; color: #ffe9a8; background: #b3201a; padding: 2px 12px 3px; border-radius: 10px; margin-bottom: 5px; letter-spacing: 2px; }
+    .slip-val { display: block; font-size: 11.5px; color: #3d1408; text-align: left; line-height: 1.75; }
+    .slip-footer { background: linear-gradient(180deg, #a31a12, #7e120c); padding: 11px 8px; border-top: 3px double #d4af37; }
+    .slip-footer-jp { font-size: 11px; color: #f0d78a; letter-spacing: 4px; font-weight: 700; }
+    .slip-footer-th { font-size: 9.5px; color: rgba(240,215,138,0.75); margin-top: 3px; }
   </style>
 </head>
 <body>
