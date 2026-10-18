@@ -98,6 +98,16 @@
     #stick-number { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #d4af37; white-space: nowrap; font-weight: 700; opacity: 0; transition: opacity 0.5s; }
     @keyframes tubeShake { 0%,100%{transform:translateX(-50%) rotate(0deg)} 5%{transform:translateX(-50%) rotate(-10deg)} 15%{transform:translateX(-50%) rotate(13deg)} 25%{transform:translateX(-50%) rotate(-15deg)} 35%{transform:translateX(-50%) rotate(14deg)} 45%{transform:translateX(-50%) rotate(-13deg)} 55%{transform:translateX(-50%) rotate(12deg)} 65%{transform:translateX(-50%) rotate(-10deg)} 75%{transform:translateX(-50%) rotate(8deg)} 85%{transform:translateX(-50%) rotate(-6deg)} 92%{transform:translateX(-50%) rotate(4deg)} }
     .shaking { animation: tubeShake 3.5s ease-in-out; }
+    /* image-based altar & tube */
+    .altar-section { max-width: 380px; }
+    .altar-wrap { width: 100%; max-width: 340px; height: auto; aspect-ratio: 900 / 592; }
+    .altar-img { width: 100%; height: auto; display: block; filter: drop-shadow(0 12px 28px rgba(212,175,55,0.25)); }
+    .coin-drop { top: 10px; right: auto; left: calc(50% - 9px); }
+    @keyframes coinFall { 0%{top:10px;opacity:1;transform:rotate(0deg)} 65%{top:140px;opacity:1;transform:rotate(280deg)} 80%{top:135px;opacity:1;transform:rotate(310deg)} 100%{top:142px;opacity:0;transform:rotate(330deg)} }
+    .tube-wrap { width: 160px; height: 310px; }
+    #tube { width: 140px; height: 300px; }
+    .tube-img { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 22px rgba(212,175,55,0.3)); }
+    #stick-out { bottom: 255px; }
     @keyframes stickRise { 0%{height:0} 100%{height:90px} }
     .stick-rising { display: block !important; animation: stickRise 0.6s ease-out 3.3s forwards; }
     .stick-show { opacity: 1 !important; }
@@ -254,34 +264,7 @@
   <!-- Step 1 -->
   <div class="altar-section" id="altarSection">
     <div class="altar-wrap">
-      <div class="candle-wrap">
-        <div class="candle c-tall"><div class="candle-flame"></div></div>
-        <div class="candle c-short"><div class="candle-flame"></div></div>
-      </div>
-      <div class="offering off-left">
-        <div class="fruit fruit-red"></div><div class="fruit fruit-orange"></div><div class="fruit fruit-yellow"></div>
-        <div class="fruit-plate"></div>
-      </div>
-      <div class="incense-wrap">
-        <div class="incense-stick is1"></div><div class="incense-stick is2"></div><div class="incense-stick is3"></div>
-        <div class="incense-holder"></div>
-      </div>
-      <div class="qian-tube">
-        <div class="qt-body"><div class="qt-char">簽</div></div>
-        <div class="qt-top"><div class="qt-hole"></div></div>
-      </div>
-      <div class="guanyin-wrap">
-        <div class="guanyin-halo"></div><div class="guanyin-crown"></div><div class="guanyin-head"></div>
-        <div class="guanyin-body"><div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:28px;height:40px;background:linear-gradient(180deg,transparent,rgba(212,175,55,0.1));border-radius:12px 12px 8px 8px;"></div></div>
-        <div class="guanyin-hands"><div class="guanyin-hand"></div><div class="guanyin-vase"></div><div class="guanyin-hand"></div></div>
-        <div class="guanyin-base"></div>
-      </div>
-      <div class="offering off-right">
-        <div class="fruit fruit-yellow"></div><div class="fruit fruit-red"></div><div class="fruit fruit-orange"></div>
-        <div class="fruit-plate"></div>
-      </div>
-      <div class="altar-table"></div>
-      <div class="altar-legs"><div class="altar-leg"></div><div class="altar-leg"></div><div class="altar-leg"></div><div class="altar-leg"></div></div>
+      <img class="altar-img" src="../images/guanyin-altar.webp" alt="แท่นบูชาเจ้าแม่กวนอิม" width="900" height="592">
       <div class="coin-drop" id="coinDrop"></div>
     </div>
     <div class="donation-steps"><span>หยอดเหรียญ</span> → เขย่า → <span>รับคำทำนาย</span></div>
@@ -292,13 +275,7 @@
   <div class="tube-section" id="tubeSection">
     <div class="tube-wrap">
       <div id="tube">
-        <div class="tube-body">
-          <div class="tube-grain"></div><div class="tube-shine"></div>
-          <div class="gold-band gb1"></div><div class="gold-band gb2"></div>
-          <div class="gold-band gb3"></div><div class="gold-band gb4"></div>
-          <div class="tube-engraving">觀<br>音</div>
-        </div>
-        <div class="tube-top"><div class="tube-hole"></div></div>
+        <img class="tube-img" src="../images/guanyin-tube.webp" alt="กระบอกเซียมซี" width="500" height="924">
         <div id="stick-out"><div id="stick-number"></div></div>
       </div>
     </div>
