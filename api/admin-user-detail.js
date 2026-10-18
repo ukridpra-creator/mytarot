@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       };
     });
 
-    const sourceLabelMap = { checkin: '🎁 เช็คอินรายวัน', tree: '🌳 เขย่าต้นไม้มงคล' };
+    const sourceLabelMap = { checkin: '🎁 เช็คอินรายวัน', tree: '🌳 เขย่าต้นไม้มงคล', admin: '🛠️ แอดมินปรับให้' };
     const ledgerEntries = ledgerSnap.docs.map(d => {
       const l = d.data();
       const dt = toJSDate(l.createdAt);

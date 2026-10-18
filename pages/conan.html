@@ -105,6 +105,21 @@
     .modal-user-sub{font-size:12px;color:var(--dim);margin-top:2px;}
     .modal-sec-title{font-size:12px;color:var(--dim);font-weight:700;letter-spacing:1px;margin:20px 0 10px;}
 
+    /* SEARCH + ADD COINS */
+    .search-row{display:flex;gap:8px;margin-bottom:12px;}
+    .search-input{flex:1;min-width:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:white;font-size:15px;font-family:'Sarabun',sans-serif;outline:none;}
+    .search-input:focus{border-color:var(--purple);}
+    .btn-gold{background:linear-gradient(135deg,#b8941f,var(--gold));border:none;border-radius:12px;padding:0 18px;color:#1a1200;font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;}
+    .btn-gold:disabled{opacity:.5;}
+    .user-sub2{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .coin-form{background:var(--surface);border:1px solid rgba(212,175,55,0.3);border-radius:16px;padding:14px;margin-bottom:6px;}
+    .coin-form label{display:block;font-size:11px;color:var(--dim);margin:8px 0 4px;}
+    .coin-form .search-input{width:100%;}
+    .quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+    .quick span{padding:6px 12px;border-radius:10px;border:1px solid var(--border);color:var(--text);font-size:12px;cursor:pointer;}
+    .coin-msg{font-size:13px;margin-top:10px;min-height:18px;}
+    .uid-line{font-size:10px;color:var(--dim);word-break:break-all;margin-top:4px;}
+
     /* LOADING */
     .loading{text-align:center;padding:32px;color:var(--dim);font-size:13px;}
     .skel{background:linear-gradient(90deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 100%);background-size:200% 100%;animation:skel 1.2s infinite;border-radius:8px;height:16px;margin-bottom:8px;}
@@ -169,6 +184,14 @@
         <div class="metric-sub">เหรียญรวม</div>
       </div>
     </div>
+
+    <!-- SEARCH USER -->
+    <div class="sec-title">🔎 ค้นหายูส / เพิ่มเหรียญ</div>
+    <div class="search-row">
+      <input class="search-input" id="userQ" placeholder="ชื่อ / อีเมล / UID" onkeydown="if(event.key==='Enter')searchUsers()">
+      <button class="btn-gold" id="userQBtn" onclick="searchUsers()">ค้นหา</button>
+    </div>
+    <div class="card" id="searchResult" style="display:none"></div>
 
     <!-- RECENT USERS (ใหม่) -->
     <div class="sec-title">👥 ผู้ใช้ที่มีความเคลื่อนไหวล่าสุด</div>
@@ -289,6 +312,55 @@ window.switchPeriod=function(period){
   renderTopPages(period);
 };
 
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+window.searchUsers=async function(){
+  const q=document.getElementById('userQ').value.trim();
+  const box=document.getElementById('searchResult');
+  if(q.length<2){return;}
+  const btn=document.getElementById('userQBtn');
+  btn.disabled=true; box.style.display='block'; box.innerHTML='<div class="loading">กำลังค้นหา...</div>';
+  try{
+    const res=await fetch('/api/admin-user-search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:window._adminPass,q})});
+    if(!res.ok){box.innerHTML='<div class="loading">ค้นหาไม่สำเร็จ (รหัส '+res.status+')</div>';return;}
+    const d=await res.json();
+    box.innerHTML=d.users.length?d.users.map(u=>`
+      <div class="user-item" data-uid="${esc(u.uid)}" onclick="openUserDetail(this.dataset.uid)">
+        <div class="user-avatar">🔮</div>
+        <div class="user-info">
+          <div class="user-name">${esc(u.displayName||u.email||u.uid.slice(0,8))}</div>
+          <div class="user-sub2">${esc(u.email)}${u.lastActive?' · '+timeAgo(u.lastActive):''}</div>
+        </div>
+        <div class="user-coins">🪙 ${esc(u.coins)}</div>
+        <div class="user-arrow">›</div>
+      </div>`).join(''):'<div class="loading">ไม่พบยูสที่ตรงกันค่ะ ลองใช้ชื่อบางส่วน/อีเมล/UID</div>';
+  }catch(e){console.error(e);box.innerHTML='<div class="loading">เกิดข้อผิดพลาดค่ะ</div>';}
+  finally{btn.disabled=false;}
+};
+
+window.addCoins=async function(uid){
+  const n=parseInt(document.getElementById('addAmt').value,10);
+  const reason=document.getElementById('addReason').value.trim();
+  const msg=document.getElementById('coinMsg');
+  if(!Number.isInteger(n)||n===0){msg.style.color='#f87171';msg.textContent='ใส่จำนวนเหรียญก่อนค่ะ';return;}
+  if(!confirm((n>0?'เพิ่ม ':'หัก ')+Math.abs(n)+' เหรียญ ให้ยูสนี้?'))return;
+  const btn=document.getElementById('addBtn'); btn.disabled=true; msg.style.color='';msg.textContent='กำลังบันทึก...';
+  try{
+    const res=await fetch('/api/admin-add-coins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:window._adminPass,uid,coins:n,reason})});
+    const d=await res.json().catch(()=>({}));
+    if(res.ok){
+      msg.style.color='#10b981';msg.textContent='✓ สำเร็จ '+d.before+' → '+d.after+' เหรียญ';
+      document.getElementById('addAmt').value='';
+      setTimeout(()=>openUserDetail(uid),1200);
+      if(document.getElementById('userQ').value.trim().length>=2) searchUsers();
+    }else{
+      msg.style.color='#f87171';
+      msg.textContent=d.error==='negative_balance'?'หักแล้วเหรียญติดลบ ทำไม่ได้ค่ะ':d.error==='user_not_found'?'ไม่พบยูสนี้':'ไม่สำเร็จ (รหัส '+res.status+')';
+    }
+  }catch(e){msg.style.color='#f87171';msg.textContent='เชื่อมต่อไม่ได้ค่ะ';}
+  finally{btn.disabled=false;}
+};
+
 // ── USER DETAIL MODAL (ใหม่) ──
 window.openUserDetail=async function(uid){
   document.getElementById('userModal').classList.add('show');
@@ -310,23 +382,34 @@ window.openUserDetail=async function(uid){
       <div class="tx-item">
         <div class="tx-avatar">🪙</div>
         <div class="tx-info">
-          <div class="tx-name">${s.label}</div>
+          <div class="tx-name">${esc(s.label)}</div>
           <div class="tx-time">${s.createdAt ? new Date(s.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
         </div>
-        <div class="tx-amt">+${s.coins} 🪙</div>
+        <div class="tx-amt">${s.coins>0?'+':''}${s.coins} 🪙</div>
       </div>`).join('') : '<div class="loading">ยังไม่มีประวัติได้เหรียญค่ะ (หมายเหตุ: เช็คอิน/ต้นไม้เพิ่งเริ่มบันทึกย้อนหลังไม่ได้)</div>';
 
     const readHtml = d.readings.length ? d.readings.map(r=>`
       <div class="rank-item">
-        <div class="rank-name">${r.type}</div>
+        <div class="rank-name">${esc(r.type)}</div>
         <div class="rank-count" style="width:auto;">${r.createdAt ? new Date(r.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
       </div>`).join('') : '<div class="loading">ยังไม่เคยดูดวงค่ะ</div>';
 
     document.getElementById('userModalBody').innerHTML = `
       <div class="modal-user-head">
         <div class="modal-user-avatar">🔮</div>
-        <div class="modal-user-name">${d.displayName || d.email || d.uid.slice(0,8)}</div>
-        <div class="modal-user-sub">${d.email || ''} · 🪙 ${d.coins}</div>
+        <div class="modal-user-name">${esc(d.displayName || d.email || d.uid.slice(0,8))}</div>
+        <div class="modal-user-sub">${esc(d.email || '')} · 🪙 ${esc(d.coins)}</div>
+        <div class="uid-line">UID: ${esc(d.uid)}</div>
+      </div>
+      <div class="modal-sec-title">➕ เพิ่ม/หักเหรียญ (ใส่ - เพื่อหัก)</div>
+      <div class="coin-form">
+        <label>จำนวนเหรียญ</label>
+        <input class="search-input" id="addAmt" type="number" inputmode="numeric" placeholder="เช่น 100">
+        <div class="quick">${[20,50,100,200,500].map(v=>`<span onclick="document.getElementById('addAmt').value=${v}">+${v}</span>`).join('')}</div>
+        <label>หมายเหตุ (เช่น เติมไม่เข้า สลิป 12 ต.ค.)</label>
+        <input class="search-input" id="addReason" placeholder="เหตุผล">
+        <button class="btn-gold" id="addBtn" style="width:100%;padding:12px;margin-top:12px;" data-uid="${esc(d.uid)}" onclick="addCoins(this.dataset.uid)">บันทึก</button>
+        <div class="coin-msg" id="coinMsg"></div>
       </div>
       <div class="modal-sec-title">🪙 ที่มาของเหรียญ (${d.coinSources.length})</div>
       <div class="card">${sourceHtml}</div>
@@ -362,10 +445,10 @@ window.loadDash=async function(){
 
     // RECENT USERS (ใหม่)
     document.getElementById('recentUsers').innerHTML = (d.recentUsers && d.recentUsers.length) ? d.recentUsers.map(u=>`
-      <div class="user-item" onclick="openUserDetail('${u.uid}')">
+      <div class="user-item" data-uid="${esc(u.uid)}" onclick="openUserDetail(this.dataset.uid)">
         <div class="user-avatar">🔮</div>
         <div class="user-info">
-          <div class="user-name">${u.displayName}</div>
+          <div class="user-name">${esc(u.displayName)}</div>
           <div class="user-time">${timeAgo(u.lastActive)}</div>
         </div>
         <div class="user-coins">🪙 ${u.coins}</div>
@@ -388,7 +471,7 @@ window.loadDash=async function(){
       <div class="tx-item">
         <div class="tx-avatar">🪙</div>
         <div class="tx-info">
-          <div class="tx-name">${tx.label}</div>
+          <div class="tx-name">${esc(tx.label)}</div>
           <div class="tx-time">${tx.createdAt?new Date(tx.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</div>
         </div>
         <div class="tx-amt">฿${tx.amount}</div>
