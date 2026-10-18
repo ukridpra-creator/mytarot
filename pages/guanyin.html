@@ -160,8 +160,8 @@
     /* BURN */
     .burn-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; }
     .burn-overlay.show { display: flex; }
-    .burn-wrap { position: relative; width: 268px; overflow: hidden; }
-    #burn-slip-img { width: 268px; display: block; border-radius: 2px; }
+    .burn-wrap { position: relative; width: 200px; overflow: hidden; }
+    #burn-slip-img { width: 200px; display: block; border-radius: 2px; }
     .fire-wrap { position: absolute; left: -10px; right: -10px; bottom: 0; height: 80px; pointer-events: none; }
     @keyframes f1 { 0%,100%{transform:scaleX(1) scaleY(1) rotate(-2deg)} 50%{transform:scaleX(1.1) scaleY(1.4) rotate(2deg)} }
     @keyframes f2 { 0%,100%{transform:scaleX(1) scaleY(1.2) rotate(1deg)} 50%{transform:scaleX(0.9) scaleY(1) rotate(-2deg)} }
@@ -175,26 +175,6 @@
     .burn-msg.show { opacity: 1; }
     .burn-msg-main { font-size: 18px; color: #d4af37; font-weight: 700; margin-bottom: 8px; }
     .burn-msg-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
-  
-    /* ===== premium slip card ===== */
-    #slip-card { width: 268px; background: #fdf3d8 radial-gradient(circle at 50% 0%, #fff8e4 0%, #fbeec9 55%, #f4e0aa 100%); border: 5px double #c8a030; border-radius: 6px; box-shadow: 0 12px 50px rgba(0,0,0,0.7), 0 0 40px rgba(212,175,55,0.25); }
-    #slip-card::before { inset: 4px; border: 1px solid rgba(155,0,0,0.35); border-radius: 3px; }
-    .slip-header { background: repeating-linear-gradient(45deg, rgba(212,175,55,0.07) 0 6px, transparent 6px 12px), linear-gradient(180deg, #b30000 0%, #8a0000 60%, #6e0000 100%); padding: 18px 10px 14px; border-bottom: 3px double #d4af37; }
-    .slip-shrine { font-size: 13px; color: #f0d78a; letter-spacing: 8px; margin-bottom: 6px; font-weight: 700; }
-    .slip-shrine::before, .slip-shrine::after { content: '✦'; font-size: 8px; color: #d4af37; margin: 0 8px; vertical-align: middle; letter-spacing: 0; }
-    .slip-num { font-size: 13px; color: #ffe9a8; letter-spacing: 4px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(212,175,55,0.35); display: inline-block; min-width: 120px; }
-    .slip-grade { font-size: 46px; color: #fff8e0; font-weight: 800; letter-spacing: 4px; text-shadow: 0 2px 0 #7a4a00, 0 0 18px rgba(255,200,80,0.7); }
-    .slip-grade-th { font-size: 13px; color: #ffd98a; margin-top: 6px; letter-spacing: 2px; font-weight: 600; }
-    .slip-palace { display: inline-block; font-size: 11px; color: #ffe9a8; margin-top: 8px; padding: 2px 14px; border: 1px solid rgba(212,175,55,0.55); border-radius: 12px; background: rgba(0,0,0,0.18); }
-    .slip-poem-box { padding: 16px 18px 12px; background: linear-gradient(180deg, #fbe7a8 0%, #fdf0c8 45%, #fdf3d8 100%); border-bottom: 1px solid rgba(155,0,0,0.25); }
-    .slip-poem-label { font-size: 11px; color: #9B0000; letter-spacing: 5px; margin-bottom: 10px; font-weight: 700; }
-    .slip-poem-line { font-size: 15px; color: #8a0000; line-height: 2.1; font-weight: 800; letter-spacing: 3px; }
-    .slip-section-box { padding: 11px 18px 10px; border-bottom: 1px dashed rgba(155,0,0,0.22); }
-    .slip-section-label { display: inline-block; font-size: 11px; color: #ffe9a8; background: #9B0000; padding: 2px 12px 3px; border-radius: 10px; margin-bottom: 6px; letter-spacing: 2px; font-weight: 700; }
-    .slip-section-text { font-size: 11.5px; color: #4d1400; line-height: 1.75; }
-    .slip-footer { background: linear-gradient(180deg, #8a0000, #6e0000); padding: 11px 8px; border-top: 3px double #d4af37; }
-    .slip-footer-main { font-size: 11px; color: #f0d78a; letter-spacing: 4px; font-weight: 700; }
-    .slip-footer-sub { font-size: 9.5px; color: rgba(240,215,138,0.75); margin-top: 3px; }
   </style>
 </head>
 <body>
