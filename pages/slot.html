@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="../css/style.css">
 <script src="../js/checkin.js"></script>
 <script src="../js/planet-transits-data.js"></script>
+<script src="../js/astronomy.browser.min.js"></script>
 <style>
 body { padding-bottom:80px; background:linear-gradient(160deg,#080614 0%,#0d0820 50%,#080614 100%); }
 
@@ -320,6 +321,16 @@ function calcScores(dateStr) {
 
 // ตำแหน่งจันทร์แบบประมาณ (แม่น ~1°) แปลงเป็นระบบนิรายนะ (Lahiri)
 function moonSiderealLon(date) {
+  // ใช้ astronomy-engine (แม่นกว่า) ถ้าโหลดสำเร็จ ไม่งั้นใช้สูตรประมาณด้านล่าง
+  try {
+    if (typeof Astronomy !== 'undefined' && Astronomy.EclipticGeoMoon) {
+      const tropical = Astronomy.EclipticGeoMoon(date).lon;
+      const dd = date.getTime() / 86400000 + 2440587.5 - 2451545.0;
+      const ay = 23.85 + (dd / 36525) * (50.2611 / 3600);
+      const v = (((tropical - ay) % 360) + 360) % 360;
+      if (isFinite(v)) return v;
+    }
+  } catch (e) { /* fallback */ }
   const d = date.getTime() / 86400000 + 2440587.5 - 2451545.0;
   const rad = Math.PI / 180;
   const L = 218.316 + 13.176396 * d;
