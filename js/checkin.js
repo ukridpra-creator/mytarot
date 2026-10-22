@@ -114,9 +114,9 @@ var html = `
 .ci-close { position:absolute; top:10px; right:12px; width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.7); font-size:20px; line-height:26px; cursor:pointer; }
 .ci-ribbon { position:absolute; top:-16px; left:50%; transform:translateX(-50%); padding:8px 26px; white-space:nowrap; font-size:15px; font-weight:800; color:#3a1a00; letter-spacing:.5px;
   background:linear-gradient(180deg,#fde68a,#f59e0b 60%,#d97706); border-radius:12px; box-shadow:0 4px 14px rgba(245,158,11,0.5), inset 0 1px 0 rgba(255,255,255,.7); }
-.ci-streak { display:flex; align-items:center; justify-content:center; gap:6px; margin:6px 0 14px; font-size:13px; color:rgba(255,255,255,0.75); }
-.ci-streak b { font-size:20px; color:#fbbf24; text-shadow:0 0 12px rgba(251,191,36,0.6); }
-.ci-flame { width:30px; height:30px; object-fit:contain; animation:ciFlame 1.4s ease-in-out infinite; }
+.ci-streak { display:flex; align-items:center; justify-content:center; gap:8px; margin:2px 0 12px; font-size:13px; color:rgba(255,255,255,0.75); }
+.ci-streak b { font-size:26px; color:#fbbf24; text-shadow:0 0 12px rgba(251,191,36,0.6); }
+.ci-flame { width:52px; height:52px; object-fit:contain; animation:ciFlame 1.4s ease-in-out infinite; }
 @keyframes ciFlame { 0%,100%{transform:scale(1) rotate(-3deg)} 50%{transform:scale(1.15) rotate(3deg)} }
 .ci-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
 .ci-card { position:relative; border-radius:16px; padding:8px 4px 8px; display:flex; flex-direction:column; align-items:center; gap:2px;

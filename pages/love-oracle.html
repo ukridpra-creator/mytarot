@@ -39,6 +39,18 @@
     color: var(--ink);
   }
 
+
+  /* BOTTOM NAV */
+  body { padding-bottom: 96px; }
+  .bottom-nav { position:fixed; bottom:0; left:0; right:0; background:rgba(255,248,250,0.96); backdrop-filter:blur(16px); border-top:1px solid rgba(192,96,122,0.25); display:flex; padding:8px 0 16px; z-index:100; box-shadow:0 -4px 18px rgba(192,96,122,0.12); }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; font-size:11px; color:#9b6878; font-family:'Noto Sans Thai',sans-serif; }
+  .bottom-nav .nav-item > span:first-child { display:block; width:38px; height:38px; font-size:0; line-height:0; color:transparent; background-repeat:no-repeat; background-position:center; background-size:contain; transition:transform .2s; }
+  .bottom-nav .nav-item:nth-child(1) > span:first-child { background-image:url(../images/nav/home.webp); }
+  .bottom-nav .nav-item:nth-child(2) > span:first-child { background-image:url(../images/nav/history.webp); }
+  .bottom-nav .nav-item:nth-child(3) > span:first-child { background-image:url(../images/nav/checkin.webp); }
+  .bottom-nav .nav-item:nth-child(4) > span:first-child { background-image:url(../images/nav/coin.webp); }
+  .bottom-nav .nav-item:nth-child(5) > span:first-child { background-image:url(../images/nav/profile.webp); }
+
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -566,6 +578,7 @@
   .reveal-btn.ready { background:linear-gradient(135deg,#b04a68,#e8708a 55%,#d8a35a); cursor:pointer; box-shadow:0 4px 20px rgba(192,96,122,.45); animation:glow 1.6s infinite; }
   @keyframes glow { 0%,100%{box-shadow:0 4px 16px rgba(192,96,122,.35)} 50%{box-shadow:0 4px 28px rgba(232,112,138,.7)} }
 </style>
+<script src="../js/checkin.js"></script>
 </head>
 <body>
 <div class="page-wrap">
@@ -681,6 +694,14 @@
   </div>
 </div>
 
+<nav class="bottom-nav">
+  <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
+  <div class="nav-item" onclick="window.location.href='history.html'"><span>📜</span><span>ประวัติ</span></div>
+  <div class="nav-item" onclick="openCheckin()"><span>🎁</span><span>เช็คอิน</span></div>
+  <div class="nav-item" onclick="window.location.href='coins.html'"><span>🪙</span><span>เหรียญ</span></div>
+  <div class="nav-item" onclick="window.location.href='profile.html'"><span>👤</span><span>โปรไฟล์</span></div>
+</nav>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
@@ -772,6 +793,7 @@ var drawnCards = [];
 // ─── AUTH ───
 onAuthStateChanged(auth, async function(user) {
   currentUser = user;
+  if(typeof setupCheckin==='function')setupCheckin(user,'../');
   if (user) {
     var snap = await getDoc(doc(db, "users", user.uid));
     var coins = snap.exists() ? (snap.data().coins || 0) : 0;
@@ -1035,7 +1057,7 @@ async function callReading() {
     "ใช้ภาษาไทยธรรมชาติ อ่านง่าย ไม่ทางการเกินไป มีความหวาน\n\n" +
     "สถานะความรักของ" + selectedGenderLabel + ": " + selectedStatus + "\n\n" +
     "ไพ่ที่จั่วได้:\n" + cardList + specialText + "\n\n" +
-    "ตอบตามรูปแบบนี้เท่านั้น ห้ามใช้ markdown หรือหัวข้ออื่น โดยเขียนแท็กในบรรทัดของตัวเอง แล้วขึ้นบรรทัดใหม่เขียนเนื้อหา 2-4 ประโยค:\n" +
+    "ตอบตามรูปแบบนี้เท่านั้น ห้ามใช้ markdown หรือหัวข้ออื่น โดยเขียนแท็กในบรรทัดของตัวเอง แล้วขึ้นบรรทัดใหม่เขียนเนื้อหาแท็กละ 2-3 ประโยคกระชับ (ห้ามยาวเกิน) และต้องเขียนให้ครบทุกแท็กจนถึง [ADVICE] เสมอ:\n" +
     tagGuide + "\n" +
     "[TOGETHER]\nสิ่งที่ไพ่ทั้งหมดบอกรวมกัน\n" +
     "[ADVICE]\nคำแนะนำจากน้องถึง" + selectedGenderLabel + "\n\n" +
@@ -1053,7 +1075,7 @@ async function callReading() {
       body: JSON.stringify({
         service: service,
         model: "claude-sonnet-4-6",
-        max_tokens: 1400,
+        max_tokens: 4000,
         messages: [{ role: "user", content: promptText }]
       })
     });
@@ -1073,12 +1095,17 @@ async function callReading() {
     var reader = res.body.getReader();
     var decoder = new TextDecoder();
     var fullText = "";
+    var rafPending = false;
 
     while (true) {
       var chunk = await reader.read();
       if (chunk.done) break;
       var text = decoder.decode(chunk.value, { stream: true });
       fullText += text;
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(function() { rafPending = false; renderReading(fullText, posLabels); });
+      }
     }
     renderReading(fullText, posLabels);
 
