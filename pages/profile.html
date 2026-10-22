@@ -145,6 +145,28 @@
     }
     .glitter::after { animation-delay: 1.5s; box-shadow: 20vw 40vh 0 rgba(255,255,255,0.5), 45vw 15vh 0 rgba(212,175,55,0.4), 75vw 70vh 0 rgba(255,255,255,0.6); }
     @keyframes sparkle { 0%{opacity:0.2;transform:scale(0.8)} 100%{opacity:1;transform:scale(1.2)} }
+
+    /* ─── REFINED PROFILE ─── */
+    .ico { width:20px; height:20px; }
+    .title-ico { width:20px; height:20px; vertical-align:-4px; color:var(--gold); }
+    .ico-coin { width:18px; height:18px; vertical-align:-4px; }
+    .ico-coin.big { width:44px; height:44px; filter:drop-shadow(0 4px 10px rgba(245,158,11,.45)); }
+    .coins-icon { display:flex; }
+    .btn-ico { display:inline-flex; vertical-align:-4px; margin-right:4px; }
+    .btn-ico .ico { width:18px; height:18px; }
+    .avatar-card { position:relative; overflow:hidden; background:linear-gradient(160deg,rgba(124,58,237,.18),rgba(236,72,153,.06) 60%,rgba(255,255,255,.02)); border-color:rgba(168,85,247,.35); }
+    .avatar-card::before { content:''; position:absolute; top:-60px; left:50%; width:240px; height:240px; transform:translateX(-50%); background:radial-gradient(circle,rgba(245,158,11,.22),transparent 65%); pointer-events:none; }
+    .avatar-ring { position:relative; width:112px; height:112px; margin:0 auto 10px; border-radius:50%; padding:4px; background:conic-gradient(from 200deg,#f59e0b,#ec4899,#a855f7,#f59e0b); box-shadow:0 0 24px rgba(168,85,247,.45); cursor:pointer; }
+    .avatar-ring .avatar-display { width:100%; height:100%; margin:0; border:3px solid #130f2a; background:radial-gradient(circle at 50% 35%,#3b2670,#1a1535); }
+    .avatar-pen { position:absolute; right:-2px; bottom:2px; width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#f59e0b,#d97706); color:#2a1200; display:flex; align-items:center; justify-content:center; border:2px solid #130f2a; }
+    .avatar-pen .ico { width:15px; height:15px; }
+    .edit-icon { display:inline-flex; color:rgba(255,255,255,.4); }
+    .edit-icon .ico { width:15px; height:15px; }
+    .profile-name { font-size:22px; }
+    .coins-card { background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(236,72,153,.08)); }
+    .menu-item-icon { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:rgba(168,85,247,.16); color:#c4a8ff; }
+    .menu-item-icon .ico { width:19px; height:19px; }
+    .avatar-opt.selected { border-color:#f59e0b; box-shadow:0 0 14px rgba(245,158,11,.55); }
   </style>
 </head>
 <body>
@@ -156,15 +178,15 @@
     <div class="sheet-handle"></div>
     <div class="sheet-title">เลือก Avatar ของคุณ</div>
     <div class="avatar-scroll" id="avatarScroll"></div>
-    <button class="btn-save-avatar" onclick="saveAvatar()">✅ บันทึก Avatar</button>
+    <button class="btn-save-avatar" onclick="saveAvatar()">บันทึก Avatar</button>
     <button class="btn-cancel-avatar" onclick="closeAvatarSheet()">ยกเลิก</button>
   </div>
 </div>
 
 <!-- HEADER -->
 <div class="page-header">
-  <div class="page-title">👤 โปรไฟล์</div>
-  <div style="margin-left:auto" class="coin-badge">🪙 <span id="coinCount">—</span></div>
+  <div class="page-title"><svg class="ico title-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.500-6 8-6s8 2 8 6"/></svg> โปรไฟล์</div>
+  <div style="margin-left:auto" class="coin-badge"><svg class="ico-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fcd34d" stroke="#d97706" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#d97706" stroke-width="1.2"/><path d="M12 8.5l1.2 2.4 2.6.4-1.9 1.8.5 2.600L12 14.500l-2.400 1.200.5-2.600-1.900-1.800 2.600-.4z" fill="#d97706"/></svg> <span id="coinCount">—</span></div>
 </div>
 
 <div class="page-content" style="position:relative;z-index:1;">
@@ -181,7 +203,7 @@
       เข้าสู่ระบบด้วย Google
     </button>
     <button onclick="window.location.href='login.html?return='+encodeURIComponent(window.location.href)" style="width:100%;margin-top:10px;padding:14px;border-radius:16px;background:rgba(124,58,237,0.2);border:1px solid rgba(124,58,237,0.4);color:white;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;">
-      📧 เข้าสู่ระบบด้วย Email
+      <span class="btn-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.500"/><path d="M3.500 7l8.500 6.500L20.500 7"/></svg></span> เข้าสู่ระบบด้วย Email
     </button>
   </div>
 
@@ -189,19 +211,22 @@
   <div id="profileSection" class="profile-section">
 
     <div class="avatar-card">
-      <div class="avatar-display" id="avatarDisplay" onclick="openAvatarSheet()">🔮</div>
-      <div class="avatar-edit-hint">กดที่รูปเพื่อเปลี่ยน Avatar</div>
+      <div class="avatar-ring" onclick="openAvatarSheet()">
+        <div class="avatar-display" id="avatarDisplay"></div>
+        <span class="avatar-pen"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.800 2.800 0 0 0-4-4L4 16z"/><path d="M13.500 6.500l4 4"/></svg></span>
+      </div>
+      <div class="avatar-edit-hint">แตะที่รูปเพื่อเปลี่ยน Avatar</div>
       <div class="profile-name-wrap">
         <input class="profile-name" id="profileNameInput" type="text" maxlength="20"
           oninput="onNameInput()" onkeydown="if(event.key==='Enter') saveName()">
-        <span class="edit-icon" onclick="editName()">✏️</span>
+        <span class="edit-icon" onclick="editName()"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.800 2.800 0 0 0-4-4L4 16z"/><path d="M13.500 6.500l4 4"/></svg></span>
       </div>
       <div class="profile-email" id="profileEmail"></div>
       <button class="btn-save-name" id="btnSaveName" onclick="saveName()">บันทึกชื่อ</button>
     </div>
 
     <div class="coins-card">
-      <div class="coins-icon">🪙</div>
+      <div class="coins-icon"><svg class="ico-coin big" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#fcd34d" stroke="#d97706" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#d97706" stroke-width="1.2"/><path d="M12 8.5l1.2 2.4 2.6.4-1.9 1.8.5 2.600L12 14.500l-2.400 1.200.5-2.600-1.900-1.800 2.600-.4z" fill="#d97706"/></svg></div>
       <div class="coins-info">
         <div class="coins-label">เหรียญคงเหลือ</div>
         <div class="coins-amount" id="coinAmount">—</div>
@@ -211,13 +236,23 @@
 
     <div class="menu-card">
       <div class="menu-item" onclick="window.location.href='history.html'">
-        <div class="menu-item-icon">📜</div>
+        <div class="menu-item-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/><path d="M6 4a2 2 0 0 0-2 2v1h2M9 9h7M9 13h7M9 17h4"/></svg></div>
         <div class="menu-item-text">ประวัติดูดวง</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="openCheckin()">
+        <div class="menu-item-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M12 9v11M3 13h18M12 9C9 9 7 7.500 8 6s3.500-.5 4 3c.5-3.500 3-4.500 4-3s-1 3-4 3z"/></svg></div>
+        <div class="menu-item-text">เช็คอินรับเหรียญฟรี</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="window.location.href='coins.html'">
+        <div class="menu-item-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></div>
+        <div class="menu-item-text">เติมเหรียญ</div>
         <div class="menu-item-arrow">›</div>
       </div>
     </div>
 
-    <button class="btn-logout" onclick="logoutUser()">🚪 ออกจากระบบ</button>
+    <button class="btn-logout" onclick="logoutUser()"><span class="btn-ico"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/><path d="M16 8l4 4-4 4M20 12H9"/></svg></span> ออกจากระบบ</button>
   </div>
 </div>
 
@@ -272,7 +307,7 @@ function setAvatarDisplay(avatar) {
   if (avatar && avatar.includes('.png')) {
     el.innerHTML = '<img src="' + avatar + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
   } else {
-    el.textContent = '🔮';
+    el.innerHTML = '<img src="../images/mascot.png" alt="" style="width:100%;height:100%;object-fit:contain;padding:6px;" onerror="this.style.display=\'none\'">';
   }
 }
 

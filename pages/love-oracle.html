@@ -544,6 +544,27 @@
   .pick-card:hover { transform:translateY(-14px); }
   .pick-card.used { visibility:hidden; }
   .pick-note { text-align:center; font-size:11px; color:var(--ink-light); }
+
+  .pick-fanwrap { position:relative; margin:0 -20px; }
+  .pick-fanwrap::before, .pick-fanwrap::after { content:''; position:absolute; top:0; bottom:0; width:28px; z-index:2; pointer-events:none; }
+  .pick-fanwrap::before { left:0; background:linear-gradient(90deg,#fbeaf0,transparent); }
+  .pick-fanwrap::after { right:0; background:linear-gradient(270deg,#fbeaf0,transparent); }
+  .pick-scroll { margin:0 !important; }
+  .pick-card { transition:transform .2s, opacity .25s; }
+  .pick-card.used { visibility:visible; opacity:.18; transform:translateY(10px) scale(.94); pointer-events:none; }
+  .pick-note { display:flex; justify-content:center; align-items:center; gap:8px; }
+  .pick-note .arr { font-size:22px; line-height:1; color:var(--rose-deep); animation:nudgeL 1.4s infinite; }
+  .pick-note .arr.r { animation-name:nudgeR; }
+  @keyframes nudgeL { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-5px)} }
+  @keyframes nudgeR { 0%,100%{transform:translateX(0)} 50%{transform:translateX(5px)} }
+  .pick-slot { position:relative; cursor:default; }
+  .pick-slot.filled { cursor:pointer; }
+  .pick-slot .x { position:absolute; top:-6px; right:-2px; width:18px; height:18px; border-radius:50%; background:var(--rose-deep); color:#fff; font-style:normal; font-size:13px; line-height:18px; text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.3); }
+  .pick-slot.filled img { animation:none; }
+  .reveal-wrap { padding:16px 0 4px; display:flex; justify-content:center; }
+  .reveal-btn { min-width:200px; padding:13px 28px; border:none; border-radius:50px; font-family:'Noto Serif Thai',serif; font-size:16px; font-weight:600; color:#fff; background:linear-gradient(135deg,#b9a0a8,#cdb8be); cursor:not-allowed; transition:all .25s; letter-spacing:1px; }
+  .reveal-btn.ready { background:linear-gradient(135deg,#b04a68,#e8708a 55%,#d8a35a); cursor:pointer; box-shadow:0 4px 20px rgba(192,96,122,.45); animation:glow 1.6s infinite; }
+  @keyframes glow { 0%,100%{box-shadow:0 4px 16px rgba(192,96,122,.35)} 50%{box-shadow:0 4px 28px rgba(232,112,138,.7)} }
 </style>
 </head>
 <body>
@@ -822,6 +843,8 @@ window.selectMode = function(n) {
 // ─── DRAW ───
 var pickPool = [], picked = [], pickLocked = false;
 
+function curPos() { return currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5; }
+
 window.drawCards = function() {
   if (pickLocked) return;
   if (!currentUser) { loginNow(); return; }
@@ -831,49 +854,75 @@ window.drawCards = function() {
   drawnCards = [];
   picked = [];
   pickPool = allCards.slice().sort(function() { return Math.random() - 0.5; });
-  renderPicker();
+  buildPicker();
   document.getElementById("cardsArea").scrollIntoView({ behavior: "smooth", block: "center" });
 };
 
-function renderPicker() {
-  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
-  var slots = "";
-  for (var k = 0; k < currentMode; k++) {
-    slots += '<div class="pick-slot' + (k < picked.length ? ' filled' : '') + '">' +
-      (k < picked.length ? '<img src="../images/love-card-back.webp" alt="">' : '<span>' + (k + 1) + '</span>') +
-      '<small>' + posLabels[k] + '</small></div>';
-  }
+function buildPicker() {
   var fan = "";
   for (var n = 0; n < pickPool.length; n++) {
-    var used = picked.indexOf(n) !== -1;
-    fan += '<button class="pick-card' + (used ? ' used' : '') + '" onclick="pickCard(' + n + ')" aria-label="เลือกไพ่ใบที่ ' + (n + 1) + '"><img src="../images/love-card-back.webp" alt=""></button>';
+    fan += '<button class="pick-card" id="pc' + n + '" onclick="pickCard(' + n + ')" aria-label="เลือกไพ่ใบที่ ' + (n + 1) + '"><img src="../images/love-card-back.webp" alt=""></button>';
   }
   document.getElementById("cardsArea").innerHTML =
-    '<div class="pick-hint">ตั้งใจคิดถึงเรื่องความรัก แล้วเลือกไพ่ที่ใช่ <b>' + currentMode + '</b> ใบ <span>(' + picked.length + '/' + currentMode + ')</span></div>' +
-    '<div class="pick-slots">' + slots + '</div>' +
-    '<div class="pick-scroll" id="pickScroll">' + fan + '</div>' +
-    '<div class="pick-note">เลื่อนซ้าย-ขวาเพื่อดูไพ่ทั้งหมด</div>';
+    '<div class="pick-hint" id="pickHint"></div>' +
+    '<div class="pick-slots" id="pickSlots"></div>' +
+    '<div class="pick-fanwrap"><div class="pick-scroll" id="pickScroll">' + fan + '</div></div>' +
+    '<div class="pick-note"><span class="arr">&#8249;</span> เลื่อนซ้าย-ขวาเพื่อดูไพ่ทั้งหมด <span class="arr r">&#8250;</span></div>' +
+    '<div class="reveal-wrap"><button class="reveal-btn" id="revealBtn" onclick="revealCards()" disabled>เปิดไพ่</button></div>';
+  updatePicker();
   var sc = document.getElementById("pickScroll");
-  if (sc && window.__pickX) sc.scrollLeft = window.__pickX;
+  setTimeout(function() { sc.scrollTo({ left: 160, behavior: "smooth" }); setTimeout(function() { sc.scrollTo({ left: 0, behavior: "smooth" }); }, 700); }, 500);
 }
 
-window.pickCard = async function(n) {
+function updatePicker() {
+  var pos = curPos(), slots = "";
+  for (var k = 0; k < currentMode; k++) {
+    var f = k < picked.length;
+    slots += '<div class="pick-slot' + (f ? ' filled' : '') + '"' + (f ? ' onclick="unpickCard(' + k + ')"' : '') + '>' +
+      (f ? '<img src="../images/love-card-back.webp" alt=""><i class="x">&times;</i>' : '<span>' + (k + 1) + '</span>') +
+      '<small>' + pos[k] + '</small></div>';
+  }
+  document.getElementById("pickSlots").innerHTML = slots;
+  for (var n = 0; n < pickPool.length; n++) {
+    document.getElementById("pc" + n).classList.toggle("used", picked.indexOf(n) !== -1);
+  }
+  var full = picked.length >= currentMode;
+  document.getElementById("pickHint").innerHTML = full
+    ? 'เลือกครบแล้ว กดปุ่ม <b>เปิดไพ่</b> ได้เลยค่ะ'
+    : 'ตั้งใจคิดถึงเรื่องความรัก แล้วเลือกไพ่ที่ใช่ <b>' + currentMode + '</b> ใบ <span>(' + picked.length + '/' + currentMode + ')</span>';
+  var rb = document.getElementById("revealBtn");
+  rb.disabled = !full;
+  rb.classList.toggle("ready", full);
+}
+
+window.pickCard = function(n) {
   if (pickLocked || picked.indexOf(n) !== -1 || picked.length >= currentMode) return;
-  var sc = document.getElementById("pickScroll");
-  window.__pickX = sc ? sc.scrollLeft : 0;
   picked.push(n);
-  renderPicker();
-  if (picked.length < currentMode) return;
+  preloadArt(pickPool[n]);
+  updatePicker();
+};
+
+window.unpickCard = function(k) {
+  if (pickLocked) return;
+  picked.splice(k, 1);
+  updatePicker();
+};
+
+window.revealCards = async function() {
+  if (pickLocked || picked.length < currentMode) return;
   pickLocked = true;
-  window.__pickX = 0;
   document.getElementById("drawBtn").disabled = true;
+  var rb = document.getElementById("revealBtn");
+  rb.disabled = true;
+  rb.innerHTML = 'น้องกำลังเตรียมไพ่<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
   drawnCards = picked.map(function(i) { return pickPool[i]; });
-  await sleep(600);
+  await Promise.all(drawnCards.map(preloadArt).concat([sleep(800)]));
   renderCards();
+  await sleep(500);
   for (var i = 0; i < drawnCards.length; i++) {
-    await sleep(400 + i * 300);
     var inner = document.getElementById("cardInner_" + i);
     if (inner) inner.classList.add("flipped");
+    await sleep(650);
   }
   spawnPetals();
   try { await callReading(); }
@@ -884,6 +933,20 @@ window.pickCard = async function(n) {
     b.lastChild.textContent = " เลือกไพ่ใหม่อีกครั้ง";
   }
 };
+
+var artCache = {};
+function preloadArt(card) {
+  var src = cardArt(card);
+  if (!artCache[src]) {
+    artCache[src] = new Promise(function(res) {
+      var im = new Image();
+      im.onload = im.onerror = function() { res(); };
+      im.src = src;
+      setTimeout(res, 6000);
+    });
+  }
+  return artCache[src];
+}
 
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
@@ -996,7 +1059,7 @@ async function callReading() {
     });
 
     var newCoins = res.headers.get("X-New-Coin-Balance");
-    if (newCoins !== null) updateCoinUI(parseInt(newCoins) + " เหรียญ");
+    if (newCoins !== null) updateCoinUI(parseInt(newCoins));
 
     if (!res.ok) {
       var err = await res.json();
@@ -1021,12 +1084,13 @@ async function callReading() {
 
     // save firestore
     await addDoc(collection(db, "users", currentUser.uid, "readings"), {
-      type: "love-oracle",
+      type: "เลิฟ ออราเคิล",
+      question: drawnCards.map(function(c) { return c.name; }).join(" • "),
+      result: historyText(fullText, posLabels),
+      cards: drawnCards.map(function(c, i) { return { name: c.name, position: posLabels[i] }; }),
       mode: currentMode,
       gender: selectedGender,
       status: selectedStatus,
-      cards: drawnCards.map(function(c) { return c.name; }),
-      reading: fullText,
       createdAt: serverTimestamp()
     });
 
@@ -1034,6 +1098,29 @@ async function callReading() {
     textEl.textContent = "เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ";
     console.error(e);
   }
+}
+
+function parseParts(text) {
+  var parts = {}, cur = null;
+  text.split("\n").forEach(function(line) {
+    var t = line.trim();
+    var m = t.match(/^\[(C\d|TOGETHER|ADVICE)\]$/);
+    if (m) { cur = m[1]; parts[cur] = ""; }
+    else if (cur && t) parts[cur] += (parts[cur] ? " " : "") + t;
+  });
+  return parts;
+}
+
+function historyText(text, posLabels) {
+  var parts = parseParts(text);
+  if (!parts.TOGETHER && !parts.ADVICE && !parts.C1) return text;
+  var out = [];
+  drawnCards.forEach(function(c, k) {
+    if (parts["C" + (k + 1)]) out.push(c.name + " (" + posLabels[k] + ")\n" + parts["C" + (k + 1)]);
+  });
+  if (parts.TOGETHER) out.push("สิ่งที่ไพ่บอกรวมกัน\n" + parts.TOGETHER);
+  if (parts.ADVICE) out.push("คำแนะนำจากน้อง\n" + parts.ADVICE);
+  return out.join("\n\n");
 }
 
 function renderReading(text, posLabels) {
