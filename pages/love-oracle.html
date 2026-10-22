@@ -525,6 +525,25 @@
   .rsec h4 { font-size:14px; }
 
   .petal { border-radius:100% 0 100% 0; opacity:.85; top:0; }
+
+  /* ─── PICK CARDS ─── */
+  .pick-hint { text-align:center; font-size:13px; color:var(--ink-mid); margin-bottom:12px; line-height:1.7; }
+  .pick-hint b { color:var(--rose-deep); font-size:15px; }
+  .pick-hint span { color:var(--ink-light); }
+  .pick-slots { display:flex; gap:8px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+  .pick-slot { width:58px; text-align:center; }
+  .pick-slot span, .pick-slot img { display:flex; width:58px; height:84px; border-radius:8px; align-items:center; justify-content:center; font-size:18px; color:var(--rose); border:1.5px dashed var(--rose); background:rgba(255,255,255,.5); object-fit:cover; }
+  .pick-slot.filled img { border:1.5px solid #fff; box-shadow:0 4px 12px rgba(192,96,122,.35); animation:pop .35s; }
+  .pick-slot small { display:block; font-size:10px; color:var(--ink-light); margin-top:3px; }
+  @keyframes pop { from { transform:scale(.6); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .pick-scroll { display:flex; overflow-x:auto; padding:18px 30px 16px; margin:0 -20px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .pick-scroll::-webkit-scrollbar { display:none; }
+  .pick-card { flex:none; width:70px; height:104px; margin-left:-34px; padding:0; border:2px solid #fff; border-radius:9px; overflow:hidden; background:var(--rose-deep); cursor:pointer; box-shadow:0 4px 12px rgba(120,30,60,.3); transition:transform .2s; }
+  .pick-card:first-child { margin-left:0; }
+  .pick-card img { width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
+  .pick-card:hover { transform:translateY(-14px); }
+  .pick-card.used { visibility:hidden; }
+  .pick-note { text-align:center; font-size:11px; color:var(--ink-light); }
 </style>
 </head>
 <body>
@@ -611,7 +630,7 @@
 <div class="draw-btn-wrap">
   <button class="draw-btn" id="drawBtn" onclick="drawCards()">
     <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
-    ให้น้องดูไพ่ให้
+    เลือกไพ่ให้น้องดู
   </button>
 </div>
 
@@ -797,31 +816,73 @@ window.selectMode = function(n) {
   document.getElementById("cardsArea").innerHTML = "";
   document.getElementById("readingWrap").classList.remove("show");
   drawnCards = [];
+  if (!pickLocked) picked = [];
 };
 
 // ─── DRAW ───
-window.drawCards = async function() {
+var pickPool = [], picked = [], pickLocked = false;
+
+window.drawCards = function() {
+  if (pickLocked) return;
   if (!currentUser) { loginNow(); return; }
-  if (!selectedGender) { alert("เลือกเพศก่อนนะคะ "); return; }
-  if (!selectedStatus) { alert("เลือกสถานะความรักก่อนนะคะ "); return; }
-
+  if (!selectedGender) { alert("เลือกเพศก่อนนะคะ"); return; }
+  if (!selectedStatus) { alert("เลือกสถานะความรักก่อนนะคะ"); return; }
+  document.getElementById("readingWrap").classList.remove("show");
   drawnCards = [];
-  var shuffled = allCards.slice().sort(function() { return Math.random() - 0.5; });
-  drawnCards = shuffled.slice(0, currentMode);
+  picked = [];
+  pickPool = allCards.slice().sort(function() { return Math.random() - 0.5; });
+  renderPicker();
+  document.getElementById("cardsArea").scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
+function renderPicker() {
+  var posLabels = currentMode === 1 ? posLabels1 : currentMode === 3 ? posLabels3 : posLabels5;
+  var slots = "";
+  for (var k = 0; k < currentMode; k++) {
+    slots += '<div class="pick-slot' + (k < picked.length ? ' filled' : '') + '">' +
+      (k < picked.length ? '<img src="../images/love-card-back.webp" alt="">' : '<span>' + (k + 1) + '</span>') +
+      '<small>' + posLabels[k] + '</small></div>';
+  }
+  var fan = "";
+  for (var n = 0; n < pickPool.length; n++) {
+    var used = picked.indexOf(n) !== -1;
+    fan += '<button class="pick-card' + (used ? ' used' : '') + '" onclick="pickCard(' + n + ')" aria-label="เลือกไพ่ใบที่ ' + (n + 1) + '"><img src="../images/love-card-back.webp" alt=""></button>';
+  }
+  document.getElementById("cardsArea").innerHTML =
+    '<div class="pick-hint">ตั้งใจคิดถึงเรื่องความรัก แล้วเลือกไพ่ที่ใช่ <b>' + currentMode + '</b> ใบ <span>(' + picked.length + '/' + currentMode + ')</span></div>' +
+    '<div class="pick-slots">' + slots + '</div>' +
+    '<div class="pick-scroll" id="pickScroll">' + fan + '</div>' +
+    '<div class="pick-note">เลื่อนซ้าย-ขวาเพื่อดูไพ่ทั้งหมด</div>';
+  var sc = document.getElementById("pickScroll");
+  if (sc && window.__pickX) sc.scrollLeft = window.__pickX;
+}
+
+window.pickCard = async function(n) {
+  if (pickLocked || picked.indexOf(n) !== -1 || picked.length >= currentMode) return;
+  var sc = document.getElementById("pickScroll");
+  window.__pickX = sc ? sc.scrollLeft : 0;
+  picked.push(n);
+  renderPicker();
+  if (picked.length < currentMode) return;
+  pickLocked = true;
+  window.__pickX = 0;
+  document.getElementById("drawBtn").disabled = true;
+  drawnCards = picked.map(function(i) { return pickPool[i]; });
+  await sleep(600);
   renderCards();
-
-  var btn = document.getElementById("drawBtn");
-  btn.disabled = true;
-
   for (var i = 0; i < drawnCards.length; i++) {
     await sleep(400 + i * 300);
     var inner = document.getElementById("cardInner_" + i);
     if (inner) inner.classList.add("flipped");
   }
-
   spawnPetals();
-  await callReading();
+  try { await callReading(); }
+  finally {
+    pickLocked = false;
+    var b = document.getElementById("drawBtn");
+    b.disabled = false;
+    b.lastChild.textContent = " เลือกไพ่ใหม่อีกครั้ง";
+  }
 };
 
 function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }

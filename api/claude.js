@@ -97,6 +97,9 @@ const SERVICE_COSTS = {
   "dragon-oracle-3": TIER.T20,
   "dragon-oracle-5": TIER.T30,
   "dragon-oracle-followup": 5,
+  "love-oracle-1": TIER.T10,
+  "love-oracle-3": TIER.T20,
+  "love-oracle-5": TIER.T30,
 };
 
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*';
