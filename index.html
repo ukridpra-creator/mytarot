@@ -26,6 +26,20 @@
     .btn-login-now { width:100%; padding:14px; border-radius:16px; background:white; border:none; color:#333; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
     .btn-cancel-login { width:100%; padding:10px; margin-top:10px; border-radius:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
     .card-icon-emoji { font-size:36px; margin-bottom:8px; display:block; }
+
+    /* ─── NEW BANNER ─── */
+    .new-banner { position:relative; display:block; margin:14px 16px 0; border-radius:20px; overflow:hidden; aspect-ratio:2.4/1; max-height:200px; text-decoration:none; border:1px solid rgba(245,158,11,0.45); box-shadow:0 8px 28px rgba(236,72,153,0.25), 0 0 0 1px rgba(255,255,255,0.04) inset; background:#1a0a2a; -webkit-tap-highlight-color:transparent; transition:transform .2s; }
+    .new-banner:active { transform:scale(0.985); }
+    .new-banner img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:right center; }
+    .new-banner::before { content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, rgba(13,8,32,0.92) 0%, rgba(13,8,32,0.7) 38%, rgba(13,8,32,0) 66%); }
+    .new-banner::after { content:''; position:absolute; top:0; bottom:0; width:40%; left:-60%; z-index:2; background:linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent); transform:skewX(-18deg); animation:nbShine 5s ease-in-out infinite; }
+    @keyframes nbShine { 0%,60% { left:-60%; } 100% { left:130%; } }
+    .nb-text { position:absolute; z-index:3; left:0; top:0; bottom:0; width:58%; padding:0 0 0 18px; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+    .nb-tag { align-self:flex-start; font-size:10px; font-weight:800; letter-spacing:2px; padding:3px 10px; border-radius:50px; color:#2a1200; background:linear-gradient(135deg,#fde68a,#f59e0b); box-shadow:0 0 14px rgba(245,158,11,0.6); }
+    .nb-title { font-size:21px; font-weight:800; line-height:1.15; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,0.6); background:linear-gradient(135deg,#fff,#fbcfe8); -webkit-background-clip:text; background-clip:text; color:transparent; font-family:'Sarabun',sans-serif; }
+    .nb-sub { font-size:12px; color:rgba(255,255,255,0.78); line-height:1.4; }
+    .nb-cta { align-self:flex-start; margin-top:2px; font-size:12px; font-weight:700; color:#fde68a; }
+    @media (min-width:640px) { .new-banner { max-width:640px; margin-left:auto; margin-right:auto; } .nb-title { font-size:26px; } .nb-sub { font-size:14px; } }
   </style>
   <script src="js/checkin.js"></script>
   <script type="module">
@@ -139,6 +153,16 @@
   </div>
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
+
+<a class="new-banner" href="pages/love-oracle" aria-label="Love Oracle ไพ่แห่งหัวใจ อัปเดตใหม่">
+  <img src="images/banner-love.webp" alt="" width="1200" height="500">
+  <div class="nb-text">
+    <span class="nb-tag">NEW</span>
+    <span class="nb-title">Love Oracle</span>
+    <span class="nb-sub">ไพ่ความรัก 36 ใบ</span>
+    <span class="nb-cta">ลองเลย &rarr;</span>
+  </div>
+</a>
 
 <section class="hero">
   <div class="hero-badge">✨ ไขความลับชีวิต ด้วยศาสตร์แห่งดวงดาว</div>

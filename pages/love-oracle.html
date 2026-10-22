@@ -8,6 +8,7 @@
 <meta name="keywords" content="ไพ่ออราเคิลความรัก,love oracle,ดูดวงรัก,ไพ่ความรัก">
 <meta property="og:title" content="ไพ่ออราเคิลความรัก Love Oracle — My Tarot">
 <meta property="og:description" content="ดูดวงไพ่ออราเคิลความรัก รับสารจากจักรวาลเรื่องความรักและความสัมพันธ์ค่ะ">
+<link rel="canonical" href="https://www.mytarot.vip/pages/love-oracle">
 <meta property="og:url" content="https://www.mytarot.vip/pages/love-oracle">
 <meta property="og:image" content="https://www.mytarot.vip/images/og-tarot.jpg">
 <meta property="og:type" content="website">
@@ -324,6 +325,19 @@
     border: 1.5px solid var(--rose-light);
   }
 
+  .card-front { padding: 0; background: linear-gradient(160deg,#fff0f4,#ffd9e3); }
+  .card-front .card-art { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .card-front .card-cap {
+    position:absolute; left:0; right:0; bottom:0;
+    padding: 14px 4px 5px;
+    background: linear-gradient(to top, rgba(60,10,30,0.82), rgba(60,10,30,0));
+    text-align:center; color:#fff;
+  }
+  .card-front .card-cap .card-name { color:#fff; font-size:9.5px; text-shadow:0 1px 3px rgba(0,0,0,.6); }
+  .cards-layout-1 .card-front .card-cap .card-name { font-size:13px; }
+  .card-front .card-cap .card-pos { color:#ffd6e0; margin-top:1px; font-size:8px; }
+  .cards-layout-1 .card-front .card-cap .card-pos { font-size:10px; }
+
   .card-front .card-level {
     font-size: 16px; margin-bottom: 2px;
   }
@@ -381,6 +395,24 @@
     font-family: 'Noto Sans Thai', sans-serif;
     font-weight: 300;
   }
+
+  .reading-text.sections { white-space: normal; }
+  .rsec {
+    border-radius: 14px; padding: 14px 14px 12px; margin-bottom: 12px;
+    background: rgba(255,240,245,0.7); border-left: 4px solid var(--rose);
+  }
+  .rsec h4 {
+    display:flex; align-items:center; gap:8px;
+    font-family:'Noto Serif Thai',serif; font-size:13px; font-weight:600;
+    color: var(--rose-deep); margin-bottom:6px;
+  }
+  .rsec h4 img { width:34px; height:50px; object-fit:cover; border-radius:5px; box-shadow:0 2px 6px rgba(192,96,122,.3); }
+  .rsec h4 small { display:block; font-weight:400; font-size:11px; color:#9b6878; }
+  .rsec p { font-size:14px; line-height:2; font-weight:300; color:var(--ink); }
+  .rsec.together { background: rgba(255,248,225,0.8); border-color: var(--gold); }
+  .rsec.together h4 { color:#a8801f; }
+  .rsec.advice { background: rgba(255,228,236,0.85); border-color: var(--rose-deep); }
+  .rsec.advice h4 { color: var(--rose-deep); }
 
   .reading-loading {
     text-align: center; padding: 20px;
@@ -451,6 +483,48 @@
     0%   { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 1; }
     100% { transform: translateY(100vh) rotate(480deg) translateX(30px); opacity: 0; }
   }
+
+  /* ─── REFINED LOOK ─── */
+  .mascot-wrap { width:116px; height:116px; border:3px solid #fff; box-shadow:0 0 0 1.5px var(--gold-light), 0 8px 30px rgba(192,96,122,0.28); }
+  .title-th { font-size:30px; margin:2px 0 6px; background:linear-gradient(135deg,#a8446a,#c9a84c); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:none; }
+  .subtitle { letter-spacing:1.5px; }
+  .coin-bar { background:rgba(255,255,255,.75); border:1px solid var(--rose-light); border-radius:50px; padding:6px 16px; width:max-content; margin:14px auto 0; }
+  .coin { width:18px; height:18px; flex:none; vertical-align:-4px; }
+  .tab-cost .coin { width:13px; height:13px; vertical-align:-2px; }
+
+  .step-head { display:flex; align-items:center; justify-content:center; gap:10px; margin:26px 20px 12px; }
+  .step-head::before, .step-head::after { content:''; flex:1; max-width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold-light)); }
+  .step-head::after { transform:scaleX(-1); }
+  .step-no { width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg,var(--rose-deep),#e8708a); color:#fff; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(192,96,122,.35); }
+  .step-title { font-family:'Noto Serif Thai',serif; font-size:14px; font-weight:600; color:var(--ink-mid); }
+
+  .gender-btn:hover, .status-btn:hover, .tab-btn:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(192,96,122,.18); }
+  .gender-btn .g-icon, .status-btn .s-icon { display:flex; align-items:center; justify-content:center; color:var(--rose-deep); margin:0 auto 6px; }
+  .gender-btn .g-icon svg { width:30px; height:30px; }
+  .status-btn .s-icon svg { width:26px; height:26px; }
+  .gender-btn.selected .g-icon { color:#fff; }
+  .status-btn.selected { background:linear-gradient(135deg,#fde0e8,#f5c0d0); }
+
+  .tab-stack { display:flex; justify-content:center; height:34px; margin-bottom:6px; align-items:center; }
+  .tab-stack b { width:18px; height:27px; border-radius:3px; background:url(../images/love-card-back.webp) center/cover, var(--rose-deep); box-shadow:0 1px 4px rgba(120,30,60,.35); margin-left:-7px; border:1px solid rgba(255,255,255,.7); }
+  .tab-stack b:first-child { margin-left:0; }
+  .tab-btn.active .tab-name { color:var(--rose-deep); font-weight:600; }
+  .mode-desc { font-style:normal; margin-top:4px; }
+
+  .draw-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#b04a68,#e8708a 55%,#d8a35a); letter-spacing:1px; }
+  .draw-btn svg { color:#ffe9b0; }
+
+  .card-back-icon { width:34px; height:34px; color:rgba(255,255,255,.8); }
+  .card-back-icon svg { width:100%; height:100%; }
+  .rh-ico, .rl-ico { display:inline-flex; width:18px; height:18px; color:var(--rose-deep); vertical-align:-3px; }
+  .rh-ico svg, .rl-ico svg { width:100%; height:100%; }
+  .reading-loading { display:flex; align-items:center; justify-content:center; gap:6px; }
+  .rl-ico { animation:beat 1.2s infinite; }
+  @keyframes beat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+  .reading-wrap { background:rgba(255,255,255,.9); border:1px solid var(--gold-light); }
+  .rsec h4 { font-size:14px; }
+
+  .petal { border-radius:100% 0 100% 0; opacity:.85; top:0; }
 </style>
 </head>
 <body>
@@ -459,78 +533,75 @@
 <!-- HEADER -->
 <div class="header">
   <div class="mascot-wrap">
-    <img src="images/love-mascot.png" alt="Love Oracle"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-    <div class="mascot-placeholder" style="display:none">💕</div>
+    <img src="../images/mascot-loveoracle.png" alt="Love Oracle"
+         onerror="this.style.display='none'">
   </div>
   <div class="title-en">LOVE ORACLE</div>
-  <div class="title-th">เลิฟ ออราเคิล</div>
+  <h1 class="title-th">เลิฟ ออราเคิล</h1>
   <div class="subtitle">ไพ่แห่งหัวใจและความรัก</div>
   <div class="coin-bar">
-    🪙 <span id="coinCount">-</span>
+    <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8cc80" stroke="#c9a84c" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/><path d="M12 8.5v7M9.5 10.5h4a1.5 1.5 0 0 1 0 3h-4" fill="none" stroke="#a8801f" stroke-width="1.2" stroke-linecap="round"/></svg> <span id="coinCount">-</span>
   </div>
 </div>
 
 <!-- STEP 1: GENDER -->
-<div class="divider"><span>💕</span></div>
-<div class="step-label">- เลือกเพศของคุณก่อนนะคะ -</div>
+<div class="step-head"><span class="step-no">1</span><span class="step-title">เลือกเพศของคุณ</span></div>
 
 <div class="gender-grid">
   <button class="gender-btn" onclick="selectGender(this, 'male', 'พี่ชาย')">
-    <span class="g-icon">👦</span>
+    <span class="g-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="14" r="5"/><path d="M14 10l6-6M15 4h5v5"/></svg></span>
     <span class="g-name">พี่ชาย</span>
   </button>
   <button class="gender-btn" onclick="selectGender(this, 'female', 'พี่สาว')">
-    <span class="g-icon">👧</span>
+    <span class="g-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span>
     <span class="g-name">พี่สาว</span>
   </button>
 </div>
 
 <!-- STEP 2: STATUS -->
-<div class="divider"><span>🌹</span></div>
-<div class="step-label">- สถานะความรักตอนนี้ -</div>
+<div class="step-head"><span class="step-no">2</span><span class="step-title">สถานะความรักตอนนี้</span></div>
 
 <div class="status-grid">
   <button class="status-btn" onclick="selectStatus(this, 'โสดสนิท ยังไม่มีใครในใจ')">
-    <span class="s-icon">💔</span>
+    <span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5S4.5 16 3 11.5C2 8 4 5 7 5c2 0 3.5 1 5 3l-2 3 3 2-2 4"/><path d="M12 8c1.5-2 3-3 5-3 3 0 5 3 4 6.5-.6 1.8-2 3.4-3.6 4.8"/></svg></span>
     <span class="s-name">โสดสนิท</span>
     <span class="s-desc">ยังไม่มีใครในใจ</span>
   </button>
   <button class="status-btn" onclick="selectStatus(this, 'มีแฟนอยู่แล้ว อยู่ในความสัมพันธ์')">
-    <span class="s-icon">💑</span>
+    <span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18S3.5 14.7 3 10.5C2.8 8 4.5 6 6.7 6c1.3 0 2.3.6 2.3 1.8C9 6.6 10 6 11.3 6 13.5 6 15.2 8 15 10.5 14.5 14.7 9 18 9 18z"/><path d="M15 21s5-3 5.5-7c.2-2-1.2-3.8-3-3.8-1 0-1.8.4-2.5 1.3"/></svg></span>
     <span class="s-name">มีแฟน</span>
     <span class="s-desc">อยู่ในความสัมพันธ์</span>
   </button>
   <button class="status-btn" onclick="selectStatus(this, 'มีคนคุยอยู่ ยังไม่ได้ตกลงกัน')">
-    <span class="s-icon">💌</span>
+    <span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6.5L20.5 7"/></svg></span>
     <span class="s-name">มีคนคุย</span>
     <span class="s-desc">ยังไม่ได้ตกลงกัน</span>
   </button>
   <button class="status-btn" onclick="selectStatus(this, 'สถานะซับซ้อน ยังไม่ชัดเจน')">
-    <span class="s-icon">🌀</span>
+    <span class="s-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.5"/><path d="M12 10.5c-1.5-3 1-6 4-5.5 3.500.6 5 4.500 3 8-2 3.500-6.500 5-10 3.500S3 11 5.500 7.500"/></svg></span>
     <span class="s-name">ซับซ้อน</span>
     <span class="s-desc">ยังไม่ชัดเจน</span>
   </button>
 </div>
 
 <!-- STEP 3: MODE -->
-<div class="divider"><span>🌙</span></div>
+<div class="step-head"><span class="step-no">3</span><span class="step-title">เลือกจำนวนไพ่</span></div>
 
 <div class="mode-tabs">
   <button class="tab-btn active" onclick="selectMode(1)">
-    <span class="tab-icon">💕</span>
+    <span class="tab-stack"><b></b></span>
     <span class="tab-name">1 ใบ</span>
-    <span class="tab-cost">10 🪙</span>
+    <span class="tab-cost">10 <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8cc80" stroke="#c9a84c" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/><path d="M12 8.5v7M9.5 10.5h4a1.5 1.5 0 0 1 0 3h-4" fill="none" stroke="#a8801f" stroke-width="1.2" stroke-linecap="round"/></svg></span>
   </button>
   <button class="tab-btn" onclick="selectMode(3)">
-    <span class="tab-icon">💕💕</span>
+    <span class="tab-stack"><b></b><b></b><b></b></span>
     <span class="tab-name">3 ใบ</span>
-    <span class="tab-cost">20 🪙</span>
+    <span class="tab-cost">20 <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8cc80" stroke="#c9a84c" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/><path d="M12 8.5v7M9.5 10.5h4a1.5 1.5 0 0 1 0 3h-4" fill="none" stroke="#a8801f" stroke-width="1.2" stroke-linecap="round"/></svg></span>
   </button>
   <button class="tab-btn" onclick="selectMode(5)">
-    <span class="tab-icon">💕💕💕</span>
+    <span class="tab-stack"><b></b><b></b><b></b><b></b><b></b></span>
     <span class="tab-name">5 ใบ</span>
-    <span class="tab-cost">30 🪙</span>
+    <span class="tab-cost">30 <svg class="coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e8cc80" stroke="#c9a84c" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#c9a84c" stroke-width="1.2"/><path d="M12 8.5v7M9.5 10.5h4a1.5 1.5 0 0 1 0 3h-4" fill="none" stroke="#a8801f" stroke-width="1.2" stroke-linecap="round"/></svg></span>
   </button>
 </div>
 
@@ -539,7 +610,8 @@
 <!-- DRAW BUTTON -->
 <div class="draw-btn-wrap">
   <button class="draw-btn" id="drawBtn" onclick="drawCards()">
-    💕 ให้น้องดูไพ่ให้
+    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>
+    ให้น้องดูไพ่ให้
   </button>
 </div>
 
@@ -549,7 +621,7 @@
 <!-- READING -->
 <div class="reading-wrap" id="readingWrap">
   <div class="reading-header">
-    <span>🌹</span>
+    <span class="rh-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.5 1 5.4 3.2 1.9-2.2 3.4-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg></span>
     <h3 id="readingTitle">น้องบอกเลยนะคะ...</h3>
   </div>
   <div class="reading-text" id="readingText"></div>
@@ -560,7 +632,7 @@
 <!-- LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal-box">
-    <h3>💕 เข้าสู่ระบบก่อนนะคะ</h3>
+    <h3>เข้าสู่ระบบก่อนนะคะ</h3>
     <p>ต้องล็อกอินก่อนถึงจะให้น้อง<br>ดูไพ่ความรักให้ได้นะคะ</p>
     <button class="btn-google" onclick="loginGoogle()">
       <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
@@ -637,12 +709,14 @@ var allCards = [
   { name:"พระจันทร์เต็มดวง",    level:"💖", kw:"ความสมบูรณ์ ความรักที่ถึงจุดสูงสุด",                   cat:"time",     energy:"great" }
 ];
 
+var HEARTSVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.5 1 5.4 3.2 1.9-2.2 3.4-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg>';
+
 var energyLabel = {
-  great: "ดีมาก 💖",
-  good:  "ดี 💗",
-  mid:   "กลาง 💛",
-  warn:  "ระวัง 🖤",
-  bad:   "แย่มาก 💔"
+  great: "ดีมาก",
+  good:  "ดี",
+  mid:   "กลาง",
+  warn:  "ระวัง",
+  bad:   "แย่มาก"
 };
 
 var posLabels1 = ["พลังงานความรักวันนี้"];
@@ -728,8 +802,8 @@ window.selectMode = function(n) {
 // ─── DRAW ───
 window.drawCards = async function() {
   if (!currentUser) { loginNow(); return; }
-  if (!selectedGender) { alert("เลือกเพศก่อนนะคะ 💕"); return; }
-  if (!selectedStatus) { alert("เลือกสถานะความรักก่อนนะคะ 💕"); return; }
+  if (!selectedGender) { alert("เลือกเพศก่อนนะคะ "); return; }
+  if (!selectedStatus) { alert("เลือกสถานะความรักก่อนนะคะ "); return; }
 
   drawnCards = [];
   var shuffled = allCards.slice().sort(function() { return Math.random() - 0.5; });
@@ -774,23 +848,28 @@ function renderCards() {
   }
 }
 
+function cardArt(card) {
+  return "../images/love-cards/" + (allCards.indexOf(card) + 1) + ".webp";
+}
+
 function cardHTML(idx, label) {
   var card = drawnCards[idx];
   return '<div class="card-flip">' +
     '<div class="card-inner" id="cardInner_' + idx + '">' +
       '<div class="card-face card-back">' +
-        '<img src="images/love-card-back.png" alt="card back" ' +
+        '<img src="../images/love-card-back.webp" alt="card back" ' +
           'onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\'">' +
         '<div class="card-back-placeholder" style="display:none">' +
-          '<div class="card-back-icon">💕</div>' +
+          '<div class="card-back-icon">'+HEARTSVG+'</div>' +
           '<div class="card-back-border"></div>' +
         '</div>' +
       '</div>' +
       '<div class="card-face card-front">' +
-        '<div class="card-level">' + card.level + '</div>' +
-        '<div class="card-divider"></div>' +
-        '<div class="card-name">' + card.name + '</div>' +
-        '<div class="card-pos">' + label + '</div>' +
+        '<img class="card-art" src="' + cardArt(card) + '" alt="' + card.name + '" onerror="this.style.display=\'none\'">' +
+        '<div class="card-cap">' +
+          '<div class="card-name">' + card.name + '</div>' +
+          '<div class="card-pos">' + label + '</div>' +
+        '</div>' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -801,7 +880,7 @@ async function callReading() {
   var wrap = document.getElementById("readingWrap");
   var textEl = document.getElementById("readingText");
   wrap.classList.add("show");
-  textEl.innerHTML = '<div class="reading-loading">💕 น้องกำลังดูไพ่ให้ <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>';
+  textEl.innerHTML = '<div class="reading-loading"><span class="rl-ico">'+HEARTSVG+'</span> น้องกำลังดูไพ่ให้ <span class="dots"><span>.</span><span>.</span><span>.</span></span></div>';
 
   var serviceMap = { 1: "love-oracle-1", 3: "love-oracle-3", 5: "love-oracle-5" };
   var service = serviceMap[currentMode];
@@ -812,14 +891,18 @@ async function callReading() {
   var specialText = "";
   if (specials.length > 0) {
     specials.forEach(function(c) {
-      if (c.special === "third") specialText += "\n⚠️ ไพ่พิเศษ: เงาที่สาม - มีมือที่สามเกี่ยวข้อง ให้เตือนอย่างจริงจัง";
-      if (c.special === "fake") specialText += "\n⚠️ ไพ่พิเศษ: หน้ากากรัก - ระวังการคบซ้อน ให้เตือนอย่างชัดเจน";
-      if (c.special === "rival") specialText += "\n⚠️ ไพ่พิเศษ: นักล่าหัวใจ - มีคู่แข่งเคลื่อนไหว ให้ระบุความเสี่ยง";
+      if (c.special === "third") specialText += "\nไพ่พิเศษ: เงาที่สาม - มีมือที่สามเกี่ยวข้อง ให้เตือนอย่างจริงจัง";
+      if (c.special === "fake") specialText += "\nไพ่พิเศษ: หน้ากากรัก - ระวังการคบซ้อน ให้เตือนอย่างชัดเจน";
+      if (c.special === "rival") specialText += "\nไพ่พิเศษ: นักล่าหัวใจ - มีคู่แข่งเคลื่อนไหว ให้ระบุความเสี่ยง";
     });
   }
 
   var cardList = drawnCards.map(function(c, i) {
     return 'ตำแหน่ง [' + posLabels[i] + ']: ' + c.name + ' [' + energyLabel[c.energy] + '] - ' + c.kw;
+  }).join("\n");
+
+  var tagGuide = drawnCards.map(function(c, k) {
+    return "[C" + (k + 1) + "]\nความหมายไพ่ตำแหน่ง " + posLabels[k] + " (" + c.name + ")";
   }).join("\n");
 
   var promptText =
@@ -828,11 +911,11 @@ async function callReading() {
     "ใช้ภาษาไทยธรรมชาติ อ่านง่าย ไม่ทางการเกินไป มีความหวาน\n\n" +
     "สถานะความรักของ" + selectedGenderLabel + ": " + selectedStatus + "\n\n" +
     "ไพ่ที่จั่วได้:\n" + cardList + specialText + "\n\n" +
-    "กรุณาทำนายโดยแบ่งเป็น:\n" +
-    "💕 ความหมายของแต่ละไพ่ (ให้เชื่อมกับสถานะความรัก)\n" +
-    "🌹 สิ่งที่ไพ่บอกรวมกัน\n" +
-    "💌 คำแนะนำจากน้องถึง" + selectedGenderLabel + "\n\n" +
-    "ทำนายให้ตรงกับสถานะ '" + selectedStatus + "' และพลังงานของไพ่แต่ละใบ";
+    "ตอบตามรูปแบบนี้เท่านั้น ห้ามใช้ markdown หรือหัวข้ออื่น โดยเขียนแท็กในบรรทัดของตัวเอง แล้วขึ้นบรรทัดใหม่เขียนเนื้อหา 2-4 ประโยค:\n" +
+    tagGuide + "\n" +
+    "[TOGETHER]\nสิ่งที่ไพ่ทั้งหมดบอกรวมกัน\n" +
+    "[ADVICE]\nคำแนะนำจากน้องถึง" + selectedGenderLabel + "\n\n" +
+    "ห้ามใช้อีโมจิหรือสัญลักษณ์พิเศษในคำตอบ ทำนายให้ตรงกับสถานะ '" + selectedStatus + "' และพลังงานของไพ่แต่ละใบ เชื่อมความหมายไพ่กับสถานะความรัก";
 
   try {
     var idToken = await currentUser.getIdToken();
@@ -846,7 +929,7 @@ async function callReading() {
       body: JSON.stringify({
         service: service,
         model: "claude-sonnet-4-6",
-        max_tokens: 1000,
+        max_tokens: 1400,
         messages: [{ role: "user", content: promptText }]
       })
     });
@@ -857,14 +940,12 @@ async function callReading() {
     if (!res.ok) {
       var err = await res.json();
       textEl.textContent = err.error === "insufficient_coins"
-        ? "เหรียญไม่พอนะคะ 🪙 กรุณาเติมเหรียญก่อนเลยค่ะ"
-        : "เกิดข้อผิดพลาด ลองใหม่นะคะ 🙏";
+        ? "เหรียญไม่พอนะคะ กรุณาเติมเหรียญก่อนเลยค่ะ"
+        : "เกิดข้อผิดพลาด ลองใหม่นะคะ";
       return;
     }
 
     // stream
-    textEl.textContent = "";
-    textEl.innerHTML = "";
     var reader = res.body.getReader();
     var decoder = new TextDecoder();
     var fullText = "";
@@ -874,8 +955,8 @@ async function callReading() {
       if (chunk.done) break;
       var text = decoder.decode(chunk.value, { stream: true });
       fullText += text;
-      textEl.textContent = fullText;
     }
+    renderReading(fullText, posLabels);
 
     // save firestore
     await addDoc(collection(db, "users", currentUser.uid, "readings"), {
@@ -889,25 +970,60 @@ async function callReading() {
     });
 
   } catch(e) {
-    textEl.textContent = "เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ 🙏";
+    textEl.textContent = "เกิดข้อผิดพลาด กรุณาลองใหม่นะคะ";
     console.error(e);
   }
 }
 
+function renderReading(text, posLabels) {
+  var textEl = document.getElementById("readingText");
+  var parts = {}, cur = null;
+  text.split("\n").forEach(function(line) {
+    var t = line.trim();
+    var m = t.match(/^\[(C\d|TOGETHER|ADVICE)\]$/);
+    if (m) { cur = m[1]; parts[cur] = ""; }
+    else if (cur && t) parts[cur] += (parts[cur] ? " " : "") + t;
+  });
+  if (!parts.TOGETHER && !parts.ADVICE && !parts.C1) {
+    textEl.classList.remove("sections");
+    textEl.textContent = text;
+    return;
+  }
+  textEl.classList.add("sections");
+  textEl.innerHTML = "";
+  function add(cls, headHTML, body) {
+    if (!body) return;
+    var d = document.createElement("div");
+    d.className = "rsec " + cls;
+    d.innerHTML = "<h4>" + headHTML + "</h4>";
+    var p = document.createElement("p");
+    p.textContent = body;
+    d.appendChild(p);
+    textEl.appendChild(d);
+  }
+  drawnCards.forEach(function(c, k) {
+    add("", '<img src="' + cardArt(c) + '" alt="" onerror="this.style.display=\'none\'"><span>' + c.name + '<small>' + posLabels[k] + '</small></span>', parts["C" + (k + 1)]);
+  });
+  add("together", "สิ่งที่ไพ่บอกรวมกัน", parts.TOGETHER);
+  add("advice", "คำแนะนำจากน้อง", parts.ADVICE);
+}
+
 // ─── PETALS ───
 function spawnPetals() {
-  var emojis = ["🌸","💕","🌹","💗","✨"];
-  for (var i = 0; i < 14; i++) {
+  var cols = ["#f5a3b8","#e8708a","#f8c8d4","#e8cc80"];
+  for (var i = 0; i < 16; i++) {
     (function(i) {
       setTimeout(function() {
         var p = document.createElement("div");
         p.className = "petal";
-        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        var sz = 8 + Math.random() * 8;
+        p.style.width = sz + "px"; p.style.height = (sz * 1.4) + "px";
+        p.style.background = cols[Math.floor(Math.random() * cols.length)];
         p.style.left = Math.random() * 100 + "vw";
         p.style.animationDuration = (2.5 + Math.random() * 2) + "s";
         document.body.appendChild(p);
         setTimeout(function() { p.remove(); }, 5000);
-      }, i * 130);
+      }, i * 120);
     })(i);
   }
 }
