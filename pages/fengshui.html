@@ -79,6 +79,23 @@
 
     .btn-reset { width:100%; padding:14px; border-radius:14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.4); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
   </style>
+  <style>
+    .seo-wrap { max-width:480px; margin:28px auto 0; padding:0 20px; color:rgba(255,255,255,0.72); font-size:13px; line-height:1.9; }
+    .seo-wrap h2 { font-size:16px; font-weight:800; color:#fff; margin:0 0 10px; }
+    .seo-wrap h3 { font-size:14px; font-weight:700; color:#fde68a; margin:18px 0 6px; }
+    .seo-wrap p { margin:0 0 10px; }
+    .seo-wrap ul { margin:0 0 10px; padding-left:18px; }
+    .seo-wrap li { margin-bottom:5px; }
+    .seo-wrap b { color:#fff; }
+    .seo-wrap .seo-note { font-size:11.5px; color:rgba(255,255,255,0.4); }
+    .seo-table { width:100%; border-collapse:collapse; font-size:12.5px; margin:6px 0 12px; }
+    .seo-table th, .seo-table td { border:1px solid rgba(255,255,255,0.1); padding:6px 8px; text-align:left; }
+    .seo-table th { background:rgba(124,58,237,0.2); color:#fff; }
+    .seo-faq { background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.2); border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+    .seo-faq .q { font-size:13px; font-weight:700; color:#fde68a; margin-bottom:3px; }
+    .seo-faq .a { font-size:12.5px; line-height:1.8; }
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "เลขกัวคืออะไร", "acceptedAnswer": {"@type": "Answer", "text": "เป็นเลขตามศาสตร์ฮวงจุ้ยที่คำนวณจากปีเกิดและเพศ ใช้ระบุกลุ่มทิศมงคลส่วนตัว"}}, {"@type": "Question", "name": "ผู้ที่เกิดต้นปีใช้ปีไหนคำนวณเลขกัว", "acceptedAnswer": {"@type": "Answer", "text": "ผู้ที่เกิดช่วงมกราคมถึงก่อนตรุษจีน ควรใช้ปีก่อนหน้า เพราะปีฮวงจุ้ยเริ่มตามตรุษจีนหรือใบไม้ผลิ"}}, {"@type": "Question", "name": "ควรหันหัวเตียงไปทางไหน", "acceptedAnswer": {"@type": "Answer", "text": "หันไปทางทิศมงคลตามกลุ่มของเลขกัวตัวเอง โดยเฉพาะทิศที่เสริมสุขภาพหรือความสัมพันธ์ ตามที่ต้องการเสริม"}}, {"@type": "Question", "name": "บ้านเดียวกันหลายคนเลขกัวต่างกันทำอย่างไร", "acceptedAnswer": {"@type": "Answer", "text": "เลือกทิศหลักให้ตรงกับคนที่ใช้ห้องนั้นมากที่สุด เช่น ห้องนอนใช้เลขกัวของเจ้าของห้อง ส่วนห้องรวมให้เลือกทิศที่ไม่ขัดกับใครมากเกินไป"}}]}</script>
 </head>
 <body>
 
@@ -157,6 +174,28 @@
     <button class="btn-reset" onclick="resetAll()">🔄 เช็คใหม่อีกครั้ง</button>
   </div>
 </div>
+
+
+<!-- SEO CONTENT -->
+<section class="seo-wrap">
+<h2>ฮวงจุ้ยส่วนบุคคล เลขกัว (Kua) และทิศมงคลคืออะไร</h2>
+<h3>เลขกัว (Kua Number) คืออะไร</h3>
+<p>เลขกัวเป็นเลขที่ใช้ในศาสตร์ฮวงจุ้ยแบบ "แปดคฤหาสน์" (Eight Mansions) คำนวณจากปีเกิดและเพศ เพื่อบอกว่าบุคคลนั้นเข้ากับทิศใดเป็นพิเศษ ใช้เลือกทิศหันหน้าเตียง โต๊ะทำงาน และประตู ให้ตรงกับทิศมงคลส่วนตัว</p>
+<h3>วิธีคำนวณเลขกัวเบื้องต้น</h3>
+<p>นำเลขสองหลักท้ายของปีเกิด (ค.ศ.) มาบวกกันจนเหลือหลักเดียว สำหรับผู้ชายให้ใช้ 11 ลบเลขนั้น (ผู้ที่เกิดปี 2000 เป็นต้นไปให้ใช้ 9 ลบ) สำหรับผู้หญิงให้ใช้ 4 บวกเลขนั้น (ผู้ที่เกิดปี 2000 เป็นต้นไปให้ใช้ 6 บวก) ถ้าได้ผลมากกว่า 9 ให้บวกซ้ำ ถ้าได้เลข 5 ชายใช้เลข 2 หญิงใช้เลข 8 ตัวอย่าง ผู้ชายเกิดปี 1990 คือ 9+0 = 9 แล้ว 11-9 = 2 จึงได้เลขกัว 2 ผู้ที่เกิดช่วงมกราคมถึงต้นกุมภาพันธ์ควรใช้ปีก่อนหน้า เพราะปีจีนเปลี่ยนตามตรุษจีน</p>
+<h3>ทิศมงคลของแต่ละกลุ่ม</h3>
+<ul>
+<li><b>กลุ่มทิศตะวันออก</b> (เลขกัว 1, 3, 4, 9) ทิศมงคลคือ เหนือ ตะวันออก ตะวันออกเฉียงใต้ และใต้</li>
+<li><b>กลุ่มทิศตะวันตก</b> (เลขกัว 2, 6, 7, 8) ทิศมงคลคือ ตะวันตกเฉียงใต้ ตะวันตก ตะวันตกเฉียงเหนือ และตะวันออกเฉียงเหนือ</li>
+</ul>
+<p>ในแต่ละกลุ่ม ทิศมงคลมีความหมายต่างกัน เช่น ทิศเสริมทรัพย์ ทิศเสริมสุขภาพ ทิศเสริมความสัมพันธ์ และทิศเสริมความมั่นคง ใช้เลือกวางเตียง โต๊ะทำงาน และจุดนั่งหลักให้เหมาะกับตนเอง</p>
+<p class="seo-note">หมายเหตุ ฮวงจุ้ยเป็นศาสตร์ความเชื่อ ใช้เป็นแนวทางจัดพื้นที่ให้รู้สึกสบายและเป็นระเบียบ ไม่ใช่การรับประกันผลทางโชคลาภ</p>
+<h3>คำถามที่พบบ่อย</h3>
+<div class="seo-faq"><div class="q">เลขกัวคืออะไร</div><div class="a">เป็นเลขตามศาสตร์ฮวงจุ้ยที่คำนวณจากปีเกิดและเพศ ใช้ระบุกลุ่มทิศมงคลส่วนตัว</div></div>
+<div class="seo-faq"><div class="q">ผู้ที่เกิดต้นปีใช้ปีไหนคำนวณเลขกัว</div><div class="a">ผู้ที่เกิดช่วงมกราคมถึงก่อนตรุษจีน ควรใช้ปีก่อนหน้า เพราะปีฮวงจุ้ยเริ่มตามตรุษจีนหรือใบไม้ผลิ</div></div>
+<div class="seo-faq"><div class="q">ควรหันหัวเตียงไปทางไหน</div><div class="a">หันไปทางทิศมงคลตามกลุ่มของเลขกัวตัวเอง โดยเฉพาะทิศที่เสริมสุขภาพหรือความสัมพันธ์ ตามที่ต้องการเสริม</div></div>
+<div class="seo-faq"><div class="q">บ้านเดียวกันหลายคนเลขกัวต่างกันทำอย่างไร</div><div class="a">เลือกทิศหลักให้ตรงกับคนที่ใช้ห้องนั้นมากที่สุด เช่น ห้องนอนใช้เลขกัวของเจ้าของห้อง ส่วนห้องรวมให้เลือกทิศที่ไม่ขัดกับใครมากเกินไป</div></div>
+</section>
 
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
