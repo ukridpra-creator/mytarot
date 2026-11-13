@@ -28,6 +28,7 @@
     .login-required-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:20px; }
     .btn-login-now { width:100%; padding:14px; border-radius:16px; background:white; border:none; color:#333; font-size:15px; font-weight:700; font-family:'Sarabun',sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
     .btn-cancel-login { width:100%; padding:10px; margin-top:10px; border-radius:12px; background:none; border:none; color:rgba(255,255,255,0.3); font-size:14px; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    a.card { text-decoration:none; color:inherit; -webkit-tap-highlight-color:transparent; }
     .card-icon-emoji { font-size:36px; margin-bottom:8px; display:block; }
 
     /* ─── NEW BANNER ─── */
@@ -157,7 +158,7 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<a class="new-banner" href="pages/love-oracle" aria-label="Love Oracle ไพ่แห่งหัวใจ อัปเดตใหม่">
+<a class="new-banner" href="/pages/love-oracle" aria-label="Love Oracle ไพ่แห่งหัวใจ อัปเดตใหม่">
   <img src="images/banner-love.webp" alt="" width="900" height="375" fetchpriority="high" decoding="async">
   <div class="nb-text">
     <span class="nb-tag">NEW</span>
@@ -175,90 +176,90 @@
 
 <main class="main">
   <div class="grid">
-    <div class="card" onclick="window.location.href='horoscope/2570'">
+    <a class="card" href="/horoscope/2570">
       <div class="card-icon"><img src="images/icon-horoscope2570.png?v=3" alt="ดวงปีมะแม 2570" fetchpriority="high" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🐐</span>'"></div>
       <div class="card-title">ดวงปีมะแม 2570 🧧</div>
       <div class="card-desc">ดวงครบ 12 นักษัตร ปีชง ซัมแจ ฤกษ์ดี และตรุษจีน อ่านฟรี</div>
-    </div>
+    </a>
 
 
-    <div class="card" onclick="window.location.href='pages/tarot.html'">
+    <a class="card" href="/pages/tarot">
       <div class="card-icon"><img src="images/icon-tarot.png?v=2" alt="ไพ่ทาโรต์" fetchpriority="high" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🃏</span>'"></div>
       <div class="card-title">ไพ่ทาโรต์</div>
       <div class="card-desc">เปิดไพ่รับคำทำนายเชิงลึก วิเคราะห์ความรัก การงาน การเงิน</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/oracle.html'">
+    <a class="card" href="/pages/oracle">
       <div class="card-icon"><img src="images/icon-oracle.png?v=2" alt="ไพ่ออราเคิล" fetchpriority="high" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌟</span>'"></div>
       <div class="card-title">ไพ่ออราเคิล</div>
       <div class="card-desc">รับสารจากจักรวาลและสิ่งศักดิ์สิทธิ์ที่ชี้นำเส้นทางคุณ</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/number-hub.html'">
+    <a class="card" href="/pages/number-hub">
       <div class="card-icon"><img src="images/icon-number.png?v=2" alt="เลขศาสตร์" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🔢</span>'"></div>
       <div class="card-title">เลขศาสตร์</div>
       <div class="card-desc">ความลับในตัวเลข วิเคราะห์เลขชีวิตจากวันเกิดและชื่อ</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/body-hub.html'">
+    <a class="card" href="/pages/body-hub">
       <div class="card-icon"><img src="images/icon-body.png?v=2" alt="ศาสตร์ร่างกาย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🤲</span>'"></div>
       <div class="card-title">ศาสตร์ร่างกาย</div>
       <div class="card-desc">ดูลายมือ ลายเท้า โหงวเฮ้ง อ่านดวงจากร่างกายของคุณ</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/thai-hub.html'">
+    <a class="card" href="/pages/thai-hub">
       <div class="card-icon"><img src="images/icon-thai.png?v=2" alt="โหราศาสตร์ไทย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇹🇭</span>'"></div>
       <div class="card-title">โหราศาสตร์ไทย 🇹🇭</div>
       <div class="card-desc">สุริยยาตร์ เลข 7 ตัว ทักษา ตรีวัย ศาสตร์ไทยโบราณ</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/korean.html'">
+    <a class="card" href="/pages/korean">
       <div class="card-icon"><img src="images/icon-korean.png?v=2" alt="โหราศาสตร์เกาหลี" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇰🇷</span>'"></div>
       <div class="card-title">โหราศาสตร์เกาหลี 🇰🇷</div>
       <div class="card-desc">ซาจู กุงฮับ ซัมแจ ศาสตร์เกาหลีโบราณแห่งชะตา</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/chinese-hub.html'">
+    <a class="card" href="/pages/chinese-hub">
       <div class="card-icon"><img src="images/icon-chinese.png?v=2" alt="โหราศาสตร์จีน" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇨🇳</span>'"></div>
       <div class="card-title">โหราศาสตร์จีน 🇨🇳</div>
       <div class="card-desc">บาจื้อ สี่เสาแห่งชะตา ห้าธาตุ เปิดเผยดวงชะตาตลอดชีวิต</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/western-hub.html'">
+    <a class="card" href="/pages/western-hub">
       <div class="card-icon"><img src="images/icon-western.png?v=2" alt="โหราศาสตร์ตะวันตก" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🌍</span>'"></div>
       <div class="card-title">โหราศาสตร์ตะวันตก 🌍</div>
       <div class="card-desc">แผนที่ดาวแห่งชีวิต วิเคราะห์จากตำแหน่งดาวเคราะห์</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/indian-hub.html'">
+    <a class="card" href="/pages/indian-hub">
       <div class="card-icon"><img src="images/icon-indian.png?v=2" alt="โหราศาสตร์อินเดีย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🇮🇳</span>'"></div>
       <div class="card-title">โหราศาสตร์อินเดีย 🇮🇳</div>
       <div class="card-desc">เวทิก โหราศาสตร์อินเดียโบราณ ดาวนพเคราะห์และราศี</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/other-astro.html'">
+    <a class="card" href="/pages/other-astro">
       <div class="card-icon"><img src="images/icon-other-astro.png?v=2" alt="โหราศาสตร์อื่นๆ" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>✨</span>'"></div>
       <div class="card-title">โหราศาสตร์อื่นๆ ✨</div>
       <div class="card-desc">มายัน อาหรับ เซลติก และศาสตร์ดูดวงจากทั่วโลก</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/divination.html'">
+    <a class="card" href="/pages/divination">
       <div class="card-icon"><img src="images/icon-divination.png?v=2" alt="ศาสตร์เสี่ยงทาย" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎴</span>'"></div>
       <div class="card-title">ศาสตร์เสี่ยงทาย</div>
       <div class="card-desc">เซียมซี กวนอิม โอมิคุจิ อี้จิง ไพ่รูน เสี่ยงทายหลากวัฒนธรรม</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='pages/activity-hub.html'">
+    <a class="card" href="/pages/activity-hub">
       <div class="card-icon"><img src="images/icon-activity.png?v=2" alt="กิจกรรม" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>🎪</span>'"></div>
       <div class="card-title">กิจกรรม</div>
       <div class="card-desc">มินิเกม ทดสอบดวง และกิจกรรมสนุกๆ อีกมากมาย</div>
-    </div>
+    </a>
 
-    <div class="card" onclick="window.location.href='learn/index.html'">
+    <a class="card" href="/learn">
       <div class="card-icon"><img src="images/icon-learn.png?v=3" alt="ห้องเรียนโหราศาสตร์" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-icon-emoji>📚</span>'"></div>
       <div class="card-title">ห้องเรียนโหราศาสตร์</div>
       <div class="card-desc">เรียนรู้ความหมายไพ่ทาโรต์ เลขศาสตร์ โหราศาสตร์ฟรี ครบทุกสาขา</div>
-    </div>
+    </a>
 
   </div>
 </main>
@@ -266,17 +267,17 @@
 <!-- SEO TEXT -->
 <div style="padding:20px 20px 8px;max-width:600px;margin:0 auto;">
   <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">My Tarot คือเว็บดูดวงออนไลน์อะไร?</h2>
-  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">My Tarot เป็นแพลตฟอร์มดูดวงออนไลน์ที่รวมศาสตร์การทำนายจากทั่วโลกไว้ในที่เดียวค่ะ ผสานตำราโบราณเข้ากับการวิเคราะห์เชิงลึก เพื่อให้คำทำนายที่แม่นยำและเข้าใจง่าย ไม่ว่าจะเป็นไพ่ทาโรต์ ไพ่ออราเคิล เลขศาสตร์ โหราศาสตร์ไทย จีน เกาหลี ตะวันตก อินเดีย ไปจนถึงศาสตร์เสี่ยงทายจากหลากวัฒนธรรม สมัครใช้งานฟรีและเริ่มดูดวงได้ทันทีค่ะ ดูดวงปีมะแม 2570 ได้ที่<a href="horoscope/2570" style="color:rgba(212,175,55,0.7);">ดวงรายปี 2570</a> ค่ะ อยากศึกษาความหมายไพ่และศาสตร์ต่างๆ อย่างละเอียดก่อน แวะไปที่<a href="learn/index.html" style="color:rgba(212,175,55,0.7);">ห้องเรียนโหราศาสตร์</a>ของเราได้ฟรีค่ะ</p>
+  <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">My Tarot เป็นแพลตฟอร์มดูดวงออนไลน์ที่รวมศาสตร์การทำนายจากทั่วโลกไว้ในที่เดียวค่ะ ผสานตำราโบราณเข้ากับการวิเคราะห์เชิงลึก เพื่อให้คำทำนายที่แม่นยำและเข้าใจง่าย ไม่ว่าจะเป็นไพ่ทาโรต์ ไพ่ออราเคิล เลขศาสตร์ โหราศาสตร์ไทย จีน เกาหลี ตะวันตก อินเดีย ไปจนถึงศาสตร์เสี่ยงทายจากหลากวัฒนธรรม สมัครใช้งานฟรีและเริ่มดูดวงได้ทันทีค่ะ ดูดวงปีมะแม 2570 ได้ที่<a href="/horoscope/2570" style="color:rgba(212,175,55,0.7);">ดวงรายปี 2570</a> ค่ะ อยากศึกษาความหมายไพ่และศาสตร์ต่างๆ อย่างละเอียดก่อน แวะไปที่<a href="/learn" style="color:rgba(212,175,55,0.7);">ห้องเรียนโหราศาสตร์</a>ของเราได้ฟรีค่ะ</p>
 </div>
 
 <footer style="background:rgba(10,6,8,0.95);border-top:1px solid rgba(212,175,55,0.15);padding:32px 20px 100px;text-align:center;position:relative;z-index:1;">
   <div style="font-size:20px;margin-bottom:8px;">🔮 My Tarot</div>
   <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;letter-spacing:1px;">ดูดวงออนไลน์ด้วย · ไพ่ทาโรต์ · ไพ่ออราเคิล · เซียมซี · โหราศาสตร์</div>
   <div style="display:flex;justify-content:center;gap:20px;margin-bottom:16px;flex-wrap:wrap;">
-    <a href="learn/index.html" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">ห้องเรียนโหราศาสตร์</a>
-    <a href="pages/privacy.html" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Privacy Policy</a>
-    <a href="pages/terms.html" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Terms of Service</a>
-    <a href="pages/refund.html" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Refund Policy</a>
+    <a href="/learn" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">ห้องเรียนโหราศาสตร์</a>
+    <a href="/pages/privacy" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Privacy Policy</a>
+    <a href="/pages/terms" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Terms of Service</a>
+    <a href="/pages/refund" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">Refund Policy</a>
     <a href="https://www.tiktok.com/@mytarot.vip" target="_blank" style="font-size:11px;color:rgba(212,175,55,0.5);text-decoration:none;">TikTok @mytarot.vip</a>
   </div>
   <div style="margin-bottom:12px;">

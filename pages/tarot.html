@@ -48,12 +48,13 @@
     .section-title { font-size:12px; color:var(--dim); font-weight:700; letter-spacing:1px; margin-bottom:12px; margin-top:20px; padding-left:4px; }
     .section-title:first-of-type { margin-top:0; }
   </style>
+<style>:where(h1.page-title){margin:0;font-size:inherit;font-weight:inherit}</style>
 </head>
 <body>
 
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
-  <div class="page-title">🃏 ไพ่ทาโรต์</div>
+  <a href="/" class="back-btn">←</a>
+  <h1 class="page-title">🃏 ไพ่ทาโรต์</h1>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -85,7 +86,7 @@
   <!-- ฟรี -->
   <div class="section-title">✨ ฟรี</div>
   <div class="menu-list">
-    <a href="tarot-yesno.html" class="menu-card accent" style="border-left-color:#10b981;border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));">
+    <a href="/pages/tarot-yesno" class="menu-card accent" style="border-left-color:#10b981;border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));">
       <div class="menu-icon">
         <img src="../images/icon-tarotyesno.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🎴</span>'">
       </div>
@@ -101,7 +102,7 @@
   <!-- ถามทั่วไป -->
   <div class="section-title">🔮 ถามทั่วไป</div>
   <div class="menu-list">
-    <a href="tarot-ask.html" class="menu-card accent">
+    <a href="/pages/tarot-ask" class="menu-card accent">
       <div class="menu-icon">
         <img src="../images/icon-tarotask.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔮</span>'">
       </div>
@@ -117,7 +118,7 @@
   <!-- เจาะลึก -->
   <div class="section-title">✨ เจาะลึกรายด้าน</div>
   <div class="menu-list">
-    <a href="tarot-love.html" class="menu-card accent" style="border-left-color:#ec4899;border-color:rgba(236,72,153,0.25);background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(219,39,119,0.05));">
+    <a href="/pages/tarot-love" class="menu-card accent" style="border-left-color:#ec4899;border-color:rgba(236,72,153,0.25);background:linear-gradient(135deg,rgba(236,72,153,0.08),rgba(219,39,119,0.05));">
       <div class="menu-icon">
         <img src="../images/icon-tarotlove.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>❤️</span>'">
       </div>
@@ -141,7 +142,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="tarot-money.html" class="menu-card accent" style="border-left-color:#f59e0b;border-color:rgba(245,158,11,0.25);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));">
+    <a href="/pages/tarot-money" class="menu-card accent" style="border-left-color:#f59e0b;border-color:rgba(245,158,11,0.25);background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));">
       <div class="menu-icon">
         <img src="../images/icon-tarotmoney.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>💰</span>'">
       </div>
@@ -153,7 +154,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="tarot-health.html" class="menu-card accent" style="border-left-color:#10b981;border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));">
+    <a href="/pages/tarot-health" class="menu-card accent" style="border-left-color:#10b981;border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.05));">
       <div class="menu-icon">
         <img src="../images/icon-tarothealth.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🌿</span>'">
       </div>
@@ -218,7 +219,7 @@ onAuthStateChanged(auth,async user=>{
 
 <!-- SEO TEXT -->
 <div style="padding:20px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px;">
-  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซี ไพ่ทาโรต์ออนไลน์ภาษาไทย ฟรี | My Tarot</h2>
+  <h2 style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:8px;">ดูดวงไพ่ยิปซี ไพ่ทาโรต์ออนไลน์ภาษาไทย ฟรี</h2>
   <p style="font-size:12px;color:rgba(255,255,255,0.3);line-height:1.9;">ไพ่ยิปซีหรือไพ่ทาโรต์คืออะไร? ไพ่ยิปซี (Tarot Card) เป็นศาสตร์การทำนายที่มีต้นกำเนิดจากยุโรป ชาวยิปซีใช้ไพ่ทาโรต์ในการดูดวงและทำนายอนาคตมาหลายร้อยปีค่ะ ปัจจุบันไพ่ยิปซีหรือไพ่ทาโรต์เป็นที่นิยมทั่วโลก รวมถึงในประเทศไทยค่ะ สามารถใช้ถามเรื่องความรัก การงาน การเงิน สุขภาพ และชีวิตโดยรวมได้ค่ะ ที่ My Tarot เราใช้ตำราโบราณวิเคราะห์ไพ่ยิปซีภาษาไทยให้คุณพี่แบบเข้าใจง่ายและแม่นยำค่ะ</p>
 </div>
 

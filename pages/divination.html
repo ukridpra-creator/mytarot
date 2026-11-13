@@ -42,12 +42,13 @@
     .section-title { font-size:12px; color:var(--dim); font-weight:700; letter-spacing:1px; margin-bottom:12px; margin-top:20px; padding-left:4px; }
     .section-title:first-of-type { margin-top:0; }
   </style>
+<style>:where(h1.page-title){margin:0;font-size:inherit;font-weight:inherit}</style>
 </head>
 <body>
 
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
-  <div class="page-title">🎴 ศาสตร์เสี่ยงทาย</div>
+  <a href="/" class="back-btn">←</a>
+  <h1 class="page-title">🎴 ศาสตร์เสี่ยงทาย</h1>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -79,7 +80,7 @@
   <!-- ฟรี -->
   <div class="section-title">✨ ฟรี</div>
   <div class="menu-list">
-    <a href="fortune-cookie.html" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.25);">
+    <a href="/pages/fortune-cookie" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.25);">
       <div class="menu-icon" style="background:rgba(245,158,11,0.2);">
         <img src="../images/icon-cookie.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🥠</span>'">
       </div>
@@ -96,7 +97,7 @@
   <div class="section-title">✦ พรีเมียม</div>
   <div class="menu-list">
 
-    <a href="omikuji.html" class="menu-card" style="border-left:3px solid #8B0000;background:linear-gradient(135deg,rgba(139,0,0,0.08),rgba(212,175,55,0.05));border-color:rgba(139,0,0,0.25);">
+    <a href="/pages/omikuji" class="menu-card" style="border-left:3px solid #8B0000;background:linear-gradient(135deg,rgba(139,0,0,0.08),rgba(212,175,55,0.05));border-color:rgba(139,0,0,0.25);">
       <div class="menu-icon" style="background:rgba(139,0,0,0.2);">
         <img src="../images/icon-omikuji.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🎋</span>'">
       </div>
@@ -108,7 +109,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="guanyin.html" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(139,0,0,0.05));border-color:rgba(212,175,55,0.25);">
+    <a href="/pages/guanyin" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(139,0,0,0.05));border-color:rgba(212,175,55,0.25);">
       <div class="menu-icon" style="background:rgba(212,175,55,0.2);">
         <img src="../images/icon-guanyin.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🙏</span>'">
       </div>
@@ -120,7 +121,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="iching.html" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
+    <a href="/pages/iching" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
       <div class="menu-icon" style="background:rgba(168,85,247,0.2);">
         <img src="../images/icon-iching.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>☯️</span>'">
       </div>
@@ -132,7 +133,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="rune.html" class="menu-card" style="border-left:3px solid #6366f1;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(79,70,229,0.05));border-color:rgba(99,102,241,0.25);">
+    <a href="/pages/rune" class="menu-card" style="border-left:3px solid #6366f1;background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(79,70,229,0.05));border-color:rgba(99,102,241,0.25);">
       <div class="menu-icon" style="background:rgba(99,102,241,0.2);">
         <img src="../images/icon-rune.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>ᚱ</span>'">
       </div>

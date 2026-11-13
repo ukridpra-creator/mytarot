@@ -128,12 +128,13 @@
     .section-title { font-size:12px; color:var(--dim); font-weight:700; letter-spacing:1px; margin-bottom:12px; margin-top:20px; padding-left:4px; }
     .section-title:first-of-type { margin-top:0; }
   </style>
+<style>:where(h1.page-title){margin:0;font-size:inherit;font-weight:inherit}</style>
 </head>
 <body>
 
 <div class="page-header">
-  <a href="../index.html" class="back-btn">←</a>
-  <div class="page-title">🇨🇳 โหราศาสตร์จีน</div>
+  <a href="/" class="back-btn">←</a>
+  <h1 class="page-title">🇨🇳 โหราศาสตร์จีน</h1>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -165,7 +166,7 @@
   <!-- ฟรี -->
   <div class="section-title">✨ ฟรี</div>
   <div class="menu-list">
-    <a href="zodiac.html" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
+    <a href="/pages/zodiac" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
       <div class="menu-icon" style="background:rgba(239,68,68,0.2);">
   <img src="../images/icon-zodiac.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🐉</span>'">
 </div>
@@ -177,7 +178,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="fengshui.html" class="menu-card" style="border-left:3px solid #14b8a6;background:linear-gradient(135deg,rgba(20,184,166,0.08),rgba(13,148,136,0.05));border-color:rgba(20,184,166,0.25);">
+    <a href="/pages/fengshui" class="menu-card" style="border-left:3px solid #14b8a6;background:linear-gradient(135deg,rgba(20,184,166,0.08),rgba(13,148,136,0.05));border-color:rgba(20,184,166,0.25);">
       <div class="menu-icon" style="background:rgba(20,184,166,0.2);">
         <img src="../images/icon-fengshui.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🧭</span>'">
       </div>
@@ -189,7 +190,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="pichong.html" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
+    <a href="/pages/pichong" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
       <div class="menu-icon" style="background:rgba(239,68,68,0.2);">
         <img src="../images/icon-pichong.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🧧</span>'">
       </div>
@@ -206,7 +207,7 @@
   <div class="section-title">✦ พรีเมียม</div>
   <div class="menu-list">
 
-    <a href="loshu.html" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.25);">
+    <a href="/pages/loshu" class="menu-card" style="border-left:3px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(217,119,6,0.05));border-color:rgba(245,158,11,0.25);">
       <div class="menu-icon" style="background:rgba(245,158,11,0.2);">
         <img src="../images/icon-loshu.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔯</span>'">
       </div>
@@ -218,7 +219,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="kuigao.html" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(180,135,11,0.05));border-color:rgba(212,175,55,0.25);">
+    <a href="/pages/kuigao" class="menu-card" style="border-left:3px solid #d4af37;background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(180,135,11,0.05));border-color:rgba(212,175,55,0.25);">
       <div class="menu-icon" style="background:rgba(212,175,55,0.2);">
   <img src="../images/icon-kuigao.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>🔯</span>'">
 </div>
@@ -230,7 +231,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="chinese.html" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
+    <a href="/pages/chinese" class="menu-card" style="border-left:3px solid #ef4444;background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(220,38,38,0.05));border-color:rgba(239,68,68,0.25);">
       <div class="menu-icon" style="background:rgba(239,68,68,0.2);">
         <img src="../images/icon-chinese.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>☯️</span>'">
       </div>
@@ -242,7 +243,7 @@
       <div class="menu-arrow">›</div>
     </a>
 
-    <a href="purple-star.html" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
+    <a href="/pages/purple-star" class="menu-card" style="border-left:3px solid #a855f7;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(124,58,237,0.05));border-color:rgba(168,85,247,0.25);">
       <div class="menu-icon" style="background:rgba(168,85,247,0.2);">
   <img src="../images/icon-purplestar.png?v=2" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=font-size:26px>⭐</span>'">
 </div>
