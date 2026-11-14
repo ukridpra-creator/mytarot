@@ -216,6 +216,19 @@
       padding: 2px 8px;
       border-radius: 10px;
     }
+    .new-banner { position:relative; display:block; margin:4px 16px 8px; border-radius:20px; overflow:hidden; aspect-ratio:2.4/1; max-height:200px; text-decoration:none; border:1px solid rgba(245,158,11,0.45); box-shadow:0 8px 28px rgba(236,72,153,0.25), 0 0 0 1px rgba(255,255,255,0.04) inset; background:#1a0a2a; -webkit-tap-highlight-color:transparent; transition:transform .2s; }
+    .new-banner:active { transform:scale(0.985); }
+    .new-banner img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:right center; }
+    .new-banner::before { content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, rgba(13,8,32,0.92) 0%, rgba(13,8,32,0.7) 38%, rgba(13,8,32,0) 66%); }
+    .new-banner::after { content:''; position:absolute; top:0; bottom:0; width:40%; left:-60%; z-index:2; background:linear-gradient(100deg, transparent, rgba(255,255,255,0.18), transparent); transform:skewX(-18deg); animation:nbShine 5s ease-in-out infinite; }
+    @keyframes nbShine { 0%,60% { left:-60%; } 100% { left:130%; } }
+    .nb-text { position:absolute; z-index:3; left:0; top:0; bottom:0; width:58%; padding:0 0 0 18px; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+    .nb-tag { align-self:flex-start; font-size:10px; font-weight:800; letter-spacing:2px; padding:3px 10px; border-radius:50px; color:#2a1200; background:linear-gradient(135deg,#fde68a,#f59e0b); box-shadow:0 0 14px rgba(245,158,11,0.6); }
+    .nb-title { font-size:21px; font-weight:800; line-height:1.15; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,0.6); background:linear-gradient(135deg,#fff,#fbcfe8); -webkit-background-clip:text; background-clip:text; color:transparent; font-family:'Sarabun',sans-serif; }
+    .nb-sub { font-size:12px; color:rgba(255,255,255,0.78); line-height:1.4; }
+    .nb-cta { align-self:flex-start; margin-top:2px; font-size:12px; font-weight:700; color:#fde68a; }
+    @media (min-width:640px) { .new-banner { max-width:640px; margin-left:auto; margin-right:auto; } .nb-title { font-size:26px; } .nb-sub { font-size:14px; } }
+    .nb-loy { margin-bottom:0; box-shadow:0 8px 28px rgba(251,191,36,0.28), 0 0 0 1px rgba(255,255,255,0.04) inset; }
   </style>
 </head>
 <body>
@@ -229,6 +242,17 @@
     <div class="learn-title">เรียนรู้<span>ศาสตร์แห่งดวงดาว</span><br>ฟรี ทุกที่ ทุกเวลา</div>
     <p class="learn-desc">รวมความรู้โหราศาสตร์ครบทุกสาขา ตั้งแต่พื้นฐานจนถึงระดับลึก เหมาะสำหรับมือใหม่และผู้ที่อยากศึกษาเพิ่มเติมค่ะ</p>
   </div>
+
+<!-- ลอยกระทง 2569: ถอดแบนเนอร์นี้ออกหลัง 25 พ.ย. 2569 -->
+<a class="new-banner nb-loy" href="/learn/loy-krathong-fortune" aria-label="ทายใจจากกระทง ลอยกระทง 2569">
+  <img src="/images/banner-loy.webp" alt="" width="900" height="375" fetchpriority="high" decoding="async">
+  <div class="nb-text">
+    <span class="nb-tag">ลอยกระทง</span>
+    <span class="nb-title">ทายใจจากกระทง</span>
+    <span class="nb-sub">ลอยไปทางไหน ดวงเป็นยังไง</span>
+    <span class="nb-cta">อ่านเลย &rarr;</span>
+  </div>
+</a>
 
   <!-- ดวงรายปี 2570 -->
   <div class="learn-section">
