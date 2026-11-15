@@ -32,7 +32,7 @@
     .hc{position:relative;margin:0;}
     .hc-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
     .hc-track::-webkit-scrollbar{display:none;}
-    .hc-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:2/1;background:#120c2a;}
+    .hc-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:16/9;background:#120c2a;}
     .hc-slide img{width:100%;height:100%;object-fit:cover;display:block;}
     .hc-foot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;pointer-events:none;}
     .hc-time{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.75);text-shadow:0 1px 6px rgba(0,0,0,.8);}
@@ -42,7 +42,7 @@
     /* card grid */
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px 12px;padding:18px 16px 4px;background:#0b0e14;}
     .nc{display:block;text-decoration:none;color:white;-webkit-tap-highlight-color:transparent;}
-    .nc img{width:100%;height:auto;aspect-ratio:5/3;object-fit:cover;border-radius:12px;display:block;background:#120c2a;}
+    .nc img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;display:block;background:#120c2a;}
     .nc-t{font-size:14.5px;font-weight:600;line-height:1.55;margin:8px 0 6px;color:rgba(255,255,255,0.92);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
     .nc-m{display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(255,255,255,0.45);flex-wrap:wrap;}
     .nc-m svg{width:12px;height:12px;flex-shrink:0;}
@@ -50,7 +50,7 @@
     .nc-c{color:#fb923c;font-weight:700;}
     .sec-h{font-size:16px;font-weight:800;margin:26px 16px 0;color:#fcd34d;}
     /* article */
-    .a-hero{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;background:#120c2a;}
+    .a-hero{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#120c2a;}
     .a-title{font-size:24px;font-weight:800;line-height:1.4;margin:18px 16px 8px;}
     .a-date{font-size:13px;color:rgba(255,255,255,0.4);margin:0 16px 14px;}
     .a-share{display:flex;gap:8px;margin:0 16px 8px;flex-wrap:wrap;}
@@ -60,7 +60,7 @@
     .a-body p a,.a-body li a,.note a{color:#fcd34d;text-decoration:none;border-bottom:1px dotted rgba(251,191,36,0.5);}
     .a-body ul{margin:0 0 14px;padding-left:22px;font-size:15px;color:rgba(255,255,255,0.7);line-height:2;}
     .a-fig{margin:26px 0 8px;}
-    .a-fig img{width:100%;height:auto;aspect-ratio:5/3;object-fit:cover;border-radius:14px;display:block;}
+    .a-fig img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:14px;display:block;}
     .a-h2{font-size:18px;font-weight:800;line-height:1.5;margin:12px 0 10px;color:white;}
     .keybox{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:16px;padding:14px 16px;margin:0 0 6px;}
     .keybox div{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.9;}
@@ -89,7 +89,7 @@
 
 <a href="/news/" class="back-link">← ข่าวดูดวง</a>
 <div class="wrap">
-  <img class="a-hero" src="/images/news/hero-jup-leo.webp" alt="พฤหัสเข้าสิงห์ 20 ต.ค. 69" width="1600" height="800" fetchpriority="high" decoding="async">
+  <img class="a-hero" src="/images/news/hero-jup-leo.webp" alt="พฤหัสเข้าสิงห์ 20 ต.ค. 69" width="1600" height="900" fetchpriority="high" decoding="async">
   <h1 class="a-title">พฤหัสเข้าราศีสิงห์ 20 ต.ค. 69 อยู่ถึง 9 ก.พ. 70 ส่งผลอย่างไร</h1>
   <div class="a-date">15 พ.ย. 69 · อัปเดตล่าสุด 15 พ.ย. 69</div>
   <div class="a-share">
@@ -99,7 +99,7 @@
   </div>
   <div class="a-body">
     <p>ดาวพฤหัสบดีย้ายเข้าราศีสิงห์วันที่ 20 ตุลาคม 2569 และอยู่ในราศีนี้ถึงวันที่ 9 กุมภาพันธ์ 2570 ก่อนจะถอยกลับเข้าราศีกรกฎ เพราะช่วงนี้พฤหัสมีการเดินผิดปกติ (ถอยหลัง) สรุปให้อ่านง่ายๆ ตามนี้</p>
-    <div class="a-fig"><img src="/images/news/jup-in-1.webp" alt="พฤหัสคือดาวอะไร" width="1000" height="600" loading="lazy" decoding="async"><h2 class="a-h2">พฤหัสคือดาวอะไร ตามโหราศาสตร์ไทย</h2></div>
+    <div class="a-fig"><img src="/images/news/jup-in-1.webp" alt="พฤหัสคือดาวอะไร" width="1000" height="563" loading="lazy" decoding="async"><h2 class="a-h2">พฤหัสคือดาวอะไร ตามโหราศาสตร์ไทย</h2></div>
 
     <p>ตามตำรา ดาวพฤหัสบดีเป็นดาวแห่งโชคลาภ ปัญญา ครูอาจารย์ และผู้ใหญ่ที่เมตตา ปกติย้ายราศีทุกราว 1 ปี ปีนี้พฤหัสผ่านจุดสำคัญหลายครั้ง</p>
     <div class="table-wrap"><table>
@@ -108,7 +108,7 @@
       <tr><td>20 ต.ค. 2569</td><td>เข้าราศีสิงห์</td></tr>
       <tr><td>9 ก.พ. 2570</td><td>ถอยกลับเข้าราศีกรกฎ (พฤหัสเดินถอยหลัง)</td></tr>
     </table></div>
-    <div class="a-fig"><img src="/images/news/jup-in-2.webp" alt="ราศีสิงห์" width="1000" height="600" loading="lazy" decoding="async"><h2 class="a-h2">ราศีสิงห์ในโหราศาสตร์ไทย</h2></div>
+    <div class="a-fig"><img src="/images/news/jup-in-2.webp" alt="ราศีสิงห์" width="1000" height="563" loading="lazy" decoding="async"><h2 class="a-h2">ราศีสิงห์ในโหราศาสตร์ไทย</h2></div>
 
     <p>ราศีสิงห์เกี่ยวกับผู้นำ ความมั่นใจ ชื่อเสียง และการเป็นที่รู้จัก เมื่อพฤหัสซึ่งเป็นดาวแห่งโชคอยู่ราศีนี้ ตามความเชื่อเรื่องบทบาทหน้าที่ ผู้ใหญ่ที่อุปถัมภ์ และการได้รับการยอมรับมักถูกพูดถึงเป็นพิเศษ เรียนรู้ลักษณะของ<a href="/learn/leo">ราศีสิงห์</a>และ<a href="/learn/cancer">ราศีกรกฎ</a>เพิ่มได้ที่ห้องเรียน</p>
     <div class="note">ผลต่างกันตามลัคนาและดวงเกิดของแต่ละคน การทำนายตามความเชื่อไม่ได้แปลว่าจะเป็นเช่นนั้นแน่นอน</div>
@@ -131,7 +131,7 @@
   </div>
 
   <h2 class="sec-h">ข่าวถัดไป</h2>
-  <div class="grid2"><a class="nc" href="/news/rahu-capricorn-2569"><img src="/images/news/card-rahu.webp" alt="ราหูย้ายมังกร 22 พ.ย. 69" width="1000" height="600" loading="lazy" decoding="async"><h2 class="nc-t">ราหูย้ายราศีมังกร 22 พ.ย. 69 กระทบ 12 ลัคนาอย่างไร ตามความเชื่อโหราศาสตร์ไทย</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ดาวย้าย</span></div></a><a class="nc" href="/news/genz-divination-trend"><img src="/images/news/card-genz.webp" alt="Gen Z ฮิตดูดวง" width="1000" height="600" loading="lazy" decoding="async"><h2 class="nc-t">Gen Z ฮิตดูดวง ทำไมไพ่และโหราศาสตร์กลับมาเป็นเทรนด์ทั่วโลก</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">เทรนด์โลก</span></div></a></div>
+  <div class="grid2"><a class="nc" href="/news/rahu-capricorn-2569"><img src="/images/news/card-rahu.webp" alt="ราหูย้ายมังกร 22 พ.ย. 69" width="1000" height="563" loading="lazy" decoding="async"><h2 class="nc-t">ราหูย้ายราศีมังกร 22 พ.ย. 69 กระทบ 12 ลัคนาอย่างไร ตามความเชื่อโหราศาสตร์ไทย</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ดาวย้าย</span></div></a><a class="nc" href="/news/genz-divination-trend"><img src="/images/news/card-genz.webp" alt="Gen Z ฮิตดูดวง" width="1000" height="563" loading="lazy" decoding="async"><h2 class="nc-t">Gen Z ฮิตดูดวง ทำไมไพ่และโหราศาสตร์กลับมาเป็นเทรนด์ทั่วโลก</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">เทรนด์โลก</span></div></a></div>
   <div class="rel"><a href="/news/">ข่าวดูดวงทั้งหมด</a></div>
 
   <div class="seo-block">

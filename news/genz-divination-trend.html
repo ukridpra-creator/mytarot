@@ -32,7 +32,7 @@
     .hc{position:relative;margin:0;}
     .hc-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
     .hc-track::-webkit-scrollbar{display:none;}
-    .hc-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:2/1;background:#120c2a;}
+    .hc-slide{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:16/9;background:#120c2a;}
     .hc-slide img{width:100%;height:100%;object-fit:cover;display:block;}
     .hc-foot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;pointer-events:none;}
     .hc-time{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,0.75);text-shadow:0 1px 6px rgba(0,0,0,.8);}
@@ -42,7 +42,7 @@
     /* card grid */
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px 12px;padding:18px 16px 4px;background:#0b0e14;}
     .nc{display:block;text-decoration:none;color:white;-webkit-tap-highlight-color:transparent;}
-    .nc img{width:100%;height:auto;aspect-ratio:5/3;object-fit:cover;border-radius:12px;display:block;background:#120c2a;}
+    .nc img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;display:block;background:#120c2a;}
     .nc-t{font-size:14.5px;font-weight:600;line-height:1.55;margin:8px 0 6px;color:rgba(255,255,255,0.92);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
     .nc-m{display:flex;align-items:center;gap:8px;font-size:11.5px;color:rgba(255,255,255,0.45);flex-wrap:wrap;}
     .nc-m svg{width:12px;height:12px;flex-shrink:0;}
@@ -50,7 +50,7 @@
     .nc-c{color:#fb923c;font-weight:700;}
     .sec-h{font-size:16px;font-weight:800;margin:26px 16px 0;color:#fcd34d;}
     /* article */
-    .a-hero{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;background:#120c2a;}
+    .a-hero{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#120c2a;}
     .a-title{font-size:24px;font-weight:800;line-height:1.4;margin:18px 16px 8px;}
     .a-date{font-size:13px;color:rgba(255,255,255,0.4);margin:0 16px 14px;}
     .a-share{display:flex;gap:8px;margin:0 16px 8px;flex-wrap:wrap;}
@@ -60,7 +60,7 @@
     .a-body p a,.a-body li a,.note a{color:#fcd34d;text-decoration:none;border-bottom:1px dotted rgba(251,191,36,0.5);}
     .a-body ul{margin:0 0 14px;padding-left:22px;font-size:15px;color:rgba(255,255,255,0.7);line-height:2;}
     .a-fig{margin:26px 0 8px;}
-    .a-fig img{width:100%;height:auto;aspect-ratio:5/3;object-fit:cover;border-radius:14px;display:block;}
+    .a-fig img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:14px;display:block;}
     .a-h2{font-size:18px;font-weight:800;line-height:1.5;margin:12px 0 10px;color:white;}
     .keybox{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:16px;padding:14px 16px;margin:0 0 6px;}
     .keybox div{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.9;}
@@ -89,7 +89,7 @@
 
 <a href="/news/" class="back-link">← ข่าวดูดวง</a>
 <div class="wrap">
-  <img class="a-hero" src="/images/news/hero-genz.webp" alt="Gen Z ฮิตดูดวง" width="1600" height="800" fetchpriority="high" decoding="async">
+  <img class="a-hero" src="/images/news/hero-genz.webp" alt="Gen Z ฮิตดูดวง" width="1600" height="900" fetchpriority="high" decoding="async">
   <h1 class="a-title">Gen Z ฮิตดูดวง ทำไมไพ่และโหราศาสตร์กลับมาเป็นเทรนด์ทั่วโลก</h1>
   <div class="a-date">15 พ.ย. 69 · อัปเดตล่าสุด 15 พ.ย. 69</div>
   <div class="a-share">
@@ -99,10 +99,10 @@
   </div>
   <div class="a-body">
     <p>ไพ่ทาโรต์และโหราศาสตร์ไม่ได้เป็นเรื่องของคนรุ่นเก่าอีกต่อไป สื่อต่างประเทศช่วงนี้เขียนถึงคนรุ่นใหม่ที่หันมาดูดวงมากขึ้น เรารวมประเด็นหลักไว้ให้แล้ว</p>
-    <div class="a-fig"><img src="/images/news/genz-in-1.webp" alt="3 ใน 10 ของ Gen Z ดูดวง" width="1000" height="600" loading="lazy" decoding="async"><h2 class="a-h2">3 ใน 10 ของ Gen Z ดูดวงหรือไพ่ทาโรต์</h2></div>
+    <div class="a-fig"><img src="/images/news/genz-in-1.webp" alt="3 ใน 10 ของ Gen Z ดูดวง" width="1000" height="563" loading="lazy" decoding="async"><h2 class="a-h2">3 ใน 10 ของ Gen Z ดูดวงหรือไพ่ทาโรต์</h2></div>
 
     <p>นิตยสาร Fortune (ต.ค. 2569) รายงานว่าคนรุ่น Gen Z ในสหรัฐฯ ควบคุมอนาคตไม่ได้ จึงหันไปหาหมอดูและไพ่ทาโรต์เพื่อให้รู้สึกจัดการอนาคตได้ง่ายขึ้น ข้อมูลสำรวจของ Harris Poll ที่อ้างถึงพบว่า ราว 3 ใน 10 ของ Gen Z ดูดวงหรือไพ่ทาโรต์ และครึ่งหนึ่งฝึกตั้งเป้าหมายด้วยการโฟกัสความคิด หรือทำบอร์ดภาพเป้าหมาย</p>
-    <div class="a-fig"><img src="/images/news/genz-in-2.webp" alt="ตลาดโหราศาสตร์โตทั่วโลก" width="1000" height="600" loading="lazy" decoding="async"><h2 class="a-h2">ตลาดโหราศาสตร์โตทั่วโลก</h2></div>
+    <div class="a-fig"><img src="/images/news/genz-in-2.webp" alt="ตลาดโหราศาสตร์โตทั่วโลก" width="1000" height="563" loading="lazy" decoding="async"><h2 class="a-h2">ตลาดโหราศาสตร์โตทั่วโลก</h2></div>
 
     <p>รายงานของ Allied Market Research ที่มีการอ้างถึงคาดว่าการใช้จ่ายด้านสินค้าและบริการเกี่ยวกับโหราศาสตร์จะโตถึงราว 22.8 พันล้านดอลลาร์ภายในปี 2574 (ค.ศ. 2031) และสื่ออย่าง Bloomberg เคยเขียนถึงกระแสคนจีนรุ่นใหม่ที่หันมาดูดวงเช่นกัน ปัจจัยที่ถูกพูดถึงคือวิดีโอสั้นและโซเชียล ที่ทำให้โหราศาสตร์และไพ่ดูเข้าถึงง่ายและเข้ากับชีวิตประจำวัน</p>
     <h2 class="a-h2">ในไทยก็เป็นกระแสเดียวกัน</h2>
@@ -127,7 +127,7 @@
   </div>
 
   <h2 class="sec-h">ข่าวถัดไป</h2>
-  <div class="grid2"><a class="nc" href="/news/rahu-capricorn-2569"><img src="/images/news/card-rahu.webp" alt="ราหูย้ายมังกร 22 พ.ย. 69" width="1000" height="600" loading="lazy" decoding="async"><h2 class="nc-t">ราหูย้ายราศีมังกร 22 พ.ย. 69 กระทบ 12 ลัคนาอย่างไร ตามความเชื่อโหราศาสตร์ไทย</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ดาวย้าย</span></div></a><a class="nc" href="/learn/lucky-color-today"><img src="/images/news/card-color.webp" alt="สีมงคลวันนี้" width="1000" height="600" loading="lazy" decoding="async"><h2 class="nc-t">สีมงคลวันนี้ ใส่สีอะไรให้มีโชคตามวันเกิด เช็กได้ทุกวัน</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ไลฟ์สไตล์</span></div></a></div>
+  <div class="grid2"><a class="nc" href="/news/rahu-capricorn-2569"><img src="/images/news/card-rahu.webp" alt="ราหูย้ายมังกร 22 พ.ย. 69" width="1000" height="563" loading="lazy" decoding="async"><h2 class="nc-t">ราหูย้ายราศีมังกร 22 พ.ย. 69 กระทบ 12 ลัคนาอย่างไร ตามความเชื่อโหราศาสตร์ไทย</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ดาวย้าย</span></div></a><a class="nc" href="/learn/lucky-color-today"><img src="/images/news/card-color.webp" alt="สีมงคลวันนี้" width="1000" height="563" loading="lazy" decoding="async"><h2 class="nc-t">สีมงคลวันนี้ ใส่สีอะไรให้มีโชคตามวันเกิด เช็กได้ทุกวัน</h2><div class="nc-m"><span class="nc-d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>15 พ.ย. 69</span><span class="nc-c">ไลฟ์สไตล์</span></div></a></div>
   <div class="rel"><a href="/news/">ข่าวดูดวงทั้งหมด</a></div>
   <div class="src" style="margin-top:20px;">อ้างอิง: <a href="https://fortune.com/2026/10/04/gen-z-witches-tarot-readers-psychic-services/" rel="nofollow noopener" target="_blank">Fortune</a> · <a href="https://alliedmarketresearch.com/resource-center/trends-and-outlook/consumer-goods/astrology's-digital-revival-exploring-wellness-spirituality-and-economic-uncertainty" rel="nofollow noopener" target="_blank">Allied Market Research</a> · <a href="https://www.dailynews.co.th/articles/5995213/" rel="nofollow noopener" target="_blank">Daily News</a></div>
   <div class="seo-block">
