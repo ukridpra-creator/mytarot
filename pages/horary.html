@@ -56,7 +56,20 @@
     .result-q span { color:var(--purple-light); font-weight:700; }
 
     .result-section { border-radius:16px; padding:20px; margin-bottom:12px; border-left:3px solid #a855f7; background:rgba(168,85,247,0.08); }
-    .result-section p { font-size:14px; line-height:2.1; color:rgba(255,255,255,0.85); min-height:20px; }
+    .result-section p { font-size:14px; line-height:2.1; color:rgba(255,255,255,0.85); min-height:20px; white-space:pre-wrap; }
+    .chart-box { border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid rgba(124,58,237,0.25); background:rgba(124,58,237,0.06); display:none; }
+    .chart-box.show { display:block; }
+    .chart-title { font-size:13px; font-weight:700; color:var(--gold); text-align:center; margin-bottom:12px; }
+    .chart-angles { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+    .chart-angle { background:rgba(124,58,237,0.12); border-radius:12px; padding:8px 10px; text-align:center; }
+    .chart-angle small { display:block; font-size:11px; color:rgba(255,255,255,0.5); }
+    .chart-angle b { font-size:14px; color:var(--purple-light); }
+    .chart-table { width:100%; border-collapse:collapse; font-size:13px; color:rgba(255,255,255,0.85); }
+    .chart-table th { font-size:11px; font-weight:400; color:rgba(255,255,255,0.4); text-align:left; padding:2px 0; }
+    .chart-table td { padding:6px 0; border-top:1px solid rgba(255,255,255,0.08); }
+    .chart-table .r { text-align:right; }
+    .chart-retro { color:#f87171; font-size:11px; }
+    .chart-note { font-size:11px; color:rgba(255,255,255,0.35); text-align:center; margin-top:12px; }
 
     .btn-again { width:100%; padding:16px; border-radius:16px; background:linear-gradient(135deg,#7c3aed,#a855f7); border:none; color:white; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-top:8px; }
 
@@ -119,7 +132,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อคำถามค่ะ</div>
+    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อคำถามค่ะ</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
@@ -130,6 +143,12 @@
     <div class="result-q">❓ <span id="resultQ"></span></div>
     <div class="result-section">
       <p id="resultText"></p>
+    </div>
+    <div class="chart-box" id="chartBox">
+      <div class="chart-title">🔭 ตำแหน่งดาว ณ เวลาที่ถาม · ประเทศไทย</div>
+      <div class="chart-angles" id="chartAngles"></div>
+      <table class="chart-table"><thead><tr><th>ดาว</th><th>ราศี</th><th>องศา</th><th class="r">เรือน</th></tr></thead><tbody id="chartRows"></tbody></table>
+      <div class="chart-note">เพื่อความบันเทิง ไม่ใช่คำพยากรณ์ที่รับประกันผล</div>
     </div>
     <button class="btn-again" onclick="resetReading()">🔮 ถามคำถามใหม่</button>
   </div>
@@ -225,19 +244,21 @@ window.startReading=async function(){
   // ผูกดวงจริง ณ เวลาที่ถาม (กรุงเทพฯ) — ตำแหน่งดาว + ลัคนา + เรือน
   const PN={sun:'อาทิตย์',moon:'จันทร์',mercury:'พุธ',venus:'ศุกร์',mars:'อังคาร',jupiter:'พฤหัส',saturn:'เสาร์'};
   const SG={aries:'เมษ',taurus:'พฤษภ',gemini:'เมถุน',cancer:'กรกฎ',leo:'สิงห์',virgo:'กันย์',libra:'ตุล',scorpio:'พิจิก',sagittarius:'ธนู',capricorn:'มังกร',aquarius:'กุมภ์',pisces:'มีน'};
-  let chartText='';
+  let chartText='';let chartData=null;
   try{
     const idTok=await currentUser.getIdToken();
     const cr=await fetch('/api/western',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+idTok},body:JSON.stringify({year:bkY,month:bkM,day:bkD,hour:bkH,minute:bkMin,lat:13.7563,lng:100.5018})});
     const cd=await cr.json();
     const pls=cd.data&&cd.data.planets,an=cd.data&&cd.data.angles_details;
     if(pls&&an){
-      const rows=pls.filter(p=>PN[p.id]).map(p=>`- ${PN[p.id]}: ราศี${SG[p.sign_id]||p.sign} ${p.pos.toFixed(1)}° อยู่เรือน ${p.house}${p.retrograde?' (ถอยหลัง)':''}`);
+      const arr=pls.filter(p=>PN[p.id]);
+      chartData={asc:{s:SG[an.asc&&an.asc.sign_id]||'',p:an.asc&&an.asc.pos},mc:{s:SG[an.mc&&an.mc.sign_id]||'',p:an.mc&&an.mc.pos},arr:arr.map(p=>({n:PN[p.id],s:SG[p.sign_id]||p.sign,p:p.pos,h:p.house,r:!!p.retrograde}))};
+      const rows=arr.map(p=>`- ${PN[p.id]}: ราศี${SG[p.sign_id]||p.sign} ${p.pos.toFixed(1)}° อยู่เรือน ${p.house}${p.retrograde?' (ถอยหลัง)':''}`);
       chartText=`ลัคนา (Ascendant): ราศี${SG[an.asc&&an.asc.sign_id]||''} ${an.asc&&an.asc.pos!=null?an.asc.pos.toFixed(1):''}°\nMC: ราศี${SG[an.mc&&an.mc.sign_id]||''} ${an.mc&&an.mc.pos!=null?an.mc.pos.toFixed(1):''}°\n`+rows.join('\n');
     }
   }catch(e){console.error(e);}
   const chartBlock=chartText
-    ?`ดวงคำถาม (ผูก ณ กรุงเทพฯ):\n${chartText}`
+    ?`ดวงคำถาม (ผูก ณ ประเทศไทย):\n${chartText}`
     :`ข้อมูล ณ ขณะนั้น:\n- ช่วงเวลา: ${isDay?'กลางวัน (ดาวมงคล = พฤหัส)':'กลางคืน (ดาวมงคล = ศุกร์)'}\n- ดาวประจำชั่วโมง: ${hourPlanet}\n- วัน: ${days[dayIdx]}`;
 
   const prompt=`คุณคือหมอดู Horary Astrology ผู้เชี่ยวชาญ เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง"
@@ -252,7 +273,7 @@ ${chartBlock}
 หลักการ Horary ที่ต้องใช้: ลัคนาและเจ้าเรือนลัคนาแทนผู้ถาม, ดวงจันทร์เป็นตัวแทนร่วมของผู้ถาม, เรือนที่เกี่ยวกับเรื่องที่ถามแทนสิ่งที่ถาม (เช่น งาน=เรือน 10, เงิน=เรือน 2, ความรัก/คู่=เรือน 7, การเรียน/การสอบ=เรือน 9 หรือ 3, สุขภาพ=เรือน 6, บ้าน/ที่อยู่=เรือน 4) ดูว่าเจ้าเรือนทั้งสองฝั่งและดวงจันทร์เกี่ยวข้องกันดีหรือไม่ ใช้เฉพาะตำแหน่งดาวที่ให้มาเท่านั้น ห้ามแต่งตำแหน่งดาวเพิ่ม
 ถ้าไม่มีข้อมูลตำแหน่งดาว ให้บอกตรง ๆ ว่าตอบจากช่วงเวลาและดาวประจำชั่วโมงเท่านั้น
 
-วิเคราะห์แบบ Horary Astrology ภาษาไทย เป็นกันเอง Gen Z สนุก ตอบให้ชัดเจนว่า ใช่หรือไม่ใช่ / เป็นไปได้หรือไม่ / ดีหรือไม่ดี พร้อมเหตุผลจากดวงดาว ณ เวลานั้น (ระบุราศี/เรือน/ดาวที่ใช้) 5-7 ประโยค จบด้วยคำแนะนำหรือกำลังใจค่ะ ห้ามใช้ markdown`;
+วิเคราะห์แบบ Horary Astrology ภาษาไทย เป็นกันเอง Gen Z สนุก ตอบให้ชัดเจนว่า ใช่หรือไม่ใช่ / เป็นไปได้หรือไม่ / ดีหรือไม่ดี พร้อมเหตุผลจากดวงดาว ณ เวลานั้น (ระบุราศี/เรือน/ดาวที่ใช้) 5-7 ประโยค แบ่งเป็น 2-3 ย่อหน้าสั้น ๆ คั่นด้วยบรรทัดว่าง ห้ามใช้คำเด็ดขาดอย่าง "แน่นอน" "ชัวร์" "รับรอง" "ต้องได้" ให้ใช้ "มีแนวโน้ม" "ดูมีโอกาส" "น่าจะ" แทน และอย่าพยากรณ์เกินกว่าที่ข้อมูลดวงบอก จบด้วยคำแนะนำหรือกำลังใจค่ะ ห้ามใช้ markdown`;
 
   try{
     const idToken=await currentUser.getIdToken();
@@ -279,6 +300,11 @@ ${chartBlock}
     document.getElementById('resultTime').textContent=`🕰️ ${timeStr}`;
     document.getElementById('resultQ').textContent=question;
     document.getElementById('resultText').textContent='';
+    (function(){const cb=document.getElementById('chartBox');if(!chartData){cb.classList.remove('show');return;}
+      const f=(x)=>x!=null?x.toFixed(1)+'°':'';
+      document.getElementById('chartAngles').innerHTML=`<div class="chart-angle"><small>ลัคนา</small><b>${chartData.asc.s} ${f(chartData.asc.p)}</b></div><div class="chart-angle"><small>MC</small><b>${chartData.mc.s} ${f(chartData.mc.p)}</b></div>`;
+      document.getElementById('chartRows').innerHTML=chartData.arr.map(x=>`<tr><td>${x.n}</td><td>${x.s}${x.r?' <span class="chart-retro">ถอย</span>':''}</td><td>${f(x.p)}</td><td class="r">${x.h}</td></tr>`).join('');
+      cb.classList.add('show');})();
     document.getElementById('resultBox').classList.add('show');
     setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
 
@@ -308,7 +334,7 @@ ${chartBlock}
 };
 
 window.resetReading=function(){
-  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('resultBox').classList.remove('show');document.getElementById('chartBox').classList.remove('show');
   document.getElementById('questionInput').value='';
   window.scrollTo({top:0,behavior:'smooth'});
 };
