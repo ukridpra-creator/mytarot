@@ -6,12 +6,12 @@ def esc(s): return html.escape(s,quote=False)
 def build(data,slug='weekly-tarot'):
     base=open(U+'horoscope/2570-cny.html',encoding='utf8').read()
     head=base[:base.index('<body>')]
-    url=f'https://www.mytarot.vip/horoscope/{slug}'
+    url=f'https://www.mytarot.vip/news/{slug}'
     T=f"ไพ่ทาโรต์ประจำสัปดาห์ {data['range']} ดวง 12 ราศี | mytarot.vip"
     desc=f"ไพ่ทาโรต์ประจำสัปดาห์ {data['range']} เปิดไพ่ครบ 12 ราศี ความรัก การงาน การเงิน และคำแนะนำของแต่ละราศี {data['hook']} ค่ะ"
     kw='ไพ่ทาโรต์ประจำสัปดาห์,ดูดวงไพ่ยิปซีรายสัปดาห์,ดวงรายสัปดาห์ 12 ราศี,ไพ่ยิปซี 12 ราศี'
     head=re.sub(r'<title>.*?</title>',f'<title>{T}</title>',head)
-    for pat,val in [(r'(<meta name="description" content=")[^"]*(")',desc),(r'(<meta name="keywords" content=")[^"]*(")',kw),(r'(<link rel="canonical" href=")[^"]*(")',url),(r'(<meta property="og:title" content=")[^"]*(")',T),(r'(<meta property="og:description" content=")[^"]*(")',desc),(r'(<meta property="og:url" content=")[^"]*(")',url),(r'(<meta property="og:image" content=")[^"]*(")','https://www.mytarot.vip/images/og-default.png'),(r'(<meta name="twitter:title" content=")[^"]*(")',T),(r'(<meta name="twitter:description" content=")[^"]*(")',desc),(r'(<meta name="twitter:image" content=")[^"]*(")','https://www.mytarot.vip/images/og-default.png')]:
+    for pat,val in [(r'(<meta name="description" content=")[^"]*(")',desc),(r'(<meta name="keywords" content=")[^"]*(")',kw),(r'(<link rel="canonical" href=")[^"]*(")',url),(r'(<meta property="og:title" content=")[^"]*(")',T),(r'(<meta property="og:description" content=")[^"]*(")',desc),(r'(<meta property="og:url" content=")[^"]*(")',url),(r'(<meta property="og:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/hero-weekly-tarot.webp'),(r'(<meta name="twitter:title" content=")[^"]*(")',T),(r'(<meta name="twitter:description" content=")[^"]*(")',desc),(r'(<meta name="twitter:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/hero-weekly-tarot.webp')]:
         head=re.sub(pat,lambda m:m.group(1)+val+m.group(2),head)
     css='''<style>
 .wk-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:14px;margin-bottom:14px;}
@@ -33,7 +33,7 @@ def build(data,slug='weekly-tarot'):
     head=head.replace('</head>',css+'</head>')
     cs='color:rgba(255,255,255,0.3);text-decoration:none;'
     out=head+'<body>\n\n'
-    out+=f'<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);"><a href="/" style="{cs}">mytarot.vip</a><span> › </span><a href="/horoscope" style="{cs}">ดวงรายปี</a><span> › </span><span style="color:rgba(255,255,255,0.5);">ไพ่ประจำสัปดาห์</span></nav>\n<a href="/horoscope" class="back-link">← ดวงรายปี</a>\n\n'
+    out+=f'<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);"><a href="/" style="{cs}">mytarot.vip</a><span> › </span><a href="/news/" style="{cs}">ข่าวดูดวง</a><span> › </span><span style="color:rgba(255,255,255,0.5);">ไพ่ประจำสัปดาห์</span></nav>\n<a href="/news/" class="back-link">← ข่าวดูดวง</a>\n<img src="/images/news/hero-weekly-tarot.webp" alt="ไพ่ประจำสัปดาห์ '+esc(data["range"])+' ดวง 12 ราศี" width="1600" height="900" fetchpriority="high" decoding="async" style="display:block;width:100%;max-width:720px;height:auto;margin:0 auto;aspect-ratio:16/9;">\n\n'
     out+=f'<div class="hero">\n  <div class="eyebrow">✦ ไพ่ทาโรต์ประจำสัปดาห์ · {esc(data["range"])}</div>\n  <h1 class="hero-title">ไพ่ประจำสัปดาห์<br><span>ดวง 12 ราศี {esc(data["range"])}</span></h1>\n  <p class="hero-sub">{esc(data["sub"])}</p>\n</div>\n\n'
     out+=f'<div class="sec">\n  <div class="sec-box">\n    <h2 class="sec-label">✦ ธีมสัปดาห์นี้</h2>\n    <p class="sec-text">{data["theme"]}</p>\n    <p class="sec-text" style="font-size:12.5px;color:rgba(255,255,255,0.5);">เปิดไพ่จากสำรับของ mytarot.vip ให้ราศีละ 1 ใบ สุ่มโดยระบบ แล้วตีความตามความหมายของไพ่ ใช้ราศีตามวันเกิดแบบสากล (21 มี.ค. = เมษ) อ่านเพื่อความบันเทิงและเป็นแง่คิดนะคะ</p>\n  </div>\n</div>\n\n'
     out+='<div class="sec">\n'
@@ -59,12 +59,12 @@ def build(data,slug='weekly-tarot'):
          ('ไพ่ประจำสัปดาห์อัปเดตเมื่อไหร่','อัปเดตทุกวันจันทร์ ครอบคลุมสัปดาห์จันทร์ถึงอาทิตย์ค่ะ'),
          ('คำทำนายแม่นแค่ไหน','เป็นการตีความไพ่เพื่อความบันเทิงและเป็นแง่คิด ไม่ใช่การรับประกันเหตุการณ์ ใช้ประกอบการตัดสินใจร่วมกับข้อมูลจริงของคุณค่ะ')]
     out+='<div class="seo-block">\n  <h2>ไพ่ทาโรต์ประจำสัปดาห์ '+esc(data['range'])+' ดวง 12 ราศี</h2>\n  <p>'+desc+'</p>\n'+''.join(f'  <h3>{q}</h3>\n  <p>{a}</p>\n' for q,a in faq)+'</div>\n\n'
-    bc={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"mytarot.vip","item":"https://www.mytarot.vip"},{"@type":"ListItem","position":2,"name":"ดวงรายปี","item":"https://www.mytarot.vip/horoscope"},{"@type":"ListItem","position":3,"name":"ไพ่ประจำสัปดาห์"}]}
-    art={"@context":"https://schema.org","@type":"Article","headline":T.replace(' | mytarot.vip',''),"description":desc,"image":"https://www.mytarot.vip/images/og-default.png","inLanguage":"th","datePublished":data['iso'],"dateModified":data['iso'],"author":{"@type":"Organization","name":"mytarot.vip"},"publisher":{"@type":"Organization","name":"mytarot.vip","logo":{"@type":"ImageObject","url":"https://www.mytarot.vip/images/favicon.png"}},"mainEntityOfPage":url}
+    bc={"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"mytarot.vip","item":"https://www.mytarot.vip"},{"@type":"ListItem","position":2,"name":"ข่าวดูดวง","item":"https://www.mytarot.vip/news"},{"@type":"ListItem","position":3,"name":"ไพ่ประจำสัปดาห์"}]}
+    art={"@context":"https://schema.org","@type":"Article","headline":T.replace(' | mytarot.vip',''),"description":desc,"image":"https://www.mytarot.vip/images/news/hero-weekly-tarot.webp","inLanguage":"th","datePublished":data['iso'],"dateModified":data['iso'],"author":{"@type":"Organization","name":"mytarot.vip"},"publisher":{"@type":"Organization","name":"mytarot.vip","logo":{"@type":"ImageObject","url":"https://www.mytarot.vip/images/favicon.png"}},"mainEntityOfPage":url}
     fq={"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in faq]}
     for d in (bc,art,fq): out+='<script type="application/ld+json">\n'+json.dumps(d,ensure_ascii=False,indent=2)+'\n</script>\n\n'
     out+='</body>\n</html>\n'
-    p=O+'horoscope/'+slug+'.html'
+    p=O+'news/'+slug+'.html'
     import os; os.makedirs(os.path.dirname(p),exist_ok=True)
     open(p,'wb').write(out.replace('\r\n','\n').replace('\n','\r\n').encode('utf8')); print('wrote',p,len(out))
 if __name__=='__main__': build(json.load(open(sys.argv[1],encoding='utf8')))
