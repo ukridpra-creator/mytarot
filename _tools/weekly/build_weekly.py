@@ -4,9 +4,9 @@ O='/mnt/user-data/outputs/stage/'
 SIGNS={'aries':('เมษ','21 มี.ค. – 19 เม.ย.'),'taurus':('พฤษภ','20 เม.ย. – 20 พ.ค.'),'gemini':('เมถุน','21 พ.ค. – 20 มิ.ย.'),'cancer':('กรกฎ','21 มิ.ย. – 22 ก.ค.'),'leo':('สิงห์','23 ก.ค. – 22 ส.ค.'),'virgo':('กันย์','23 ส.ค. – 22 ก.ย.'),'libra':('ตุลย์','23 ก.ย. – 22 ต.ค.'),'scorpio':('พิจิก','23 ต.ค. – 21 พ.ย.'),'sagittarius':('ธนู','22 พ.ย. – 21 ธ.ค.'),'capricorn':('มังกร','22 ธ.ค. – 19 ม.ค.'),'aquarius':('กุมภ์','20 ม.ค. – 18 ก.พ.'),'pisces':('มีน','19 ก.พ. – 20 มี.ค.')}
 SUIT_TH={'Cups':'ถ้วย','Swords':'ดาบ','Wands':'ไม้เท้า','Pentacles':'เหรียญ'}
 def fixth(en,th):
-    m=re.match(r'(King|Queen|Page|Ace) of (Cups|Swords|Wands|Pentacles)$',en)
+    m=re.match(r'(King|Queen|Knight|Page|Ace) of (Cups|Swords|Wands|Pentacles)$',en)
     if not m: return th
-    return {'King':'พระราชาถือ','Queen':'ราชินีถือ','Page':'เด็กถือ','Ace':'หนึ่ง'}[m.group(1)]+SUIT_TH[m.group(2)]
+    return {'King':'พระราชาถือ','Queen':'ราชินีถือ','Knight':'อัศวินถือ','Page':'เด็กถือ','Ace':'หนึ่ง'}[m.group(1)]+SUIT_TH[m.group(2)]
 
 SHARE='<div class="share-row"><button type="button" class="share-btn" id="shareBtn">🔗 คัดลอกลิงก์ไปแชร์</button></div>\n<style>.share-row{text-align:center;margin:14px 0 4px}.share-btn{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.5);color:#f0d77a;padding:10px 22px;border-radius:999px;font-size:14px;font-family:inherit;cursor:pointer}.share-btn:active{transform:scale(.97)}</style>\n<script>(function(){var b=document.getElementById(\'shareBtn\');if(!b)return;b.addEventListener(\'click\',function(){var u=location.origin+\'/news/weekly-tarot\';function ok(){b.textContent=\'✓ คัดลอกลิงก์แล้ว\';setTimeout(function(){b.textContent=\'🔗 คัดลอกลิงก์ไปแชร์\'},2200)}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,fb)}else fb();function fb(){var t=document.createElement(\'textarea\');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand(\'copy\');ok()}catch(e){prompt(\'คัดลอกลิงก์นี้\',u)}document.body.removeChild(t)}})})();</script>\n\n'
 
@@ -19,7 +19,7 @@ def build(data,slug='weekly-tarot'):
     desc=f"ไพ่ทาโรต์ประจำสัปดาห์ {data['range']} เปิดไพ่ครบ 12 ราศี ความรัก การงาน การเงิน และคำแนะนำของแต่ละราศี {data['hook']} ค่ะ"
     kw='ไพ่ทาโรต์ประจำสัปดาห์,ดูดวงไพ่ยิปซีรายสัปดาห์,ดวงรายสัปดาห์ 12 ราศี,ไพ่ยิปซี 12 ราศี'
     head=re.sub(r'<title>.*?</title>',f'<title>{T}</title>',head)
-    for pat,val in [(r'(<meta name="description" content=")[^"]*(")',desc),(r'(<meta name="keywords" content=")[^"]*(")',kw),(r'(<link rel="canonical" href=")[^"]*(")',url),(r'(<meta property="og:title" content=")[^"]*(")',T),(r'(<meta property="og:description" content=")[^"]*(")',desc),(r'(<meta property="og:url" content=")[^"]*(")',url),(r'(<meta property="og:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/hero-weekly-tarot.webp'),(r'(<meta name="twitter:title" content=")[^"]*(")',T),(r'(<meta name="twitter:description" content=")[^"]*(")',desc),(r'(<meta name="twitter:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/hero-weekly-tarot.webp')]:
+    for pat,val in [(r'(<meta name="description" content=")[^"]*(")',desc),(r'(<meta name="keywords" content=")[^"]*(")',kw),(r'(<link rel="canonical" href=")[^"]*(")',url),(r'(<meta property="og:title" content=")[^"]*(")',T),(r'(<meta property="og:description" content=")[^"]*(")',desc),(r'(<meta property="og:url" content=")[^"]*(")',url),(r'(<meta property="og:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/og-weekly-tarot.jpg'),(r'(<meta name="twitter:title" content=")[^"]*(")',T),(r'(<meta name="twitter:description" content=")[^"]*(")',desc),(r'(<meta name="twitter:image" content=")[^"]*(")','https://www.mytarot.vip/images/news/og-weekly-tarot.jpg')]:
         head=re.sub(pat,lambda m:m.group(1)+val+m.group(2),head)
     css='''<style>
 .wk-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:14px;margin-bottom:14px;}
