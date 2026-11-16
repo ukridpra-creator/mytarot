@@ -187,6 +187,29 @@ onAuthStateChanged(auth,async user=>{
 
 // อัพเดตเวลาปัจจุบัน
 function updateCurrentTime(){
+  const fm=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',hour12:false,weekday:'short'});
+  const pt={};fm.formatToParts(new Date()).forEach(x=>{pt[x.type]=x.value;});
+  const days=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const d=days[['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(pt.weekday)];
+  const dd=parseInt(pt.day);
+  const mm=months[parseInt(pt.month)-1];
+  const yy=parseInt(pt.year)+543;
+  const hh=String(parseInt(pt.hour)%24).padStart(2,'0');
+  const min=String(parseInt(pt.minute)).padStart(2,'0');
+  document.getElementById('currentTime').textContent=`วัน${d}ที่ ${dd} ${mm} ${yy} เวลา ${hh}:${min} น.`;
+}
+updateCurrentTime();
+setInterval(updateCurrentTime,30000);
+
+window.startReading=async function(){
+  if(!currentUser){document.getElementById('loginRequiredOverlay').classList.add('show');return;}
+  const question=document.getElementById('questionInput').value.trim();
+  if(!question){alert('กรุณาพิมพ์คำถามก่อนนะคะ 🙏');return;}
+
+  const btn=document.getElementById('readBtn');
+  btn.disabled=true;btn.textContent='🔮 กำลังผูกดวงคำถาม...';
+
   // จับเวลา ณ ขณะนั้น (ล็อกเวลาไทย UTC+7 + กรุงเทพฯ ไม่ขึ้นกับนาฬิกาเครื่อง)
   const fm=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',hour12:false,weekday:'short'});
   const pt={};fm.formatToParts(new Date()).forEach(x=>{pt[x.type]=x.value;});
