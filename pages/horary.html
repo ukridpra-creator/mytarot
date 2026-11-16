@@ -57,6 +57,15 @@
 
     .result-section { border-radius:16px; padding:20px; margin-bottom:12px; border-left:3px solid #a855f7; background:rgba(168,85,247,0.08); }
     .result-section p { font-size:14px; line-height:2.1; color:rgba(255,255,255,0.85); min-height:20px; white-space:pre-wrap; }
+    .actions-box { display:none; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+    .actions-box .btn-again { margin-top:0; font-size:14px; padding:14px 8px; }
+    .btn-follow { padding:14px 8px; border-radius:16px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.4); color:var(--gold); font-size:14px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .follow-box { display:none; margin-top:12px; }
+    .btn-follow-send { width:100%; margin-top:8px; padding:14px; border-radius:14px; background:linear-gradient(135deg,#f59e0b,#d97706); border:none; color:#1a0b2e; font-size:14px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .btn-follow-send:disabled { opacity:0.5; cursor:not-allowed; }
+    .follow-item { border-radius:16px; padding:16px 20px; margin-top:12px; border-left:3px solid #f59e0b; background:rgba(245,158,11,0.07); }
+    .follow-q { font-size:13px; color:var(--gold); font-weight:700; margin-bottom:6px; }
+    .follow-a { font-size:14px; line-height:2; color:rgba(255,255,255,0.85); white-space:pre-wrap; }
     .chart-box { border-radius:16px; padding:16px; margin-bottom:12px; border:1px solid rgba(124,58,237,0.25); background:rgba(124,58,237,0.06); display:none; }
     .chart-box.show { display:block; }
     .chart-title { font-size:13px; font-weight:700; color:var(--gold); text-align:center; margin-bottom:12px; }
@@ -141,15 +150,23 @@
   <div class="result-box" id="resultBox">
     <div class="result-time" id="resultTime"></div>
     <div class="result-q">❓ <span id="resultQ"></span></div>
-    <div class="result-section">
-      <p id="resultText"></p>
-    </div>
     <div class="chart-box" id="chartBox">
       <div class="chart-title">🔭 ตำแหน่งดาว ณ เวลาที่ถาม · ประเทศไทย</div>
       <div class="chart-angles" id="chartAngles"></div>
       <table class="chart-table"><thead><tr><th>ดาว</th><th>ราศี</th><th>องศา</th><th class="r">เรือน</th></tr></thead><tbody id="chartRows"></tbody></table>
     </div>
-    <button class="btn-again" onclick="resetReading()">🔮 ถามคำถามใหม่</button>
+    <div class="result-section">
+      <p id="resultText"></p>
+    </div>
+    <div id="followList"></div>
+    <div class="follow-box" id="followBox">
+      <input type="text" id="followInput" class="question-input" maxlength="200" placeholder="พิมพ์คำถามต่อจากดวงเดิม เช่น แล้วช่วงไหนจะดีขึ้น">
+      <button type="button" class="btn-follow-send" id="followSend" onclick="askFollow()">ส่งคำถามต่อ (10 เหรียญ)</button>
+    </div>
+    <div class="actions-box" id="actionsBox">
+      <button type="button" class="btn-follow" id="followToggle" onclick="toggleFollow()">💬 ถามต่อ 10 เหรียญ</button>
+      <button type="button" class="btn-again" onclick="resetReading()">🔮 ถามใหม่</button>
+    </div>
   </div>
 </div>
 
@@ -299,6 +316,7 @@ ${chartBlock}
     document.getElementById('resultTime').textContent=`🕰️ ${timeStr}`;
     document.getElementById('resultQ').textContent=question;
     document.getElementById('resultText').textContent='';
+    window.__hor=null;document.getElementById('actionsBox').style.display='none';document.getElementById('followList').innerHTML='';document.getElementById('followBox').style.display='none';
     (function(){const cb=document.getElementById('chartBox');if(!chartData){cb.classList.remove('show');return;}
       const f=(x)=>x!=null?x.toFixed(1)+'°':'';
       document.getElementById('chartAngles').innerHTML=`<div class="chart-angle"><small>ลัคนา</small><b>${chartData.asc.s} ${f(chartData.asc.p)}</b></div><div class="chart-angle"><small>MC</small><b>${chartData.mc.s} ${f(chartData.mc.p)}</b></div>`;
@@ -317,6 +335,8 @@ ${chartBlock}
       el.textContent=text;
     }
 
+    window.__hor={chartBlock:chartBlock,timeStr:timeStr,question:question,answer:text};
+    document.getElementById('followToggle').style.display='';document.getElementById('actionsBox').style.display='grid';
     await addDoc(collection(db,'users',currentUser.uid,'readings'),{
       type:'Horary Astrology',
       question:question,
@@ -327,12 +347,77 @@ ${chartBlock}
   }catch(e){
     console.error(e);
     document.getElementById('resultText').textContent='เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+    if(!window.__hor){document.getElementById('followToggle').style.display='none';document.getElementById('actionsBox').style.display='grid';}
   }
 
   btn.disabled=false;btn.textContent='🔮 ถามเลยค่ะ';
 };
 
+window.toggleFollow=function(){
+  const b=document.getElementById('followBox');
+  b.style.display=b.style.display==='block'?'none':'block';
+  if(b.style.display==='block'){const i=document.getElementById('followInput');i.focus();b.scrollIntoView({behavior:'smooth',block:'center'});}
+};
+
+window.askFollow=async function(){
+  const h=window.__hor;if(!h||!currentUser)return;
+  const inp=document.getElementById('followInput');
+  const fq=inp.value.trim();
+  if(!fq){inp.focus();return;}
+  const btn=document.getElementById('followSend');
+  btn.disabled=true;btn.textContent='กำลังดูดาว...';
+  const prompt=`คุณคือหมอดู Horary Astrology เรียกผู้ถามว่า "คุณพี่" เรียกตัวเองว่า "น้อง"
+
+ผู้ถามเพิ่งได้คำตอบจากดวงคำถามหนึ่งไปแล้ว และขอถามต่อจากดวงเดิมนี้ (ไม่ผูกดวงใหม่)
+
+เวลาที่ถามครั้งแรก — ${h.timeStr}
+${h.chartBlock}
+
+คำถามเดิม: "${h.question}"
+คำตอบเดิมที่ให้ไปแล้ว: "${h.answer}"
+
+คำถามต่อ: "${fq}"
+
+ตอบคำถามต่อโดยใช้ดวงเดิมข้างต้นเท่านั้น ห้ามแต่งตำแหน่งดาวเพิ่ม ถ้าเรื่องที่ถามต่อเป็นหัวข้อต่างจากเดิม ให้เลือกเรือนที่เกี่ยวข้องกับหัวข้อนั้นมาใช้ ภาษาไทยเป็นกันเอง Gen Z ตอบเป็น 1 ย่อหน้า 3-5 ประโยค ระบุราศี/เรือน/ดาวที่ใช้ ห้ามใช้คำเด็ดขาดอย่าง "แน่นอน" "ชัวร์" "รับรอง" "ต้องได้" ให้ใช้ "มีแนวโน้ม" "ดูมีโอกาส" "น่าจะ" แทน จบด้วยกำลังใจสั้น ๆ ค่ะ ห้ามใช้ markdown`;
+  try{
+    const idToken=await currentUser.getIdToken();
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({service:'horary-followup',model:'claude-sonnet-4-6',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    const nb=res.headers.get('X-New-Coin-Balance');
+    if(nb!=null)updateCoinUI(parseInt(nb));
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      if(err.error==='insufficient_coins')alert('เหรียญไม่พอนะคะ 🪙');
+      else alert('เกิดข้อผิดพลาดค่ะ');
+      btn.disabled=false;btn.textContent='ส่งคำถามต่อ (10 เหรียญ)';return;
+    }
+    const item=document.createElement('div');item.className='follow-item';
+    const qEl=document.createElement('div');qEl.className='follow-q';qEl.textContent='💬 '+fq;
+    const aEl=document.createElement('div');aEl.className='follow-a';
+    item.appendChild(qEl);item.appendChild(aEl);
+    document.getElementById('followList').appendChild(item);
+    inp.value='';document.getElementById('followBox').style.display='none';
+    item.scrollIntoView({behavior:'smooth',block:'center'});
+    const reader=res.body.getReader();const decoder=new TextDecoder();let t='';
+    while(true){const{done,value}=await reader.read();if(done)break;t+=decoder.decode(value);aEl.textContent=t;}
+    await addDoc(collection(db,'users',currentUser.uid,'readings'),{
+      type:'Horary Astrology (ถามต่อ)',
+      question:fq,
+      result:t,
+      createdAt:serverTimestamp()
+    });
+  }catch(e){
+    console.error(e);
+    alert('เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่');
+  }
+  btn.disabled=false;btn.textContent='ส่งคำถามต่อ (10 เหรียญ)';
+};
+
 window.resetReading=function(){
+  window.__hor=null;document.getElementById('actionsBox').style.display='none';document.getElementById('followList').innerHTML='';document.getElementById('followBox').style.display='none';
   document.getElementById('resultBox').classList.remove('show');document.getElementById('chartBox').classList.remove('show');
   document.getElementById('questionInput').value='';
   window.scrollTo({top:0,behavior:'smooth'});
