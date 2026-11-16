@@ -2,6 +2,8 @@ import json,re,sys,html
 U='/mnt/user-data/uploads/mytarot/'
 O='/mnt/user-data/outputs/stage/'
 SIGNS={'aries':('เมษ','21 มี.ค. – 19 เม.ย.'),'taurus':('พฤษภ','20 เม.ย. – 20 พ.ค.'),'gemini':('เมถุน','21 พ.ค. – 20 มิ.ย.'),'cancer':('กรกฎ','21 มิ.ย. – 22 ก.ค.'),'leo':('สิงห์','23 ก.ค. – 22 ส.ค.'),'virgo':('กันย์','23 ส.ค. – 22 ก.ย.'),'libra':('ตุลย์','23 ก.ย. – 22 ต.ค.'),'scorpio':('พิจิก','23 ต.ค. – 21 พ.ย.'),'sagittarius':('ธนู','22 พ.ย. – 21 ธ.ค.'),'capricorn':('มังกร','22 ธ.ค. – 19 ม.ค.'),'aquarius':('กุมภ์','20 ม.ค. – 18 ก.พ.'),'pisces':('มีน','19 ก.พ. – 20 มี.ค.')}
+SHARE='<div class="share-row"><button type="button" class="share-btn" id="shareBtn">🔗 คัดลอกลิงก์ไปแชร์</button></div>\n<style>.share-row{text-align:center;margin:14px 0 4px}.share-btn{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.5);color:#f0d77a;padding:10px 22px;border-radius:999px;font-size:14px;font-family:inherit;cursor:pointer}.share-btn:active{transform:scale(.97)}</style>\n<script>(function(){var b=document.getElementById(\'shareBtn\');if(!b)return;b.addEventListener(\'click\',function(){var u=location.origin+\'/news/weekly-tarot\';function ok(){b.textContent=\'✓ คัดลอกลิงก์แล้ว\';setTimeout(function(){b.textContent=\'🔗 คัดลอกลิงก์ไปแชร์\'},2200)}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(ok,fb)}else fb();function fb(){var t=document.createElement(\'textarea\');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand(\'copy\');ok()}catch(e){prompt(\'คัดลอกลิงก์นี้\',u)}document.body.removeChild(t)}})})();</script>\n\n'
+
 def esc(s): return html.escape(s,quote=False)
 def build(data,slug='weekly-tarot'):
     base=open(U+'horoscope/2570-cny.html',encoding='utf8').read()
@@ -34,7 +36,7 @@ def build(data,slug='weekly-tarot'):
     cs='color:rgba(255,255,255,0.3);text-decoration:none;'
     out=head+'<body>\n\n'
     out+=f'<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);"><a href="/" style="{cs}">mytarot.vip</a><span> › </span><a href="/news/" style="{cs}">ข่าวดูดวง</a><span> › </span><span style="color:rgba(255,255,255,0.5);">ไพ่ประจำสัปดาห์</span></nav>\n<a href="/news/" class="back-link">← ข่าวดูดวง</a>\n<img src="/images/news/hero-weekly-tarot.webp" alt="ไพ่ประจำสัปดาห์ '+esc(data["range"])+' ดวง 12 ราศี" width="1600" height="900" fetchpriority="high" decoding="async" style="display:block;width:100%;max-width:720px;height:auto;margin:0 auto;aspect-ratio:16/9;">\n\n'
-    out+=f'<div class="hero">\n  <div class="eyebrow">✦ ไพ่ทาโรต์ประจำสัปดาห์ · {esc(data["range"])}</div>\n  <h1 class="hero-title">ไพ่ประจำสัปดาห์<br><span>ดวง 12 ราศี {esc(data["range"])}</span></h1>\n  <p class="hero-sub">{esc(data["sub"])}</p>\n</div>\n\n'
+    out+=f'<div class="hero">\n  <div class="eyebrow">✦ ไพ่ทาโรต์ประจำสัปดาห์ · {esc(data["range"])}</div>\n  <h1 class="hero-title">ไพ่ประจำสัปดาห์<br><span>ดวง 12 ราศี {esc(data["range"])}</span></h1>\n  <p class="hero-sub">{esc(data["sub"])}</p>\n</div>\n\n+SHARE'
     out+=f'<div class="sec">\n  <div class="sec-box">\n    <h2 class="sec-label">✦ ธีมสัปดาห์นี้</h2>\n    <p class="sec-text">{data["theme"]}</p>\n    <p class="sec-text" style="font-size:12.5px;color:rgba(255,255,255,0.5);">เปิดไพ่จากสำรับของ mytarot.vip ให้ราศีละ 1 ใบ สุ่มโดยระบบ แล้วตีความตามความหมายของไพ่ ใช้ราศีตามวันเกิดแบบสากล (21 มี.ค. = เมษ) อ่านเพื่อความบันเทิงและเป็นแง่คิดนะคะ</p>\n  </div>\n</div>\n\n'
     out+='<div class="sec">\n'
     for z,d in data['draws'].items():
