@@ -1,5 +1,6 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 
 if (!getApps().length) {
   initializeApp({
@@ -150,6 +151,25 @@ export default async function handler(req, res) {
         lastActive: dt ? dt.toISOString() : null,
       };
     });
+
+    // ── เติมอีเมลจาก Firebase Auth ให้คนที่เอกสาร users ไม่ได้เก็บอีเมลไว้ ──
+    // (ล้มเหลวได้ ไม่กระทบส่วนอื่นของแดชบอร์ด)
+    try {
+      const missing = recentUsers.filter(u => !u.email);
+      if (missing.length) {
+        const authRes = await getAuth().getUsers(missing.map(u => ({ uid: u.uid })));
+        const emailByUid = {};
+        authRes.users.forEach(au => { if (au.email) emailByUid[au.uid] = au.email; });
+        recentUsers.forEach(u => {
+          if (!u.email && emailByUid[u.uid]) {
+            u.email = emailByUid[u.uid];
+            if (u.displayName.startsWith('User ')) u.displayName = u.email;
+          }
+        });
+      }
+    } catch (e) {
+      console.error('recentUsers email lookup error:', e);
+    }
 
     // ── Top pages (ตัวอย่างจาก READINGS_SAMPLE_LIMIT รายการล่าสุด) ──
     const pageCountAll = {};

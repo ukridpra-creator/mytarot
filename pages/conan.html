@@ -448,8 +448,8 @@ window.loadDash=async function(){
       <div class="user-item" data-uid="${esc(u.uid)}" onclick="openUserDetail(this.dataset.uid)">
         <div class="user-avatar">🔮</div>
         <div class="user-info">
-          <div class="user-name">${esc(u.displayName)}</div>
-          <div class="user-time">${timeAgo(u.lastActive)}</div>
+          <div class="user-name">${esc(u.email || u.displayName)}</div>
+          <div class="user-time">${u.email && u.displayName && u.displayName!==u.email ? esc(u.displayName)+' · ' : ''}${timeAgo(u.lastActive)}</div>
         </div>
         <div class="user-coins">🪙 ${u.coins}</div>
         <div class="user-arrow">›</div>
