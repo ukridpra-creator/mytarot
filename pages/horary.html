@@ -141,7 +141,7 @@
   </div>
 
   <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 20 เหรียญต่อคำถามค่ะ</div>
+    <div class="coin-text">🪙 ใช้ 10 เหรียญต่อคำถามค่ะ</div>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
@@ -323,7 +323,7 @@ ${chartBlock}
       document.getElementById('chartRows').innerHTML=chartData.arr.map(x=>`<tr><td>${x.n}</td><td>${x.s}${x.r?' <span class="chart-retro">ถอย</span>':''}</td><td>${f(x.p)}</td><td class="r">${x.h}</td></tr>`).join('');
       cb.classList.add('show');})();
     document.getElementById('resultBox').classList.add('show');
-    setTimeout(()=>document.getElementById('resultBox').scrollIntoView({behavior:'smooth'}),100);
+    setTimeout(()=>{const t=document.getElementById('chartBox');(t&&t.classList.contains('show')?t:document.getElementById('resultBox')).scrollIntoView({behavior:'smooth',block:'start'});},150);
 
     const reader=res.body.getReader();
     const decoder=new TextDecoder();
