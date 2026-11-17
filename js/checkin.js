@@ -85,6 +85,42 @@ async function _initAuth() {
   });
 })();
 
+// ─── X (Twitter) SOFT BANNER: ?from=x → suggest opening in Chrome/Safari ───
+(function() {
+  try {
+    if (!/[?&]from=x(&|$)/i.test(location.search)) return;
+    if (window.Capacitor) return;
+    try { if (sessionStorage.getItem('xBannerClosed')) return; } catch (e) {}
+    var ua = navigator.userAgent || '';
+    var isAndroid = /Android/i.test(ua);
+    var url = location.href;
+    document.addEventListener('DOMContentLoaded', function() {
+      var bar = document.createElement('div');
+      bar.id = 'xOpenBar';
+      bar.style.cssText = 'position:relative;z-index:9000;background:linear-gradient(135deg,#2a1155,#4c1d95);border-bottom:1px solid rgba(212,175,55,0.35);padding:10px 40px 10px 14px;text-align:center;font-family:inherit;';
+      bar.innerHTML =
+        '<div style="font-size:13px;color:#fff;line-height:1.6;">ล็อกอินง่ายกว่า ใช้อีเมลที่จำไว้ได้ 👉 ' +
+        '<a id="xOpenBtn" href="#" style="color:#ffd27a;font-weight:700;text-decoration:underline;">เปิดใน ' + (isAndroid ? 'Chrome' : 'Safari') + '</a></div>' +
+        '<div id="xOpenHint" style="display:none;font-size:12px;color:rgba(255,255,255,0.75);margin-top:6px;line-height:1.6;">กดปุ่ม ⋯ หรือไอคอนเข็มทิศ/แชร์ มุมจอ แล้วเลือก "เปิดใน Safari" ค่ะ</div>' +
+        '<button id="xOpenClose" type="button" aria-label="ปิด" style="position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(255,255,255,0.7);font-size:22px;line-height:1;cursor:pointer;">&times;</button>';
+      document.body.insertBefore(bar, document.body.firstChild);
+      document.getElementById('xOpenClose').addEventListener('click', function() {
+        bar.remove();
+        try { sessionStorage.setItem('xBannerClosed', '1'); } catch (e) {}
+      });
+      document.getElementById('xOpenBtn').addEventListener('click', function(ev) {
+        ev.preventDefault();
+        if (isAndroid) {
+          location.href = 'intent://' + url.replace(/https?:\/\//, '') +
+            '#Intent;scheme=https;package=com.android.chrome;action=android.intent.action.VIEW;end';
+        } else {
+          document.getElementById('xOpenHint').style.display = 'block';
+        }
+      });
+    });
+  } catch (e) {}
+})();
+
 // ─── INJECT HTML ───
 var html = `
 <div class="ci-overlay" id="ciOverlay" onclick="if(event.target===this)closeCheckin()">
