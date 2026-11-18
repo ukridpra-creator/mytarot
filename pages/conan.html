@@ -474,6 +474,7 @@ window.loadDash=async function(){
         <div class="tx-info">
           <div class="tx-name">${esc(tx.label)}</div>
           <div class="tx-time">${tx.createdAt?new Date(tx.createdAt).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</div>
+          <div class="tx-time">${esc(tx.email||'—')}</div>
         </div>
         <div class="tx-amt">฿${tx.amount}</div>
       </div>`).join(''):'<div class="loading">ยังไม่มีข้อมูลค่ะ</div>';

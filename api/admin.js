@@ -136,9 +136,23 @@ export default async function handler(req, res) {
         amount: t.amount || 0,
         coins: t.totalCoins || 0,
         userId: t.uid,
+        email: '',
         createdAt: dt ? dt.toISOString() : null,
       };
     });
+
+    // ── เติมอีเมลให้รายการเติมเงินล่าสุด (ล้มเหลวได้ ไม่กระทบส่วนอื่น) ──
+    try {
+      const uids = [...new Set(recentTx.map(t => t.userId).filter(Boolean))];
+      if (uids.length) {
+        const authRes = await getAuth().getUsers(uids.map(uid => ({ uid })));
+        const emailByUid = {};
+        authRes.users.forEach(au => { if (au.email) emailByUid[au.uid] = au.email; });
+        recentTx.forEach(t => { t.email = emailByUid[t.userId] || ''; });
+      }
+    } catch (e) {
+      console.error('recentTx email lookup error:', e);
+    }
 
     const recentUsers = recentUsersSnap.docs.map(doc => {
       const d = doc.data();
