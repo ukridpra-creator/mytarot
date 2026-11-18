@@ -6,3 +6,6 @@ node_modules
 apk_extract/
 _backup/
 *.apk
+
+# รูปและไฟล์ช่วยทำโพสต์โซเชียล (ไม่ใช่ส่วนของเว็บ)
+_social/
