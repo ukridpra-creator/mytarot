@@ -43,7 +43,7 @@ def build(data,slug='weekly-tarot'):
     out=head+'<body>\n\n'
     out+=f'<nav aria-label="breadcrumb" style="padding:16px 20px 0;font-size:12px;color:rgba(255,255,255,0.3);"><a href="/" style="{cs}">mytarot.vip</a><span> › </span><a href="/news/" style="{cs}">ข่าวดูดวง</a><span> › </span><span style="color:rgba(255,255,255,0.5);">ไพ่ประจำสัปดาห์</span></nav>\n<a href="/news/" class="back-link">← ข่าวดูดวง</a>\n<img src="/images/news/hero-weekly-tarot.webp" alt="ไพ่ประจำสัปดาห์ '+esc(data["range"])+' ดวง 12 ราศี" width="1600" height="900" fetchpriority="high" decoding="async" style="display:block;width:100%;max-width:720px;height:auto;margin:0 auto;aspect-ratio:16/9;">\n\n'
     out+=f'<div class="hero">\n  <div class="eyebrow">✦ ไพ่ทาโรต์ประจำสัปดาห์ · {esc(data["range"])}</div>\n  <h1 class="hero-title">ไพ่ประจำสัปดาห์<br><span>ดวง 12 ราศี {esc(data["range"])}</span></h1>\n  <p class="hero-sub">{esc(data["sub"])}</p>\n</div>\n\n'+SHARE
-    out+=f'<div class="sec">\n  <div class="sec-box">\n    <h2 class="sec-label">✦ ธีมสัปดาห์นี้</h2>\n    <p class="sec-text">{data["theme"]}</p>\n    <p class="sec-text" style="font-size:12.5px;color:rgba(255,255,255,0.5);">เปิดไพ่จากสำรับของ mytarot.vip ให้ราศีละ 1 ใบ สุ่มโดยระบบ แล้วตีความตามความหมายของไพ่ ใช้ราศีตามวันเกิดแบบสากล (21 มี.ค. = เมษ) อ่านเพื่อความบันเทิงและเป็นแง่คิดนะคะ</p>\n  </div>\n</div>\n\n'
+    out+=f'<div class="sec">\n  <div class="sec-box">\n    <h2 class="sec-label">✦ ธีมสัปดาห์นี้</h2>\n    <p class="sec-text">{data["theme"]}</p>\n    <p class="sec-text" style="font-size:12.5px;color:rgba(255,255,255,0.5);">สุ่มเปิดไพ่จากสำรับ 78 ใบ ราศีละ 1 ใบ แล้วตีความตามความหมายของไพ่ ใช้ราศีตามวันเกิดแบบสากล (21 มี.ค. = เมษ) อ่านเพื่อความบันเทิงและเป็นแง่คิดนะคะ</p>\n  </div>\n</div>\n\n'
     out+='<div class="sec">\n'
     for z,d in data['draws'].items():
         n,dr=SIGNS[z]
@@ -62,7 +62,7 @@ def build(data,slug='weekly-tarot'):
     out+='</div>\n\n'
     out+='<div class="sec">\n  <div class="sec-box">\n    <h2 class="sec-label">✦ อยากให้ไพ่ตอบเรื่องของตัวเอง</h2>\n    <p class="sec-text">ไพ่ประจำสัปดาห์เป็นภาพรวมกว้างๆ ของแต่ละราศี ถ้าอยากถามเรื่องเฉพาะของคุณ เช่น ความรัก การงาน หรือคำถามใช่/ไม่ใช่ ลองเปิดไพ่เองฟรีได้ที่ <a href="/pages/tarot">ดูดวงไพ่ยิปซีออนไลน์</a> หรือ <a href="/pages/tarot-yesno">ไพ่ยิปซี Yes or No</a></p>\n  </div>\n</div>\n\n'
     out+='<div class="cta-box">\n  <div class="cta-title">เปิดไพ่ยิปซีของคุณเอง</div>\n  <div class="cta-desc">ตั้งคำถามในใจ แล้วให้ไพ่ตอบ ฟรี ภาษาไทย</div>\n  <a href="/pages/tarot" class="cta-btn">🔮 ดูดวงไพ่ยิปซี · ฟรี</a>\n  <a href="/learn/tarot-meaning" class="cta-btn-sec">📖 ความหมายไพ่ทาโรต์ 78 ใบ</a>\n</div>\n\n'
-    faq=[('ไพ่ทาโรต์ประจำสัปดาห์เปิดยังไง','เปิดไพ่จากสำรับของ mytarot.vip ราศีละ 1 ใบ โดยให้ระบบสุ่มแล้วตีความตามความหมายไพ่ ปรับข้อความให้เข้ากับความรัก การงาน การเงิน และคำแนะนำของแต่ละราศีค่ะ'),
+    faq=[('ไพ่ทาโรต์ประจำสัปดาห์เปิดยังไง','สุ่มเปิดไพ่จากสำรับ 78 ใบ ราศีละ 1 ใบ แล้วตีความตามความหมายไพ่ ปรับข้อความให้เข้ากับความรัก การงาน การเงิน และคำแนะนำของแต่ละราศีค่ะ'),
          ('ต้องอ่านราศีไหน','อ่านราศีตามวันเกิดแบบสากล เช่น เกิด 21 มี.ค.–19 เม.ย. คือราศีเมษ ถ้าอยากอ่านเพิ่ม ลองอ่านราศีลัคนาหรือราศีของคนใกล้ตัวด้วยได้ค่ะ'),
          ('ไพ่ประจำสัปดาห์อัปเดตเมื่อไหร่','อัปเดตทุกวันจันทร์ ครอบคลุมสัปดาห์จันทร์ถึงอาทิตย์ค่ะ'),
          ('คำทำนายแม่นแค่ไหน','เป็นการตีความไพ่เพื่อความบันเทิงและเป็นแง่คิด ไม่ใช่การรับประกันเหตุการณ์ ใช้ประกอบการตัดสินใจร่วมกับข้อมูลจริงของคุณค่ะ')]
