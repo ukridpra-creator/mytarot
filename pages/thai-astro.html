@@ -3,68 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ผูกดวงโหราศาสตร์ไทย — My Tarot</title>
-  <meta name="description" content="ผูกดวงโหราศาสตร์ไทย ดูดวงชะตาตามวัน เดือน ปีเกิด พร้อมคำทำนายภาพรวมชีวิต การงาน การเงิน ความรัก">
+  <title>ผูกดวงโหราศาสตร์ไทย หาลัคนาราศี ดูดาวจร | My Tarot</title>
+  <meta name="description" content="ผูกดวงโหราศาสตร์ไทยตามคัมภีร์สุริยยาตร์ หาลัคนาราศี ตำแหน่งดาว 10 ดวง ฤกษ์เกิด พร้อมคำทำนายพื้นดวง ดวงจรช่วงนี้ และดวงรายปี 12 เดือน">
+  <meta name="keywords" content="ผูกดวง,โหราศาสตร์ไทย,หาลัคนาราศี,ลัคนา,ดูดวงวันเดือนปีเกิด,ดาวจร,สุริยยาตร์">
   <link rel="canonical" href="https://www.mytarot.vip/pages/thai-astro">
+  <meta property="og:title" content="ผูกดวงโหราศาสตร์ไทย หาลัคนาราศี — My Tarot">
+  <meta property="og:description" content="ผูกดวงตามคัมภีร์สุริยยาตร์ หาลัคนา ตำแหน่งดาว ฤกษ์เกิด และดาวจรของคุณ">
+  <meta property="og:url" content="https://www.mytarot.vip/pages/thai-astro">
+  <meta property="og:image" content="https://www.mytarot.vip/images/og-tool-thai-astro.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:image" content="https://www.mytarot.vip/images/og-tool-thai-astro.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/checkin.js"></script>
-  <script src="../js/astronomy.browser.min.js"></script>
-  <script src="../js/thai-engine.js"></script>
-  <script src="../js/planet-transits-data.js"></script>
+  <script src="../js/thai-astro-engine.js"></script>
+  <script src="../js/thai-astro-ui.js"></script>
   <style>
     body { padding-bottom:80px; }
     .page-header { display:flex; align-items:center; gap:12px; padding:16px 20px; border-bottom:1px solid var(--border); background:rgba(13,8,32,0.9); backdrop-filter:blur(12px); position:sticky; top:0; z-index:100; }
     .back-btn { width:36px; height:36px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.3); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:16px; text-decoration:none; flex-shrink:0; }
     .page-title { font-size:18px; font-weight:700; color:white; }
-    .page-content { padding:20px 20px 40px; }
+    .page-content { padding:20px 20px 40px; max-width:480px; margin:0 auto; }
     .hero { text-align:center; padding:12px 0 24px; }
-    .hero-title { font-family:'Cinzel',serif; font-size:22px; font-weight:700; color:#d4af37; margin-bottom:4px; letter-spacing:2px; }
+    .hero-title { font-family:'Cinzel','Sarabun',serif; font-size:22px; font-weight:700; color:#d4af37; margin-bottom:4px; letter-spacing:1px; }
     .hero-desc { font-size:13px; color:var(--dim); line-height:1.7; }
     .input-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:20px; padding:20px; margin-bottom:12px; }
     .input-label { font-size:13px; color:#d4af37; font-weight:700; margin-bottom:10px; display:block; letter-spacing:1px; }
+    .input-label + .date-row { margin-bottom:16px; }
     .date-row { display:flex; gap:8px; }
-    .sel { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:13px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel { flex:1; min-width:0; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 6px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; text-align:center; appearance:none; cursor:pointer; }
+    .sel option { color:#111; }
     .sel:focus { border-color:#d4af37; }
-    .time-row { display:flex; gap:8px; margin-top:8px; }
-    .inp { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:12px 10px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; }
-    .inp:focus { border-color:#d4af37; }
-    .no-time-note { font-size:11px; color:rgba(255,255,255,0.3); margin-top:8px; line-height:1.6; }
-    .coin-box { background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.2); border-radius:16px; padding:14px; margin-bottom:16px; text-align:center; }
-    .coin-text { font-size:13px; color:#d4af37; margin-bottom:4px; }
-    .coin-hint { font-size:11px; color:var(--dim); }
-    .btn-read { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:16px; padding:16px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:20px; letter-spacing:1px; }
+    .field-note { font-size:11.5px; color:rgba(255,255,255,0.45); margin-top:-8px; margin-bottom:14px; line-height:1.6; }
+    .btn-read { width:100%; background:linear-gradient(135deg,#b8860b,#d4af37); border:none; border-radius:16px; padding:16px; color:#1a1000; font-size:16px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; margin-bottom:8px; letter-spacing:1px; }
     .btn-read:disabled { opacity:0.5; cursor:not-allowed; }
-    #resultBox { display:none; }
-    .section-title { font-size:12px; color:#d4af37; font-weight:700; letter-spacing:1.5px; margin-bottom:12px; text-align:center; }
-    .planet-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
-    .planet-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:14px; padding:12px; }
-    .planet-card.lagna { border-color:rgba(212,175,55,0.4); background:rgba(212,175,55,0.08); grid-column:1/-1; }
-    .planet-name { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:4px; }
-    .planet-pos { font-size:14px; font-weight:700; color:white; }
-    .planet-card.lagna .planet-pos { font-size:18px; color:#d4af37; }
-    .planet-house { font-size:10px; color:#d4af37; margin-top:2px; }
-    .rerk-box { border-radius:16px; padding:16px; margin-bottom:20px; text-align:center; }
-    .rerk-name { font-size:18px; font-weight:800; color:white; margin-bottom:4px; }
-    .rerk-group { font-size:13px; font-weight:700; margin-bottom:8px; }
-    .rerk-desc { font-size:12px; color:rgba(255,255,255,0.5); line-height:1.7; }
-    .reading-box { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:20px; margin-bottom:20px; }
-    .reading-text { font-size:14px; color:rgba(255,255,255,0.75); line-height:2.2; white-space:pre-wrap; }
+    .free-hint { text-align:center; font-size:12px; color:var(--dim); margin-bottom:20px; }
+    #chartBox, #readingBox, #followupBox { display:none; }
+    .section-title { font-size:12px; color:#d4af37; font-weight:700; letter-spacing:1.5px; margin:22px 0 12px; text-align:center; }
+    .birth-line { text-align:center; font-size:13px; color:rgba(255,255,255,0.7); margin-bottom:12px; }
+    .ta-chips { display:flex; gap:8px; margin-bottom:16px; }
+    .ta-chip { flex:1; min-width:0; background:#1a1535; border:1px solid #3a2d63; border-radius:12px; padding:10px 10px; display:flex; flex-direction:column; gap:2px; }
+    .ta-chip-l { font-size:11px; color:#b9aedb; }
+    .ta-chip-v { font-size:15px; font-weight:700; color:#f3eeff; }
+    .ta-chip-s { font-size:11px; color:#b9aedb; }
+    .wheel-wrap { margin:4px 0 16px; font-family:'Sarabun',sans-serif; }
+    .ta-table { background:#1a1535; border:1px solid #3a2d63; border-radius:16px; padding:4px 12px 6px; }
+    .ta-row { display:flex; align-items:center; gap:6px; min-height:40px; border-top:1px solid #3a2d63; font-size:14px; color:#f3eeff; }
+    .ta-row.head { border-top:none; min-height:32px; font-size:11px; color:#b9aedb; }
+    .ta-num { width:22px; text-align:center; font-size:17px; font-weight:700; flex-shrink:0; }
+    .ta-num.gold { color:#d4af37; }
+    .ta-name { width:68px; flex-shrink:0; }
+    .ta-sign { width:46px; font-weight:600; flex-shrink:0; }
+    .ta-deg { width:48px; font-size:13px; color:#b9aedb; font-variant-numeric:tabular-nums; flex-shrink:0; }
+    .ta-house { flex:1; min-width:0; font-size:12px; color:#b9aedb; }
+    .ta-badges { display:flex; gap:3px; flex-wrap:wrap; justify-content:flex-end; max-width:86px; }
+    .ta-badge { font-size:10.5px; padding:2px 7px; border-radius:10px; border:1px solid #b9aedb; color:#b9aedb; white-space:nowrap; }
+    .ta-badge.solid { background:#d4af37; border-color:#d4af37; color:#1a1000; font-weight:700; }
+    .ta-nak { background:rgba(212,175,55,0.07); border:1px solid rgba(212,175,55,0.25); border-radius:14px; padding:12px 14px; margin-bottom:8px; }
+    .ta-nak-l { font-size:11px; color:#b9aedb; }
+    .ta-nak-v { font-size:16px; font-weight:800; color:#d4af37; }
+    .ta-nak-s { font-size:12px; color:rgba(255,255,255,0.65); line-height:1.7; }
+    .ta-note { font-size:12px; color:rgba(245,158,11,0.9); background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:10px 14px; margin:10px 0; line-height:1.7; }
+    .ta-timeline { background:#1a1535; border:1px solid #3a2d63; border-radius:16px; padding:6px 14px; }
+    .ta-tl { display:flex; gap:10px; padding:9px 0; border-top:1px solid #3a2d63; font-size:13px; color:#f3eeff; line-height:1.6; }
+    .ta-tl:first-child { border-top:none; }
+    .ta-tl-d { width:86px; flex-shrink:0; color:#d4af37; font-weight:700; font-variant-numeric:tabular-nums; }
+    .ta-tl-t i { font-style:normal; color:#b9aedb; }
+    .plan { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:14px 14px; margin-bottom:10px; color:white; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .plan:disabled { opacity:0.5; cursor:not-allowed; }
+    .plan.star { border-color:rgba(212,175,55,0.5); background:rgba(212,175,55,0.07); }
+    .plan-body { flex:1; min-width:0; }
+    .plan-name { font-size:15px; font-weight:800; }
+    .plan-desc { font-size:12px; color:var(--dim); line-height:1.6; }
+    .plan-cost { flex-shrink:0; font-size:14px; font-weight:800; color:#d4af37; white-space:nowrap; }
+    .coin-hint { text-align:center; font-size:12px; color:var(--dim); margin:4px 0 0; }
+    .rd-sec { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px 16px; margin-bottom:10px; }
+    .rd-sec h3 { margin:0 0 6px; font-size:14px; font-weight:800; color:#d4af37; }
+    .rd-sec p { margin:0; font-size:14px; color:rgba(255,255,255,0.82); line-height:2; white-space:pre-wrap; }
+    .rd-wait { color:rgba(255,255,255,0.3); font-size:13px; }
     .cursor { display:inline-block; width:2px; height:16px; background:#d4af37; margin-left:2px; animation:blink 0.8s infinite; vertical-align:middle; }
     @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
-    .solar-note { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:12px; padding:10px 14px; font-size:12px; color:rgba(245,158,11,0.8); margin-bottom:16px; text-align:center; }
+    .followup-box { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:16px; padding:16px; margin-top:14px; }
+    .followup-title { font-size:14px; font-weight:700; color:white; margin-bottom:8px; }
+    .followup-input { width:100%; box-sizing:border-box; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; padding:10px 12px; color:white; font-size:14px; font-family:'Sarabun',sans-serif; outline:none; resize:vertical; }
+    .followup-btn { width:100%; margin-top:8px; padding:12px; border-radius:12px; border:1px solid rgba(212,175,55,0.5); background:rgba(212,175,55,0.12); color:#d4af37; font-size:14px; font-weight:800; font-family:'Sarabun',sans-serif; cursor:pointer; }
+    .followup-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .followup-q { font-size:13px; font-weight:700; color:#fde68a; margin:10px 0 4px; }
+    .followup-a { font-size:14px; color:rgba(255,255,255,0.82); line-height:2; white-space:pre-wrap; }
+    .login-required-overlay.show { display:flex !important; }
+    .seo-wrap { max-width:480px; margin:28px auto 0; padding:0 20px; color:rgba(255,255,255,0.72); font-size:13px; line-height:1.9; }
+    .seo-wrap h2 { font-size:16px; font-weight:800; color:#fff; margin:0 0 10px; }
+    .seo-wrap h3 { font-size:14px; font-weight:700; color:#fde68a; margin:18px 0 6px; }
+    .seo-wrap p { margin:0 0 10px; }
+    .seo-wrap ul { margin:0 0 10px; padding-left:18px; }
+    .seo-wrap li { margin-bottom:5px; }
+    .seo-wrap b { color:#fff; }
+    .seo-wrap .seo-note { font-size:11.5px; color:rgba(255,255,255,0.4); }
+    .seo-faq { background:rgba(251,191,36,0.06); border:1px solid rgba(251,191,36,0.2); border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+    .seo-faq .q { font-size:13px; font-weight:700; color:#fde68a; margin-bottom:3px; }
+    .seo-faq .a { font-size:12.5px; line-height:1.8; }
   </style>
 <style>:where(h1.page-title){margin:0;font-size:inherit;font-weight:inherit}</style>
-  <meta property="og:image" content="https://www.mytarot.vip/images/og-tool-thai-astro.jpg">
-  <meta name="twitter:image" content="https://www.mytarot.vip/images/og-tool-thai-astro.jpg">
-  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ลัคนาคืออะไร","acceptedAnswer":{"@type":"Answer","text":"ลัคนาคือราศีที่กำลังขึ้นทางขอบฟ้าตะวันออก ณ เวลาและสถานที่เกิด เป็นจุดเริ่มนับเรือนชะตาทั้ง 12 ภพ และเป็นตัวแทนของเจ้าชะตาในโหราศาสตร์ไทย"}},{"@type":"Question","name":"ผูกดวงต้องใช้ข้อมูลอะไรบ้าง","acceptedAnswer":{"@type":"Answer","text":"ใช้วันเดือนปีเกิด เวลาเกิด และจังหวัดที่เกิด ถ้าไม่ทราบเวลาเกิดยังดูตำแหน่งดาวได้ แต่จะไม่มีลัคนาและเรือนชะตา"}},{"@type":"Question","name":"ทำไมลัคนาแต่ละเว็บไม่ตรงกัน","acceptedAnswer":{"@type":"Answer","text":"เพราะแต่ละที่ใช้เวลาอาทิตย์ขึ้นต่างกัน หน้านี้ใช้ลัคนาอันโตนาทีสามัญ นับจากเวลาอาทิตย์ขึ้นจริงของจังหวัดที่เกิด คนที่ลัคนาอยู่ชิดขอบราศีจึงอาจได้ราศีต่างจากที่อื่น"}},{"@type":"Question","name":"ดาวจรคืออะไร","acceptedAnswer":{"@type":"Answer","text":"ดาวจรคือตำแหน่งดาวบนท้องฟ้าในปัจจุบัน นำมาเทียบกับดวงกำเนิดเพื่อดูว่าช่วงนี้ดาวดวงใดเข้ามาส่งผลกับเรื่องใดในชีวิต"}}]}</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
 <div class="page-header">
-  <a href="/pages/horathai" class="back-btn">←</a>
-  <h1 class="page-title">🔯 ผูกดวงโหราศาสตร์ไทย</h1>
+  <a href="/pages/thai-hub" class="back-btn" aria-label="กลับ">←</a>
+  <h1 class="page-title">ผูกดวงโหราศาสตร์ไทย</h1>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
     <div class="coin-badge">🪙 <span id="coinCount">—</span></div>
     <div class="user-btn" onclick="toggleUserMenu()"><div class="avatar" id="avatarEl">👤</div></div>
@@ -75,7 +125,7 @@
   <div id="guestView">
     <div class="menu-title">ยังไม่ได้เข้าสู่ระบบ</div>
     <div class="menu-sub">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18">เข้าสู่ระบบด้วย Google</button>
+    <button type="button" class="btn-google" onclick="loginNow()"><img src="https://www.google.com/favicon.ico" width="18" alt="">เข้าสู่ระบบด้วย Google</button>
   </div>
   <div id="loggedView" style="display:none">
     <div class="menu-user-info"><div class="menu-avatar">👤</div><div><div class="menu-name" id="menuName"></div><div class="menu-email" id="menuEmail"></div></div></div>
@@ -86,69 +136,120 @@
 </div>
 <div class="overlay" id="overlay" onclick="closeUserMenu()"></div>
 
-<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+<div class="login-required-overlay" id="loginRequiredOverlay" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)this.classList.remove('show')">
   <div style="background:linear-gradient(180deg,#1a0e2e,#0d0820);border:1px solid rgba(212,175,55,0.3);border-radius:24px;padding:32px 24px;width:90%;max-width:320px;text-align:center;">
-    <div style="font-size:48px;margin-bottom:12px;">🔯</div>
     <div style="font-size:18px;font-weight:800;color:white;margin-bottom:8px;">รบกวนเข้าสู่ระบบก่อนนะคะ 🙏</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อบันทึกประวัติดูดวง</div>
-    <button onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-      <img src="https://www.google.com/favicon.ico" width="18"> เข้าสู่ระบบด้วย Google
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;">เข้าสู่ระบบเพื่อผูกดวงและบันทึกประวัติดูดวง</div>
+    <button type="button" onclick="loginNow()" style="width:100%;padding:14px;border-radius:16px;background:white;border:none;color:#333;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <img src="https://www.google.com/favicon.ico" width="18" alt=""> เข้าสู่ระบบด้วย Google
     </button>
-    <button onclick="document.getElementById('loginRequiredOverlay').style.display='none'" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
+    <button type="button" onclick="document.getElementById('loginRequiredOverlay').classList.remove('show')" style="width:100%;padding:10px;margin-top:10px;border-radius:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:14px;font-family:'Sarabun',sans-serif;cursor:pointer;">ยกเลิก</button>
   </div>
 </div>
 
 <div class="page-content">
   <div class="hero">
     <div style="margin-bottom:12px">
-      <img src="../images/mascot-thai-astro.webp" alt="mascot" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
+      <img src="../images/mascot-thai-astro.webp" alt="" style="width:120px;height:120px;object-fit:contain;" onerror="this.style.display='none'">
     </div>
     <div class="hero-title">ผูกดวงโหราศาสตร์ไทย</div>
-    <div class="hero-desc">วิเคราะห์ดวงชะตาตามคัมภีร์สุริยยาตร์<br>ดาวกำเนิด ลัคนา ฤกษ์เกิด และดาวจรค่ะ</div>
+    <div class="hero-desc">คำนวณตามคัมภีร์สุริยยาตร์<br>ลัคนา ดาว 10 ดวง ฤกษ์เกิด และดาวจรของคุณพี่ค่ะ</div>
   </div>
 
   <div class="input-card">
-    <label class="input-label">📅 วันเกิด</label>
+    <label class="input-label" for="inDay">วันเกิด</label>
     <div class="date-row">
-      <select class="sel" id="inDay"></select>
-      <select class="sel" id="inMonth"></select>
-      <select class="sel" id="inYear"></select>
+      <select class="sel" id="inDay" aria-label="วันที่"></select>
+      <select class="sel" id="inMonth" aria-label="เดือน" style="flex:1.6"></select>
+      <select class="sel" id="inYear" aria-label="ปี พ.ศ." style="flex:1.3"></select>
+    </div>
+    <label class="input-label" for="inHour">เวลาเกิด</label>
+    <div class="date-row">
+      <select class="sel" id="inHour" aria-label="ชั่วโมง"></select>
+      <select class="sel" id="inMinute" aria-label="นาที"></select>
+    </div>
+    <div class="field-note">เวลาเกิดใช้ผูกลัคนา ยิ่งตรงยิ่งแม่นค่ะ ถ้าไม่ทราบให้เลือก "ไม่ทราบ" จะดูได้เฉพาะตำแหน่งดาว</div>
+    <label class="input-label" for="inProvince">จังหวัดที่เกิด</label>
+    <div class="date-row" style="margin-bottom:0">
+      <select class="sel" id="inProvince" aria-label="จังหวัดที่เกิด"></select>
     </div>
   </div>
 
-  <div class="input-card">
-    <label class="input-label">⏰ เวลาเกิด (ถ้ามี)</label>
-    <div class="time-row">
-      <input class="inp" type="number" id="inHour" placeholder="ชั่วโมง 0-23" min="0" max="23">
-      <input class="inp" type="number" id="inMin"  placeholder="นาที 0-59"   min="0" max="59">
-    </div>
-    <div class="no-time-note">⚠️ เวลาเกิดสำคัญมากสำหรับการคำนวณลัคนาค่ะ<br>ถ้าไม่มีเวลาเกิด จะใช้ราศีอาทิตย์แทนลัคนา (Solar Chart)</div>
-  </div>
+  <button type="button" class="btn-read" id="chartBtn" onclick="makeChart()">ผูกดวง</button>
+  <div class="free-hint">ผูกดวงดูผังและตำแหน่งดาวได้เลย ไม่ใช้เหรียญค่ะ</div>
 
-  <div class="coin-box">
-    <div class="coin-text">🪙 ใช้ 99 เหรียญต่อการวิเคราะห์</div>
+  <!-- ผังดวง -->
+  <div id="chartBox">
+    <div class="section-title">✦ ผังดวงกำเนิด ✦</div>
+    <div class="birth-line" id="birthLine"></div>
+    <div id="summaryBox"></div>
+    <div class="wheel-wrap" id="wheelBox"></div>
+    <div id="cuspNote"></div>
+    <div id="tableBox"></div>
+    <div class="section-title">✦ ฤกษ์เกิด ✦</div>
+    <div id="nakBox"></div>
+    <div class="section-title">✦ ดาวจรวันนี้ เทียบดวงของคุณพี่ ✦</div>
+    <div id="transitBox"></div>
+    <div class="section-title">✦ ดาวใหญ่ย้ายราศีใน 12 เดือนข้างหน้า ✦</div>
+    <div id="timelineBox"></div>
+
+    <div class="section-title">✦ ให้น้องอ่านดวงให้ ✦</div>
+    <button type="button" class="plan" data-kind="basic" onclick="startReading('basic')">
+      <span class="plan-body"><span class="plan-name">พื้นดวงย่อ</span><br><span class="plan-desc">ตัวตน จุดเด่น จุดที่ต้องระวัง อ่านจบในนาทีเดียว</span></span>
+      <span class="plan-cost">🪙 10</span>
+    </button>
+    <button type="button" class="plan" data-kind="transit" onclick="startReading('transit')">
+      <span class="plan-body"><span class="plan-name">ดวงจรช่วงนี้</span><br><span class="plan-desc">ดาวจรกำลังทำอะไรกับดวงคุณพี่ งาน เงิน รัก ช่วง 1–3 เดือนนี้</span></span>
+      <span class="plan-cost">🪙 20</span>
+    </button>
+    <button type="button" class="plan star" data-kind="year" onclick="startReading('year')">
+      <span class="plan-body"><span class="plan-name">ดวงรายปี 12 เดือน</span><br><span class="plan-desc">อ่านทีละเดือนตามดาวจรจริง ช่วงไหนดี ช่วงไหนต้องระวัง</span></span>
+      <span class="plan-cost">🪙 59</span>
+    </button>
+    <button type="button" class="plan" data-kind="full" onclick="startReading('full')">
+      <span class="plan-body"><span class="plan-name">พื้นดวงฉบับเต็ม</span><br><span class="plan-desc">ครบ 12 ภพ การงาน การเงิน ความรัก สุขภาพ บารมี และจังหวะชีวิต</span></span>
+      <span class="plan-cost">🪙 99</span>
+    </button>
     <div class="coin-hint">เหรียญคงเหลือ: <span id="coinDisplay">—</span> เหรียญ</div>
   </div>
 
-  <button class="btn-read" id="readBtn" onclick="startReading()">🔯 วิเคราะห์ดวงชะตา</button>
-
-  <div id="resultBox">
-    <div id="solarNote" class="solar-note" style="display:none">
-      ⚠️ ไม่มีเวลาเกิด — ใช้ Solar Chart (ราศีอาทิตย์แทนลัคนา) ความแม่นยำอาจลดลงค่ะ
-    </div>
-    <div class="section-title">✦ ดาวกำเนิด ณ วันเกิด ✦</div>
-    <div class="planet-grid" id="planetGrid"></div>
-    <div class="section-title">✦ ฤกษ์เกิด ✦</div>
-    <div class="rerk-box" id="rerkBox"></div>
-    <div class="section-title">✦ คำทำนายโหราศาสตร์ไทย ✦</div>
-    <div class="reading-box">
-      <div class="reading-text" id="readingText">⏳ กำลังวิเคราะห์...</div>
+  <!-- คำทำนาย -->
+  <div id="readingBox">
+    <div class="section-title" id="readingTitle">✦ คำทำนาย ✦</div>
+    <div id="readingSections"></div>
+    <div class="followup-box" id="followupBox">
+      <div id="followupResult"></div>
+      <div class="followup-title">คุณพี่อยากถามอะไรเพิ่มไหมคะ</div>
+      <textarea class="followup-input" id="followupInput" rows="2" maxlength="300" placeholder="เช่น ปีนี้เหมาะเปลี่ยนงานไหม"></textarea>
+      <button type="button" class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
   </div>
 </div>
 
 <!-- LEARN LINKS -->
-<div class="learn-links" style="max-width:480px;margin:28px auto 0;padding:0 20px;"><div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);">📚 อ่านเพิ่มเติมในห้องเรียน</div><a href="/learn/thai-astro" style="display:block;padding:10px 12px;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#d8c9ff;font-size:14px;text-decoration:none;">โหราศาสตร์ไทย →</a></div>
+<div class="learn-links" style="max-width:480px;margin:28px auto 0;padding:0 20px;"><div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);">📚 อ่านเพิ่มเติมในห้องเรียน</div><a href="/learn/thai-astro" style="display:block;padding:10px 12px;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#d8c9ff;font-size:14px;text-decoration:none;">โหราศาสตร์ไทย →</a><a href="/learn/thaksa" style="display:block;padding:10px 12px;margin-top:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#d8c9ff;font-size:14px;text-decoration:none;">ทักษาปกรณ์ 8 ทิศแห่งชีวิต →</a></div>
+
+<!-- SEO CONTENT -->
+<section class="seo-wrap">
+<h2>ผูกดวงโหราศาสตร์ไทย หาลัคนาราศีและตำแหน่งดาว</h2>
+<h3>ผูกดวงคืออะไร</h3>
+<p>การผูกดวงคือการวางตำแหน่งดาวบนจักรราศี ณ วันเวลาและสถานที่เกิด แล้วหา<b>ลัคนา</b> ซึ่งเป็นจุดเริ่มนับเรือนชะตาทั้ง 12 ภพ โหราศาสตร์ไทยคำนวณตำแหน่งดาวตามคัมภีร์สุริยยาตร์ ซึ่งเป็นระบบดาราศาสตร์ไทยดั้งเดิม ผลที่ได้จึงต่างจากราศีแบบสากลที่ใช้กันในดวงรายวันทั่วไป</p>
+<h3>หน้านี้แสดงอะไรบ้าง</h3>
+<ul>
+<li><b>ผังดวงราศีจักร</b> พร้อมลัคนา ดาว 10 ดวง (อาทิตย์ถึงมฤตยู) และเรือนชะตา 12 ภพ</li>
+<li><b>ตำแหน่งดาวเป็นองศา</b> มาตรฐานดาว เช่น เกษตร อุจจ์ และดาวพักร์</li>
+<li><b>ฤกษ์เกิด</b> ทั้งฤกษ์ลัคนาและฤกษ์จันทร์ จาก 27 นักษัตรฤกษ์</li>
+<li><b>ดาวจรวันนี้</b> เทียบกับดวงกำเนิด และวันที่ดาวใหญ่ย้ายราศีใน 12 เดือนข้างหน้า</li>
+</ul>
+<h3>คำทำนายที่เลือกอ่านได้</h3>
+<p>หลังผูกดวงแล้ว เลือกอ่านคำทำนายได้ 4 แบบ คือพื้นดวงย่อ ดวงจรช่วงนี้ ดวงรายปี 12 เดือน และพื้นดวงฉบับเต็ม ทุกแบบอ่านจากตำแหน่งดาวในดวงของคุณเอง และถามต่อจากคำทำนายได้</p>
+<p class="seo-note">หมายเหตุ ลัคนาในหน้านี้ใช้วิธีอันโตนาทีสามัญ นับจากเวลาอาทิตย์ขึ้นจริงของจังหวัดที่เกิด โหราศาสตร์เป็นศาสตร์ความเชื่อ ใช้เป็นแนวทางเข้าใจตนเองและวางแผน ไม่ใช่คำพยากรณ์ที่แน่นอน</p>
+<h3>คำถามที่พบบ่อย</h3>
+<div class="seo-faq"><div class="q">ลัคนาคืออะไร</div><div class="a">ลัคนาคือราศีที่กำลังขึ้นทางขอบฟ้าตะวันออก ณ เวลาและสถานที่เกิด เป็นจุดเริ่มนับเรือนชะตาทั้ง 12 ภพ และเป็นตัวแทนของเจ้าชะตาในโหราศาสตร์ไทย</div></div>
+<div class="seo-faq"><div class="q">ผูกดวงต้องใช้ข้อมูลอะไรบ้าง</div><div class="a">ใช้วันเดือนปีเกิด เวลาเกิด และจังหวัดที่เกิด ถ้าไม่ทราบเวลาเกิดยังดูตำแหน่งดาวได้ แต่จะไม่มีลัคนาและเรือนชะตา</div></div>
+<div class="seo-faq"><div class="q">ทำไมลัคนาแต่ละเว็บไม่ตรงกัน</div><div class="a">เพราะแต่ละที่ใช้เวลาอาทิตย์ขึ้นต่างกัน หน้านี้ใช้ลัคนาอันโตนาทีสามัญ นับจากเวลาอาทิตย์ขึ้นจริงของจังหวัดที่เกิด คนที่ลัคนาอยู่ชิดขอบราศีจึงอาจได้ราศีต่างจากที่อื่น</div></div>
+<div class="seo-faq"><div class="q">ดาวจรคืออะไร</div><div class="a">ดาวจรคือตำแหน่งดาวบนท้องฟ้าในปัจจุบัน นำมาเทียบกับดวงกำเนิดเพื่อดูว่าช่วงนี้ดาวดวงใดเข้ามาส่งผลกับเรื่องใดในชีวิต</div></div>
+</section>
 
 <nav class="bottom-nav">
   <div class="nav-item" onclick="window.location.href='../index.html'"><span>🏠</span><span>หน้าหลัก</span></div>
@@ -161,9 +262,9 @@
 <script type="module">
 import { nativeGoogleSignIn } from '../js/native-google-auth.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut , signInWithCredential }
+import { getAuth, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, signInWithCredential }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc }
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -172,271 +273,220 @@ const firebaseConfig = {
   storageBucket:"my-tarot67.firebasestorage.app",
   messagingSenderId:"33661162829", appId:"1:33661162829:web:9e06a7cd5a00d613785304"
 };
-const app  = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-setPersistence(auth, indexedDBLocalPersistence).catch(()=>setPersistence(auth, browserLocalPersistence));
+setPersistence(auth, indexedDBLocalPersistence).catch(() => setPersistence(auth, browserLocalPersistence));
 const db = getFirestore(app);
+const MODEL = 'claude-sonnet-4-6';
+const A = window.ThaiAstro, U = window.ThaiAstroUI;
 
-window._currentUser = null;
-window.updateCoinUI = function(c) {
-  document.getElementById('coinCount').textContent = c;
-  document.getElementById('coinDisplay').textContent = c;
-};
+let currentUser = null;
+let natal = null;          // ผังดวงที่ผูกล่าสุด
+let provinceName = '';
+let lastReading = '';      // คำทำนายล่าสุด (ข้อความสะอาด) ใช้ตอนถามต่อ
+let busy = false;
+
+const $ = id => document.getElementById(id);
+
+window.updateCoinUI = function(c) { $('coinCount').textContent = c; $('coinDisplay').textContent = c; };
 function setAvatarDisplay(a) {
-  var el=document.getElementById('avatarEl'); if(!el) return;
-  if(a&&a.includes('.png')) el.innerHTML='<img src="'+a+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-  else el.textContent=a||'👤';
+  var el = $('avatarEl'); if (!el) return;
+  if (a && a.includes('.png')) el.innerHTML = '<img src="' + a + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+  else el.textContent = a || '👤';
 }
-window.loginNow  = async function(){ try{ await (window.Capacitor?.isNativePlatform() ? nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) : signInWithPopup(auth, new GoogleAuthProvider())); }catch(e){console.error(e);} };
-window.logoutNow = async function(){ await signOut(auth); window.location.href='../index.html'; };
+window.__ciGoogleSignIn = async function() {
+  try { await (window.Capacitor?.isNativePlatform() ? nativeGoogleSignIn(auth, GoogleAuthProvider, signInWithCredential) : signInWithPopup(auth, new GoogleAuthProvider())); } catch (e) { console.error(e); }
+};
+window.loginNow = function() { var m = $('loginRequiredOverlay'); if (m) m.classList.add('show'); };
+window.logoutNow = async function() { await signOut(auth); window.location.href = '../index.html'; };
 
 onAuthStateChanged(auth, async user => {
-  window._currentUser = user;
-  if(user){
-    var snap=await getDoc(doc(db,'users',user.uid));
-    var data=snap.exists()?snap.data():{};
-    updateCoinUI(data.coins||0); setAvatarDisplay(data.avatar||'');
-    document.getElementById('guestView').style.display='none';
-    document.getElementById('loggedView').style.display='block';
-    document.getElementById('menuName').textContent=data.displayName||user.displayName||'';
-    document.getElementById('menuEmail').textContent=user.email;
-    if(typeof setupCheckin==='function') setupCheckin(user,'../');
+  currentUser = user;
+  if (user) {
+    var snap = await getDoc(doc(db, 'users', user.uid));
+    var data = snap.exists() ? snap.data() : {};
+    updateCoinUI(data.coins || 0); setAvatarDisplay(data.avatar || '');
+    $('guestView').style.display = 'none';
+    $('loggedView').style.display = 'block';
+    $('menuName').textContent = data.displayName || user.displayName || '';
+    $('menuEmail').textContent = user.email;
+    if (typeof setupCheckin === 'function') setupCheckin(user, '../');
   } else { updateCoinUI('—'); setAvatarDisplay(''); }
 });
 
-// dropdowns
-document.addEventListener('DOMContentLoaded', function() {
-  var dayEl=document.getElementById('inDay');
-  for(var d=1;d<=31;d++){var o=document.createElement('option');o.value=d;o.textContent=d;dayEl.appendChild(o);}
-  var months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  var monthEl=document.getElementById('inMonth');
-  months.forEach(function(m,i){var o=document.createElement('option');o.value=i+1;o.textContent=m;monthEl.appendChild(o);});
-  var yearEl=document.getElementById('inYear');
-  var curY=new Date().getFullYear()+543;
-  for(var y=curY;y>=2490;y--){var o=document.createElement('option');o.value=y;o.textContent='พ.ศ.'+y;if(y===2529)o.selected=true;yearEl.appendChild(o);}
-});
+// ─── DROPDOWN INIT ───
+(function() {
+  function opt(el, value, text, selected) { var o = document.createElement('option'); o.value = value; o.textContent = text; if (selected) o.selected = true; el.appendChild(o); }
+  for (var d = 1; d <= 31; d++) opt($('inDay'), d, d);
+  U.MONTHS.forEach(function(m, i) { opt($('inMonth'), i + 1, m); });
+  var curBE = U.thaiNow().year + 543;
+  for (var y = curBE; y >= curBE - 100; y--) opt($('inYear'), y, 'พ.ศ. ' + y, y === 2535);
+  opt($('inHour'), '', 'ไม่ทราบ');
+  for (var h = 0; h <= 23; h++) opt($('inHour'), h, (h < 10 ? '0' + h : h) + ' น.');
+  for (var m = 0; m <= 59; m++) opt($('inMinute'), m, (m < 10 ? '0' + m : m) + ' นาที');
+  A.PROVINCES.forEach(function(p, i) { opt($('inProvince'), i, p[0], i === 0); });
+})();
 
-// constants
-var PLANET_TH = {sun:'☀️ อาทิตย์',moon:'🌙 จันทร์',mars:'♂ อังคาร',merc:'☿ พุธ',jup:'♃ พฤหัส',ven:'♀ ศุกร์',sat:'♄ เสาร์',rahu:'☊ ราหู',ketu:'☋ เกตุ'};
-var PLANET_KEYS = ['sun','moon','mars','merc','jup','ven','sat','rahu','ketu'];
+function daysInMonth(yearCE, month) { return new Date(Date.UTC(yearCE, month, 0)).getUTCDate(); }
 
-function getPlanetSign(yearBE, planet, dateStr) {
-  var yr=PLANET_TRANSITS[yearBE];
-  if(!yr||!yr[planet]) return -1;
-  var list=yr[planet]; var s=list[0].s;
-  for(var i=0;i<list.length;i++){ if(list[i].d<=dateStr) s=list[i].s; else break; }
-  return s;
+// ─── ผูกดวง (ไม่ใช้เหรียญ คำนวณในเครื่อง) ───
+window.makeChart = function() {
+  if (!currentUser) { $('loginRequiredOverlay').classList.add('show'); return; }
+  var day = parseInt($('inDay').value), month = parseInt($('inMonth').value), be = parseInt($('inYear').value);
+  if (day > daysInMonth(be - 543, month)) { alert('วันที่ไม่ถูกต้องค่ะ เดือนนี้มีไม่ถึง ' + day + ' วัน'); return; }
+  var hourStr = $('inHour').value, prov = A.PROVINCES[parseInt($('inProvince').value)];
+  var input = { be: be, month: month, day: day, lat: prov[1], lon: prov[2] };
+  if (hourStr !== '') { input.hour = parseInt(hourStr); input.minute = parseInt($('inMinute').value); }
+  provinceName = hourStr !== '' ? prov[0] : '';
+
+  natal = A.natalChart(input);
+  var now = U.thaiNow();
+  var transit = A.transitChart(natal, now);
+
+  $('birthLine').textContent = U.birthLine(input, provinceName);
+  $('summaryBox').innerHTML = U.summaryHTML(natal);
+  $('wheelBox').innerHTML = U.wheelSVG(natal);
+  $('tableBox').innerHTML = U.tableHTML(natal);
+  $('nakBox').innerHTML = U.nakshatraHTML(natal);
+  $('transitBox').innerHTML = U.transitHTML(transit);
+  $('timelineBox').innerHTML = U.timelineHTML(U.timelineEvents(natal, now, 366));
+
+  var note = '';
+  if (!natal.lagna) note = 'ไม่ทราบเวลาเกิด จึงไม่มีลัคนาและเรือนชะตาค่ะ ตำแหน่งจันทร์เป็นค่าประมาณตอนเที่ยงวัน คำทำนายจะอ่านจากราศีและมุมของดาวแทน';
+  else if (natal.lagna.nearCusp) note = 'ลัคนาของคุณพี่อยู่ชิดขอบราศีมากค่ะ ถ้าเวลาเกิดคลาดไปไม่กี่นาที ลัคนาอาจเป็นราศีข้างเคียงได้ (อาทิตย์ขึ้นวันนั้น ' + natal.lagna.sunrise + ' น.)';
+  $('cuspNote').innerHTML = note ? '<div class="ta-note">' + note + '</div>' : '';
+
+  $('readingBox').style.display = 'none';
+  $('followupBox').style.display = 'none';
+  $('followupResult').innerHTML = '';
+  lastReading = '';
+  $('chartBox').style.display = 'block';
+  $('chartBox').scrollIntoView({ behavior: 'smooth' });
+};
+
+// ─── STREAMING: initSections → parseAndRender(text,false) ระหว่างสตรีม → parseAndRender(text,true) ตอนจบ ───
+let activeSections = [];
+function initSections(sections) {
+  activeSections = sections;
+  $('readingSections').innerHTML = sections.map(function(s) {
+    return '<div class="rd-sec"><h3>✦ ' + U.esc(s[1]) + '</h3><p id="rd_' + s[0] + '"><span class="rd-wait">กำลังอ่านดวง…</span></p></div>';
+  }).join('');
 }
-
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-async function streamText(el, text, speed) {
-  el.innerHTML='<span class="cursor"></span>';
-  for(var i=0;i<text.length;i++){
-    el.innerHTML=text.substring(0,i+1)+'<span class="cursor"></span>';
-    await sleep(speed);
-  }
-  el.innerHTML=text;
-}
-
-function hexToRgb(hex){
-  return parseInt(hex.slice(1,3),16)+','+parseInt(hex.slice(3,5),16)+','+parseInt(hex.slice(5,7),16);
-}
-
-window.startReading = async function() {
-  if(!window._currentUser){
-    document.getElementById('loginRequiredOverlay').style.display='flex';
-    return;
-  }
-
-  var day   = parseInt(document.getElementById('inDay').value);
-  var month = parseInt(document.getElementById('inMonth').value);
-  var yearBE= parseInt(document.getElementById('inYear').value);
-  var yearCE= yearBE - 543;
-  var hourStr=document.getElementById('inHour').value.trim();
-  var minStr =document.getElementById('inMin').value.trim();
-  var hasTime= hourStr!==''&&minStr!=='';
-  var hour=hasTime?parseInt(hourStr):12;
-  var min =hasTime?parseInt(minStr):0;
-
-  var btn=document.getElementById('readBtn');
-  btn.disabled=true; btn.textContent='⏳ กำลังวิเคราะห์...';
-
-  // หักเหรียญ
-  try {
-    var idToken=await window._currentUser.getIdToken();
-    var res=await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
-      body:JSON.stringify({service:'thai-astro',model:'claude-sonnet-4-6',max_tokens:10,messages:[{role:'user',content:'x'}]})
-    });
-    var newBal=res.headers.get('X-New-Coin-Balance');
-    if(newBal!=null) updateCoinUI(parseInt(newBal));
-    if(!res.ok){
-      var err=await res.json().catch(()=>({}));
-      alert(err.error==='insufficient_coins'?'เหรียญไม่พอนะคะ 🪙':'เกิดข้อผิดพลาดค่ะ');
-      btn.disabled=false; btn.textContent='🔯 วิเคราะห์ดวงชะตา'; return;
-    }
-  } catch(e){
-    console.error(e);
-    btn.disabled=false; btn.textContent='🔯 วิเคราะห์ดวงชะตา'; return;
-  }
-
-  var dateStr=yearCE+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-
-  // ดาว 8 ดวง
-  var signs={};
-  ['sun','mars','merc','jup','ven','sat','rahu','ketu'].forEach(function(p){
-    signs[p]=getPlanetSign(yearBE,p,dateStr);
+function parseAndRender(text, final) {
+  var parsed = U.parseSections(text, activeSections);
+  activeSections.forEach(function(s) {
+    var el = $('rd_' + s[0]), p = parsed[s[0]];
+    if (!el) return;
+    if (!p) { if (final) el.textContent = '—'; return; }
+    el.textContent = p.text;
+    if (!final && !p.done) { var c = document.createElement('span'); c.className = 'cursor'; el.appendChild(c); }
   });
+}
+function setBusy(b) {
+  busy = b;
+  document.querySelectorAll('.plan').forEach(function(x) { x.disabled = b; });
+  $('chartBtn').disabled = b; $('followupBtn').disabled = b;
+}
 
-  // จันทร์ด้วย thai-engine
-  var moonResult=getMoonSign(yearCE,month,day,hour,min);
-  signs.moon = moonResult ? moonResult.sign : signs.sun;
+// ─── อ่านดวง (หักเหรียญที่เซิร์ฟเวอร์เท่านั้น) ───
+window.startReading = async function(kind) {
+  if (busy) return;
+  if (!currentUser) { $('loginRequiredOverlay').classList.add('show'); return; }
+  if (!natal) { alert('ผูกดวงก่อนนะคะ'); return; }
+  var req = U.buildRequest(kind, natal, provinceName);
+  if (!confirm('อ่าน' + req.label + ' ใช้ ' + req.cost + ' เหรียญนะคะ')) return;
 
-  // ลัคนา
-  var lagnaSign, lagnaType;
-  if(hasTime){
+  setBusy(true);
+  $('readingTitle').textContent = '✦ ' + req.label + ' ✦';
+  initSections(req.sections);
+  $('followupBox').style.display = 'none';
+  $('readingBox').style.display = 'block';
+  $('readingBox').scrollIntoView({ behavior: 'smooth' });
+
   try {
-    var lagnaRes = await fetch('/api/lagna', {
+    var idToken = await currentUser.getIdToken();
+    var res = await fetch('/api/claude', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        year: yearCE, month: month, day: day,
-        hour: hour, minute: min,
-        lat: 13.752555, lon: 100.494066
-      })
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      body: JSON.stringify({ service: req.service, model: MODEL, max_tokens: req.max_tokens, system: req.system, messages: [{ role: 'user', content: req.user }] })
     });
-    var lagnaData = await lagnaRes.json();
-    lagnaSign = lagnaData.signIdx >= 0 ? lagnaData.signIdx : signs.sun;
-    lagnaType = 'จากเวลาเกิด '+hour+':'+String(min).padStart(2,'0')+' น.';
-  } catch(e) {
-    lagnaSign = signs.sun;
-    lagnaType = 'Solar Chart (fallback)';
-  }
-} else {
-  lagnaSign = signs.sun;
-  lagnaType = 'Solar Chart (ไม่มีเวลาเกิด)';
-}
-
-  // ฤกษ์
-  var moonLon  = moonResult ? moonResult.lon : (signs.moon*30+15);
-  var nakshatra= getNakshatra(moonLon);
-
-  // แสดง UI
-  document.getElementById('solarNote').style.display=hasTime?'none':'block';
-  document.getElementById('resultBox').style.display='block';
-  document.getElementById('resultBox').scrollIntoView({behavior:'smooth'});
-
-  // planet grid
-  var gridHtml='<div class="planet-card lagna"><div class="planet-name">⭐ ลัคนา ('+lagnaType+')</div><div class="planet-pos">'+signName(lagnaSign)+'</div><div class="planet-house">เรือน 1 — ตนุ</div></div>';
-  PLANET_KEYS.forEach(function(p){
-    var s=signs[p]; if(s<0||s===undefined) return;
-    var h=getHouse(s,lagnaSign);
-    gridHtml+='<div class="planet-card"><div class="planet-name">'+PLANET_TH[p]+'</div><div class="planet-pos">'+signName(s)+'</div><div class="planet-house">เรือน '+h+' — '+houseName(h-1)+'</div></div>';
-  });
-  document.getElementById('planetGrid').innerHTML=gridHtml;
-
-  // ฤกษ์
-  var rg=nakshatra.group;
-  document.getElementById('rerkBox').style.cssText='background:rgba('+hexToRgb(rg.color)+',0.1);border:1px solid rgba('+hexToRgb(rg.color)+',0.3);border-radius:16px;padding:16px;margin-bottom:20px;text-align:center;';
-  document.getElementById('rerkBox').innerHTML=
-    '<div class="rerk-name">'+nakshatra.name+'ฤกษ์ (ที่ '+nakshatra.idx+')</div>'+
-    '<div class="rerk-group" style="color:'+rg.color+'">'+rg.name+(rg.auspicious?' ⭐ มงคล':' ⚠️ อวมงคล')+'</div>'+
-    '<div class="rerk-desc">'+rg.desc+'</div>';
-
-  // ดาวจร 2568
-  var now=new Date();
-  var nowStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-  var tr68={}, th68={};
-  ['sun','mars','merc','jup','ven','sat','rahu','ketu'].forEach(function(p){
-    tr68[p]=getPlanetSign(2568,p,nowStr);
-    if(tr68[p]>=0) th68[p]=getHouse(tr68[p],lagnaSign);
-  });
-
-  // ดาวจร 2569
-  var tr69={}, th69={};
-  ['sun','mars','merc','jup','ven','sat','rahu','ketu'].forEach(function(p){
-    tr69[p]=getPlanetSign(2569,p,'2026-06-01');
-    if(tr69[p]>=0) th69[p]=getHouse(tr69[p],lagnaSign);
-  });
-
-  // houseMap
-  var hm={};
-  PLANET_KEYS.forEach(function(p){ if(signs[p]>=0) hm[p]=getHouse(signs[p],lagnaSign); });
-
-  var PNAME={sun:'อาทิตย์',moon:'จันทร์',mars:'อังคาร',merc:'พุธ',jup:'พฤหัส',ven:'ศุกร์',sat:'เสาร์',rahu:'ราหู',ketu:'เกตุ'};
-
-  var prompt='คุณเป็นโหรไทยผู้เชี่ยวชาญโหราศาสตร์ไทยแบบสุริยยาตร์ วิเคราะห์ดวงชะตาให้ละเอียดและยาวมากค่ะ ใช้ภาษาไทยสวยงาม\n\n'
-    +'═══ ข้อมูลดวงชะตา ═══\n'
-    +'วันเกิด: '+day+'/'+month+'/'+yearBE+' (พ.ศ.) '+(hasTime?'เวลา '+hour+':'+String(min).padStart(2,'0')+' น.':'(ไม่มีเวลาเกิด)')+'\n'
-    +'ลัคนา: ราศี'+signName(lagnaSign)+' ('+lagnaType+')\n'
-    +'ฤกษ์เกิด: '+nakshatra.name+'ฤกษ์ หมวด'+rg.name+(rg.auspicious?' (มงคล)':' (อวมงคล)')+'\n\n'
-    +'═══ ดาวกำเนิด ═══\n'
-    +PLANET_KEYS.filter(function(p){return signs[p]>=0;}).map(function(p){
-      return '• '+PNAME[p]+': ราศี'+signName(signs[p])+' เรือน'+hm[p]+' ('+houseName(hm[p]-1)+')';
-    }).join('\n')+'\n\n'
-    +'═══ ดาวจร พ.ศ.2568 (ปัจจุบัน) ═══\n'
-    +Object.keys(th68).map(function(p){
-      return '• '+PNAME[p]+': ราศี'+signName(tr68[p])+' ทับเรือน'+th68[p]+' ('+houseName(th68[p]-1)+')';
-    }).join('\n')+'\n\n'
-    +'═══ ดาวจร พ.ศ.2569 (อนาคต) ═══\n'
-    +Object.keys(th69).map(function(p){
-      return '• '+PNAME[p]+': ราศี'+signName(tr69[p])+' ทับเรือน'+th69[p]+' ('+houseName(th69[p]-1)+')';
-    }).join('\n')+'\n\n'
-    +'═══ คำขอ ═══\n'
-    +'วิเคราะห์ดวงชะตาให้ครบและละเอียดมากที่สุดค่ะ:\n'
-    +'1. ตัวตนและบุคลิกภาพ — ลัคนาราศี ฤกษ์เกิด\n'
-    +'2. ดวงกำเนิด — ดาวแต่ละดวงในเรือน ดาวดี/ดาวร้าย\n'
-    +'3. การงานและการเงิน\n'
-    +'4. ความรักและครอบครัว\n'
-    +'5. สุขภาพ\n'
-    +'6. ดวงปัจจุบัน พ.ศ.2568 — ดาวจรทับเรือน ผลกระทบ\n'
-    +'7. ดวงอนาคต พ.ศ.2569 — การเปลี่ยนแปลง โอกาส ความท้าทาย\n'
-    +'8. คำแนะนำ — สิ่งที่ควรทำและหลีกเลี่ยง';
-
-  // เรียก Claude
-  document.getElementById('readingText').innerHTML='<span class="cursor"></span>';
-  try {
-    var idToken2=await window._currentUser.getIdToken();
-    var resp=await fetch('/api/claude',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken2},
-      body:JSON.stringify({
-        service:'thai-astro-read',
-        model:'claude-sonnet-4-6',
-        max_tokens:8000,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-
-    if(!resp.ok){
-      document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
-      btn.disabled=false; btn.textContent='🔯 วิเคราะห์ดวงชะตา'; return;
+    var newBal = res.headers.get('X-New-Coin-Balance');
+    if (newBal != null) updateCoinUI(parseInt(newBal));
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      $('readingBox').style.display = 'none';
+      alert(err.error === 'insufficient_coins' ? 'เหรียญไม่พอนะคะ 🪙' : 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่');
+      setBusy(false); return;
     }
-
-    // อ่าน stream
-    var reader=resp.body.getReader();
-    var decoder=new TextDecoder();
-    var fullText='';
-    var el=document.getElementById('readingText');
-    el.innerHTML='';
-
-    while(true){
-      var result=await reader.read();
-      if(result.done) break;
-      var chunk=decoder.decode(result.value,{stream:true});
-      fullText+=chunk;
-      el.innerHTML=fullText+'<span class="cursor"></span>';
-      el.scrollIntoView({behavior:'smooth',block:'end'});
+    var reader = res.body.getReader(), decoder = new TextDecoder(), text = '';
+    while (true) {
+      var r = await reader.read();
+      if (r.done) break;
+      text += decoder.decode(r.value, { stream: true });
+      parseAndRender(text, false);
     }
-    el.innerHTML=fullText;
+    parseAndRender(text, true);
 
-  } catch(e){
+    lastReading = U.historyText(text, req.sections);
+    if (lastReading) {
+      try {
+        await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+          type: req.historyType,
+          result: U.historyText(text, req.sections, U.birthLine(natal.input, provinceName)),
+          createdAt: serverTimestamp()
+        });
+      } catch (e) { console.error('history save:', e); }
+      $('followupBox').style.display = 'block';
+    }
+  } catch (e) {
     console.error(e);
-    document.getElementById('readingText').textContent='เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+    var first = $('rd_' + req.sections[0][0]);
+    if (first) first.textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
   }
+  setBusy(false);
+};
 
-  btn.disabled=false; btn.textContent='🔯 วิเคราะห์ดวงชะตา';
+// ─── ถามต่อ ───
+window.askFollowup = async function() {
+  if (busy || !currentUser || !natal || !lastReading) return;
+  var q = $('followupInput').value.trim();
+  if (!q) { alert('พิมพ์คำถามก่อนนะคะ'); return; }
+  setBusy(true);
+  var req = U.buildFollowup(natal, provinceName, lastReading, q);
+  var wrap = document.createElement('div');
+  var qEl = document.createElement('div'); qEl.className = 'followup-q'; qEl.textContent = 'ถาม: ' + q;
+  var aEl = document.createElement('div'); aEl.className = 'followup-a'; aEl.innerHTML = '<span class="cursor"></span>';
+  wrap.appendChild(qEl); wrap.appendChild(aEl); $('followupResult').appendChild(wrap);
+  try {
+    var idToken = await currentUser.getIdToken();
+    var res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + idToken },
+      body: JSON.stringify({ service: req.service, model: MODEL, max_tokens: req.max_tokens, system: req.system, messages: [{ role: 'user', content: req.user }] })
+    });
+    var newBal = res.headers.get('X-New-Coin-Balance');
+    if (newBal != null) updateCoinUI(parseInt(newBal));
+    if (!res.ok) {
+      var err = await res.json().catch(function() { return {}; });
+      aEl.textContent = err.error === 'insufficient_coins' ? 'เหรียญไม่พอนะคะ 🪙' : 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่';
+      setBusy(false); return;
+    }
+    var reader = res.body.getReader(), decoder = new TextDecoder(), text = '';
+    while (true) {
+      var r = await reader.read();
+      if (r.done) break;
+      text += decoder.decode(r.value, { stream: true });
+      aEl.textContent = text;
+    }
+    aEl.textContent = text.trim();
+    try {
+      await addDoc(collection(db, 'users', currentUser.uid, 'readings'), {
+        type: 'โหราศาสตร์ไทย (ถามต่อ)', result: 'ถาม: ' + q + '\n\n' + text.trim(), createdAt: serverTimestamp()
+      });
+    } catch (e) { console.error('history save:', e); }
+    $('followupInput').value = '';
+  } catch (e) { console.error(e); aEl.textContent = 'เกิดข้อผิดพลาดค่ะ กรุณาลองใหม่'; }
+  setBusy(false);
 };
 </script>
 </body>
