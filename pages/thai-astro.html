@@ -224,6 +224,10 @@
       <textarea class="followup-input" id="followupInput" rows="2" maxlength="300" placeholder="เช่น ปีนี้เหมาะเปลี่ยนงานไหม"></textarea>
       <button type="button" class="followup-btn" id="followupBtn" onclick="askFollowup()">ถามต่อ 🪙 5 เหรียญ</button>
     </div>
+    <div id="morePlans" style="display:none">
+      <div class="section-title">✦ ให้น้องอ่านเรื่องอื่นต่อไหมคะ ✦</div>
+      <div id="morePlansList"></div>
+    </div>
   </div>
 </div>
 
@@ -360,6 +364,7 @@ window.makeChart = function() {
 
   $('readingBox').style.display = 'none';
   $('followupBox').style.display = 'none';
+  $('morePlans').style.display = 'none';
   $('followupResult').innerHTML = '';
   lastReading = '';
   $('chartBox').style.display = 'block';
@@ -390,6 +395,17 @@ function setBusy(b) {
   $('chartBtn').disabled = b; $('followupBtn').disabled = b;
 }
 
+// ปุ่มเลือกคำทำนายซ้ำใต้คำทำนาย (ไม่ต้องเลื่อนกลับขึ้นไปบนสุด)
+function showMorePlans(doneKind) {
+  var list = $('morePlansList');
+  list.innerHTML = '';
+  document.querySelectorAll('#chartBox .plan').forEach(function(btn) {
+    if (btn.getAttribute('data-kind') === doneKind) return;
+    list.appendChild(btn.cloneNode(true));
+  });
+  $('morePlans').style.display = list.children.length ? 'block' : 'none';
+}
+
 // ─── อ่านดวง (หักเหรียญที่เซิร์ฟเวอร์เท่านั้น) ───
 window.startReading = async function(kind) {
   if (busy) return;
@@ -402,6 +418,7 @@ window.startReading = async function(kind) {
   $('readingTitle').textContent = '✦ ' + req.label + ' ✦';
   initSections(req.sections);
   $('followupBox').style.display = 'none';
+  $('morePlans').style.display = 'none';
   $('readingBox').style.display = 'block';
   $('readingBox').scrollIntoView({ behavior: 'smooth' });
 
@@ -439,6 +456,7 @@ window.startReading = async function(kind) {
         });
       } catch (e) { console.error('history save:', e); }
       $('followupBox').style.display = 'block';
+      showMorePlans(kind);
     }
   } catch (e) {
     console.error(e);
