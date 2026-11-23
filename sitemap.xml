@@ -1998,8 +1998,20 @@
 <!--  ข่าวดูดวง  -->
 <url>
 <loc>https://www.mytarot.vip/news/</loc>
-<lastmod>2026-11-15</lastmod>
+<lastmod>2026-11-24</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://www.mytarot.vip/news/thai-top3-fortune-survey</loc>
+<lastmod>2026-11-24</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://www.mytarot.vip/news/korea-ai-fortune-trend</loc>
+<lastmod>2026-11-24</lastmod>
+<changefreq>weekly</changefreq>
 <priority>0.8</priority>
 </url>
 <url>
